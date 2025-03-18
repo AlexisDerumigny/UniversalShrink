@@ -1,0 +1,13 @@
+Package: UniversalShrink
+Title: Estimation of Covariance Matrices and Functions Thereof by Shrinkage
+Version: 0.0.0.1
+Authors@R: c(
+    person("Alexis", "Derumigny", , email = "a.f.f.derumigny@tudelft.nl", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-6163-8097")),
+    person("Nestor", "Parolya", , email = "N.Parolya@tudelft.nl", role = c("aut"), comment = c(ORCID = "0000-0003-2147-2288")),
+    person("Taras", "Bodnar", email = "taras.bodnar@liu.se", role = "aut", comment = c(ORCID = "0000-0001-7855-8221"))
+	)
+Description: What the package does (one paragraph).
+License: GPL (>= 2)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
