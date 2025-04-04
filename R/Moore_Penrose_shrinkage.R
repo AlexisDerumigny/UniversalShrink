@@ -121,6 +121,31 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov)
   trS2Pi0 <- tr(iS_MP %*% iS_MP %*% Pi0) / p
   
   d0Pi0 <- tr( (Ip - S %*% iS_MP) %*% Pi0) / p
+  # If Pi0 = Ip, then d0Pi0 should be equal to (c_n - 1) / c_n
+  # This is the same as tr(Ip/p) - tr(S %*% iS_MP) / p
+  # which is the same as 
+  # tr(Ip/p) - tr(Ytilde %*% solve(t(Ytilde) %*% Ytilde) %*% t(Ytilde) ) / p
+  # in the non-centered case.
+  # 1 - tr(Ytilde %*% solve(t(Ytilde) %*% Ytilde) %*% t(Ytilde) ) / p
+  # = 1 - tr(t(Ytilde) %*% Ytilde %*% solve(t(Ytilde) %*% Ytilde)  ) / p
+  # = 1 - tr(diag(n)  ) / p
+  #
+  # But actually this is not correct, see:
+  # tr(t(Ytilde) %*% Ytilde %*% solve(t(Ytilde) %*% Ytilde)  ) / p
+  # tr(diag(n)  ) / p
+  # This is because 
+  # tr(t(Ytilde) %*% Ytilde %*% solve(t(Ytilde) %*% Ytilde)  ) / p = (n-1)/p
+  #
+  # So d0Pi0 
+  # = 1 - (n-1) / p
+  # = (p - (n-1)) / p
+  # = (p/n - (1 - 1/n)) / (p/n)
+  # = (c_n - (1 - 1/n)) / c_n
+  #
+  # while (c_n - 1) / c_n = (p / n - 1) / (p / n) = (p - n) / p
+  # which is different.
+  
+  
   d1 <- trS1 / (trS2 * c_n)
   d1Pi0 <- trS1Pi0 / (trS2 * c_n)
   d2 <- (trS1 * trS3 - trS2 * trS2) / (trS2^3 * c_n^2)
