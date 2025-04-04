@@ -57,7 +57,7 @@
 #' FrobeniusNorm2(precision_MoorePenrose_NoCent %*% Sigma - diag(p) ) / p
 #' # this is indeed much closer than before
 #' 
-#' 
+#' @export
 Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov)
 {
   # Get sizes of Y
