@@ -73,19 +73,35 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov)
     stop("'Pi0' should be a 'p' by 'p' matrix.")
   }
   
-  # Inverse companion covariance
-  iY <- solve(t(Y) %*% Y / n)
-  
   if (centeredCov){
-    S <- cov(t(Y))
+    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
+    
+    # Sample covariance matrix
+    S <- Y %*% Jn %*% t(Y) / n
+    
+    # We remove the last eigenvector because the eigenvalues are sorted
+    # in decreasing order.
+    Hn = eigen(Jn)$vectors[, -n]
+    Ytilde = Y %*% Hn
+    
+    # Inverse companion covariance
+    iYtilde <- solve(t(Ytilde) %*% Ytilde / n)
+    
+    # Moore-Penrose inverse
+    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde)/n
+    
   } else {
     S <- Y %*% t(Y)/n
+    
+    # Inverse companion covariance
+    iY <- solve(t(Y) %*% Y / n)
+    
+    # Moore-Penrose inverse
+    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
   }
   eigenS <- eigen(S)
   U <- eigenS$vectors
   
-  ##### Moore-Penrose inverse
-  iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
   D_MP <- diag(eigen(iS_MP)$values)
   
   ##### shrinkage MP
@@ -146,20 +162,37 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov)
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  # Inverse companion covariance
-  iY <- solve(t(Y) %*% Y / n)
-  
   if (centeredCov){
-    S <- cov(t(Y))
+    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
+    
+    # Sample covariance matrix
+    S <- Y %*% Jn %*% t(Y) / n
+    
+    # We remove the last eigenvector because the eigenvalues are sorted
+    # in decreasing order.
+    Hn = eigen(Jn)$vectors[, -n]
+    Ytilde = Y %*% Hn
+    
+    # Inverse companion covariance
+    iYtilde <- solve(t(Ytilde) %*% Ytilde / n)
+    
+    # Moore-Penrose inverse
+    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde)/n
+    
   } else {
     S <- Y %*% t(Y)/n
+    
+    # Inverse companion covariance
+    iY <- solve(t(Y) %*% Y / n)
+    
+    # Moore-Penrose inverse
+    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
   }
   
   eigenS <- eigen(S)
   U <- eigenS$vectors
   
   ##### Moore-Penrose inverse
-  iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
   D_MP <- diag(eigen(iS_MP)$values)
   
   ##### shrinkage MP
