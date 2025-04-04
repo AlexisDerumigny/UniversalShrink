@@ -1,29 +1,16 @@
-#setwd("~/Documents/HD_MP_inverse/Final_prog")
-#setwd("/u/bodnar/ProgR/HD_MPinverse")
-#setwd("C:/D/2023/HD MPInverse/figOctober2023")
-#library(HDShOP)
 
 library(Rfast)
 library(Rfast2)
 library(kStatistics)
 library(corpcor)
-#library(abind)
 
-Sigma_sample_estimator <- function(x) {
-  p <- nrow(x)
-  n <- ncol(x)
-  if (is.data.frame(x)) x <- as.matrix(x)
-  a <- .rowMeans(x, m=p, n=n, na.rm = TRUE)
-  a_x_size <- matrix(rep(a,n),nrow=p, ncol=n)
-  tcrossprod(x-a_x_size)/(ncol(x)-1)
-}
 
 
 nonlin_shrinkLW = function(x){
   # the original version suggested that p is # of columns
   p = nrow(x)
   n = ncol(x)
-  sampleC = Sigma_sample_estimator(x)
+  sampleC = cov(x)
   eig = eigen(sampleC)
   #eig = eigenS
   u = eig$vectors[,p:1]
@@ -439,81 +426,6 @@ print(i_c)
 print(n)
 print(dist)
 }
-
-
-
-write.table(MP,file=paste("MP_",dist,"_n",n,".csv",sep=""), sep=",", dec=".", row.names = F,col.names = F)
-write.table(SSE,file=paste("SSE_",dist,"_n",n,".csv",sep=""), sep=",", dec=".", row.names = F,col.names = F)
-write.table(NL,file=paste("NL_",dist,"_n",n,".csv",sep=""), sep=",", dec=".", row.names = F,col.names = F)
-write.table(NLo,file=paste("NLo_",dist,"_n",n,".csv",sep=""), sep=",", dec=".", row.names = F,col.names = F)
-write.table(KS,file=paste("KS_",dist,"_n",n,".csv",sep=""), sep=",", dec=".", row.names = F,col.names = F)
-write.table(WPTZ,file=paste("WPTZ_",dist,"_n",n,".csv",sep=""), sep=",", dec=".", row.names = F,col.names = F)
-write.table(ShMP,file=paste("ShMP_",dist,"_n",n,".csv",sep=""), sep=",", dec=".", row.names = F,col.names = F)
-write.table(ShRt,file=paste("ShRt_",dist,"_n",n,".csv",sep=""), sep=",", dec=".", row.names = F,col.names = F)
-write.table(ShMP2,file=paste("ShMP2_",dist,"_n",n,".csv",sep=""), sep=",", dec=".", row.names = F,col.names = F)
-write.table(ShMP3,file=paste("ShMP3_",dist,"_n",n,".csv",sep=""), sep=",", dec=".", row.names = F,col.names = F)
-write.table(ShMP4,file=paste("ShMP4_",dist,"_n",n,".csv",sep=""), sep=",", dec=".", row.names = F,col.names = F)
-write.table(ShMP5,file=paste("ShMP5_",dist,"_n",n,".csv",sep=""), sep=",", dec=".", row.names = F,col.names = F)
-write.table(PRIAL,file=paste("PRIAL",dist,"_n",n,".csv",sep=""), sep=",", dec=".", row.names = F,col.names = F)
-
-
-
-
-res<-100*(1-PRIAL[,c(2:12)]/(PRIAL[,1]%*%matrix(1,1,11)))
-
-#res<-rOSV
-res<- apply(res, c(1,2), Re)
-#c_val<-c(seq(1.5,3,0.1),seq(3.5,5,0.5))
-
-#MP<- apply(MP, 1, median)/V_GMV-1
-#BPS<- apply(BPS, 1, median)/V_GMV-1
-#ShMP<- apply(ShMP, 1, median)/V_GMV-1
-#ShRt<- apply(ShRt, 1, median)/V_GMV-1
-#WPTZ<- apply(WPTZ, 1, median)/V_GMV-1
-#NLo<- apply(NLo, 1, median)/V_GMV-1
-
-
-#res<- cbind(NLo, BPS, ShMP, ShRt, WPTZ)
-#res<- apply(res, 1:2, Re)
-
-#ylim = range(res[,1:ncol(res)])
-
-
-c_val<-c(seq(1.5,3,0.1),seq(3.5,5,0.5))
-PRIAL <- read.table(paste("PRIAL", dist, "_n", n, ".csv", sep=""), sep=",", dec=".", header=FALSE)
-
-pdf(paste("PRIAL_prec_",dist,"_n", n, ".pdf", sep=""), height=5.5, width=7)
-plot(c(rep(c_val,ncol(res)) ),c(res[,1:ncol(res)]), type="n", main="", xlab=expression(c[n]), ylab="PRIAL", mgp=c(2.2,1,0), xlim = c(1.5,5), ylim = c(55,100),cex=1.5, lwd = 1.6, cex.axis=1.2,cex.lab=1.5,axes=T,frame=T,font=2)
-#lines(c_val, res[,2], lty=7, col="lightblue", lwd = 1.4)
-lines(c_val, res[,11], lty=1, col="blue", lwd = 1.4)
-#lines(c_val, res[,6], lty=7, col="red", lwd = 1.4)
-#lines(c_val, res[,3], lty=5, col="green", lwd = 1.4)
-lines(c_val, res[,5], lty=1, col="orange", lwd = 1.4)
-lines(c_val, res[,7], lty=2, col="orange", lwd = 1.4)
-lines(c_val, res[,8], lty=3, col="orange", lwd = 1.4)
-lines(c_val, res[,9], lty=4, col="orange", lwd = 1.4)
-lines(c_val, res[,10], lty=5, col="orange", lwd = 1.4)
-legend("topright", lty=c(1, 1,2,3,4,5), col=c("blue", rep("orange", 5)), c("NL oracle", "MP shrinkage (m=1)", "High order m=2", "High order m=3", "High order m=4", "High order m=5"), bty = "n", cex=1.0, lwd = 2.0)
-dev.off()
-
-
-pdf(paste("zoomedPRIAL_prec_",dist,"_n", n, ".pdf", sep=""), height=5.5, width=7)
-plot(c(rep(c_val,ncol(res)) ),c(res[,1:ncol(res)]), type="n", main="", xlab=expression(c[n]), ylab="PRIAL", mgp=c(2.2,1,0), xlim = c(2.5,5), ylim = c(60,70),cex=1.5, lwd = 1.6, cex.axis=1.2,cex.lab=1.5,axes=T,frame=T,font=2)
-#lines(c_val, res[,2], lty=7, col="lightblue", lwd = 1.4)
-lines(c_val, res[,11], lty=1, col="blue", lwd = 1.4)
-#lines(c_val, res[,6], lty=7, col="red", lwd = 1.4)
-#lines(c_val, res[,3], lty=5, col="green", lwd = 1.4)
-lines(c_val, res[,5], lty=1, col="orange", lwd = 1.4)
-lines(c_val, res[,7], lty=2, col="orange", lwd = 1.4)
-lines(c_val, res[,8], lty=3, col="orange", lwd = 1.4)
-lines(c_val, res[,9], lty=4, col="orange", lwd = 1.4)
-lines(c_val, res[,10], lty=5, col="orange", lwd = 1.4)
-legend("topright", lty=c(1, 1,2,3,4,5), col=c("blue", rep("orange", 5)), c("NL oracle", "MP shrinkage (m=1)", "High order m=2", "High order m=3", "High order m=4", "High order m=5"), bty = "n", cex=1.0, lwd = 2.0)
-dev.off()
-
-
-
-
 
 
 
