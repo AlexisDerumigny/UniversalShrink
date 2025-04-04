@@ -49,7 +49,14 @@
 #' FrobeniusNorm2(precision_NLshrink     %*% Sigma - diag(p) ) / p
 #' FrobeniusNorm2(precision_QISshrink    %*% Sigma - diag(p) ) / p
 #' 
-#'
+#' # We now use the true value of the precision matrix as a target for shrinkage
+#' precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(t(X), centeredCov = TRUE, Pi0 = solve(Sigma))
+#' precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(t(X), centeredCov = FALSE, Pi0 = solve(Sigma))
+#' FrobeniusNorm2(precision_MoorePenrose_Cent %*% Sigma - diag(p) ) / p
+#' FrobeniusNorm2(precision_MoorePenrose_NoCent %*% Sigma - diag(p) ) / p
+#' # this is indeed much closer than before
+#' 
+#' 
 Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov)
 {
   # Get sizes of Y
