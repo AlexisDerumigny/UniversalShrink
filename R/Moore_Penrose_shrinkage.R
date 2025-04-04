@@ -177,7 +177,8 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov)
 }
 
 
-
+#' @rdname Moore_Penrose_shrinkage
+#' @export
 Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov)
 {
   # Get sizes of Y

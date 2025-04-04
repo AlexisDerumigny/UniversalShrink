@@ -2,9 +2,12 @@
 % Please edit documentation in R/Moore_Penrose_shrinkage.R
 \name{Moore_Penrose_shrinkage}
 \alias{Moore_Penrose_shrinkage}
+\alias{Moore_Penrose_shrinkage_toIP}
 \title{First-order shrinkage of the Moore-Penrose inverse towards a general target}
 \usage{
 Moore_Penrose_shrinkage(Y, Pi0 = NULL, centeredCov)
+
+Moore_Penrose_shrinkage_toIP(Y, centeredCov)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
@@ -25,7 +28,7 @@ It is (asymptotically) optimal for the loss
 First-order shrinkage of the Moore-Penrose inverse towards a general target
 }
 \examples{
-n = 10
+n = 100
 p = 5 * n
 mu = rep(0, p)
 
@@ -35,7 +38,7 @@ H <- eigen(t(X0) \%*\% X0)$vectors
 Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 
 # Generate example dataset
-X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
+X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
 precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(t(X), centeredCov = FALSE)
 precision_MoorePenrose_toIPCent = Moore_Penrose_shrinkage_toIP(t(X), centeredCov = TRUE)
