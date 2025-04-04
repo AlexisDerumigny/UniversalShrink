@@ -18,7 +18,8 @@
 #' 
 #' 
 #' @examples
-#' p = 500
+#' n = 100
+#' p = 5 * n
 #' mu = rep(0, p)
 #' 
 #' # Generate Sigma
@@ -27,8 +28,8 @@
 #' Sigma = H %*% diag(seq(1, 0.02, length.out = p)) %*% t(H)
 #' 
 #' # Generate example dataset
-#' X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
-#' precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(t(X), centeredCov = TRUE)
+#' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
+#' precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
 #' precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(t(X), centeredCov = FALSE)
 #' precision_MoorePenrose_toIPCent = Moore_Penrose_shrinkage_toIP(t(X), centeredCov = TRUE)
 #' precision_MoorePenrose_toIPNoCent = Moore_Penrose_shrinkage_toIP(t(X), centeredCov = FALSE)
