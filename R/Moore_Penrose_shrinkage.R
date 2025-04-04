@@ -18,11 +18,20 @@
 #' 
 #' 
 #' @examples
-#' p = 200
-#' Sigma = diag(seq(1, 0.02, length.out = p))
+#' p = 500
 #' mu = rep(0, p)
+#' 
+#' # Generate Sigma
+#' X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
+#' H <- eigen(t(X0) %*% X0)$vectors
+#' Sigma = H %*% diag(seq(1, 0.02, length.out = p)) %*% t(H)
+#' 
+#' # Generate example dataset
 #' X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
-#' precision_MoorePenrose = Moore_Penrose_shrinkage(t(X))
+#' precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(t(X), centeredCov = TRUE)
+#' precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(t(X), centeredCov = FALSE)
+#' precision_MoorePenrose_toIPCent = Moore_Penrose_shrinkage_toIP(t(X), centeredCov = TRUE)
+#' precision_MoorePenrose_toIPNoCent = Moore_Penrose_shrinkage_toIP(t(X), centeredCov = FALSE)
 #' 
 #' precisionTrue = solve(Sigma)
 #' 
@@ -32,12 +41,16 @@
 #' precision_NLshrink = solve(estimatedCov_NLshrink)
 #' precision_QISshrink = solve(estimatedCov_QISshrink)
 #' 
-#' sum((precision_MoorePenrose %*% Sigma - diag(p))^2) / p
-#' sum((precision_NLshrink %*% Sigma - diag(p))^2) / p
-#' sum((precision_QISshrink %*% Sigma - diag(p))^2) / p
+#' FrobeniusNorm2 <- function(M){sum(diag(M %*% t(M)))}
+#' FrobeniusNorm2(precision_MoorePenrose_Cent %*% Sigma - diag(p) ) / p
+#' FrobeniusNorm2(precision_MoorePenrose_NoCent %*% Sigma - diag(p) ) / p
+#' FrobeniusNorm2(precision_MoorePenrose_toIPCent %*% Sigma - diag(p) ) / p
+#' FrobeniusNorm2(precision_MoorePenrose_toIPNoCent %*% Sigma - diag(p) ) / p
+#' FrobeniusNorm2(precision_NLshrink     %*% Sigma - diag(p) ) / p
+#' FrobeniusNorm2(precision_QISshrink    %*% Sigma - diag(p) ) / p
 #' 
 #'
-Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL)
+Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov)
 {
   # Get sizes of Y
   p = nrow(Y)
@@ -56,7 +69,11 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL)
   # Inverse companion covariance
   iY <- solve(t(Y) %*% Y / n)
   
-  S <- cov(t(Y))
+  if (centeredCov){
+    S <- cov(t(Y))
+  } else {
+    S <- Y %*% t(Y)/n
+  }
   eigenS <- eigen(S)
   U <- eigenS$vectors
   
@@ -104,10 +121,72 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL)
   den_MP   <- -(d2Sig2 - d1Sig2 * h3 / h2) * q2Pi02 / h2 - d1Sig2Pi0^2 / h2
   
   alpha    <- num_alpha_MP / den_MP
-  beta    <- num_beta_MP / den_MP
+  beta     <- num_beta_MP / den_MP
   iS_ShMP  <- alpha * iS_MP + beta * Pi0
   
   return (iS_ShMP)
 }
+
+
+
+Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov)
+{
+  # Get sizes of Y
+  p = nrow(Y)
+  n = ncol(Y)
+  c_n = p / n
+  
+  # Identity matrix of size p
+  Ip = diag(nrow = p)
+  
+  # Inverse companion covariance
+  iY <- solve(t(Y) %*% Y / n)
+  
+  if (centeredCov){
+    S <- cov(t(Y))
+  } else {
+    S <- Y %*% t(Y)/n
+  }
+  
+  eigenS <- eigen(S)
+  U <- eigenS$vectors
+  
+  ##### Moore-Penrose inverse
+  iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
+  D_MP <- diag(eigen(iS_MP)$values)
+  
+  ##### shrinkage MP
+  trS1<-sum(diag(iS_MP))/p
+  trS2<-sum(diag(iS_MP%*%iS_MP))/p
+  trS3<-sum(diag(iS_MP%*%iS_MP%*%iS_MP))/p
+  
+  hv0<-c_n*trS1
+  ihv0<-1/hv0
+  ihv0_2<-ihv0^2
+  ihv0_3<-ihv0^3
+  
+  h2<-1/trS2/c_n
+  h3<-trS3/(trS2^3)/c_n^2
+  
+  d1<-trS1/trS2/c_n
+  d2<-(trS1*trS3-trS2^2)/(trS2^3)/c_n^2
+  
+  q1<-sum(diag(S))/p
+  q2<-sum(diag(S%*%S))/p-c_n*(q1^2)
+  
+  d1Sig<-ihv0*(ihv0/c_n-d1)
+  d1Sig2<-ihv0_2*(q1+d1-2*ihv0/c_n)
+  d2Sig2<-ihv0*d1Sig2-ihv0_2*(d1Sig-d2)
+  
+  num_a_MP<-d1Sig*q2-d1Sig2*q1
+  num_b_MP<--(d2Sig2-d1Sig2*h3/h2)*q1/h2-d1Sig*d1Sig2/h2
+  den_MP<--(d2Sig2-d1Sig2*h3/h2)*q2/h2-d1Sig2^2/h2
+  ha_MP<-num_a_MP/den_MP
+  hb_MP<-num_b_MP/den_MP
+  iS_ShMP<-ha_MP*iS_MP+hb_MP*Ip
+  
+  return(iS_ShMP)
+}
+
 
 
