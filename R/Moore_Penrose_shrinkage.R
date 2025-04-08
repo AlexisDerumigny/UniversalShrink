@@ -58,7 +58,7 @@
 #' # this is indeed much closer than before
 #' 
 #' @export
-Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov)
+Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
 {
   # Get sizes of Y
   p = nrow(Y)
@@ -173,6 +173,12 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov)
   num_beta_MP <- -(d2Sig2 - d1Sig2 * h3 / h2) * q1Pi0 / h2 - d1Sig * d1Sig2Pi0 / h2
   den_MP   <- -(d2Sig2 - d1Sig2 * h3 / h2) * q2Pi02 / h2 - d1Sig2Pi0^2 / h2
   
+  if (verbose){
+    cat("num_alpha_MP = ", num_alpha_MP, "\n")
+    cat("num_beta_MP = ", num_beta_MP, "\n")
+    cat("den_MP = ", den_MP, "\n")
+  }
+  
   alpha    <- num_alpha_MP / den_MP
   beta     <- num_beta_MP / den_MP
   iS_ShMP  <- alpha * iS_MP + beta * Pi0
@@ -183,7 +189,7 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov)
 
 #' @rdname Moore_Penrose_shrinkage
 #' @export
-Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov)
+Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov, verbose = 0)
 {
   # Get sizes of Y
   p = nrow(Y)
@@ -254,12 +260,19 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov)
   }
   d2Sig2<-ihv0*d1Sig2-ihv0_2*(d1Sig-d2)
   
-  num_a_MP<-d1Sig*q2-d1Sig2*q1
-  num_b_MP<--(d2Sig2-d1Sig2*h3/h2)*q1/h2-d1Sig*d1Sig2/h2
+  num_alpha_MP<-d1Sig*q2-d1Sig2*q1
+  num_beta_MP<--(d2Sig2-d1Sig2*h3/h2)*q1/h2-d1Sig*d1Sig2/h2
   den_MP<--(d2Sig2-d1Sig2*h3/h2)*q2/h2-d1Sig2^2/h2
-  ha_MP<-num_a_MP/den_MP
-  hb_MP<-num_b_MP/den_MP
-  iS_ShMP<-ha_MP*iS_MP+hb_MP*Ip
+  
+  if (verbose){
+    cat("num_alpha_MP = ", num_alpha_MP, "\n")
+    cat("num_beta_MP = ", num_beta_MP, "\n")
+    cat("den_MP = ", den_MP, "\n")
+  }
+  
+  ha_MP <- num_alpha_MP / den_MP
+  hb_MP <- num_beta_MP / den_MP
+  iS_ShMP<-ha_MP * iS_MP + hb_MP * Ip
   
   return(iS_ShMP)
 }
