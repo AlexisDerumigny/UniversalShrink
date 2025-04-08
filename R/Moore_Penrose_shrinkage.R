@@ -155,7 +155,7 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov)
   q1    <- tr(S) / p
   q1Pi0 <- tr(S %*% Pi0) / p
   q1Pi02 <- tr(S %*% Pi0 %*% Pi0) / p
-  q2 <- tr(S %*% S) / p - c_n * q1 * q1
+  q2 <- tr(S %*% S) / p - c_n * q1 * q1Pi0
   q2Pi0 <- tr(S %*% S %*% Pi0) / p - c_n * q1 * q1Pi0
   q2Pi02 <- tr(S %*% S %*% Pi0 %*% Pi0) / p - c_n * q1 * q1Pi02
   
