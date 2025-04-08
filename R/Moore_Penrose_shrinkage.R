@@ -160,7 +160,11 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov)
   q2Pi02 <- tr(S %*% S %*% Pi0 %*% Pi0) / p - c_n * q1 * q1Pi02
   
   d1Sig  <- ihv0 * (ihv0 / c_n - d1)
-  d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 / c_n)
+  if (centeredCov){
+    d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 * (1 - 1/n) /c_n)
+  } else {
+    d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 / c_n)
+  }
   d1Sig2Pi0 <- ihv0_2 * (q1Pi0 + d1Pi0) - 2 * ihv0^3 * (tr(Pi0) / p - d0Pi0)
   
   d2Sig2 <- ihv0 * d1Sig2 - ihv0_2 * (d1Sig - d2)
