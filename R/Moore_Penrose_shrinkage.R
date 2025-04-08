@@ -240,10 +240,14 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov)
   
   q1<-sum(diag(S))/p
   q2<-sum(diag(S%*%S))/p-c_n*(q1^2)
-  # TODO: update this value in case of centering
   
   d1Sig<-ihv0*(ihv0/c_n-d1)
-  d1Sig2<-ihv0_2*(q1+d1-2*ihv0/c_n)
+  
+  if (centeredCov){
+    d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 * (1 - 1/n) /c_n)
+  } else {
+    d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 / c_n)
+  }
   d2Sig2<-ihv0*d1Sig2-ihv0_2*(d1Sig-d2)
   
   num_a_MP<-d1Sig*q2-d1Sig2*q1
