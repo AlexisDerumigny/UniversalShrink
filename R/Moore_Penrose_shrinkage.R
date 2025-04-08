@@ -100,10 +100,6 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
     # Moore-Penrose inverse
     iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
   }
-  eigenS <- eigen(S)
-  U <- eigenS$vectors
-  
-  D_MP <- diag(eigen(iS_MP)$values)
   
   ##### shrinkage MP
   trS1 <- tr(iS_MP) / p
@@ -225,12 +221,6 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov, verbose = 0)
     # Moore-Penrose inverse
     iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
   }
-  
-  eigenS <- eigen(S)
-  U <- eigenS$vectors
-  
-  ##### Moore-Penrose inverse
-  D_MP <- diag(eigen(iS_MP)$values)
   
   ##### shrinkage MP
   trS1<-sum(diag(iS_MP))/p
