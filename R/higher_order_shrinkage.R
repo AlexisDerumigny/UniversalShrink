@@ -9,10 +9,9 @@ tr <- function(M){
 # Compute the matrix M for the higher-order shrinkage
 compute_M <- function(m, n, p, ihv0, D_MP, q1 = q1, q2 = q2)
 {
-  v <- rep(0, 2*m)
-  h <- rep(0, 2*m+1)
-  d <- matrix(0, nrow = 2 * m, ncol = 2)
-  s <- rep(q2 , (2*m+1))
+  v <- rep(NA, 2*m)
+  h <- rep(NA, 2*m+1)
+  d <- matrix(NA, nrow = 2 * m, ncol = 2)
   
   h[2] <- h2
   h[3] <- h3
@@ -21,7 +20,6 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1 = q1, q2 = q2)
   {
     v[i] <- (-1)^i * factorial(i) * c_n * (1/p) * tr(D_MP^(i+1))
   }
-  
   
   if (m > 1)
   { 
@@ -51,26 +49,48 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1 = q1, q2 = q2)
     }
   }
   
+  s2 <- rep(NA , 2 * m + 1)
+  s2[1] <- q2
+  
   for (j in 1:(2*m))
   {
-    ss <- 0
+    s2[j+1] <- 0
     for (k in 1:j)
     {
-      ss <- ss + (-1)^(j+k+1) * factorial(k) / factorial(j) * d[k,2] * 
-        kStatistics::e_eBellPol(j, k, c(v[1:(j-k+1)], rep(0,k-1)))
+      s2[j+1] <- s2[j+1] +
+        (-1)^(j + k + 1) * factorial(k) / factorial(j) * d[k,2] * 
+        kStatistics::e_eBellPol(j, k, c(v[1:(j - k + 1)], rep(0, k - 1)))
     }
-    s[j+1] <- ss
   }
   
-  M <- s[1:(m+1)]
+  M <- s2[1:(m+1)]
   for (j in 2:(m+1))
   {
-    M <- cbind(M, s[j:(m+j)])
+    M <- cbind(M, s2[j:(m+j)])
   }
   
   M <- apply(M, c(1,2), Re)
   
-  return(M)
+  
+  # Computation of hm
+  
+  hm <- rep(NA, m + 1)
+  
+  hm[1] <- q1
+  
+  for (j in 1:m)
+  {
+    hm[j+1]<-0
+    for (k in 1:j)
+    {
+      hm[j+1] <- hm[j+1] +
+        (-1)^(j + k + 1) * factorial(k) / factorial(j) * d[k,1] *
+        kStatistics::e_eBellPol(j, k, c(v[1:(j - k + 1)], rep(0, k - 1)))
+    }
+  }
+  hm <- Re(hm)
+  
+  return(list(M = M, hm = hm))
 }
 
 
@@ -132,87 +152,18 @@ higher_order_shrinkage <- function(Y, m, centeredCov)
   ihv0_2 <- ihv0^2
   ihv0_3 <- ihv0^3
   
-  ##### Shrinkage m order
+  estimatedM = compute_M(m = m, n = n, p = p, ihv0 = ihv0, D_MP = D_MP,
+                         q1 = q1, q2 = q2)
   
+  alpha = solve(estimatedM$M) %*% estimatedM$hm
   
-  hm <- function(m)
-  {
-    hm <- rep(0, m + 1)
-    h  <- rep(0, m + 1)
-    d  <- rep(0, m)
-    v  <- rep(0, m)
-    
-    
-    for (i in 1:m) {
-      v[i]<- (-1)^i * factorial(i) * c_n * (1/p) * tr(D_MP^(i+1))
-    }
-    
-    hm[1]<- q1
-    
-    h[2]<- h2
-    h[3]<- h3
-    
-    if (m > 1) { 
-      for (i in 3:m) {
-        sh <- 0
-        for (k in 2:(i-1)) {
-          sh <- sh + (-1)^k * factorial(k) * h[k+1] * 
-            kStatistics::e_eBellPol(i, k, c(v[1:(i-k+1)], rep(0,k-1)))
-        }
-        h[i+1] <- (v[i] + v[1] * sh) / ((v[1])^(i+1) * (-1)^(i+1) * factorial(i))
-      }
-    }
-    
-    for (k in 1:m)
-    {
-      d[k] <- 1 / c_n * (1 / (hv0^(k+1)) - h[k+1])
-    }
-    
-    hm[1]<-q1
-    for (j in 1:m)
-    {
-      s<-0
-      for (k in 1:j)
-      {
-        s<- s + (-1)^(j+k+1)*factorial(k)/factorial(j)*d[k] *
-          kStatistics::e_eBellPol(j,k,c(v[1:(j-k+1)],rep(0,k-1)))
-      }
-      hm[j+1]<- s
-    }
-    hm<- Re(hm)
-    return(hm)
+  result = alpha[1] * Ip
+  power_isMP = Ip
+  
+  for (k in 1:m){
+    power_isMP = power_isMP %*% iS_MP
+    result = result + alpha[k + 1] * power_isMP
   }
-  
-  
-  # alpha_m1 <- solve(compute_M(m = 1, n = n, p = p, ihv0 = ihv0, D_MP = D_MP,
-  #                             q1 = q1, q2 = q2)) %*% hm(1)
-  
-  alpha_m2 <- solve(compute_M(m = 2, n = n, p = p, ihv0 = ihv0, D_MP = D_MP,
-                              q1 = q1, q2 = q2)) %*% hm(2)
-  
-  alpha_m3 <- solve(compute_M(m = 3, n = n, p = p, ihv0 = ihv0, D_MP = D_MP,
-                              q1 = q1, q2 = q2)) %*% hm(3)
-  
-  alpha_m4 <- solve(compute_M(m = 4, n = n, p = p, ihv0 = ihv0, D_MP = D_MP,
-                              q1 = q1, q2 = q2)) %*% hm(4)
-  
-  alpha_m5 <- solve(compute_M(m = 5, n = n, p = p, ihv0 = ihv0, D_MP = D_MP,
-                              q1 = q1, q2 = q2)) %*% hm(5)
-  
-  
-  # high_shrink1<- alpha_m1[1]*Ip+alpha_m1[2]*iS_MP
-  high_shrink2 <- alpha_m2[1]*Ip + alpha_m2[2]*iS_MP + alpha_m2[3]*iS_MP%*%iS_MP
-  
-  high_shrink3 <- alpha_m3[1]*Ip + alpha_m3[2]*iS_MP + alpha_m3[3]*iS_MP%*%iS_MP + 
-    alpha_m3[4]*iS_MP%*%iS_MP%*%iS_MP
-  
-  high_shrink4 <- alpha_m4[1]*Ip + alpha_m4[2]*iS_MP + alpha_m4[3]*iS_MP%*%iS_MP + 
-    alpha_m4[4]*iS_MP%*%iS_MP%*%iS_MP + alpha_m4[5]*iS_MP%*%iS_MP%*%iS_MP%*%iS_MP
-  
-  high_shrink5 <- alpha_m5[1]*Ip + alpha_m5[2]*iS_MP + alpha_m5[3]*iS_MP%*%iS_MP + 
-    alpha_m5[4]*iS_MP%*%iS_MP%*%iS_MP + alpha_m5[5]*iS_MP%*%iS_MP%*%iS_MP%*%iS_MP + 
-    alpha_m5[6]*iS_MP%*%iS_MP%*%iS_MP%*%iS_MP%*%iS_MP
-  
   
 }
 
