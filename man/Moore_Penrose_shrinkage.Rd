@@ -5,9 +5,9 @@
 \alias{Moore_Penrose_shrinkage_toIP}
 \title{First-order shrinkage of the Moore-Penrose inverse towards a general target}
 \usage{
-Moore_Penrose_shrinkage(Y, Pi0 = NULL, centeredCov)
+Moore_Penrose_shrinkage(Y, Pi0 = NULL, centeredCov, verbose = 0)
 
-Moore_Penrose_shrinkage_toIP(Y, centeredCov)
+Moore_Penrose_shrinkage_toIP(Y, centeredCov, verbose = 0)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).

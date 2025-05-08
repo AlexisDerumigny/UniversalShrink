@@ -4,17 +4,33 @@
 \alias{higher_order_shrinkage}
 \title{Higher order shrinkage}
 \usage{
-higher_order_shrinkage(Y, Pi0 = NULL)
+higher_order_shrinkage(Y, m, centeredCov)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
 TODO: transpose everything.}
 
-\item{Pi0}{prior of the precision matrix. This a \code{p} by \code{p} matrix, used as
-a target for the shrinkage. Default value is the identity matrix of size \code{p}.
-As an advice, it should be a symmetric positive-definite matrix, but this is
-not checked for.}
+\item{m}{order of the shrinkage. Should be at least 1.}
 }
 \description{
 Higher order shrinkage
+}
+\examples{
+
+n = 100
+p = 5 * n
+mu = rep(0, p)
+
+# Generate Sigma
+X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
+H <- eigen(t(X0) \%*\% X0)$vectors
+Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
+
+# Generate example dataset
+X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
+precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
+precision_higher_order_shrinkage = higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE)
+
+
+
 }
