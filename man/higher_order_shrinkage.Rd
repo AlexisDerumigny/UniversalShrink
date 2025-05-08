@@ -28,9 +28,21 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
-precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
-precision_higher_order_shrinkage = higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE)
+precision_MoorePenrose_Cent = 
+    Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
+precision_higher_order_shrinkage_Cent = 
+    higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE)
+    
+precision_MoorePenrose_NoCent = 
+    Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
+precision_higher_order_shrinkage_NoCent = 
+    higher_order_shrinkage(Y = t(X), m = 1, centeredCov = FALSE)
 
+FrobeniusNorm2 <- function(M){sum(diag(M \%*\% t(M)))}
+FrobeniusNorm2(precision_MoorePenrose_Cent \%*\% Sigma - diag(p) ) / p
+FrobeniusNorm2(precision_higher_order_shrinkage_Cent \%*\% Sigma - diag(p) ) / p
+FrobeniusNorm2(precision_MoorePenrose_NoCent \%*\% Sigma - diag(p) ) / p
+FrobeniusNorm2(precision_higher_order_shrinkage_NoCent \%*\% Sigma - diag(p) ) / p
 
 
 }
