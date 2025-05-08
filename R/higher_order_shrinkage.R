@@ -117,8 +117,8 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' 
 #' @examples
 #' 
-#' n = 100
-#' p = 5 * n
+#' n = 50
+#' p = 2 * n
 #' mu = rep(0, p)
 #' 
 #' # Generate Sigma
@@ -128,21 +128,30 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' 
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
-#' precision_MoorePenrose_Cent = 
-#'     Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
-#' precision_higher_order_shrinkage_Cent = 
-#'     higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE)
-#'     
-#' precision_MoorePenrose_NoCent = 
-#'     Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
-#' precision_higher_order_shrinkage_NoCent = 
-#'     higher_order_shrinkage(Y = t(X), m = 1, centeredCov = FALSE)
 #' 
 #' FrobeniusNorm2 <- function(M){sum(diag(M %*% t(M)))}
+#' 
+#' precision_MoorePenrose_Cent = 
+#'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
+#' precision_MoorePenrose_NoCent = 
+#'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
+#'   
 #' FrobeniusNorm2(precision_MoorePenrose_Cent %*% Sigma - diag(p) ) / p
-#' FrobeniusNorm2(precision_higher_order_shrinkage_Cent %*% Sigma - diag(p) ) / p
 #' FrobeniusNorm2(precision_MoorePenrose_NoCent %*% Sigma - diag(p) ) / p
-#' FrobeniusNorm2(precision_higher_order_shrinkage_NoCent %*% Sigma - diag(p) ) / p
+#' 
+#' for (m in 1:5){
+#'   print(m)
+#'   precision_higher_order_shrinkage_Cent = 
+#'       higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE)
+#'       
+#'   precision_higher_order_shrinkage_NoCent = 
+#'       higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE)
+#'       
+#'   print(FrobeniusNorm2(precision_higher_order_shrinkage_Cent %*% Sigma - diag(p) ) / p)
+#'   
+#'   print(FrobeniusNorm2(precision_higher_order_shrinkage_NoCent %*% Sigma - diag(p) ) / p)
+#' }
+#' 
 #' 
 #' 
 #' @export
@@ -207,6 +216,8 @@ higher_order_shrinkage <- function(Y, m, centeredCov)
   estimatedM = compute_M(m = m, n = n, p = p, ihv0 = ihv0, D_MP = D_MP,
                          q1 = q1, q2 = q2, h2 = h2, h3 = h3, hv0 = hv0,
                          centeredCov = centeredCov)
+  
+  # TODO: compute all estimators for smaller m here using submatrices of this matrix
   
   alpha = solve(estimatedM$M) %*% estimatedM$hm
   
