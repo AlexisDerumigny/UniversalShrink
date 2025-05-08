@@ -7,8 +7,9 @@ tr <- function(M){
 
 
 # Compute the matrix M for the higher-order shrinkage
-compute_M <- function(m, n, p, ihv0, D_MP, q1 = q1, q2 = q2)
+compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 {
+  c_n = p/n
   v <- rep(NA, 2*m)
   h <- rep(NA, 2*m+1)
   d <- matrix(NA, nrow = 2 * m, ncol = 2)
@@ -183,8 +184,15 @@ higher_order_shrinkage <- function(Y, m, centeredCov)
   ihv0_2 <- ihv0^2
   ihv0_3 <- ihv0^3
   
+  h2 <- 1 / (trS2 * c_n)
+  h3 <- trS3 / (trS2^3 * c_n^2)
+  
+  q1 <- tr(S) / p
+  q2 <- tr(S %*% S) / p - c_n * q1^2
+  
   estimatedM = compute_M(m = m, n = n, p = p, ihv0 = ihv0, D_MP = D_MP,
-                         q1 = q1, q2 = q2)
+                         q1 = q1, q2 = q2, h2 = h2, h3 = h3, hv0 = hv0,
+                         centeredCov = centeredCov)
   
   alpha = solve(estimatedM$M) %*% estimatedM$hm
   
@@ -196,5 +204,6 @@ higher_order_shrinkage <- function(Y, m, centeredCov)
     result = result + alpha[k + 1] * power_isMP
   }
   
+  return(result)
 }
 
