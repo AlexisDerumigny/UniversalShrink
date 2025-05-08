@@ -3,5 +3,6 @@
 export(Moore_Penrose_shrinkage)
 export(Moore_Penrose_shrinkage_toIP)
 export(analytical_NL_shrinkage)
+export(higher_order_shrinkage)
 export(optimal_ridge_shrinkage)
 export(quadratic_inverse_shrinkage)
