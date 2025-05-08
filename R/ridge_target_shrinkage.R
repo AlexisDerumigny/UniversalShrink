@@ -7,64 +7,139 @@
 #' @param Y data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
+#' @examples
+#' 
+#' n = 100
+#' p = 5 * n
+#' mu = rep(0, p)
+#' 
+#' # Generate Sigma
+#' X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
+#' H <- eigen(t(X0) %*% X0)$vectors
+#' Sigma = H %*% diag(seq(1, 0.02, length.out = p)) %*% t(H)
+#' 
+#' # Generate example dataset
+#' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
+#' precision_ridge_target_Cent = 
+#'     ridge_target_identity(Y = t(X), centeredCov = TRUE)
+#'     
+#' precision_ridge_target_NoCent = 
+#'     ridge_target_identity(Y = t(X), centeredCov = FALSE)
+#' 
+#' FrobeniusNorm2 <- function(M){sum(diag(M %*% t(M)))}
+#' 
+#' FrobeniusNorm2(precision_ridge_target_Cent %*% Sigma - diag(p) ) / p
+#' FrobeniusNorm2(precision_ridge_target_NoCent %*% Sigma - diag(p) ) / p
 #' 
 #' 
-ridge_target_identity <- function (Y){
+#' @export
+ridge_target_identity <- function (Y, centeredCov){
   
+  # Get sizes of Y
+  p = nrow(Y)
+  n = ncol(Y)
+  
+  # Identity matrix of size p
+  Ip = diag(nrow = p)
+  
+  if (centeredCov){
+    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
+    
+    # Sample covariance matrix
+    S <- Y %*% Jn %*% t(Y) / (n-1)
+    
+    # We remove the last eigenvector because the eigenvalues are sorted
+    # in decreasing order.
+    Hn = eigen(Jn)$vectors[, -n]
+    Ytilde = Y %*% Hn
+    
+    # Inverse companion covariance
+    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
+    
+    # Moore-Penrose inverse
+    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
+    
+    c_n = p / (n-1)
+  } else {
+    S <- Y %*% t(Y)/n
+    
+    # Inverse companion covariance
+    iY <- solve(t(Y) %*% Y / n)
+    
+    # Moore-Penrose inverse
+    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
+    
+    c_n = p / n
+  }
+  
+  r = (c_n - 1)/c_n
+  
+  q1 <- tr(S) / p
+  q2 <- tr(S %*% S) / p - c_n * q1^2
   
   ##### shrinkage Ridge
   
-  hL2R<-function(u)
+  hL2R <- function(u)
   {
-    t<-tan(u)
-    iS_Rt<-solve(S+t*Ip)
-    trS1_t<-sum(diag(iS_Rt))/p
-    trS2_t<-sum(diag(iS_Rt%*%iS_Rt))/p
+    t <- tan(u)
+    iS_Rt <- solve(S + t * Ip)
+    trS1_t <- sum(diag(iS_Rt)) / p
+    trS2_t <- sum(diag(iS_Rt %*% iS_Rt)) / p
     
-    hvt<-c_n*(trS1_t-r/t)
-    hvprt<--c_n*(trS2_t-r/t/t)
-    ihvt<-1/hvt
-    ihvt_2<-ihvt^2
+    hvt <- c_n * (trS1_t - r / t)
+    hvprt <- - c_n * (trS2_t - r / t^2)
+    ihvt <- 1 / hvt
+    ihvt_2 <- ihvt^2
     
-    d0_t<-t*trS1_t
-    d1_t<- -(t*trS2_t-d0_t/t)/(trS2_t-r/t/t)/c_n
+    d0_t <- t * trS1_t
+    d1_t <- - ( t * trS2_t - d0_t / t) / (trS2_t - r / t^2) / c_n
     
-    d0Sig_t<-ihvt/c_n-t/c_n
-    d0Sig2_t<-ihvt*(q1-d0Sig_t)
-    d1Sig2_t<-ihvt_2*(q1+d1_t-2*d0Sig_t)
+    d0Sig_t <- ihvt / c_n - t / c_n
+    d0Sig2_t <- ihvt * (q1 - d0Sig_t)
+    d1Sig2_t <- ihvt_2 * (q1 + d1_t - 2 * d0Sig_t)
     
-    num_a_ShRt<-d0Sig_t*q2-d0Sig2_t*q1
-    den_ShRt<-(d0Sig2_t+t*hvprt*d1Sig2_t)*q2-d0Sig2_t^2
-    L2_ShRt<-num_a_ShRt^2/den_ShRt/q2
+    num_a_ShRt <- d0Sig_t * q2 - d0Sig2_t * q1
+    den_ShRt <- (d0Sig2_t + t * hvprt * d1Sig2_t) * q2 - d0Sig2_t^2
+    L2_ShRt <- num_a_ShRt^2 / den_ShRt / q2
+    
     return(L2_ShRt)
   }
   
-  hL2R_max <- optim(1.5, hL2R,lower = eps, upper = upp, method= "L-BFGS-B", control = list(fnscale = -1))
-  u_R<- hL2R_max$par
+  # TODO: provide this as an option for the user
+  initialValue = 1.5
+  eps <- 1/(10^6)
+  upp <- pi/2 - eps
   
-  t_R<-tan(u_R)
-  iS_Rt1<-solve(S+t_R*Ip)
-  trS1_t1<-sum(diag(iS_Rt1))/p
-  trS2_t1<-sum(diag(iS_Rt1%*%iS_Rt1))/p
+  hL2R_max <- optim(par = initialValue, fn = hL2R,
+                    lower = eps, upper = upp,
+                    method= "L-BFGS-B", control = list(fnscale = -1))
   
-  hvt1<-c_n*(trS1_t1-r/t_R)
-  hvprt1<--c_n*(trS2_t1-r/t_R/t_R)
-  ihvt1<-1/hvt1
-  ihvt1_2<-ihvt1^2
+  u_R <- hL2R_max$par
   
-  d0_t1<-t_R*trS1_t1
-  d1_t1<- -(t_R*trS2_t1-d0_t1/t_R)/(trS2_t1-r/t_R/t_R)/c_n
+  t_R <- tan(u_R)
+  iS_Rt1 <- solve(S+t_R*Ip)
+  trS1_t1 <- sum(diag(iS_Rt1)) / p
+  trS2_t1 <- sum(diag(iS_Rt1 %*% iS_Rt1)) / p
   
-  d0Sig_t1<-ihvt1/c_n-t_R/c_n
-  d0Sig2_t1<-ihvt1*(q1-d0Sig_t1)
-  d1Sig2_t1<-ihvt1_2*(q1+d1_t1-2*d0Sig_t1)
+  hvt1 <- c_n * (trS1_t1 - r / t_R)
+  hvprt1 <- - c_n * (trS2_t1 - r / t_R^2)
+  ihvt1 <- 1 / hvt1
+  ihvt1_2 <- ihvt1^2
   
-  num_a_ShRt1<-d0Sig_t1*q2-d0Sig2_t1*q1
-  num_b_ShRt1<-(d0Sig2_t1/t_R+hvprt1*d1Sig2_t1)*q1-d0Sig_t1*d0Sig2_t1/t_R
-  den_ShRt1<-(d0Sig2_t1/t_R+hvprt1*d1Sig2_t1)*q2-d0Sig2_t1^2/t_R
-  ha_ShRt1<-num_a_ShRt1/den_ShRt1
-  hb_ShRt1<-num_b_ShRt1/den_ShRt1
-  iS_ShRt1<-ha_ShRt1*iS_Rt1+hb_ShRt1*Ip
+  d0_t1 <- t_R * trS1_t1
+  d1_t1 <- -(t_R * trS2_t1 - d0_t1 / t_R) * c_n / (trS2_t1 - r / t_R^2)
   
+  d0Sig_t1 <- ihvt1 / c_n - t_R / c_n
+  d0Sig2_t1 <- ihvt1 * (q1 - d0Sig_t1)
+  d1Sig2_t1 <- ihvt1_2*(q1 + d1_t1 - 2 * d0Sig_t1)
+  
+  num_a_ShRt1 <- d0Sig_t1 * q2 - d0Sig2_t1 * q1
+  num_b_ShRt1 <- (d0Sig2_t1 / t_R + hvprt1 * d1Sig2_t1) * q1 - d0Sig_t1 * d0Sig2_t1 / t_R
+  den_ShRt1 <- (d0Sig2_t1 / t_R + hvprt1 * d1Sig2_t1) * q2 - d0Sig2_t1^2 / t_R
+  ha_ShRt1 <- num_a_ShRt1 / den_ShRt1
+  hb_ShRt1 <- num_b_ShRt1 / den_ShRt1
+  iS_ShRt1 <- ha_ShRt1 * iS_Rt1 + hb_ShRt1 * Ip
+  
+  return(iS_ShRt1)
 }
 

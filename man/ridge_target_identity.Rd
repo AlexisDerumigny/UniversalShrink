@@ -4,7 +4,7 @@
 \alias{ridge_target_identity}
 \title{Ridge with target set to the identity}
 \usage{
-ridge_target_identity(Y)
+ridge_target_identity(Y, centeredCov)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
@@ -12,4 +12,30 @@ TODO: transpose everything.}
 }
 \description{
 Ridge with target set to the identity
+}
+\examples{
+
+n = 100
+p = 5 * n
+mu = rep(0, p)
+
+# Generate Sigma
+X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
+H <- eigen(t(X0) \%*\% X0)$vectors
+Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
+
+# Generate example dataset
+X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
+precision_ridge_target_Cent = 
+    ridge_target_identity(Y = t(X), centeredCov = TRUE)
+    
+precision_ridge_target_NoCent = 
+    ridge_target_identity(Y = t(X), centeredCov = FALSE)
+
+FrobeniusNorm2 <- function(M){sum(diag(M \%*\% t(M)))}
+
+FrobeniusNorm2(precision_ridge_target_Cent \%*\% Sigma - diag(p) ) / p
+FrobeniusNorm2(precision_ridge_target_NoCent \%*\% Sigma - diag(p) ) / p
+
+
 }
