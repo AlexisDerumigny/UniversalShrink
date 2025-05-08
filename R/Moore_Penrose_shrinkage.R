@@ -63,7 +63,6 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  c_n = p / n
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
@@ -78,7 +77,7 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
     Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
     
     # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / n
+    S <- Y %*% Jn %*% t(Y) / (n-1)
     
     # We remove the last eigenvector because the eigenvalues are sorted
     # in decreasing order.
@@ -86,11 +85,12 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
     Ytilde = Y %*% Hn
     
     # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / n)
+    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1))
     
     # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde)/n
+    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
     
+    c_n = p / (n-1)
   } else {
     S <- Y %*% t(Y)/n
     
@@ -99,6 +99,8 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
     
     # Moore-Penrose inverse
     iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
+    
+    c_n = p / n
   }
   
   ##### shrinkage MP
@@ -156,11 +158,12 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
   q2Pi02 <- tr(S %*% S %*% Pi0 %*% Pi0) / p - c_n * q1 * q1Pi02
   
   d1Sig  <- ihv0 * (ihv0 / c_n - d1)
-  if (centeredCov){
-    d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 * (1 - 1/n) /c_n)
-  } else {
-    d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 / c_n)
-  }
+  # if (centeredCov){
+  #   d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 * (1 - 1/n) /c_n)
+  # } else {
+  #   d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 / c_n)
+  # }
+  d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 / c_n)
   d1Sig2Pi0 <- ihv0_2 * (q1Pi0 + d1Pi0) - 2 * ihv0^3 * (tr(Pi0) / p - d0Pi0)
   
   d2Sig2 <- ihv0 * d1Sig2 - ihv0_2 * (d1Sig - d2)
@@ -190,7 +193,6 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov, verbose = 0)
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  c_n = p / n
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
@@ -199,7 +201,7 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov, verbose = 0)
     Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
     
     # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / n
+    S <- Y %*% Jn %*% t(Y) / (n-1)
     
     # We remove the last eigenvector because the eigenvalues are sorted
     # in decreasing order.
@@ -207,11 +209,12 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov, verbose = 0)
     Ytilde = Y %*% Hn
     
     # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / n)
+    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
     
     # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde)/n
+    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
     
+    c_n = p / (n-1)
   } else {
     S <- Y %*% t(Y)/n
     
@@ -220,6 +223,8 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov, verbose = 0)
     
     # Moore-Penrose inverse
     iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
+    
+    c_n = p / n
   }
   
   ##### shrinkage MP
@@ -243,11 +248,12 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov, verbose = 0)
   
   d1Sig<-ihv0*(ihv0/c_n-d1)
   
-  if (centeredCov){
-    d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 * (1 - 1/n) /c_n)
-  } else {
-    d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 / c_n)
-  }
+  # if (centeredCov){
+  #   d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 * (1 - 1/n) /c_n)
+  # } else {
+  #   d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 / c_n)
+  # }
+  d1Sig2 <- ihv0_2 * (q1 + d1 - 2 * ihv0 / c_n)
   d2Sig2<-ihv0*d1Sig2-ihv0_2*(d1Sig-d2)
   
   num_alpha_MP<-d1Sig*q2-d1Sig2*q1

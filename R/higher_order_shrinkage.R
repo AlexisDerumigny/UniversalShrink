@@ -9,7 +9,12 @@ tr <- function(M){
 # Compute the matrix M for the higher-order shrinkage
 compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 {
-  c_n = p/n
+  if (centeredCov){
+    c_n = p / (n-1)
+  } else {
+    c_n = p/n
+  }
+  
   v <- rep(NA, 2*m)
   h <- rep(NA, 2*m+1)
   d <- matrix(NA, nrow = 2 * m, ncol = 2)
@@ -43,7 +48,13 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
       if (l == 1){
         d[k,l] <- 1 / c_n * (1 / (hv0^(k+1)) - h[k+1])
       } else if (l == 2 && k == 1) {
-        d[k,l] <- ihv0 * (ihv0 * (q1 - ihv0 * (1 / c_n)) - d[1,1])
+        # if (centeredCov){
+        #   d[k,l] <- ihv0 * (ihv0 * (q1 - ihv0 * ( (1 - 1/n) / c_n ) ) - d[1,1] )
+        # } else {
+        #   d[k,l] <- ihv0 * (ihv0 * (q1 - ihv0 * ( 1 / c_n ) ) - d[1,1] )
+        # }
+        
+        d[k,l] <- ihv0 * (ihv0 * (q1 - ihv0 * ( 1 / c_n ) ) - d[1,1] )
       } else if (l == 2 && k > 1) {
         d[k,l] <- ihv0 * (d[k-1,2] - d[k,1])
       }
@@ -141,7 +152,6 @@ higher_order_shrinkage <- function(Y, m, centeredCov)
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  c_n = p / n
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
@@ -150,7 +160,7 @@ higher_order_shrinkage <- function(Y, m, centeredCov)
     Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
     
     # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / n
+    S <- Y %*% Jn %*% t(Y) / (n-1)
     
     # We remove the last eigenvector because the eigenvalues are sorted
     # in decreasing order.
@@ -158,10 +168,12 @@ higher_order_shrinkage <- function(Y, m, centeredCov)
     Ytilde = Y %*% Hn
     
     # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / n)
+    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
     
     # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde)/n
+    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
+    
+    c_n = p / (n-1)
     
   } else {
     S <- Y %*% t(Y)/n
@@ -171,6 +183,8 @@ higher_order_shrinkage <- function(Y, m, centeredCov)
     
     # Moore-Penrose inverse
     iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
+    
+    c_n = p / n
   }
   
   D_MP <- diag(eigen(iS_MP)$values)
