@@ -1,0 +1,81 @@
+---
+title: "Comparison_GMV"
+output: rmarkdown::html_vignette
+vignette: >
+%\VignetteIndexEntry{Comparison_GMV}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  ---
+  
+  ```{r, include = FALSE}
+knitr::opts_chunk$set(
+collapse = TRUE,
+comment = "#>"
+)
+```
+
+
+```{r setup}
+library(UniversalShrink)
+```
+
+
+
+```{r}
+n = 50
+p = 2 * n
+mu = rep(0, p)
+
+# Generate Sigma
+X0 <- MASS::mvrnorm(n = n, mu = mu, Sigma = diag(p))
+H <- eigen(t(X0) %*% X0)$vectors
+Sigma = H %*% diag(seq(1, 0.02, length.out = p)) %*% t(H)
+
+# Generate example dataset
+X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
+
+ones = rep(1, length = p)
+V_GMV = 1 / ( t(ones) %*% solve(Sigma) %*% ones)
+
+
+LossFunction_GMV <- function(weights){
+  outOfSampleVariance = t(weights) %*% Sigma %*% weights
+  
+  Loss_GMV = (outOfSampleVariance - V_GMV) / V_GMV
+  
+  return (Loss_GMV)
+}
+```
+
+
+
+```{r}
+list_GMV = list(
+  GMV_MP_shrinkage = GMV_Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE),
+  
+  GMV_MP = GMV_Moore_Penrose(Y = t(X), centeredCov = TRUE),
+  
+  GMV_plugin_MP_shrinked_toIP = GMV_PlugIn(
+    Moore_Penrose_shrinkage_toIP(Y = t(X), centeredCov = TRUE)),
+  
+  GMV_plugin_ridge_target_shrinked_toIP = GMV_PlugIn(
+    ridge_target_identity(Y = t(X), centeredCov = TRUE)),
+  
+  GMV_plugin_optimal_ridge_shrinkage = GMV_PlugIn(
+    optimal_ridge_shrinkage(Y = t(X))),
+  
+  GMV_plugin_inv_quadratic_inverse_shrinkage = GMV_PlugIn(
+    solve(quadratic_inverse_shrinkage(X = X, centeredCov = TRUE))),
+  
+  GMV_plugin_higher_order_shrinkage_5 = GMV_PlugIn(
+    higher_order_shrinkage(Y = t(X), m = 5, centeredCov = TRUE))
+)
+```
+
+
+```{r}
+sapply(X = list_GMV, FUN = LossFunction_GMV)
+```
+
+
+
