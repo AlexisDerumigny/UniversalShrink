@@ -36,9 +36,7 @@ V_GMV = 1 / ( t(ones) \%*\% solve(Sigma) \%*\% ones)
 
 Loss_GMV_Moore_Penrose_shrinkage = (outOfSampleVariance - V_GMV) / V_GMV
 
-iS_MP = Moore_Penrose(Y = t(X), centeredCov = TRUE)
-
-GMV_MP_Cent = (iS_MP \%*\% ones) / (sum(iS_MP))
+GMV_MP_Cent = GMV_Moore_Penrose(Y = t(X), centeredCov = TRUE)
 outOfSampleVariance = t(GMV_MP_Cent) \%*\% Sigma \%*\% GMV_MP_Cent
 
 Loss_GMV_Moore_Penrose = (outOfSampleVariance - V_GMV) / V_GMV

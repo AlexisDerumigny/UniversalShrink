@@ -29,9 +29,7 @@
 #' 
 #' Loss_GMV_Moore_Penrose_shrinkage = (outOfSampleVariance - V_GMV) / V_GMV
 #' 
-#' iS_MP = Moore_Penrose(Y = t(X), centeredCov = TRUE)
-#' 
-#' GMV_MP_Cent = (iS_MP %*% ones) / (sum(iS_MP))
+#' GMV_MP_Cent = GMV_Moore_Penrose(Y = t(X), centeredCov = TRUE)
 #' outOfSampleVariance = t(GMV_MP_Cent) %*% Sigma %*% GMV_MP_Cent
 #' 
 #' Loss_GMV_Moore_Penrose = (outOfSampleVariance - V_GMV) / V_GMV
@@ -92,9 +90,7 @@ GMV_Moore_Penrose_shrinkage <- function(Y, b = NULL, centeredCov = TRUE){
     c_n = p / n
   }
   
-  # w_MP = (iS_MP %*% ones) / (ones %*% iS_MP %*% ones)
-  # Faster and equivalent expression:
-  w_MP = rowSums(iS_MP) / sum(iS_MP)
+  w_MP = GMV_PlugIn(estimatedPrecisionMatrix = iS_MP)
   
   trS1 <- sum(diag(iS_MP)) / p
   trS2 <- sum(diag(iS_MP %*% iS_MP))/p
