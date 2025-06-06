@@ -17,9 +17,11 @@ comment = "#>"
 
 ```{r setup}
 library(UniversalShrink)
+library(tidyverse)
 ```
 
 
+# Generation of the data
 
 ```{r}
 n = 50
@@ -45,9 +47,15 @@ LossFunction_GMV <- function(weights){
   
   return (Loss_GMV)
 }
+
+OutOfSampleVariance <- function(weights){
+  outOfSampleVariance = t(weights) %*% Sigma %*% weights
+  
+  return (outOfSampleVariance)
+}
 ```
 
-
+# Computation of the estimators
 
 ```{r}
 list_GMV = list(
@@ -67,14 +75,93 @@ list_GMV = list(
   GMV_plugin_inv_quadratic_inverse_shrinkage = GMV_PlugIn(
     solve(quadratic_inverse_shrinkage(X = X, centeredCov = TRUE))),
   
+  GMV_plugin_higher_order_shrinkage_2 = GMV_PlugIn(
+    higher_order_shrinkage(Y = t(X), m = 2, centeredCov = TRUE)),
+  
+  GMV_plugin_higher_order_shrinkage_3 = GMV_PlugIn(
+    higher_order_shrinkage(Y = t(X), m = 3, centeredCov = TRUE)),
+  
+  GMV_plugin_higher_order_shrinkage_4 = GMV_PlugIn(
+    higher_order_shrinkage(Y = t(X), m = 4, centeredCov = TRUE)),
+  
   GMV_plugin_higher_order_shrinkage_5 = GMV_PlugIn(
-    higher_order_shrinkage(Y = t(X), m = 5, centeredCov = TRUE))
+    higher_order_shrinkage(Y = t(X), m = 5, centeredCov = TRUE)),
+  
+  GMV_plugin_higher_order_shrinkage_6 = GMV_PlugIn(
+    higher_order_shrinkage(Y = t(X), m = 6, centeredCov = TRUE))
 )
 ```
 
 
+# Visualization of the loss
+
 ```{r}
-sapply(X = list_GMV, FUN = LossFunction_GMV)
+all_losses = sapply(X = list_GMV, FUN = LossFunction_GMV)
+print(all_losses)
+```
+
+
+```{r}
+df_all_losses = data.frame(
+  loss = unname(all_losses),
+  method = names(all_losses)
+)
+
+
+df_all_losses |>
+  # filter(method != "GMV_MP") |>
+  arrange(desc(loss)) |>
+  mutate(method = factor(method, levels = method)) |>
+  ggplot() +
+  geom_col(aes(x = method, y = loss)) +
+  guides(x =  guide_axis(angle = 45))
+```
+
+## Focusing on GMV_plugin_higher_order_shrinkage
+
+```{r}
+df_all_losses = data.frame(
+  loss = unname(all_losses),
+  method = names(all_losses)
+)
+
+
+df_all_losses_higher_order = df_all_losses[
+  grep("GMV_plugin_higher_order_shrinkage_", x = df_all_losses$method), ] |>
+  mutate(m = as.numeric(str_sub(method, start= -1)))
+
+
+ggplot(df_all_losses_higher_order) +
+  geom_col(aes(x = m, y = loss)) +
+  scale_y_log10()
+```
+
+
+# Comparison of the out of sample variance
+
+```{r}
+all_OutOfSampleVariance = sapply(X = list_GMV, FUN = OutOfSampleVariance)
+
+all_OutOfSampleVariance = c(all_OutOfSampleVariance, V_GMV = V_GMV)
+
+print(all_OutOfSampleVariance)
+```
+
+
+```{r}
+df_all_OutOfSampleVariance = data.frame(
+  outOfSampleVariance = unname(all_OutOfSampleVariance),
+  method = names(all_OutOfSampleVariance)
+)
+
+
+df_all_OutOfSampleVariance |>
+  # filter(method != "GMV_MP") |>
+  arrange(desc(outOfSampleVariance)) |>
+  mutate(method = factor(method, levels = method)) |>
+  ggplot() +
+  geom_col(aes(x = method, y = outOfSampleVariance)) +
+  guides(x =  guide_axis(angle = 45))
 ```
 
 
