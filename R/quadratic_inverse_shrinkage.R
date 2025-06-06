@@ -6,7 +6,7 @@
 #' This function estimates the covariance matrix as a given data set using
 #' quadratic inverse shrinkage.
 #' 
-#' @param Y data matrix (rows are observations, columns are features).
+#' @param X data matrix (rows are observations, columns are features).
 #' 
 #' @returns the estimator of the covariance matrix
 #' (a `p` by `p` matrix).
@@ -30,23 +30,23 @@
 #' mean((eigen(Sigma)$values - eigen(estimatedCov_shrink)$values)^2)
 #' 
 #' @export
-quadratic_inverse_shrinkage <- function(Y, k = NA) {
-  # Y: raw data matrix
-  # k: degree of freedom adjustment (default: 1)
+quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE) {
+  Y = t(X)
+  n <- nrow(X) # Sample size
+  p <- ncol(X) # Matrix dimension
   
-  N <- nrow(Y) # Sample size
-  p <- ncol(Y) # Matrix dimension
-  
-  # Default settings
-  if (is.na(k) || is.null(k)) {
-    Y <- scale(Y, center = TRUE, scale = FALSE) # Demean the raw data matrix
-    k <- 1
+  if (centeredCov){
+    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
+    
+    # Sample covariance matrix
+    sample <- Y %*% Jn %*% t(Y) / (n-1)
+    
+    c = p / (n-1)
+  } else {
+    sample <- Y %*% t(Y)/n
+    
+    c = p / n
   }
-  
-  n <- N - k  # Adjust effective sample size
-  c <- p / n  # Concentration ratio
-  
-  sample <- (t(Y) %*% Y) / n  # Sample covariance matrix
   
   eig_decomp <- eigen(sample, symmetric = TRUE) # Spectral decomposition
   lambda <- sort(eig_decomp$values)  # Sorted eigenvalues (ascending)

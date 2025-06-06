@@ -4,10 +4,10 @@
 \alias{quadratic_inverse_shrinkage}
 \title{Quadratic inverse shrinkage}
 \usage{
-quadratic_inverse_shrinkage(Y, k = NA)
+quadratic_inverse_shrinkage(X, centeredCov = TRUE)
 }
 \arguments{
-\item{Y}{data matrix (rows are observations, columns are features).}
+\item{X}{data matrix (rows are observations, columns are features).}
 }
 \value{
 the estimator of the covariance matrix
