@@ -15,7 +15,7 @@ First-order shrinkage of the Moore-Penrose portfolio towards a general target
 }
 \examples{
 n = 50
-p = 5 * n
+p = 2 * n
 mu = rep(0, p)
 
 # Generate Sigma
@@ -26,7 +26,26 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-GMV_Moore_Penrose_shrinkage_Cent = 
+GMV_MP_shrinkage_Cent = 
   GMV_Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
+
+outOfSampleVariance = t(GMV_MP_shrinkage_Cent) \%*\% Sigma \%*\% GMV_MP_shrinkage_Cent
+
+ones = rep(1, length = p)
+V_GMV = 1 / ( t(ones) \%*\% solve(Sigma) \%*\% ones)
+
+Loss_GMV_Moore_Penrose_shrinkage = (outOfSampleVariance - V_GMV) / V_GMV
+
+iS_MP = Moore_Penrose(Y = t(X), centeredCov = TRUE)
+
+GMV_MP_Cent = (iS_MP \%*\% ones) / (sum(iS_MP))
+outOfSampleVariance = t(GMV_MP_Cent) \%*\% Sigma \%*\% GMV_MP_Cent
+
+Loss_GMV_Moore_Penrose = (outOfSampleVariance - V_GMV) / V_GMV
+
+# Shrinkage helps to reduce the loss
+stopifnot(Loss_GMV_Moore_Penrose_shrinkage < Loss_GMV_Moore_Penrose)
+
+
 
 }
