@@ -2,15 +2,15 @@
 title: "Comparison_GMV"
 output: rmarkdown::html_vignette
 vignette: >
-%\VignetteIndexEntry{Comparison_GMV}
+  %\VignetteIndexEntry{Comparison_GMV}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  ---
-  
-  ```{r, include = FALSE}
-knitr::opts_chunk$set(
-collapse = TRUE,
-comment = "#>"
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE,
+                      comment = "#>"
 )
 ```
 
