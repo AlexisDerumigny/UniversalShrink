@@ -115,9 +115,9 @@ GMV_Moore_Penrose_shrinkage <- function(Y, b = NULL, centeredCov = TRUE){
   d0<-1-tbip%*%S%*%iS_MP%*%bip/p
   d1<-bipiSbip/p/trS2/c_n  
   d1_b<-((1-d0)/(hv0)-d1)/hv0
-  d3<-(bipiS3bip/trS2^3+2*bipiSbip*trS3^2/p/trS2^5-(bipiS2bip+trS4*bipiSbip/p)/trS2^4)/c_n^3
+  d3<-(bipiS3bip/trS2^3+2*bipiSbip*trS3^2/p/trS2^5-(bipiS2bip+trS4*bipiSbip)/trS2^4)/c_n^3
   
-  alp_ShMP <- sum(bipSbip / p - d1_b / d1) / sum(bipSbip/p-2*d1_b/d1+d3/d1^2)
+  alp_ShMP <- sum(bipSbip - d1_b / d1) / sum(bipSbip-2*d1_b/d1+d3/d1^2)
   
   cat("alp_ShMP = ", alp_ShMP, "\n")
   
