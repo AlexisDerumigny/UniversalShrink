@@ -19,9 +19,10 @@ quadratic inverse shrinkage.
 }
 \examples{
 p = 200
+n = 400
 Sigma = diag(seq(1, 0.02, length.out = p))
 mu = rep(0, p)
-X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
+X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 estimatedCov_sample = cov(X)
 estimatedCov_shrink = quadratic_inverse_shrinkage(X)
 

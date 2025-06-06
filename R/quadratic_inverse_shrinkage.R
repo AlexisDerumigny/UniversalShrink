@@ -19,9 +19,10 @@
 #' 
 #' @examples
 #' p = 200
+#' n = 400
 #' Sigma = diag(seq(1, 0.02, length.out = p))
 #' mu = rep(0, p)
-#' X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
+#' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' estimatedCov_sample = cov(X)
 #' estimatedCov_shrink = quadratic_inverse_shrinkage(X)
 #' 
@@ -41,12 +42,15 @@ quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE) {
     # Sample covariance matrix
     sample <- Y %*% Jn %*% t(Y) / (n-1)
     
-    c = p / (n-1)
+    # Adjusted sample size
+    n_adjusted <- n - 1
+    
   } else {
     sample <- Y %*% t(Y)/n
     
-    c = p / n
+    n_adjusted <- n
   }
+  c = p / n_adjusted
   
   eig_decomp <- eigen(sample, symmetric = TRUE) # Spectral decomposition
   lambda <- sort(eig_decomp$values)  # Sorted eigenvalues (ascending)
@@ -55,23 +59,24 @@ quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE) {
   # COMPUTE Quadratic-Inverse Shrinkage estimator of the covariance matrix
   h <- min(c^2, 1/c^2)^0.35 / p^0.35  # Smoothing parameter
   
-  invlambda <- 1 / lambda[max(1, p - n + 1):p] # Inverse of non-null eigenvalues
+  invlambda <- 1 / lambda[max(1, p - n_adjusted + 1):p] # Inverse of non-null eigenvalues
   
-  Lj <- matrix(rep(invlambda, each = min(p, n)), ncol = min(p, n)) # Like 1/lambda_j
+  # Like 1/lambda_j
+  Lj <- matrix(rep(invlambda, each = min(p, n_adjusted)), ncol = min(p, n_adjusted))
   Lj_i <- Lj - t(Lj) # (1/lambda_j) - (1/lambda_i)
   
   theta <- rowMeans(Lj * Lj_i / (Lj_i^2 + h^2 * Lj^2)) # Smoothed Stein shrinker
   Htheta <- rowMeans(Lj * (h * Lj) / (Lj_i^2 + h^2 * Lj^2)) # Conjugate term
   Atheta2 <- theta^2 + Htheta^2 # Squared amplitude
   
-  if (p <= n) {
+  if (p <= n_adjusted) {
     # Case where sample covariance matrix is not singular
     delta <- 1 / ((1 - c)^2 * invlambda + 2 * c * (1 - c) * invlambda * theta +
                     c^2 * invlambda * Atheta2) # Optimally shrunk eigenvalues
   } else {
     # Case where sample covariance matrix is singular
     delta0 <- 1 / ((c - 1) * mean(invlambda)) # Shrinkage of null eigenvalues
-    delta <- c(rep(delta0, p - n), 1 / (invlambda * Atheta2))
+    delta <- c(rep(delta0, p - n_adjusted), 1 / (invlambda * Atheta2))
   }
   
   deltaQIS <- delta * (sum(lambda) / sum(delta)) # Preserve trace
