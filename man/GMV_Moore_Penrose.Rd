@@ -2,7 +2,7 @@
 % Please edit documentation in R/GMV_Moore_Penrose.R
 \name{GMV_Moore_Penrose}
 \alias{GMV_Moore_Penrose}
-\title{Optimal portfolio weights based on a plug-oin of the Moore-Penrose inverse
+\title{Optimal portfolio weights based on a plug-in of the Moore-Penrose inverse
 of the sample covariance matrix}
 \usage{
 GMV_Moore_Penrose(Y, centeredCov = TRUE)
@@ -12,6 +12,6 @@ GMV_Moore_Penrose(Y, centeredCov = TRUE)
 TODO: transpose everything.}
 }
 \description{
-Optimal portfolio weights based on a plug-oin of the Moore-Penrose inverse
+Optimal portfolio weights based on a plug-in of the Moore-Penrose inverse
 of the sample covariance matrix
 }

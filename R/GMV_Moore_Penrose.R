@@ -1,6 +1,6 @@
 
 
-#' Optimal portfolio weights based on a plug-oin of the Moore-Penrose inverse
+#' Optimal portfolio weights based on a plug-in of the Moore-Penrose inverse
 #' of the sample covariance matrix
 #' 
 #'
