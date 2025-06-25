@@ -38,11 +38,15 @@ h_hat_jp1_t <- function(h_hat_until_j, v_hat_until_j, j)
   
   ugly_sum <- 0
   
-  for (k in 2:(j-1))
-  {
-    ugly_sum <- ugly_sum +
-      (-1)^(k) * factorial(k) * h_hat_until_j[k+1] *
-      kStatistics::e_eBellPol(j, k, c(v_hat_until_j[1:(j - k + 1)], rep(0, k - 1)) )
+  if (j > 2){
+    # This is the sum from to 2 to j-1, so if j == 2, then the sum is empty
+    # so we compute the sum only if j > 2.
+    for (k in 2:(j-1))
+    {
+      ugly_sum <- ugly_sum +
+        (-1)^(k) * factorial(k) * h_hat_until_j[k+1] *
+        kStatistics::e_eBellPol(j, k, c(v_hat_until_j[1:(j - k + 1)], rep(0, k - 1)) )
+    }
   }
   
   numerator = v_hat_until_j[j] + v_hat_until_j[1] * ugly_sum
