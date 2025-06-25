@@ -102,7 +102,7 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
   }
   hm <- Re(hm)
   
-  return(list(M = M, hm = hm))
+  return(list(M = M, hm = hm, v = v))
 }
 
 
@@ -229,6 +229,13 @@ higher_order_shrinkage <- function(Y, m, centeredCov)
     result = result + alpha[k + 1] * power_isMP
   }
   
-  return(result)
+  
+  return(list(
+    estimated_precision_matrix = result,
+    M = estimatedM$M,
+    hm = estimatedM$hm,
+    alpha = alpha,
+    v = estimatedM$v
+  ) )
 }
 
