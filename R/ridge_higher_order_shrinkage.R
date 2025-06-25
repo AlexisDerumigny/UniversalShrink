@@ -15,6 +15,10 @@ v_hat_j_of_t <- function(t, j, S_t_inverse_pow_jp1, c_n)
   
   result = (-1)^j * factorial(j) * c_n * 
     ( tr(S_t_inverse_pow_jp1) / p - (c_n - 1)/c_n * t^(-(j+1) ) )
+  
+  # cat("j = ", j, "; trace = ", tr(S_t_inverse_pow_jp1) / p, "\n")
+  
+  return(result)
 }
 
 
@@ -169,7 +173,7 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t)
   }
   hm <- Re(hm)
   
-  return(list(M = M, hm = hm))
+  return(list(M = M, hm = hm, v = v))
 }
 
 
@@ -204,21 +208,23 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t)
 #'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
 #' precision_MoorePenrose_NoCent = 
 #'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
-#'   
-#' FrobeniusNorm2(precision_MoorePenrose_Cent %*% Sigma - diag(p) ) / p
-#' FrobeniusNorm2(precision_MoorePenrose_NoCent %*% Sigma - diag(p) ) / p
+#'
+#' FrobeniusLoss2 <- function(M){FrobeniusNorm2(M %*% Sigma - diag(p) ) / p}
+#'
+#' print(FrobeniusLoss2(precision_MoorePenrose_Cent))
+#' print(FrobeniusLoss2(precision_MoorePenrose_NoCent))
 #' 
 #' for (m in 1:5){
 #'   cat("m = ", m, "\n")
 #'   precision_higher_order_shrinkage_Cent = 
-#'       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE, t = 1)
+#'       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE, t = 10)
 #'       
 #'   precision_higher_order_shrinkage_NoCent = 
-#'       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE, t = 1)
+#'       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE, t = 10)
 #'       
-#'   print(FrobeniusNorm2(precision_higher_order_shrinkage_Cent %*% Sigma - diag(p) ) / p)
+#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix))
 #'   
-#'   print(FrobeniusNorm2(precision_higher_order_shrinkage_NoCent %*% Sigma - diag(p) ) / p)
+#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent$estimated_precision_matrix))
 #' }
 #' 
 #' 
@@ -272,6 +278,12 @@ ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t)
     result = result + alpha[k + 1] * power_S_t_inverse
   }
   
-  return(result)
+  return(list(
+    estimated_precision_matrix = result,
+    M = estimatedM$M,
+    hm = estimatedM$hm,
+    alpha = alpha,
+    v = estimatedM$v
+  ) )
 }
 
