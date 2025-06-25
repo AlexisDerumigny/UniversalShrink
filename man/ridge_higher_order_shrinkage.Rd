@@ -37,21 +37,23 @@ precision_MoorePenrose_Cent =
   Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
 precision_MoorePenrose_NoCent = 
   Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
-  
-FrobeniusNorm2(precision_MoorePenrose_Cent \%*\% Sigma - diag(p) ) / p
-FrobeniusNorm2(precision_MoorePenrose_NoCent \%*\% Sigma - diag(p) ) / p
+
+FrobeniusLoss2 <- function(M){FrobeniusNorm2(M \%*\% Sigma - diag(p) ) / p}
+
+print(FrobeniusLoss2(precision_MoorePenrose_Cent))
+print(FrobeniusLoss2(precision_MoorePenrose_NoCent))
 
 for (m in 1:5){
-  print(m)
+  cat("m = ", m, "\n")
   precision_higher_order_shrinkage_Cent = 
-      ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE)
+      ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE, t = 10)
       
   precision_higher_order_shrinkage_NoCent = 
-      ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE, t = 1)
+      ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE, t = 10)
       
-  print(FrobeniusNorm2(precision_higher_order_shrinkage_Cent \%*\% Sigma - diag(p) ) / p)
+  print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix))
   
-  print(FrobeniusNorm2(precision_higher_order_shrinkage_NoCent \%*\% Sigma - diag(p) ) / p)
+  print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent$estimated_precision_matrix))
 }
 
 

@@ -107,7 +107,7 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 
 
 
-#' Higher order shrinkage
+#' Moore-Penrose higher order shrinkage
 #' 
 #' 
 #' @param Y data matrix (rows are features, columns are observations).
@@ -136,27 +136,29 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' precision_MoorePenrose_NoCent = 
 #'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
 #'   
-#' FrobeniusNorm2(precision_MoorePenrose_Cent %*% Sigma - diag(p) ) / p
-#' FrobeniusNorm2(precision_MoorePenrose_NoCent %*% Sigma - diag(p) ) / p
+#' FrobeniusLoss2 <- function(M){FrobeniusNorm2(M %*% Sigma - diag(p) ) / p}
+#'
+#' print(FrobeniusLoss2(precision_MoorePenrose_Cent))
+#' print(FrobeniusLoss2(precision_MoorePenrose_NoCent))
 #' 
 #' for (m in 1:5){
-#'   print(m)
+#'   cat("m = ", m, "\n")
 #'   precision_higher_order_shrinkage_Cent = 
-#'       higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE)
+#'       Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE, t = 10)
 #'       
 #'   precision_higher_order_shrinkage_NoCent = 
-#'       higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE)
+#'       Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE, t = 10)
 #'       
-#'   print(FrobeniusNorm2(precision_higher_order_shrinkage_Cent %*% Sigma - diag(p) ) / p)
+#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix))
 #'   
-#'   print(FrobeniusNorm2(precision_higher_order_shrinkage_NoCent %*% Sigma - diag(p) ) / p)
+#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent$estimated_precision_matrix))
 #' }
 #' 
 #' 
 #' 
 #' @export
 #' 
-higher_order_shrinkage <- function(Y, m, centeredCov)
+Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov)
 {
   # Get sizes of Y
   p = nrow(Y)
