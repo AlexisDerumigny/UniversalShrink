@@ -109,7 +109,7 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t)
   
   for (j in 1:(2*m)){
     S_t_inverse_pow_jp1 = S_t_inverse %*% S_t_inverse_pow_jp1
-    v[j] <- v_hat_j_of_t(t = t, j = 1,
+    v[j] <- v_hat_j_of_t(t = t, j = j,
                          S_t_inverse_pow_jp1 = S_t_inverse_pow_jp1,
                          c_n = c_n)
   }
