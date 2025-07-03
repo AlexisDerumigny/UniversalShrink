@@ -23,7 +23,7 @@
 #' Sigma = diag(seq(1, 0.02, length.out = p))
 #' mu = rep(0, p)
 #' X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
-#' precision_OptimalRidge = optimal_ridge_shrinkage(t(X))
+#' precision_OptimalRidge = ridge_shrinkage_rescaled_optimal(t(X))
 #' 
 #' precisionTrue = solve(Sigma)
 #' 
@@ -39,7 +39,7 @@
 #' 
 #' 
 #' @export
-optimal_ridge_shrinkage <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
+ridge_shrinkage_rescaled_optimal <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
 {
   if (eps <= 0 || eps > pi/2){
     stop("'eps' must be between 0 and pi/2")
@@ -60,6 +60,10 @@ optimal_ridge_shrinkage <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
+  # We are looking for an optimal rescaled ridge of the form
+  # alpha * (Sn + t * Ip)^1
+  # alpha can be optimized explicitly, but the objective has to be optimized
+  # explicitly in t.
   hL_WPTZ<- function(u)
   {
     t<-tan(u)
@@ -77,7 +81,7 @@ optimal_ridge_shrinkage <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
   
   hL_WPTZ_max <- optim(1.5, hL_WPTZ, lower = eps, upper = upp, method = "L-BFGS-B",
                        control = list(fnscale = -1))
-  hL_WPTZ_bet <- tan(hL_WPTZ_max$par)
+  t_optimal <- tan(hL_WPTZ_max$par)
   
   iS_t<-solve(S/hL_WPTZ_bet + Ip)
   tr_iS_t<-sum(diag(iS_t))/p
@@ -86,9 +90,13 @@ optimal_ridge_shrinkage <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
   
   hR1<-a1/(1-c_n*a1)
   hR2<-a1/((1-c_n*a1)^3)-a2/((1-c_n*a1)^4)
-  hL_WPTZ_alp<-hR1/hR2
+  alpha_optimal <- hR1 / hR2
   
-  iS_WPTZ <- hL_WPTZ_alp*solve(S +hL_WPTZ_bet * Ip)
+  # We are looking for an optimal rescaled ridge of the form
+  # alpha * (Sn + t * Ip)^1
+  # This is the final estimator of the precision matrix
+  # using the optimal parameters that were found.
+  iS_WPTZ <- alpha_optimal * solve(S + t_optimal * Ip)
   
   return (iS_WPTZ)
 }
