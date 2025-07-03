@@ -118,8 +118,8 @@ ridge_target_identity_optimal <- function (Y, centeredCov){
   
   t_R <- tan(u_R)
   iS_Rt1 <- solve(S+t_R*Ip)
-  trS1_t1 <- sum(diag(iS_Rt1)) / p
-  trS2_t1 <- sum(diag(iS_Rt1 %*% iS_Rt1)) / p
+  trS1_t1 <- tr(iS_Rt1) / p
+  trS2_t1 <- tr(iS_Rt1 %*% iS_Rt1) / p
   
   hvt1 <- c_n * (trS1_t1 - r / t_R)
   hvprt1 <- - c_n * (trS2_t1 - r / t_R^2)
@@ -198,8 +198,8 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t){
   
   
   iS_ridge <- solve(S + t * Ip)
-  trS1_t <- sum(diag(iS_ridge)) / p
-  trS2_t <- sum(diag(iS_ridge %*% iS_ridge)) / p
+  trS1_t <- tr(iS_ridge) / p
+  trS2_t <- tr(iS_ridge %*% iS_ridge) / p
   
   hvt1 <- c_n * (trS1_t - r / t)
   hvprt1 <- - c_n * (trS2_t - r / t^2)

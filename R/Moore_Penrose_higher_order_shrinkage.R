@@ -1,11 +1,4 @@
 
-
-# Trace function of a matrix
-tr <- function(M){
-  return (sum(diag(M)))
-}
-
-
 # Compute the matrix M for the higher-order shrinkage
 compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 {
