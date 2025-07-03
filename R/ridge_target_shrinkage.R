@@ -216,7 +216,23 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t){
   num_a_ShRt1 <- d0Sig_t1 * q2 - d0Sig2_t1 * q1
   num_b_ShRt1 <- (d0Sig2_t1 / t + hvprt1 * d1Sig2_t1) * q1 - d0Sig_t1 * d0Sig2_t1 / t
   
+  
   den_ShRt1 <- (d0Sig2_t1 / t + hvprt1 * d1Sig2_t1) * q2 - d0Sig2_t1^2 / t
+  
+  # Equivalent representation in terms of hm and M
+  hm = c(q1, d0Sig_t1 / t)
+  
+  M = c(q2                                  , d0Sig2_t1 / t,
+        d0Sig2_t1 / t                       , d0Sig2_t1 / t^2 + hvprt1 * d1Sig2_t1 / t) |>
+    matrix(ncol = 2, byrow = TRUE)
+  
+  det_M = den_ShRt1 / t
+  
+  inv_M = c(d0Sig2_t1 / t^2 + hvprt1 * d1Sig2_t1 / t, - d0Sig2_t1 / t,
+            - d0Sig2_t1 / t                         , q2 ) |>
+    matrix(ncol = 2, byrow = TRUE) / 
+    det_M
+  
   
   alpha <- num_a_ShRt1 / den_ShRt1
   beta <- num_b_ShRt1 / den_ShRt1
@@ -227,7 +243,9 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t){
   return(list(
     estimated_precision_matrix = iS_ShRt1,
     alpha_optimal = alpha,
-    beta_optimal = beta
+    beta_optimal = beta,
+    M = M,
+    hm = hm
   ) )
 }
 
