@@ -4,7 +4,7 @@
 \alias{ridge_higher_order_shrinkage_optimal}
 \title{Ridge higher order shrinkage with optimal t}
 \usage{
-ridge_higher_order_shrinkage_optimal(Y, m, centeredCov)
+ridge_higher_order_shrinkage_optimal(Y, m, centeredCov, interval = c(0, 50))
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
