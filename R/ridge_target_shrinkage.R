@@ -21,10 +21,10 @@
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' precision_ridge_target_Cent = 
-#'     ridge_target_identity(Y = t(X), centeredCov = TRUE)
+#'     ridge_target_identity_optimal(Y = t(X), centeredCov = TRUE)
 #'     
 #' precision_ridge_target_NoCent = 
-#'     ridge_target_identity(Y = t(X), centeredCov = FALSE)
+#'     ridge_target_identity_optimal(Y = t(X), centeredCov = FALSE)
 #' 
 #' FrobeniusNorm2 <- function(M){sum(diag(M %*% t(M)))}
 #' 
@@ -33,7 +33,7 @@
 #' 
 #' 
 #' @export
-ridge_target_identity <- function (Y, centeredCov){
+ridge_target_identity_optimal <- function (Y, centeredCov){
   
   # Get sizes of Y
   p = nrow(Y)
@@ -139,6 +139,123 @@ ridge_target_identity <- function (Y, centeredCov){
   ha_ShRt1 <- num_a_ShRt1 / den_ShRt1
   hb_ShRt1 <- num_b_ShRt1 / den_ShRt1
   iS_ShRt1 <- ha_ShRt1 * iS_Rt1 + hb_ShRt1 * Ip
+  
+  
+  return(list(
+    estimated_precision_matrix = iS_ShRt1,
+    alpha_optimal = ha_ShRt1,
+    beta_optimal = hb_ShRt1,
+    t_optimal = t_R
+  ) )
+}
+
+
+#' @rdname ridge_target_identity_optimal
+#' @export
+ridge_target_identity_semioptimal <- function (Y, centeredCov, t){
+  
+  # Get sizes of Y
+  p = nrow(Y)
+  n = ncol(Y)
+  
+  # Identity matrix of size p
+  Ip = diag(nrow = p)
+  
+  if (centeredCov){
+    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
+    
+    # Sample covariance matrix
+    S <- Y %*% Jn %*% t(Y) / (n-1)
+    
+    # We remove the last eigenvector because the eigenvalues are sorted
+    # in decreasing order.
+    Hn = eigen(Jn)$vectors[, -n]
+    Ytilde = Y %*% Hn
+    
+    # Inverse companion covariance
+    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
+    
+    # Moore-Penrose inverse
+    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
+    
+    c_n = p / (n-1)
+  } else {
+    S <- Y %*% t(Y)/n
+    
+    # Inverse companion covariance
+    iY <- solve(t(Y) %*% Y / n)
+    
+    # Moore-Penrose inverse
+    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
+    
+    c_n = p / n
+  }
+  
+  r = (c_n - 1)/c_n
+  
+  q1 <- tr(S) / p
+  q2 <- tr(S %*% S) / p - c_n * q1^2
+  
+  
+  iS_ridge <- solve(S + t * Ip)
+  trS1_t <- sum(diag(iS_ridge)) / p
+  trS2_t <- sum(diag(iS_ridge %*% iS_ridge)) / p
+  
+  hvt1 <- c_n * (trS1_t - r / t)
+  hvprt1 <- - c_n * (trS2_t - r / t^2)
+  ihvt1 <- 1 / hvt1
+  ihvt1_2 <- ihvt1^2
+  
+  d0_t1 <- t * trS1_t
+  d1_t1 <- -(t * trS2_t - d0_t1 / t) * c_n / (trS2_t - r / t^2)
+  
+  d0Sig_t1 <- ihvt1 / c_n - t / c_n
+  d0Sig2_t1 <- ihvt1 * (q1 - d0Sig_t1)
+  d1Sig2_t1 <- ihvt1_2*(q1 + d1_t1 - 2 * d0Sig_t1)
+  
+  num_a_ShRt1 <- d0Sig_t1 * q2 - d0Sig2_t1 * q1
+  num_b_ShRt1 <- (d0Sig2_t1 / t + hvprt1 * d1Sig2_t1) * q1 - d0Sig_t1 * d0Sig2_t1 / t
+  
+  den_ShRt1 <- (d0Sig2_t1 / t + hvprt1 * d1Sig2_t1) * q2 - d0Sig2_t1^2 / t
+  
+  alpha <- num_a_ShRt1 / den_ShRt1
+  beta <- num_b_ShRt1 / den_ShRt1
+  
+  iS_ShRt1 <- alpha * iS_ridge + beta * Ip
+  
+  
+  return(list(
+    estimated_precision_matrix = iS_ShRt1,
+    alpha_optimal = alpha,
+    beta_optimal = beta
+  ) )
+}
+
+
+#' @rdname ridge_target_identity_optimal
+#' @export
+ridge_target_identity <- function (Y, centeredCov, t, alpha, beta){
+  
+  # Get sizes of Y
+  p = nrow(Y)
+  n = ncol(Y)
+  
+  # Identity matrix of size p
+  Ip = diag(nrow = p)
+  
+  if (centeredCov){
+    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
+    
+    # Sample covariance matrix
+    S <- Y %*% Jn %*% t(Y) / (n-1)
+  } else {
+    S <- Y %*% t(Y)/n
+  }
+  
+  
+  iS_ridge <- solve(S + t * Ip)
+  
+  iS_ShRt1 <- alpha * iS_ridge + beta * Ip
   
   return(iS_ShRt1)
 }
