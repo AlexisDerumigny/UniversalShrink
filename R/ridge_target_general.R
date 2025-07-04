@@ -13,7 +13,7 @@ estimator_d1_thetaknown <- function(Ip, Sn, t, Theta, p, cn){
   denominator = cn * ((1 / p) * tr( iS_ridge %*% iS_ridge) 
                       - t^(-2) * (cn - 1) / cn)
   
-  result = numerator / denominator
+  result = - numerator / denominator
   
   return (result)
 }
