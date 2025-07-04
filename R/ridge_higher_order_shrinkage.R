@@ -103,7 +103,7 @@ compute_d_kl <- function(v_0_t, c_n, kmax, h_hat_kmaxp1_t, t, q1)
 # Compute the matrix M for the higher-order shrinkage
 # the output should be of size m+1
 #
-compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t)
+compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 {
   v_0_t <- v_hat_j_of_t(t = t, j = 0, S_t_inverse_pow_jp1 = S_t_inverse, c_n = c_n)
   
@@ -117,6 +117,12 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t)
                          S_t_inverse_pow_jp1 = S_t_inverse_pow_jp1,
                          c_n = c_n)
   }
+  if (verbose){
+    cat("Estimation of v(t0) = ", v_0_t, "\n\n")
+    cat("Estimation of the derivatives of v:\n")
+    print(v)
+    cat("\n")
+  }
   
   h <- rep(NA, 2*m+1)
   h[2] = - 1 / v[1]
@@ -127,10 +133,21 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t)
                            j = j)
   }
   
+  if (verbose){
+    cat("Estimation of h:\n")
+    print(h)
+    cat("\n")
+  }
   
   d <- compute_d_kl(v_0_t = v_0_t, c_n = c_n, kmax = 2 * m,
                     h_hat_kmaxp1_t = h[2:(2*m+1)],
                     t = t, q1 = q1)
+  
+  if (verbose){
+    cat("Estimation of d[k,l]:\n")
+    print(d)
+    cat("\n")
+  }
   
   s2 <- rep(NA , 2 * m + 1)
   s2[1] <- q2
@@ -148,6 +165,12 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t)
           kStatistics::e_eBellPol(j, k, c(v[1:(j - k + 1)], rep(0, k - 1)))
       }
     }
+  }
+  
+  if (verbose){
+    cat("Estimation of s[, 2]:\n")
+    print(s2)
+    cat("\n")
   }
   
   M <- s2[1:(m+1)]
@@ -177,6 +200,12 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t)
     }
   }
   hm <- Re(hm)
+  
+  if (verbose){
+    cat("Estimation of hm:\n")
+    print(hm)
+    cat("\n")
+  }
   
   return(list(M = M, hm = hm, v = v))
 }
@@ -261,16 +290,30 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t)
 #' 
 #' @export
 #' 
-ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t)
+ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 2)
 {
+  if (verbose){
+    cat("Starting `ridge_higher_order_shrinkage`...\n")
+  }
+  
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
+  
+  if (verbose){
+    cat("*  n = ", n, "\n")
+    cat("*  p = ", p, "\n")
+    cat("*  t = ", t, "\n")
+    cat("*  m = ", m, "\n")
+  }
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
   if (centeredCov){
+    if (verbose){
+      cat("*  centered case\n")
+    }
     Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
     
     # Sample covariance matrix
@@ -279,9 +322,16 @@ ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t)
     c_n = p / (n-1)
     
   } else {
+    if (verbose){
+      cat("*  non-centered case\n")
+    }
+    
     S <- Y %*% t(Y)/n
     
     c_n = p / n
+  }
+  if (verbose){
+    cat("*  c_n = ", c_n, "\n\n")
   }
   
   # Regularized sample covariance matrix (Tikhonov regularization)
@@ -291,14 +341,23 @@ ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t)
   
   q1 <- tr(S) / p
   q2 <- tr(S %*% S) / p - c_n * q1^2
+  if (verbose){
+    cat("Starting values: \n")
+    cat("*  q1 = ", q1, "\n")
+    cat("*  q2 = ", q2, "\n\n")
+  }
   
   estimatedM = compute_M_t(m = m, c_n = c_n, q1 = q1, q2 = q2,
                            S_t_inverse = S_t_inverse,
-                           t = t)
+                           t = t, verbose = verbose)
   
   # TODO: compute all estimators for smaller m here using submatrices of this matrix
   
   alpha = solve(estimatedM$M) %*% estimatedM$hm
+  if (verbose){
+    cat("Optimal alpha: \n")
+    print(alpha)
+  }
   
   result = alpha[1] * Ip
   power_S_t_inverse = Ip
