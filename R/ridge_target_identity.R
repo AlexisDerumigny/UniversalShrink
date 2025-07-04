@@ -243,6 +243,8 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
     cat("Estimators: \n")
     cat("*  hat_v_t0 = ", hvt1, "\n")
     cat("*  hat_vprime_t0 = ", hvprt1, "\n")
+    cat("*  d0(t, Theta) = ", d0_t1, "\n")
+    cat("*  d1(t, Theta) = ", d1_t1, "\n")
     cat("*  d0_1p_Sigma = ", d0Sig_t1, "\n")
     cat("*  d0_1p_Sigma2 = ", d0Sig2_t1, "\n")
     cat("*  d1_1p_Sigma2 = ", d1Sig2_t1, "\n")

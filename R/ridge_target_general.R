@@ -114,6 +114,15 @@ best_alphabeta_ridge_shrinkage <- function(t0, cn, Pi0, Ip, Sn, verbose = verbos
     cat("Estimators: \n")
     cat("*  hat_v_t0 = ", hat_v_t0, "\n")
     cat("*  hat_vprime_t0 = ", hat_vprime_t0, "\n")
+    
+    d0_t0_1p_Pi0 = estimator_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
+    
+    d1_t0_1p_Ip = estimator_d1_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Ip / p,
+                                          p = p, cn = cn)
+    
+    cat("*  d0(t, Theta) = ", d0_t0_1p_Pi0, "\n")
+    cat("*  d1(t, Theta) = ", d1_t0_1p_Ip, "\n")
+    
     cat("*  d0_1p_Sigma = ", d0_1p_Sigma, "\n")
     cat("*  d0_1p_Sigma2 = ", d0_1p_Sigma2, "\n")
     cat("*  d0_1p_Sigma2_Pi0 = ", d0_1p_Sigma2_Pi0, "\n")
