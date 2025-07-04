@@ -92,7 +92,7 @@ ridge_target_identity_optimal <- function (Y, centeredCov){
     ihvt_2 <- ihvt^2
     
     d0_t <- t * trS1_t
-    d1_t <- - ( t * trS2_t - d0_t / t) / (trS2_t - r / t^2) / c_n
+    d1_t <- - ( t * trS2_t - d0_t / t) / (c_n * (trS2_t - r / t^2) )
     
     d0Sig_t <- ihvt / c_n - t / c_n
     d0Sig2_t <- ihvt * (q1 - d0Sig_t)
@@ -127,7 +127,7 @@ ridge_target_identity_optimal <- function (Y, centeredCov){
   ihvt1_2 <- ihvt1^2
   
   d0_t1 <- t_R * trS1_t1
-  d1_t1 <- -(t_R * trS2_t1 - d0_t1 / t_R) * c_n / (trS2_t1 - r / t_R^2)
+  d1_t1 <- -(t_R * trS2_t1 - d0_t1 / t_R) / ( c_n * (trS2_t1 - r / t_R^2) )
   
   d0Sig_t1 <- ihvt1 / c_n - t_R / c_n
   d0Sig2_t1 <- ihvt1 * (q1 - d0Sig_t1)
@@ -207,7 +207,7 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t){
   ihvt1_2 <- ihvt1^2
   
   d0_t1 <- t * trS1_t
-  d1_t1 <- -(t * trS2_t - d0_t1 / t) * c_n / (trS2_t - r / t^2)
+  d1_t1 <- -(t * trS2_t - d0_t1 / t) / ( c_n * (trS2_t - r / t^2) )
   
   d0Sig_t1 <- ihvt1 / c_n - t / c_n
   d0Sig2_t1 <- ihvt1 * (q1 - d0Sig_t1)
