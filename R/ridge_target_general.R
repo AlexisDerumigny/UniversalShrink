@@ -37,8 +37,8 @@ estimator_d0_1p_Sigma <- function(t0, hat_v_t0, cn){
 
 #' Estimator of d0(t0, Sigma^2 / p)
 estimator_d0_1p_Sigma2 <- function(t0, hat_v_t0, cn, Sn){
+  result = (1 / hat_v_t0) * (tr(Sn) / p - (1 / (cn * hat_v_t0)) + t0 / cn)
   
-  result = (1 / hat_v_t0) * (tr(Sn) / p - (1 / cn * hat_v_t0) + t0 / cn)
   return (result)
 }
 
