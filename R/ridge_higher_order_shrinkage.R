@@ -228,6 +228,25 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t)
 #' }
 #' 
 #' 
+#' precision_higher_order_shrinkage_Cent = 
+#'       ridge_higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE, t = 10)
+#' 
+#' precision_target_identity_semioptimal_Cent = 
+#'       ridge_target_identity_semioptimal(Y = t(X), centeredCov = TRUE, t = 10)
+#'
+#' precision_higher_order_shrinkage_Cent$alpha
+#' precision_target_identity_semioptimal_Cent$beta_optimal
+#' precision_target_identity_semioptimal_Cent$alpha_optimal
+#' 
+#' precision_higher_order_shrinkage_Cent$M
+#' precision_target_identity_semioptimal_Cent$M
+#' 
+#' precision_higher_order_shrinkage_Cent$hm
+#' precision_target_identity_semioptimal_Cent$hm
+#' 
+#' FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix)
+#' FrobeniusLoss2(precision_target_identity_semioptimal_Cent$estimated_precision_matrix)
+#' 
 #' 
 #' @export
 #' 
