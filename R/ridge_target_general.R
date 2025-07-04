@@ -36,7 +36,7 @@ estimator_d0_1p_Sigma <- function(t0, hat_v_t0, cn){
 }
 
 #' Estimator of d0(t0, Sigma^2 / p)
-estimator_d0_1p_Sigma2 <- function(t0, hat_v_t0, cn){
+estimator_d0_1p_Sigma2 <- function(t0, hat_v_t0, cn, Sn){
   
   result = (1 / hat_v_t0) * (tr(Sn) / p - (1 / cn * hat_v_t0) + t0 / cn)
   return (result)
@@ -69,12 +69,12 @@ estimator_d1_1p_Sigma2 <- function(t0, hat_v_t0, cn, Pi0, Ip, Sn){
 
 best_alphabeta_ridge_shrinkage <- function(t0, cn, Pi0, Ip, Sn){
   
-  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, Sn = Sn, Ip = Ip)
-  hat_vprime_t0 = estimator_vhat_derivative(t = t0, m = 1, Sn = Sn, Ip = Ip)
+  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, Sn = Sn, Ip = Ip, cn = cn)
+  hat_vprime_t0 = estimator_vhat_derivative(t = t0, m = 1, Sn = Sn, Ip = Ip, cn = cn)
   
   d0_1p_Sigma = estimator_d0_1p_Sigma(t0 = t0, hat_v_t0 = hat_v_t0, cn = cn)
   
-  d0_1p_Sigma2 = estimator_d0_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, cn = cn)
+  d0_1p_Sigma2 = estimator_d0_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, cn = cn, Sn = Sn)
   
   d0_1p_Sigma2_Pi0 = estimator_d0_1p_Sigma2_Pi0(t0 = t0, hat_v_t0 = hat_v_t0,
                                                 cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn)
@@ -82,8 +82,8 @@ best_alphabeta_ridge_shrinkage <- function(t0, cn, Pi0, Ip, Sn){
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, cn = cn,
                                         Pi0 = Pi0, Ip = Ip, Sn = Sn)
   
-  q1 = estimator_q1(Sn = Sn, Theta = Theta)
-  q2 = estimator_q2(Sn = Sn, Theta = Theta, p = p, cn = cn)
+  q1 = estimator_q1(Sn = Sn, Theta = Pi0 / p)
+  q2 = estimator_q2(Sn = Sn, Theta = Pi0 %*% Pi0 / p, p = p, cn = cn)
   
   # Computation of alpha =======================================================
   numerator_alpha = d0_1p_Sigma * q2 - d0_1p_Sigma2_Pi0 * q1
@@ -111,7 +111,7 @@ best_alphabeta_ridge_shrinkage <- function(t0, cn, Pi0, Ip, Sn){
 
 
 
-estimator_vhat_derivative <- function(t, m, Sn, Ip){
+estimator_vhat_derivative <- function(t, m, Sn, Ip, cn){
   
   term1 = (-1)^m * factorial(m) * cn
   
@@ -174,7 +174,7 @@ ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0){
   
   iS_ridge <- solve(S + t * Ip)
   
-  best_alphabeta = best_alphabeta_ridge_shrinkage(t0 = t, cn = cn,
+  best_alphabeta = best_alphabeta_ridge_shrinkage(t0 = t, cn = c_n,
                                                   Pi0 = Pi0, Ip = Ip, Sn = S)
   
   alpha <- best_alphabeta$alpha
