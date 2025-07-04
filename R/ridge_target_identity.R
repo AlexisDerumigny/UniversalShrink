@@ -152,16 +152,30 @@ ridge_target_identity_optimal <- function (Y, centeredCov){
 
 #' @rdname ridge_target_identity_optimal
 #' @export
-ridge_target_identity_semioptimal <- function (Y, centeredCov, t){
+ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
+  
+  if (verbose){
+    cat("Starting `ridge_target_identity_semioptimal`...\n")
+  }
   
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
   
+  if (verbose){
+    cat("*  n = ", n, "\n")
+    cat("*  p = ", p, "\n")
+    cat("*  t = ", t, "\n")
+  }
+  
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
   if (centeredCov){
+    if (verbose){
+      cat("*  centered case\n")
+    }
+    
     Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
     
     # Sample covariance matrix
@@ -180,6 +194,10 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t){
     
     c_n = p / (n-1)
   } else {
+    if (verbose){
+      cat("*  non-centered case\n")
+    }
+    
     S <- Y %*% t(Y)/n
     
     # Inverse companion covariance
@@ -189,6 +207,10 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t){
     iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
     
     c_n = p / n
+  }
+  
+  if (verbose){
+    cat("*  c_n = ", c_n, "\n\n")
   }
   
   r = (c_n - 1)/c_n
@@ -217,6 +239,18 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t){
   num_b_ShRt1 <- (d0Sig2_t1 / t + hvprt1 * d1Sig2_t1) * q1 - d0Sig_t1 * d0Sig2_t1 / t
   
   
+  if (verbose){
+    cat("Estimators: \n")
+    cat("*  hat_v_t0 = ", hvt1, "\n")
+    cat("*  hat_vprime_t0 = ", hvprt1, "\n")
+    cat("*  d0_1p_Sigma = ", d0Sig_t1, "\n")
+    cat("*  d0_1p_Sigma2 = ", d0Sig2_t1, "\n")
+    cat("*  d1_1p_Sigma2 = ", d1Sig2_t1, "\n")
+    cat("*  q1 = ", q1, "\n")
+    cat("*  q2 = ", q2, "\n")
+    cat("\n")
+  }
+  
   den_ShRt1 <- (d0Sig2_t1 / t + hvprt1 * d1Sig2_t1) * q2 - d0Sig2_t1^2 / t
   
   # Equivalent representation in terms of hm and M
@@ -239,6 +273,15 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t){
   
   iS_ShRt1 <- alpha * iS_ridge + beta * Ip
   
+  if (verbose){
+    cat("Optimal values: \n")
+    cat("*  numerator_alpha = ", num_a_ShRt1, "\n")
+    cat("*  numerator_beta = ", num_b_ShRt1, "\n")
+    cat("*  denominator = ", den_ShRt1, "\n")
+    cat("*  alpha = ", alpha, "\n")
+    cat("*  beta = ", beta, "\n")
+    cat("\n")
+  }
   
   return(list(
     estimated_precision_matrix = iS_ShRt1,

@@ -49,7 +49,7 @@ estimator_d0_1p_Sigma2 <- function(t0, hat_v_t0, cn, Sn, verbose = verbose){
     cat("*  result = ", result, "\n\n")
   }
   
-  stopifnot(first_term - second_term == result)
+  stopifnot(all.equal(first_term - second_term , result))
   
   return (result)
 }
@@ -67,6 +67,9 @@ estimator_d0_1p_Sigma2_Pi0 <- function(t0, hat_v_t0, cn, Pi0, Ip, Sn, verbose){
     cat("Estimator of d0(t0, Sigma^2 * Pi_0 / p) : \n")
     cat("*  first_term = ", first_term, "\n")
     cat("*  second_term = ", second_term, "\n")
+    cat("   *  1 / hat_v_t0^2 = ", 1 / hat_v_t0^2, "\n")
+    cat("   *  tr(Pi0) / p = ", tr(Pi0) / p, "\n")
+    cat("   *  d0_t0_1p_Pi0 = ", d0_t0_1p_Pi0, "\n")
     cat("*  result = ", result, "\n\n")
   }
   
