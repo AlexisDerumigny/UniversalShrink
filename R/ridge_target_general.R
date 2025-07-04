@@ -28,7 +28,8 @@ estimator_q2 <- function(Sn, Theta, p, cn){
   return (result)
 }
 
-#' Estimator of d0(t0, Sigma  /p)
+#' Estimator of d0(t0, Sigma / p)
+#' @noRd
 estimator_d0_1p_Sigma <- function(t0, hat_v_t0, cn){
   
   result = 1 / (cn * hat_v_t0) - t0 / cn
@@ -36,6 +37,7 @@ estimator_d0_1p_Sigma <- function(t0, hat_v_t0, cn){
 }
 
 #' Estimator of d0(t0, Sigma^2 / p)
+#' @noRd
 estimator_d0_1p_Sigma2 <- function(t0, hat_v_t0, cn, Sn, verbose = verbose){
   first_term = (1 / hat_v_t0) * (tr(Sn) / p)
   second_term = (1 / hat_v_t0) * ( (1 / (cn * hat_v_t0)) - t0 / cn)
@@ -55,6 +57,7 @@ estimator_d0_1p_Sigma2 <- function(t0, hat_v_t0, cn, Sn, verbose = verbose){
 }
 
 #' Estimator of d0(t0, Sigma^2 * Pi_0 / p)
+#' @noRd
 estimator_d0_1p_Sigma2_Pi0 <- function(t0, hat_v_t0, cn, Pi0, Ip, Sn, verbose){
   first_term = (1 / hat_v_t0) * (1 / p) * tr(Sn %*% Pi0)
   
@@ -77,6 +80,7 @@ estimator_d0_1p_Sigma2_Pi0 <- function(t0, hat_v_t0, cn, Pi0, Ip, Sn, verbose){
 }
 
 #' Estimator of d1(t0, Sigma^2 / p)
+#' @noRd
 estimator_d1_1p_Sigma2 <- function(t0, hat_v_t0, cn, Pi0, Ip, Sn){
   first_term = (1 / hat_v_t0^2)
   

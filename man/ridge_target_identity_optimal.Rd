@@ -8,11 +8,11 @@
 \alias{ridge_target_identity}
 \title{Ridge with target set to the identity}
 \usage{
-ridge_target_general_semioptimal(Y, centeredCov, t, Pi0)
+ridge_target_general_semioptimal(Y, centeredCov, t, Pi0, verbose = 2)
 
 ridge_target_identity_optimal(Y, centeredCov)
 
-ridge_target_identity_semioptimal(Y, centeredCov, t)
+ridge_target_identity_semioptimal(Y, centeredCov, t, verbose = 2)
 
 ridge_target_identity(Y, centeredCov, t, alpha, beta)
 }
