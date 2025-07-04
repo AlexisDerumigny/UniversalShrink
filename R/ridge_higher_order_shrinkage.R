@@ -135,14 +135,18 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t)
   s2 <- rep(NA , 2 * m + 1)
   s2[1] <- q2
   
+  # FIXME !!
   for (j in 1:(2*m))
   {
     s2[j+1] <- 0
-    for (k in 1:j)
-    {
-      s2[j+1] <- s2[j+1] +
-        (-1)^(j + k + 1) * factorial(k) / factorial(j) * d[k,2] * 
-        kStatistics::e_eBellPol(j, k, c(v[1:(j - k + 1)], rep(0, k - 1)))
+    ugly_sum = 0
+    for (i in 1:j){
+      ugly_sum = 0
+      for (k in 1:2){
+        s2[j+1] <- s2[j+1] +
+          (-1)^(j + k + 1) * factorial(k) / factorial(j) * d[k,2] * 
+          kStatistics::e_eBellPol(j, k, c(v[1:(j - k + 1)], rep(0, k - 1)))
+      }
     }
   }
   
@@ -161,6 +165,7 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t)
   
   hm[1] <- q1
   
+  # FIXME !!
   for (j in 1:m)
   {
     hm[j+1]<-0
