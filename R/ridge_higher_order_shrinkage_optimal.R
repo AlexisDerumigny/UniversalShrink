@@ -49,11 +49,22 @@
 #'   print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent$estimated_precision_matrix))
 #' }
 #' 
+#' precision_higher_order_shrinkage_Cent = 
+#'       ridge_higher_order_shrinkage_optimal(Y = t(X), m = 1, centeredCov = TRUE)
+#' 
+#' precision_ridge_target_Cent = 
+#'     ridge_target_identity_optimal(Y = t(X), centeredCov = TRUE)
+#'   
+#' print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix))
+#'   
+#' print(FrobeniusLoss2(precision_ridge_target_Cent$estimated_precision_matrix))
+#' 
 #' 
 #' 
 #' @export
 #' 
-ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov, interval = c(0, 50))
+ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov, interval = c(0, 50),
+                                                 verbose = 2)
 {
   # Get sizes of Y
   p = nrow(Y)
@@ -90,7 +101,7 @@ ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov, interval = c
     loss = tryCatch({
       estimatedM = compute_M_t(m = m, c_n = c_n, q1 = q1, q2 = q2,
                                S_t_inverse = S_t_inverse,
-                               t = t)
+                               t = t, verbose = 0)
       
       loss = 1 - t(estimatedM$hm) %*% solve(estimatedM$M) %*% estimatedM$hm
     }, error = function(e){e}
@@ -122,7 +133,7 @@ ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov, interval = c
   
   estimatedM = compute_M_t(m = m, c_n = c_n, q1 = q1, q2 = q2,
                            S_t_inverse = S_t_inverse,
-                           t = optimal_t)
+                           t = optimal_t, verbose = verbose)
   
   alpha = solve(estimatedM$M) %*% estimatedM$hm
   
