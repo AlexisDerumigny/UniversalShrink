@@ -90,7 +90,7 @@ compute_d_kl <- function(v_0_t, c_n, kmax, h_hat_kmaxp1_t, t, q1)
       d_km1_2 = d_k2[k - 1]
     }
     
-    d_k2[k] <- (d_km1_2 - d_k1[k])
+    d_k2[k] <- (d_km1_2 - d_k1[k]) / v_0_t
   }
   
   result = cbind(c(d_01, d_k1), c(d_02, d_k2))
