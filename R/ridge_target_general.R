@@ -9,7 +9,11 @@ estimator_d1_thetaknown <- function(Ip, Sn, t, Theta, p, cn){
   
   iS_ridge = solve(Sn + t * Ip)
   
-  numerator = t * tr( iS_ridge %*% iS_ridge %*% Theta ) - t^(-1) * estimator_d0_thetaknown(Ip, Sn, t, Theta)
+  numerator_term1 = t * tr( iS_ridge %*% iS_ridge %*% Theta )
+  numerator_term2 = t^(-1) * estimator_d0_thetaknown(Ip, Sn, t, Theta)
+  
+  numerator = numerator_term1 - numerator_term2
+  
   denominator = cn * ((1 / p) * tr( iS_ridge %*% iS_ridge) 
                       - t^(-2) * (cn - 1) / cn)
   
