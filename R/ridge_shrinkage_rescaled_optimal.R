@@ -83,7 +83,7 @@ ridge_shrinkage_rescaled_optimal <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
                        control = list(fnscale = -1))
   t_optimal <- tan(hL_WPTZ_max$par)
   
-  iS_t<-solve(S/hL_WPTZ_bet + Ip)
+  iS_t<-solve(S / t_optimal + Ip)
   tr_iS_t<-sum(diag(iS_t))/p
   a1<-1-tr_iS_t
   a2<-tr_iS_t-sum(diag(iS_t%*%iS_t))/p
