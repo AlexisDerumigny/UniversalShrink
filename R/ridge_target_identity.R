@@ -262,6 +262,12 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
         d0Sig2_t1 / t                       , d0Sig2_t1 / t^2 + hvprt1 * d1Sig2_t1 / t) |>
     matrix(ncol = 2, byrow = TRUE)
   
+  if (verbose){
+    cat("Term of M[2,2] computed as:\n")
+    cat("*  d0Sig2_t1 / t^2: ", d0Sig2_t1 / t^2, "\n")
+    cat("*  hvprt1 * d1Sig2_t1 / t: ", hvprt1 * d1Sig2_t1 / t, "\n\n")
+  }
+  
   det_M = den_ShRt1 / t
   
   inv_M = c(d0Sig2_t1 / t^2 + hvprt1 * d1Sig2_t1 / t, - d0Sig2_t1 / t,

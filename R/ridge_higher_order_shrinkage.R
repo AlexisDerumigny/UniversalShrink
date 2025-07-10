@@ -94,6 +94,8 @@ compute_d_kl <- function(v_0_t, c_n, kmax, h_hat_kmaxp1_t, t, q1)
   }
   
   result = cbind(c(d_01, d_k1), c(d_02, d_k2))
+  colnames(result) <- c("l = 1", "l = 2")
+  rownames(result) <- paste0("k = ", 0:(nrow(result) - 1) )
   
   return (result)
 }
@@ -107,11 +109,11 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 {
   v_0_t <- v_hat_j_of_t(t = t, j = 0, S_t_inverse_pow_jp1 = S_t_inverse, c_n = c_n)
   
-  v = rep(NA, 2 * m)
+  v = rep(NA, 2 * m - 1)
   
   S_t_inverse_pow_jp1 = S_t_inverse
   
-  for (j in 1:(2*m)){
+  for (j in 1:(2*m - 1)){
     S_t_inverse_pow_jp1 = S_t_inverse %*% S_t_inverse_pow_jp1
     v[j] <- v_hat_j_of_t(t = t, j = j,
                          S_t_inverse_pow_jp1 = S_t_inverse_pow_jp1,
@@ -124,13 +126,15 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     cat("\n")
   }
   
-  h <- rep(NA, 2*m+1)
+  h <- rep(NA, 2 * m)
   h[2] = - 1 / v[1]
   
-  for (j in 2:(2*m)){
-    h[j + 1] = h_hat_jp1_t(h_hat_until_j = h[1:j],
-                           v_hat_until_j = v[1:j],
-                           j = j)
+  if (2 <= 2 * m - 1){
+    for (j in 2:(2 * m - 1)){
+      h[j + 1] = h_hat_jp1_t(h_hat_until_j = h[1:j],
+                             v_hat_until_j = v[1:j],
+                             j = j)
+    }
   }
   
   if (verbose){
@@ -139,9 +143,13 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     cat("\n")
   }
   
-  d <- compute_d_kl(v_0_t = v_0_t, c_n = c_n, kmax = 2 * m,
-                    h_hat_kmaxp1_t = h[2:(2*m+1)],
+  d <- compute_d_kl(v_0_t = v_0_t, c_n = c_n, kmax = 2 * m - 1,
+                    h_hat_kmaxp1_t = h[2:(2 * m)],
                     t = t, q1 = q1)
+  
+  if (nrow(d) != 2 * m){
+    stop("d should be of the right size.")
+  }
   
   if (verbose){
     cat("Estimation of d[k,l]:\n")
@@ -149,29 +157,66 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     cat("\n")
   }
   
-  s2 <- rep(NA , 2 * m + 1)
-  s2[1] <- q2
-  
-  # FIXME !!
-  for (j in 1:(2*m))
-  {
-    s2[j+1] <- 0
-    ugly_sum = 0
-    for (i in 1:j){
-      ugly_sum = 0
-      for (k in 1:2){
-        s2[j+1] <- s2[j+1] +
-          (-1)^(j + k + 1) * factorial(k) / factorial(j) * d[k,2] * 
-          kStatistics::e_eBellPol(j, k, c(v[1:(j - k + 1)], rep(0, k - 1)))
+  s <- matrix(nrow = 2 * m, ncol = 2)
+  for (index in 1:(2 * m)){
+    j = index - 1
+    # so that index = j + 1
+    if (verbose){
+      cat("We are now computing s[", index, ",], corresponding to j =", j, "\n",
+          sep = "")
+    }
+    
+    # Remember that d[1,l] corresponds in the paper to d_{0,l}
+    # because indexing starts at 1.
+    s[index, 1] = t^(-j - 1) * d[1, 1]
+    s[index, 2] = t^(-j - 1) * d[1, 2]
+    
+    if (verbose){
+      cat("d[0, 2] = ", d[1, 2], "\n")
+      cat("s[", index, ", 2] =", s[index, 2], "\n", sep = "")
+    }
+    
+    if (j >= 1){
+      # Otherwise the sum is empty
+      for (i in 1:j){
+        for (k in 1:i){
+          if (verbose){
+            cat("This is term i =", i, ", k =", k, "\n")
+          }
+          Bell_polynomial = 
+            kStatistics::e_eBellPol(i, k, c(v[1:(i - k + 1)], rep(0, k - 1)) )
+          
+          multiplicative_factor = t^(- (j - i) - 1) * (-1)^(i + k) * 
+            factorial(k) / factorial(i) * Bell_polynomial
+          
+          if (verbose){
+            cat("Bell_polynomial = ", Bell_polynomial, "\n")
+          }
+          
+          for (l in 1:2){
+            # Remember that d[k + 1, l] corresponds in the paper to d_{k,l}
+            additional_term = multiplicative_factor * d[k + 1, l]
+            
+            if (verbose && (l == 2)){
+              cat("l = ", l, ", d_{k,l} = ", d[k + 1, l], "\n")
+              cat("l = ", l, ", additional_term = ", additional_term, "\n")
+            }
+            
+            s[index, l] = s[index, l] + additional_term
+          }
+        }
       }
     }
   }
   
   if (verbose){
-    cat("Estimation of s[, 2]:\n")
-    print(s2)
+    cat("Estimation of s:\n")
+    print(s)
     cat("\n")
   }
+  
+  # Computation of M  ==========================================================
+  s2 = c(q2, s[, 2])
   
   M <- s2[1:(m+1)]
   for (j in 2:(m+1))
@@ -179,27 +224,9 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     M <- cbind(M, s2[j:(m+j)])
   }
   
-  M <- apply(M, c(1,2), Re)
   
-  
-  # Computation of hm
-  
-  hm <- rep(NA, m + 1)
-  
-  hm[1] <- q1
-  
-  # FIXME !!
-  for (j in 1:m)
-  {
-    hm[j+1]<-0
-    for (k in 1:j)
-    {
-      hm[j+1] <- hm[j+1] +
-        (-1)^(j + k + 1) * factorial(k) / factorial(j) * d[k,1] *
-        kStatistics::e_eBellPol(j, k, c(v[1:(j - k + 1)], rep(0, k - 1)))
-    }
-  }
-  hm <- Re(hm)
+  # Computation of hm  =========================================================
+  hm = c(q1, s[1:m, 1])
   
   if (verbose){
     cat("Estimation of hm:\n")
