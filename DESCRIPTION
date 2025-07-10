@@ -6,7 +6,9 @@ Authors@R: c(
     person("Nestor", "Parolya", , email = "N.Parolya@tudelft.nl", role = c("aut"), comment = c(ORCID = "0000-0003-2147-2288")),
     person("Taras", "Bodnar", email = "taras.bodnar@liu.se", role = "aut", comment = c(ORCID = "0000-0001-7855-8221"))
 	)
-Description: What the package does (one paragraph).
+Description: Provides function for the regularized estimation of high-dimensional 
+    covariance matrices, and functions thereof (inverse of covariance matrices,
+    optimal porfolio weights) by different types of shrinkage methods.
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -17,3 +19,5 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+URL: https://github.com/AlexisDerumigny/UniversalShrink/issues
+BugReports: https://github.com/AlexisDerumigny/UniversalShrink
