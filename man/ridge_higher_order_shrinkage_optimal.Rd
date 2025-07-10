@@ -4,7 +4,13 @@
 \alias{ridge_higher_order_shrinkage_optimal}
 \title{Ridge higher order shrinkage with optimal t}
 \usage{
-ridge_higher_order_shrinkage_optimal(Y, m, centeredCov, interval = c(0, 50))
+ridge_higher_order_shrinkage_optimal(
+  Y,
+  m,
+  centeredCov,
+  interval = c(0, 50),
+  verbose = 2
+)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
@@ -40,8 +46,8 @@ precision_MoorePenrose_NoCent =
 
 FrobeniusLoss2 <- function(M){FrobeniusNorm2(M \%*\% Sigma - diag(p) ) / p}
 
-print(FrobeniusLoss2(precision_MoorePenrose_Cent))
-print(FrobeniusLoss2(precision_MoorePenrose_NoCent))
+FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
+FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
 
 for (m in 1:5){
   cat("m = ", m, "\n")
@@ -51,11 +57,19 @@ for (m in 1:5){
   precision_higher_order_shrinkage_NoCent = 
       ridge_higher_order_shrinkage_optimal(Y = t(X), m = m, centeredCov = FALSE)
       
-  print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix))
+  print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
   
-  print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent$estimated_precision_matrix))
+  print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
 }
 
+precision_higher_order_shrinkage_Cent = 
+      ridge_higher_order_shrinkage_optimal(Y = t(X), m = 1, centeredCov = TRUE)
+
+precision_ridge_target_Cent = 
+    ridge_target_identity_optimal(Y = t(X), centeredCov = TRUE)
+  
+FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
+FrobeniusLoss2(precision_ridge_target_Cent, Sigma = Sigma)
 
 
 }

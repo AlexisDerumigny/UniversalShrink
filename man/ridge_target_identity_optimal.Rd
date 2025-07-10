@@ -42,10 +42,8 @@ precision_ridge_target_Cent =
 precision_ridge_target_NoCent = 
     ridge_target_identity_optimal(Y = t(X), centeredCov = FALSE)
 
-FrobeniusNorm2 <- function(M){sum(diag(M \%*\% t(M)))}
-
-FrobeniusNorm2(precision_ridge_target_Cent \%*\% Sigma - diag(p) ) / p
-FrobeniusNorm2(precision_ridge_target_NoCent \%*\% Sigma - diag(p) ) / p
+FrobeniusLoss2(precision_ridge_target_Cent, Sigma = Sigma)
+FrobeniusLoss2(precision_ridge_target_NoCent, Sigma = Sigma)
 
 
 }

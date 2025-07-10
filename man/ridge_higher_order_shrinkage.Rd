@@ -31,17 +31,11 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-FrobeniusNorm2 <- function(M){sum(diag(M \%*\% t(M)))}
+precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
+precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
 
-precision_MoorePenrose_Cent = 
-  Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
-precision_MoorePenrose_NoCent = 
-  Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
-
-FrobeniusLoss2 <- function(M){FrobeniusNorm2(M \%*\% Sigma - diag(p) ) / p}
-
-print(FrobeniusLoss2(precision_MoorePenrose_Cent))
-print(FrobeniusLoss2(precision_MoorePenrose_NoCent))
+FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
+FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
 
 for (m in 1:5){
   cat("m = ", m, "\n")
@@ -51,20 +45,20 @@ for (m in 1:5){
   precision_higher_order_shrinkage_NoCent = 
       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE, t = 10)
       
-  print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix))
+  print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
   
-  print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent$estimated_precision_matrix))
+  print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
 }
 
 
 precision_higher_order_shrinkage_Cent = 
-      ridge_higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE, t = 100)
+  ridge_higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE, t = 100)
 
 precision_target_identity_semioptimal_Cent = 
-      ridge_target_identity_semioptimal(Y = t(X), centeredCov = TRUE, t = 100)
+  ridge_target_identity_semioptimal(Y = t(X), centeredCov = TRUE, t = 100)
       
 precision_target_general_semioptimal_Cent = 
-      ridge_target_general_semioptimal(Y = t(X), centeredCov = TRUE, t = 100, Pi0 = diag(p))
+  ridge_target_general_semioptimal(Y = t(X), centeredCov = TRUE, t = 100, Pi0 = diag(p))
 
 precision_higher_order_shrinkage_Cent$alpha
 precision_target_identity_semioptimal_Cent$beta_optimal
@@ -79,8 +73,8 @@ precision_target_identity_semioptimal_Cent$M
 precision_higher_order_shrinkage_Cent$hm
 precision_target_identity_semioptimal_Cent$hm
 
-FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix)
-FrobeniusLoss2(precision_target_identity_semioptimal_Cent$estimated_precision_matrix)
+FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
+FrobeniusLoss2(precision_target_identity_semioptimal_Cent, Sigma = Sigma)
 
 
 }

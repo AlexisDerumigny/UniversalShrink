@@ -33,8 +33,8 @@
 #'
 #' FrobeniusLoss2 <- function(M){FrobeniusNorm2(M %*% Sigma - diag(p) ) / p}
 #'
-#' print(FrobeniusLoss2(precision_MoorePenrose_Cent))
-#' print(FrobeniusLoss2(precision_MoorePenrose_NoCent))
+#' FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
+#' FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
 #' 
 #' for (m in 1:5){
 #'   cat("m = ", m, "\n")
@@ -44,9 +44,9 @@
 #'   precision_higher_order_shrinkage_NoCent = 
 #'       ridge_higher_order_shrinkage_optimal(Y = t(X), m = m, centeredCov = FALSE)
 #'       
-#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix))
+#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
 #'   
-#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent$estimated_precision_matrix))
+#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
 #' }
 #' 
 #' precision_higher_order_shrinkage_Cent = 
@@ -55,10 +55,8 @@
 #' precision_ridge_target_Cent = 
 #'     ridge_target_identity_optimal(Y = t(X), centeredCov = TRUE)
 #'   
-#' print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix))
-#'   
-#' print(FrobeniusLoss2(precision_ridge_target_Cent$estimated_precision_matrix))
-#' 
+#' FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
+#' FrobeniusLoss2(precision_ridge_target_Cent, Sigma = Sigma)
 #' 
 #' 
 #' @export

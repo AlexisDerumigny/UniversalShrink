@@ -35,9 +35,9 @@ estimatedCov_QISshrink = quadratic_inverse_shrinkage(X)
 precision_NLshrink = solve(estimatedCov_NLshrink)
 precision_QISshrink = solve(estimatedCov_QISshrink)
 
-mean((eigen(precisionTrue)$values - eigen(precision_OptimalRidge)$values)^2)
-mean((eigen(precisionTrue)$values - eigen(precision_NLshrink)$values)^2)
-mean((eigen(precisionTrue)$values - eigen(precision_QISshrink)$values)^2)
+FrobeniusLoss2(precision_OptimalRidge, Sigma = Sigma)
+FrobeniusLoss2(precision_NLshrink, Sigma = Sigma, type = "precision matrix")
+FrobeniusLoss2(precision_QISshrink, Sigma = Sigma, type = "precision matrix")
 
 
 }
