@@ -140,13 +140,16 @@ ridge_target_identity_optimal <- function (Y, centeredCov){
   hb_ShRt1 <- num_b_ShRt1 / den_ShRt1
   iS_ShRt1 <- ha_ShRt1 * iS_Rt1 + hb_ShRt1 * Ip
   
-  
-  return(list(
+  result = list(
     estimated_precision_matrix = iS_ShRt1,
     alpha_optimal = ha_ShRt1,
     beta_optimal = hb_ShRt1,
     t_optimal = t_R
-  ) )
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
 }
 
 
@@ -291,13 +294,17 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
     cat("\n")
   }
   
-  return(list(
+  result = list(
     estimated_precision_matrix = iS_ShRt1,
     alpha_optimal = alpha,
     beta_optimal = beta,
     M = M,
     hm = hm
-  ) )
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
 }
 
 
@@ -326,6 +333,12 @@ ridge_target_identity <- function (Y, centeredCov, t, alpha, beta){
   
   iS_ShRt1 <- alpha * iS_ridge + beta * Ip
   
-  return(iS_ShRt1)
+  result = list(
+    estimated_precision_matrix = iS_ShRt1
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
 }
 

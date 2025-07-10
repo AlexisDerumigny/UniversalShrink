@@ -98,6 +98,12 @@ ridge_shrinkage_rescaled_optimal <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
   # using the optimal parameters that were found.
   iS_WPTZ <- alpha_optimal * solve(S + t_optimal * Ip)
   
-  return (iS_WPTZ)
+  result = list(
+    estimated_precision_matrix = iS_WPTZ
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
 }
 

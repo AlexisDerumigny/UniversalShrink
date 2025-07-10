@@ -137,22 +137,27 @@ ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov, interval = c
   
   alpha = solve(estimatedM$M) %*% estimatedM$hm
   
-  result = alpha[1] * Ip
+  estimated_precision_matrix = alpha[1] * Ip
   power_S_t_inverse = Ip
   
   for (k in 1:m){
     power_S_t_inverse = power_S_t_inverse %*% S_t_inverse
-    result = result + alpha[k + 1] * power_S_t_inverse
+    estimated_precision_matrix = estimated_precision_matrix + 
+      alpha[k + 1] * power_S_t_inverse
   }
   
-  return(list(
-    estimated_precision_matrix = result,
+  result = list(
+    estimated_precision_matrix = estimated_precision_matrix,
     M = estimatedM$M,
     hm = estimatedM$hm,
     alpha = alpha,
     v = estimatedM$v,
     t = optimal_t,
     estimated_loss = result_optim$objective
-  ) )
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
 }
 

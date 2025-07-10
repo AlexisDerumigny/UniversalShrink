@@ -265,11 +265,14 @@ ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 
   
   iS_ShRt1 <- alpha * iS_ridge + beta * Ip
   
-  
-  return(list(
+  result = list(
     estimated_precision_matrix = iS_ShRt1,
     alpha_optimal = alpha,
     beta_optimal = beta
-  ) )
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
 }
 
