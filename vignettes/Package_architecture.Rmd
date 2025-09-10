@@ -1,0 +1,53 @@
+---
+title: "Package_architecture"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Package_architecture}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(UniversalShrink)
+```
+
+
+
+# 1. Functions for estimation of the covariance matrix
+
+
+- Estimator of the covariance matrix using non-linear shrinkage.
+  The function is: `analytical_NL_shrinkage()`.
+  It is optimal for the Frobenius norm.
+
+
+
+# 2. Functions for estimation of the precision matrix
+
+
+
+
+# 3. Functions for estimation of optimal portfolio weights
+
+
+- From a given precision matrix, one can get the optimal portfolio weights
+  (*GMV* for Global Minimum Variance) using the function `GMV_PlugIn()`. This can
+  also be used by giving as input an estimator of the precision matrix,
+  which then will give as output an estimator of the optimal portfolio weights.
+
+- `GMV_Moore_Penrose()`: using the Moore-Penrose inverse `Moore_Penrose()` of
+  the precision matrix as an input for the plug-in estimation.
+
+- `GMV_Moore_Penrose_shrinkage_toEq()`: performs a first-order shrinkage of the
+  estimator given by `GMV_Moore_Penrose()` towards the equally-weighted portfolio.
+
+
+
+

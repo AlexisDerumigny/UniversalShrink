@@ -1,10 +1,27 @@
 
 
-#' First-order shrinkage of the Moore-Penrose portfolio towards a general target
+#' First-order shrinkage of the Moore-Penrose portfolio towards the equally weighted portfolio
+#'
+#' This function computes
+#' \deqn{\alpha \times w_{MP} + (1 - \alpha) \times \mathbf{1}/p}
+#' where \eqn{\alpha} is a carefully chosen coefficient, \eqn{w_{MP}} is the
+#' vector of optimal portfolio weights estimated as the plug-in of the Moore-Penrose
+#' estimate of the precision matrix and \eqn{\mathbf{1}} is a vector of ones of
+#' size \eqn{p}.
 #'
 #'
 #' @param Y data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
+#' 
+#' @return a vector of size \eqn{p} of (estimated) optimal portfolio weights,
+#' where \eqn{p} is the number of assets.
+#' 
+#' @references 
+#' Nestor Parolya & Taras Bodnar (2024).
+#' Reviving pseudo-inverses: Asymptotic properties of large dimensional
+#' Moore-Penrose and Ridge-type inverses with applications.
+#' \link{https://doi.org/10.48550/arXiv.2403.15792}
+#' 
 #' 
 #' @examples
 #' n = 50
@@ -20,14 +37,14 @@
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
 #' GMV_MP_shrinkage_Cent = 
-#'   GMV_Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
+#'   GMV_Moore_Penrose_shrinkage_toEq(Y = t(X), centeredCov = TRUE)
 #' 
 #' outOfSampleVariance = t(GMV_MP_shrinkage_Cent) %*% Sigma %*% GMV_MP_shrinkage_Cent
 #' 
 #' ones = rep(1, length = p)
 #' V_GMV = 1 / ( t(ones) %*% solve(Sigma) %*% ones)
 #' 
-#' Loss_GMV_Moore_Penrose_shrinkage = (outOfSampleVariance - V_GMV) / V_GMV
+#' Loss_GMV_Moore_Penrose_shrinkage_toEq = (outOfSampleVariance - V_GMV) / V_GMV
 #' 
 #' GMV_MP_Cent = GMV_Moore_Penrose(Y = t(X), centeredCov = TRUE)
 #' outOfSampleVariance = t(GMV_MP_Cent) %*% Sigma %*% GMV_MP_Cent
@@ -35,12 +52,12 @@
 #' Loss_GMV_Moore_Penrose = (outOfSampleVariance - V_GMV) / V_GMV
 #' 
 #' # Shrinkage helps to reduce the loss
-#' stopifnot(Loss_GMV_Moore_Penrose_shrinkage < Loss_GMV_Moore_Penrose)
+#' stopifnot(Loss_GMV_Moore_Penrose_shrinkage_toEq < Loss_GMV_Moore_Penrose)
 #' 
 #' 
 #' 
 #' @export
-GMV_Moore_Penrose_shrinkage <- function(Y, b = NULL, centeredCov = TRUE){
+GMV_Moore_Penrose_shrinkage_toEq <- function(Y, centeredCov = TRUE){
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
@@ -50,15 +67,15 @@ GMV_Moore_Penrose_shrinkage <- function(Y, b = NULL, centeredCov = TRUE){
   # Vector of ones of size p
   ones = rep(1, length = p)
   
-  if (is.null(b)){
-    b = rep(1/p, length = p)
-  } else if (length(b) != p){
-    stop("'b' should be a vector of length 'p'.")
-  }
-  if (abs(sum(b) - 1) > 0.001){
-    stop("The weights (b) should sum up to 1.")
-  }
-  
+  # if (is.null(b)){
+  #   b = rep(1/p, length = p)
+  # } else if (length(b) != p){
+  #   stop("'b' should be a vector of length 'p'.")
+  # }
+  # if (abs(sum(b) - 1) > 0.001){
+  #   stop("The weights (b) should sum up to 1.")
+  # }
+  # 
   
   if (centeredCov){
     Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
@@ -111,13 +128,14 @@ GMV_Moore_Penrose_shrinkage <- function(Y, b = NULL, centeredCov = TRUE){
   d0<-1-tbip%*%S%*%iS_MP%*%bip/p
   d1<-bipiSbip/p/trS2/c_n  
   d1_b<-((1-d0)/(hv0)-d1)/hv0
-  d3<-(bipiS3bip/trS2^3+2*bipiSbip*trS3^2/p/trS2^5-(bipiS2bip+trS4*bipiSbip)/trS2^4)/c_n^3
+  d3<-(bipiS3bip / trS2^3 + 2*bipiSbip*trS3^2 / p / trS2^5 - 
+         (bipiS2bip+trS4*bipiSbip) / trS2^4) / c_n^3
   
   alp_ShMP <- sum(bipSbip - d1_b / d1) / sum(bipSbip-2*d1_b/d1+d3/d1^2)
   
   cat("alp_ShMP = ", alp_ShMP, "\n")
   
-  w_ShMP <- alp_ShMP*w_MP+(1-alp_ShMP)*bip/p
+  w_ShMP <- alp_ShMP * w_MP + (1 - alp_ShMP) * bip / p
   
   return (w_ShMP)
 }
