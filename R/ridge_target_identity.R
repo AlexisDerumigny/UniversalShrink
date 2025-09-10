@@ -3,9 +3,36 @@
 
 #' Ridge with target set to the identity
 #' 
+#' This function computes
+#' \deqn{\alpha \widehat{\Sigma^{-1}}^{ridge}_t + \beta I_p}
+#' where \eqn{\widehat{\Sigma^{-1}}^{ridge}_t = (S + t I_p)},
+#' \eqn{S} is the sample covariance matrix,
+#' \eqn{\alpha} and \eqn{\beta} are real-valued coefficients
+#' and \eqn{I_p} is the identity matrix of size \eqn{p}.
+#' 
+#' The function `ridge_target_identity()` requires the specification of all
+#' \eqn{t, \alpha, \beta}.
+#' The function `ridge_target_identity_semioptimal()` only requires the
+#' specification of \eqn{t} and compute (asymptotically) optimal choices of
+#' \eqn{\alpha} and \eqn{\beta}.
+#' Finally, the function `ridge_target_identity_optimal()` compute the (asymptotically)
+#' optimal choice of \eqn{t, \alpha, \beta}..
+#' 
 #' 
 #' @param Y data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
+#' 
+#' @param t,alpha,beta parameters of the estimation.
+#' 
+#' @returns the estimator of the precision matrix
+#' (a `p` by `p` matrix).
+#' 
+#' @references 
+#' Nestor Parolya & Taras Bodnar (2024).
+#' Reviving pseudo-inverses: Asymptotic properties of large dimensional
+#' Moore-Penrose and Ridge-type inverses with applications.
+#' \link{https://doi.org/10.48550/arXiv.2403.15792}
+#' 
 #' 
 #' @examples
 #' 

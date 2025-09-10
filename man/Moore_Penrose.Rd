@@ -12,6 +12,10 @@ TODO: transpose everything.}
 
 \item{centeredCov}{Boolean: do we center (\code{TRUE}) or not (\code{FALSE}).}
 }
+\value{
+the estimator of the precision matrix
+(a \code{p} by \code{p} matrix, i.e. the inverse of the covariance matrix).
+}
 \description{
 Moore-Penrose inverse of the sample covariance matrix
 }
@@ -48,4 +52,10 @@ sum((S \%*\% iS_MP - t(S \%*\% iS_MP))^2)
 # We test iS_MP \%*\% S == t(iS_MP \%*\% S)
 sum((iS_MP \%*\% S - t(iS_MP \%*\% S))^2)
 
+}
+\references{
+Nestor Parolya & Taras Bodnar (2024).
+Reviving pseudo-inverses: Asymptotic properties of large dimensional
+Moore-Penrose and Ridge-type inverses with applications.
+\link{https://doi.org/10.48550/arXiv.2403.15792}
 }

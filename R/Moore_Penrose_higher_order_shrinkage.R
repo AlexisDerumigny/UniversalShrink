@@ -100,13 +100,29 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 
 
 
-#' Moore-Penrose higher order shrinkage
+#' Moore-Penrose higher order shrinkage of the precision matrix
+#' 
+#' This function compute an estimator of the precision matrix by using the
+#' polynomial
+#' \deqn{\alpha_0 I_p + \sum_{k = 1}^m \alpha_k \left(\widehat{\Sigma^{-1}}^{MP}\right)^k}
+#' where \eqn{\alpha_0, \dots, \alpha_p} are carefully chosen coefficients,
+#' \eqn{\widehat{\Sigma^{-1}}^{MP}} is the Moore-Penrose inverse of the sample
+#' covariance matrix
+#' and \eqn{I_p} is the identity matrix of size \eqn{p}.
 #' 
 #' 
 #' @param Y data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
 #' @param m order of the shrinkage. Should be at least 1.
+#' 
+#' 
+#' @returns the estimator of the precision matrix
+#' (a `p` by `p` matrix, i.e. the inverse of the covariance matrix).
+#' 
+#' @references
+#' Nestor Parolya & Taras Bodnar (2024).
+#' Higher-order nonlinear shrinkage estimator of large-dimensional precision matrix.
 #' 
 #' @examples
 #' 

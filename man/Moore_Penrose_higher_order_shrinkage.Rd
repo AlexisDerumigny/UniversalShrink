@@ -2,7 +2,7 @@
 % Please edit documentation in R/Moore_Penrose_higher_order_shrinkage.R
 \name{Moore_Penrose_higher_order_shrinkage}
 \alias{Moore_Penrose_higher_order_shrinkage}
-\title{Moore-Penrose higher order shrinkage}
+\title{Moore-Penrose higher order shrinkage of the precision matrix}
 \usage{
 Moore_Penrose_higher_order_shrinkage(Y, m, centeredCov)
 }
@@ -12,8 +12,18 @@ TODO: transpose everything.}
 
 \item{m}{order of the shrinkage. Should be at least 1.}
 }
+\value{
+the estimator of the precision matrix
+(a \code{p} by \code{p} matrix, i.e. the inverse of the covariance matrix).
+}
 \description{
-Moore-Penrose higher order shrinkage
+This function compute an estimator of the precision matrix by using the
+polynomial
+\deqn{\alpha_0 I_p + \sum_{k = 1}^m \alpha_k \left(\widehat{\Sigma^{-1}}^{MP}\right)^k}
+where \eqn{\alpha_0, \dots, \alpha_p} are carefully chosen coefficients,
+\eqn{\widehat{\Sigma^{-1}}^{MP}} is the Moore-Penrose inverse of the sample
+covariance matrix
+and \eqn{I_p} is the identity matrix of size \eqn{p}.
 }
 \examples{
 
@@ -56,4 +66,8 @@ for (m in 1:5){
 
 
 
+}
+\references{
+Nestor Parolya & Taras Bodnar (2024).
+Higher-order nonlinear shrinkage estimator of large-dimensional precision matrix.
 }

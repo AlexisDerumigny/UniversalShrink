@@ -25,7 +25,13 @@ It is (asymptotically) optimal for the loss
 \eqn{Loss(EstimatorPi) := \| EstimatorPi * \Sigma - I \|_F^2}.
 }
 \description{
-First-order shrinkage of the Moore-Penrose inverse towards a general target
+This function computes
+\deqn{\alpha \times \widehat{\Sigma^{-1}}^{MP} + (1 - \alpha) \times \Pi_0}
+where \eqn{\alpha} is a carefully chosen coefficient,
+\eqn{\widehat{\Sigma^{-1}}^{MP}} is the Moore-Penrose inverse of the sample
+covariance matrix
+and \eqn{\Pi_0} is a given target (for \code{Moore_Penrose_shrinkage()})
+or the identity matrix (for \code{Moore_Penrose_shrinkage_toIP()}).
 }
 \examples{
 n = 100
@@ -39,10 +45,18 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
-precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
-precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(t(X), centeredCov = FALSE)
-precision_MoorePenrose_toIPCent = Moore_Penrose_shrinkage_toIP(t(X), centeredCov = TRUE)
-precision_MoorePenrose_toIPNoCent = Moore_Penrose_shrinkage_toIP(t(X), centeredCov = FALSE)
+
+precision_MoorePenrose_Cent =
+   Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
+   
+precision_MoorePenrose_NoCent = 
+   Moore_Penrose_shrinkage(t(X), centeredCov = FALSE)
+   
+precision_MoorePenrose_toIPCent = 
+   Moore_Penrose_shrinkage_toIP(t(X), centeredCov = TRUE)
+   
+precision_MoorePenrose_toIPNoCent = 
+   Moore_Penrose_shrinkage_toIP(t(X), centeredCov = FALSE)
 
 precisionTrue = solve(Sigma)
 
@@ -61,10 +75,18 @@ FrobeniusNorm2(precision_NLshrink     \%*\% Sigma - diag(p) ) / p
 FrobeniusNorm2(precision_QISshrink    \%*\% Sigma - diag(p) ) / p
 
 # We now use the true value of the precision matrix as a target for shrinkage
-precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(t(X), centeredCov = TRUE, Pi0 = solve(Sigma))
-precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(t(X), centeredCov = FALSE, Pi0 = solve(Sigma))
+precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(t(X), centeredCov = TRUE,
+                                                      Pi0 = solve(Sigma))
+precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(t(X), centeredCov = FALSE,
+                                                        Pi0 = solve(Sigma))
 FrobeniusNorm2(precision_MoorePenrose_Cent \%*\% Sigma - diag(p) ) / p
 FrobeniusNorm2(precision_MoorePenrose_NoCent \%*\% Sigma - diag(p) ) / p
 # this is indeed much closer than before
 
+}
+\references{
+Nestor Parolya & Taras Bodnar (2024).
+Reviving pseudo-inverses: Asymptotic properties of large dimensional
+Moore-Penrose and Ridge-type inverses with applications.
+\link{https://doi.org/10.48550/arXiv.2403.15792}
 }
