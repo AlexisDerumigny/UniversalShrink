@@ -4,6 +4,7 @@
 \name{ridge_target_general}
 \alias{ridge_target_general}
 \alias{ridge_target_general_semioptimal}
+\alias{ridge_target_general_optimal}
 \alias{ridge_target_identity_optimal}
 \alias{ridge_target_identity_semioptimal}
 \alias{ridge_target_identity}
@@ -12,6 +13,10 @@
 ridge_target_general(Y, centeredCov, t, Pi0, alpha, beta, verbose = 2)
 
 ridge_target_general_semioptimal(Y, centeredCov, t, Pi0, verbose = 2)
+
+ridge_target_general(Y, centeredCov, t, Pi0, alpha, beta, verbose = 2)
+
+ridge_target_general_optimal(Y, centeredCov, Pi0, verbose = 2)
 
 ridge_target_identity_optimal(Y, centeredCov)
 
@@ -67,6 +72,15 @@ precision_ridge_target_NoCent =
 
 FrobeniusLoss2(precision_ridge_target_Cent, Sigma = Sigma)
 FrobeniusLoss2(precision_ridge_target_NoCent, Sigma = Sigma)
+
+precision_ridge_target_Cent_g = 
+    ridge_target_general_optimal(Y = t(X), centeredCov = TRUE, Pi0 = diag(nrow = p))
+    
+precision_ridge_target_NoCent_g = 
+    ridge_target_general_optimal(Y = t(X), centeredCov = FALSE, Pi0 = diag(nrow = p))
+
+FrobeniusLoss2(precision_ridge_target_Cent_g, Sigma = Sigma)
+FrobeniusLoss2(precision_ridge_target_NoCent_g, Sigma = Sigma)
 
 
 }

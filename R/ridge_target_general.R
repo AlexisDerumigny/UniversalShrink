@@ -359,3 +359,232 @@ ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 
   return (result)
 }
 
+
+
+
+#' @rdname ridge_target_identity_optimal
+#' @export
+ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose = 2){
+  
+  if (verbose){
+    cat("Starting `ridge_target_general`...\n")
+  }
+  
+  # Get sizes of Y
+  p = nrow(Y)
+  n = ncol(Y)
+  if (verbose){
+    cat("*  n = ", n, "\n")
+    cat("*  p = ", p, "\n")
+    cat("*  t = ", t, "\n")
+  }
+  
+  # Identity matrix of size p
+  Ip = diag(nrow = p)
+  
+  if (centeredCov){
+    if (verbose){
+      cat("*  centered case\n")
+    }
+    
+    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
+    
+    # Sample covariance matrix
+    S <- Y %*% Jn %*% t(Y) / (n-1)
+    
+    # We remove the last eigenvector because the eigenvalues are sorted
+    # in decreasing order.
+    Hn = eigen(Jn)$vectors[, -n]
+    Ytilde = Y %*% Hn
+    
+    # Inverse companion covariance
+    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
+    
+    # Moore-Penrose inverse
+    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
+    
+    c_n = p / (n-1)
+  } else {
+    if (verbose){
+      cat("*  non-centered case\n")
+    }
+    
+    S <- Y %*% t(Y)/n
+    
+    # Inverse companion covariance
+    iY <- solve(t(Y) %*% Y / n)
+    
+    # Moore-Penrose inverse
+    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
+    
+    c_n = p / n
+  }
+  
+  if (verbose){
+    cat("*  c_n = ", c_n, "\n\n")
+  }
+  
+  iS_ridge <- solve(S + t * Ip)
+  
+  iS_ShRt1 <- alpha * iS_ridge + beta * Ip
+  
+  result = list(
+    estimated_precision_matrix = iS_ShRt1,
+    alpha = alpha,
+    beta = beta,
+    t = t
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
+}
+
+
+#' @rdname ridge_target_identity_optimal
+#' @export
+ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2){
+  
+  if (verbose){
+    cat("Starting `ridge_target_general_optimal`...\n")
+  }
+  
+  # Get sizes of Y
+  p = nrow(Y)
+  n = ncol(Y)
+  if (verbose){
+    cat("*  n = ", n, "\n")
+    cat("*  p = ", p, "\n")
+  }
+  
+  # Identity matrix of size p
+  Ip = diag(nrow = p)
+  
+  if (centeredCov){
+    if (verbose){
+      cat("*  centered case\n")
+    }
+    
+    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
+    
+    # Sample covariance matrix
+    S <- Y %*% Jn %*% t(Y) / (n-1)
+    
+    # We remove the last eigenvector because the eigenvalues are sorted
+    # in decreasing order.
+    Hn = eigen(Jn)$vectors[, -n]
+    Ytilde = Y %*% Hn
+    
+    # Inverse companion covariance
+    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
+    
+    # Moore-Penrose inverse
+    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
+    
+    c_n = p / (n-1)
+  } else {
+    if (verbose){
+      cat("*  non-centered case\n")
+    }
+    
+    S <- Y %*% t(Y)/n
+    
+    # Inverse companion covariance
+    iY <- solve(t(Y) %*% Y / n)
+    
+    # Moore-Penrose inverse
+    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
+    
+    c_n = p / n
+  }
+  
+  if (verbose){
+    cat("*  c_n = ", c_n, "\n\n")
+  }
+  
+  
+  # TODO: provide this as an option for the user
+  initialValue = 1.5
+  eps <- 1/(10^6)
+  upp <- pi/2 - eps
+  
+  hL2R <- function(u){
+    loss = loss_L2_ridge_optimal(t = tan(u), Sn = S, Ip = Ip, cn = c_n, Pi0 = Pi0,
+                                 verbose = verbose - 1)
+    return(loss)
+  }
+  
+  hL2R_max <- optim(par = initialValue, fn = hL2R,
+                    lower = eps, upper = upp,
+                    method= "L-BFGS-B", control = list(fnscale = -1))
+  
+  u_R <- hL2R_max$par
+  t <- tan(u_R)
+  if (verbose){
+    cat("*  optimal t =", t ,"\n")
+  }
+  
+  iS_ridge <- solve(S + t * Ip)
+  
+  best_alphabeta = best_alphabeta_ridge_shrinkage(t0 = t, cn = c_n,
+                                                  Pi0 = Pi0, Ip = Ip, Sn = S,
+                                                  verbose = verbose)
+  
+  alpha <- best_alphabeta$alpha
+  beta <- best_alphabeta$beta
+  
+  iS_ShRt1 <- alpha * iS_ridge + beta * Ip
+  
+  result = list(
+    estimated_precision_matrix = iS_ShRt1,
+    alpha_optimal = alpha,
+    beta_optimal = beta,
+    t_optimal = t
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
+}
+
+
+#' @param t the value of that parameter
+#' @param Sn the sample covariance matrix (potentially centered)
+#' @param Ip the identity matrix
+#' @param cn the ratio p/n (potentially centered)
+#' @param Pi0 the target
+#'
+#' @returns an estimator of the L2 loss
+#'
+#' @noRd
+loss_L2_ridge_optimal <- function(t, Sn, Ip, cn, Pi0, verbose)
+{
+  hat_v_t0 = estimator_vhat_derivative(t = t, m = 0, Sn = Sn, Ip = Ip, cn = cn)
+  hat_vprime_t0 = estimator_vhat_derivative(t = t, m = 1, Sn = Sn, Ip = Ip, cn = cn)
+  
+  q1 = estimator_q1(Sn = Sn, Theta = Pi0 / p)
+  q2 = estimator_q2(Sn = Sn, Theta = Pi0 %*% Pi0 / p, p = p, cn = cn)
+  
+  d0_1p_Sigma = estimator_d0_1p_Sigma(t0 = t, hat_v_t0 = hat_v_t0, cn = cn)
+  
+  d0_1p_Sigma2 = estimator_d0_1p_Sigma2(t0 = t, hat_v_t0 = hat_v_t0, cn = cn,
+                                        Sn = Sn, verbose = verbose - 1)
+  
+  d0_1p_Sigma2_Pi0 = estimator_d0_1p_Sigma2_Pi0(t0 = t, hat_v_t0 = hat_v_t0,
+                                                cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
+                                                verbose = verbose - 1)
+  
+  d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t, hat_v_t0 = hat_v_t0, cn = cn,
+                                        Pi0 = Pi0, Ip = Ip, Sn = Sn)
+  
+  numerator = (d0_1p_Sigma * q2 - d0_1p_Sigma2_Pi0 * q1)^2
+  
+  denominator_main = (d0_1p_Sigma2 + t * hat_vprime_t0 * d1_1p_Sigma2) * q2 
+    
+  denominator = q2 * (denominator_main - d0_1p_Sigma2_Pi0^2)
+  
+  loss_L2 = numerator / denominator
+  
+  return (loss_L2)
+}
+
