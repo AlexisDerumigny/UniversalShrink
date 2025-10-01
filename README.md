@@ -53,6 +53,16 @@ TODO: clean documentation of the following functions:
 - `ridge_shrinkage_rescaled_optimal`
 
 
+## 2.3. Moore-Penrose-Ridge estimators
+
+
+TODO:
+- implement `MPR`
+- implement `MPR_target_identity`
+- implement `MPR_target_identity_semioptimal`, `MPR_target_identity_optimal`
+- implement `MPR_target_general`
+- implement `MPR_target_general_semioptimal`, `MPR_target_general_optimal`
+
 
 # 3. Functions for estimation of optimal portfolio weights
 
