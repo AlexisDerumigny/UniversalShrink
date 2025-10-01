@@ -44,7 +44,7 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
   
 TODO: 
 - implement an optimized in $t$ version of `ridge_no_shrinkage`
-- implement `ridge_target_general()` and `ridge_target_general_optimal()`.
+- implement `ridge_target_general_optimal()`.
 
 TODO: clean documentation of the following functions:
 - `ridge_no_shrinkage`
