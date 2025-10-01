@@ -42,9 +42,12 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 - `ridge_target_general_semioptimal()` perform first-order shrinkage of the Ridge
   estimator towards a general target.
   
-TODO: implement simple ridge, `ridge_target_general()` and `ridge_target_general_optimal()`.
+TODO: 
+- implement an optimized in $t$ version of `ridge_no_shrinkage`
+- implement `ridge_target_general()` and `ridge_target_general_optimal()`.
 
 TODO: clean documentation of the following functions:
+- `ridge_no_shrinkage`
 - `ridge_higher_order_shrinkage`
 - `ridge_higher_order_shrinkage_optimal`
 - `ridge_shrinkage_rescaled_optimal`

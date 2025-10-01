@@ -5,7 +5,7 @@
 #' 
 #' This function computes
 #' \deqn{\alpha \widehat{\Sigma^{-1}}^{ridge}_t + \beta I_p}
-#' where \eqn{\widehat{\Sigma^{-1}}^{ridge}_t = (S + t I_p)},
+#' where \eqn{\widehat{\Sigma^{-1}}^{ridge}_t = (S + t I_p)^{-1}},
 #' \eqn{S} is the sample covariance matrix,
 #' \eqn{\alpha} and \eqn{\beta} are real-valued coefficients
 #' and \eqn{I_p} is the identity matrix of size \eqn{p}.
@@ -16,7 +16,7 @@
 #' specification of \eqn{t} and compute (asymptotically) optimal choices of
 #' \eqn{\alpha} and \eqn{\beta}.
 #' Finally, the function `ridge_target_identity_optimal()` compute the (asymptotically)
-#' optimal choice of \eqn{t, \alpha, \beta}..
+#' optimal choice of \eqn{t, \alpha, \beta}.
 #' 
 #' 
 #' @param Y data matrix (rows are features, columns are observations).
