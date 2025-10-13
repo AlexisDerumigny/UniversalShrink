@@ -35,11 +35,26 @@
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 #' 
-#' for (t in c(0.2, 0.5, 1, 2)){
+#' Y = t(X)
+#' Ip = diag(nrow = p)
+#' for (t in c(0.01, 0.2, 0.5, 1, 2)){
 #'   precision_MPR_Cent = 
 #'     MPR_no_shrinkage(Y = t(X), centeredCov = TRUE, t = t)
+#'   
+#'   Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
+#'   S = Y %*% Jn %*% t(Y) / (n-1)
+#'   precision_ridge = solve(S + t * Ip)
+#'   precision_MPR_Cent_alternative_expression = precision_ridge %*% S %*% precision_ridge
+#'   precision_MP = Moore_Penrose(Y = t(X), centeredCov = TRUE)
 #' 
-#'   cat("t = ", t,", loss =", FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma), "\n")
+#'   cat("t = ", t,", Moore-Penrose  , loss =", 
+#'     FrobeniusLoss2(precision_MP, Sigma = Sigma), "\n")
+#'   cat("t = ", t,", ridge          , loss =", 
+#'     FrobeniusLoss2(precision_ridge, Sigma = Sigma), "\n")
+#'   cat("t = ", t,", MPR            , loss =", 
+#'     FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma), "\n")
+#'   cat("t = ", t,", MPR alternative, loss =", 
+#'     FrobeniusLoss2(precision_MPR_Cent_alternative_expression, Sigma = Sigma), "\n")
 #' }
 #' 
 #' 
@@ -65,7 +80,10 @@ MPR_no_shrinkage <- function (Y, centeredCov, t){
   
   iS_ridge <- solve(S + t * Ip)
   
-  MPR_estimator <- iS_ridge - t * iS_ridge^2
+  MPR_estimator <- iS_ridge - t * iS_ridge %*% iS_ridge
+  
+  # This can also be written as:
+  # iS_ridge %*% S %*% iS_ridge
   
   result = list(
     estimated_precision_matrix = MPR_estimator,
