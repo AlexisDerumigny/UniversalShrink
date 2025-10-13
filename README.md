@@ -53,12 +53,15 @@ TODO: clean documentation of the following functions:
 - `ridge_shrinkage_rescaled_optimal`
 
 
-## 2.3. Moore-Penrose-Ridge estimators
+## 2.3. Moore-Penrose-Ridge "hybrid" estimators
+
+- `MPR_no_shrinkage()`
+
+- `MPR_target_identity_optimal()`, `MPR_target_identity_semioptimal()`,
+  `MPR_target_identity()`
 
 
 TODO:
-- implement `MPR_target_identity`
-- implement `MPR_target_identity_semioptimal`, `MPR_target_identity_optimal`
 - implement `MPR_target_general`
 - implement `MPR_target_general_semioptimal`, `MPR_target_general_optimal`
 
