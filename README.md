@@ -57,7 +57,6 @@ TODO: clean documentation of the following functions:
 
 
 TODO:
-- implement `MPR`
 - implement `MPR_target_identity`
 - implement `MPR_target_identity_semioptimal`, `MPR_target_identity_optimal`
 - implement `MPR_target_general`
