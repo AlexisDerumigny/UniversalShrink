@@ -1,5 +1,5 @@
 
-#' Moore-Penrose-Ridge
+#' Moore-Penrose-Ridge with identity target
 #' 
 #' This function computes
 #' \deqn{\widehat{\Sigma^{-1}}^{ridge}_t = (S + t I_p)^{-1} - t * (S + t I_p)^{-2}},
@@ -213,8 +213,12 @@ MPR_target_identity_semioptimal <- function (Y, centeredCov, t){
     
     # Sample covariance matrix
     S <- Y %*% Jn %*% t(Y) / (n-1)
+    
+    cn = p / (n-1)
   } else {
     S <- Y %*% t(Y)/n
+    
+    cn = p / n
   }
   
   

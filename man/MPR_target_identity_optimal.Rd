@@ -4,9 +4,15 @@
 \alias{MPR_target_identity_optimal}
 \alias{MPR_target_identity_semioptimal}
 \alias{MPR_target_identity}
-\title{Moore-Penrose-Ridge}
+\title{Moore-Penrose-Ridge with identity target}
 \usage{
-MPR_target_identity_optimal(Y, centeredCov, verbose = 2)
+MPR_target_identity_optimal(
+  Y,
+  centeredCov,
+  verbose = 2,
+  eps = 1/(10^6),
+  upp = pi/2 - eps
+)
 
 MPR_target_identity_semioptimal(Y, centeredCov, t)
 
@@ -44,7 +50,27 @@ X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 Y = t(X)
 
 precision_MPR_Cent_optimal = MPR_target_identity_optimal(Y = Y, centeredCov = TRUE)
-cat(FrobeniusLoss2(precision_MPR_Cent_optimal, Sigma = Sigma), "\n")
+cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_optimal, Sigma = Sigma),
+    ", t opt = ", precision_MPR_Cent_optimal$t_optimal, 
+    ", alpha opt = ", precision_MPR_Cent_optimal$alpha_optimal,
+    ", beta opt = ", precision_MPR_Cent_optimal$beta_optimal, "\n", sep = "")
+
+precision_MPR_Cent = MPR_target_identity(Y = Y, centeredCov = TRUE,
+                                         t = precision_MPR_Cent_optimal$t_optimal,
+                                         alpha = precision_MPR_Cent_optimal$alpha_optimal,
+                                         beta = precision_MPR_Cent_optimal$beta_optimal)
+cat("loss = ", FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma))
+
+precision_MPR_Cent = MPR_target_identity(Y = Y, centeredCov = TRUE,
+                                         t = precision_MPR_Cent_optimal$t_optimal,
+                                         alpha = 1,
+                                         beta = 0)
+cat("loss = ", FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma))
+
+precision_MPR_Cent = MPR_no_shrinkage(Y = Y, centeredCov = TRUE,
+                                      t = precision_MPR_Cent_optimal$t_optimal)
+cat("loss = ", FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma))
+
 
 }
 \references{
