@@ -260,7 +260,7 @@ estimator_MPR_s2_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0, hat
   second_term_1 = hat_vthird_t0 * d1_1p_Sigma2 / 6
   second_term_2 = hat_vprime_t0 * hat_vsecond_t0 * d2_1p_Sigma2
   second_term_3 = hat_vprime_t0^3 * d3_1p_Sigma2
-  second_term = t0 * (second_term_1 + second_term_2 + second_term_3)
+  second_term = t0 * (second_term_1 - second_term_2 + second_term_3)
   
   result = first_term + second_term
   
@@ -271,6 +271,9 @@ estimator_MPR_s2_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0, hat
     cat("*  d3_1p_Sigma2 = ", d3_1p_Sigma2, "\n")
     cat("*  first_term = ", first_term, "\n")
     cat("*  second_term = ", second_term, "\n")
+    cat("*    second_term_1 = ", second_term_1, "\n")
+    cat("*    second_term_2 = ", second_term_2, "\n")
+    cat("*    second_term_3 = ", second_term_3, "\n")
     cat("*  result = ", result, "\n\n")
   }
   

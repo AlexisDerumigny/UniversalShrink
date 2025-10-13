@@ -199,7 +199,7 @@ loss_L2_MPR_optimal <- function(t, S, cn, p, Ip){
 
 #' @rdname MPR_target_identity_optimal
 #' @export
-MPR_target_identity_semioptimal <- function (Y, centeredCov, t){
+MPR_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
   
   # Get sizes of Y
   p = nrow(Y)
@@ -248,14 +248,57 @@ MPR_target_identity_semioptimal <- function (Y, centeredCov, t){
   d1Sig2_t<-ihvt*(d0Sig2_t-d1Sig_t)
   d2Sig2_t<-ihvt*(d1Sig2_t-(ihvt^3+hvprprt/(hvprt^3)/2)/cn)
   d3Sig2_t<-ihvt*(d2Sig2_t-(ihvt^4+hvprprt^2/(hvprt^5)/2-hvprprprt/(hvprt^4)/6)/cn)
-  hgs2Sig2_t<- -(hvprt_2*d2Sig2_t-hvprprt*d1Sig2_t/2)+t*(hvprprprt*d1Sig2_t/6-hvprt*hvprprt*d2Sig2_t+d3Sig2_t*hvprt^3)
   
-  num_a_ShMPRt<- -hvprt*d1Sig_t*q2+hvprt*d1Sig2_t*q1
-  num_b_ShMPRt<- hgs2Sig2_t*q1- hvprt_2*d1Sig_t*d1Sig2_t
-  den_ShMPRt<-hgs2Sig2_t*q2-hvprt_2*d1Sig2_t^2
-  alpha <- num_a_ShMPRt/den_ShMPRt
-  beta  <- num_b_ShMPRt/den_ShMPRt
-
+  first_term_s2_Sigma2 = -(hvprt_2*d2Sig2_t-hvprprt*d1Sig2_t/2)
+  
+  second_term_s2_Sigma2_1 = hvprprprt*d1Sig2_t/6
+  second_term_s2_Sigma2_2 = hvprt*hvprprt*d2Sig2_t
+  second_term_s2_Sigma2_3 = d3Sig2_t*hvprt^3
+  
+  second_term_s2_Sigma2 = t * 
+    (second_term_s2_Sigma2_1 - second_term_s2_Sigma2_2 + second_term_s2_Sigma2_3)
+  
+  hgs2Sig2_t = first_term_s2_Sigma2 + second_term_s2_Sigma2
+  
+  if (verbose){
+    cat("*  s2_Sigma2 = ", hgs2Sig2_t, "\n")
+    cat("*    first_term = ", first_term_s2_Sigma2, "\n")
+    cat("*    second_term = ", second_term_s2_Sigma2, "\n")
+    cat("*      second_term_1 = ", second_term_s2_Sigma2_1, "\n")
+    cat("*      second_term_2 = ", second_term_s2_Sigma2_2, "\n")
+    cat("*      second_term_3 = ", second_term_s2_Sigma2_3, "\n")
+  }
+  
+  numerator_alpha_1 = hvprt*d1Sig_t*q2
+  numerator_alpha_2 = hvprt*d1Sig2_t*q1
+  numerator_alpha   = - numerator_alpha_1 + numerator_alpha_2
+  
+  numerator_beta_1 = hgs2Sig2_t*q1
+  numerator_beta_2 = hvprt_2*d1Sig_t*d1Sig2_t
+  numerator_beta   = numerator_beta_1 - numerator_beta_2
+  
+  denominator_1 = hgs2Sig2_t*q2
+  denominator_2 = hvprt_2*d1Sig2_t^2
+  denominator <- denominator_1 - denominator_2
+  
+  alpha = numerator_alpha / denominator
+  beta  = numerator_beta  / denominator
+  
+  if (verbose){
+    cat("Optimal values: \n")
+    cat("*  numerator_alpha = ", numerator_alpha, "\n")
+    cat("*    numerator_alpha_1 = ", numerator_alpha_1, "\n")
+    cat("*    numerator_alpha_2 = ", numerator_alpha_2, "\n")
+    cat("*  numerator_beta = ", numerator_beta, "\n")
+    cat("*    numerator_beta_1 = ", numerator_beta_1, "\n")
+    cat("*    numerator_beta_2 = ", numerator_beta_2, "\n")
+    cat("*  denominator = ", denominator, "\n")
+    cat("*    denominator_1 = ", denominator_1, "\n")
+    cat("*    denominator_2 = ", denominator_2, "\n")
+    cat("*  alpha = ", alpha, "\n")
+    cat("*  beta = ", beta, "\n")
+    cat("\n")
+  }
   
   MPR_estimator <- iS_ridge - t * iS_ridge %*% iS_ridge
   
