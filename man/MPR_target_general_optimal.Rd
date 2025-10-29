@@ -6,7 +6,7 @@
 \alias{MPR_target_general}
 \title{Moore-Penrose-Ridge with general target}
 \usage{
-MPR_target_general_optimal(Y, centeredCov, t, Pi0, verbose = 2)
+MPR_target_general_optimal(Y, centeredCov, Pi0, verbose = 2)
 
 MPR_target_general_semioptimal(Y, centeredCov, t, Pi0, verbose = 2)
 
@@ -44,21 +44,26 @@ X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 Y = t(X)
 Ip = diag(nrow = p)
 
-precision_MPR_Cent_gen_optimal = MPR_target_general_semioptimal(Y = Y, centeredCov = TRUE,
-                                                                Pi0 = Ip, t = 1)
-cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_gen_optimal, Sigma = Sigma),
-    ", t opt = ", precision_MPR_Cent_gen_optimal$t_optimal, 
-    ", alpha opt = ", precision_MPR_Cent_gen_optimal$alpha_optimal,
-    ", beta opt = ", precision_MPR_Cent_gen_optimal$beta_optimal, "\n", sep = "")
+t = 1
 
-precision_MPR_Cent_optimal = MPR_target_identity_semioptimal(Y = Y, centeredCov = TRUE, 
-                                                             t = 1)
-cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_optimal, Sigma = Sigma),
-    ", t opt = ", precision_MPR_Cent_optimal$t_optimal, 
-    ", alpha opt = ", precision_MPR_Cent_optimal$alpha_optimal,
-    ", beta opt = ", precision_MPR_Cent_optimal$beta_optimal, "\n", sep = "")
+precision_MPR_Cent_gen_semioptimal = 
+  MPR_target_general_semioptimal(Y = Y, centeredCov = TRUE, Pi0 = Ip, t = t)
+                                                                
+cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_gen_semioptimal, Sigma = Sigma),
+    ", t = ", t, 
+    ", alpha opt = ", precision_MPR_Cent_gen_semioptimal$alpha_optimal,
+    ", beta opt = ", precision_MPR_Cent_gen_semioptimal$beta_optimal, "\n", sep = "")
 
+precision_MPR_Cent_semioptimal = 
+  MPR_target_identity_semioptimal(Y = Y, centeredCov = TRUE, t = t)
+  
+cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_semioptimal, Sigma = Sigma),
+    ", t = ", t, 
+    ", alpha opt = ", precision_MPR_Cent_semioptimal$alpha_optimal,
+    ", beta opt = ", precision_MPR_Cent_semioptimal$beta_optimal, "\n", sep = "")
 
+precision_MPR_Cent_gen_optimal = 
+  MPR_target_general_optimal(Y = Y, centeredCov = TRUE, Pi0 = Ip)
 
 }
 \references{

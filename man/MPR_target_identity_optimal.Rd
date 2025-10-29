@@ -14,7 +14,7 @@ MPR_target_identity_optimal(
   upp = pi/2 - eps
 )
 
-MPR_target_identity_semioptimal(Y, centeredCov, t)
+MPR_target_identity_semioptimal(Y, centeredCov, t, verbose = 2)
 
 MPR_target_identity(Y, centeredCov, t, alpha, beta)
 }

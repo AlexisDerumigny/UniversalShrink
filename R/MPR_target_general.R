@@ -58,11 +58,26 @@
 #'     ", alpha opt = ", precision_MPR_Cent_semioptimal$alpha_optimal,
 #'     ", beta opt = ", precision_MPR_Cent_semioptimal$beta_optimal, "\n", sep = "")
 #' 
+#' precision_MPR_Cent_gen_optimal = 
+#'   MPR_target_general_optimal(Y = Y, centeredCov = TRUE, Pi0 = Ip)
+#'   
+#' cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_gen_optimal, Sigma = Sigma),
+#'     ", t = ", precision_MPR_Cent_gen_optimal$t_optimal, 
+#'     ", alpha opt = ", precision_MPR_Cent_gen_optimal$alpha_optimal,
+#'     ", beta opt = ", precision_MPR_Cent_gen_optimal$beta_optimal, "\n", sep = "")
 #' 
+#' precision_MPR_Cent_gen_optimal_oracle = 
+#'   MPR_target_general_optimal(Y = Y, centeredCov = TRUE,
+#'   Pi0 = solve(0.99 * Sigma + 0.01 * Ip))
+#'   
+#' cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_gen_optimal_oracle, Sigma = Sigma),
+#'     ", t = ", precision_MPR_Cent_gen_optimal_oracle$t_optimal, 
+#'     ", alpha opt = ", precision_MPR_Cent_gen_optimal_oracle$alpha_optimal,
+#'     ", beta opt = ", precision_MPR_Cent_gen_optimal_oracle$beta_optimal, "\n", sep = "")
 #' 
 #' @export
 #' 
-MPR_target_general_optimal <- function (Y, centeredCov, t, Pi0, verbose = 2){
+MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3){
   
   # Get sizes of Y
   p = nrow(Y)
@@ -85,6 +100,111 @@ MPR_target_general_optimal <- function (Y, centeredCov, t, Pi0, verbose = 2){
   }
   
   
+  # TODO: provide this as an option for the user
+  initialValue = 1.5
+  eps <- 1/(10^6)
+  upp <- pi/2 - eps
+  
+  hL2R <- function(u){
+    loss = loss_L2_MPR_optimal_target_general(
+      t = tan(u), Sn = S, Ip = Ip, cn = cn, Pi0 = Pi0,
+      verbose = verbose - 3)
+    
+    if (verbose > 1){
+      cat("t = ", tan(u), "; loss = ", loss, ". ")
+    }
+    
+    return(loss)
+  }
+  
+  control = list(fnscale = -1,
+                 trace = if(verbose > 2){6} else {0},
+                 factr = 1e8
+                 # ndeps = 0.01
+                 )
+  
+  hL2R_max <- optim(par = initialValue, fn = hL2R,
+                    lower = eps, upper = upp,
+                    method= "L-BFGS-B", control = control)
+  
+  u_R <- hL2R_max$par
+  t <- tan(u_R)
+  if (verbose > 0){
+    cat("*  optimal t =", t ,"\n")
+  }
+  
+  iS_ridge <- solve(S + t * Ip)
+  
+  best_alphabeta = best_alphabeta_MPR_shrinkage(t0 = t, cn = cn, Pi0 = Pi0,
+                                                Ip = Ip, Sn = S, verbose = verbose)
+  
+  alpha <- best_alphabeta$alpha
+  beta <- best_alphabeta$beta
+  
+  MPR_estimator <- iS_ridge - t * iS_ridge %*% iS_ridge
+  
+  # This can also be written as:
+  # iS_ridge %*% S %*% iS_ridge
+  
+  MPR_target_general = alpha * MPR_estimator + beta * Pi0
+  
+  result = list(
+    estimated_precision_matrix = MPR_target_general,
+    t_optimal = t,
+    alpha_optimal = alpha,
+    beta_optimal = beta
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
+}
+
+
+
+
+#' @param t the value of that parameter
+#' @param Sn the sample covariance matrix (potentially centered)
+#' @param Ip the identity matrix
+#' @param cn the ratio p/n (potentially centered)
+#' @param Pi0 the target
+#'
+#' @returns an estimator of the L2 loss
+#'
+#' @noRd
+loss_L2_MPR_optimal_target_general <- function(t, Sn, Ip, cn, Pi0, verbose)
+{
+  hat_v_t0 = estimator_vhat_derivative(t = t, m = 0, Sn = Sn, Ip = Ip, cn = cn)
+  hat_vprime_t0 = estimator_vhat_derivative(t = t, m = 1, Sn = Sn, Ip = Ip, cn = cn)
+  hat_vsecond_t0 = estimator_vhat_derivative(t = t, m = 2, Sn = Sn, Ip = Ip, cn = cn)
+  hat_vthird_t0 = estimator_vhat_derivative(t = t, m = 3, Sn = Sn, Ip = Ip, cn = cn)
+  
+  q1 = estimator_q1(Sn = Sn, Theta = Pi0 / p)
+  q2 = estimator_q2(Sn = Sn, Theta = Pi0 %*% Pi0 / p, p = p, cn = cn)
+  
+  d1_1p_Sigma = estimator_d1_1p_Sigma(hat_v_t0 = hat_v_t0,
+                                      hat_vprime_t0 = hat_vprime_t0, cn = cn)
+  
+  d1_1p_Sigma2_Pi0 = estimator_d1_1p_Sigma2Pi0(t0 = t, hat_v_t0 = hat_v_t0,
+                                               cn = cn, p = p, Sn = Sn, Pi0 = Pi0,
+                                               verbose = verbose)
+  
+  s2_Sigma2 = estimator_MPR_s2_Sigma2(hat_v_t0 = hat_v_t0,
+                                      hat_vprime_t0 = hat_vprime_t0,
+                                      hat_vsecond_t0 = hat_vsecond_t0,
+                                      hat_vthird_t0 = hat_vthird_t0,
+                                      t0 = t, cn = cn, Pi0 = Pi0, Ip = Ip,
+                                      Sn = Sn, verbose = verbose)
+  
+  numerator = hat_vprime_t0^2 * (d1_1p_Sigma * q2 - d1_1p_Sigma2_Pi0 * q1)^2
+  
+  denominator_main = s2_Sigma2 * q2 - hat_vprime_t0^2 * d1_1p_Sigma2_Pi0^2
+  
+  denominator = q2 * denominator_main
+  
+  loss_L2 = numerator / denominator
+  
+  return (loss_L2)
 }
 
 
