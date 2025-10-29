@@ -1,4 +1,40 @@
 
+
+#' Estimate the derivatives of the function v at t = o
+#' 
+#' @param m parameter describing the derivatives to take. We want to estimate
+#' all the derivatives from i = 1 to i = m
+#' 
+#' @param c_n ratio p/n, eventually adjusted for centering
+#' 
+#' @param p number of variables
+#' 
+#' @param Splus Moore-Penrose inverse of the sample covariance matrix
+#' 
+#' @returns a vector of size \code{m} containing
+#' \eqn{\widehat{v'}(0), \dots, \widehat{v^{(m)}}(0)}.
+#' 
+#' @noRd
+estimator_vhat_derivative_t0 <- function(m, c_n, p, Splus){
+  v <- rep(NA, m)
+  
+  for (i in 1:m)
+  {
+    v[i] <- (-1)^i * factorial(i) * c_n * (1/p) * tr(Splus^(i+1))
+  }
+  
+  return (v)
+} 
+
+#' This function estimates \eqn{\widehat{v(0)}}
+#'
+#' @noRd
+estimator_vhat_t0 <- function(c_n, p, Splus){
+  v <- c_n * (1/p) * tr(Splus)
+  
+  return (v)
+}
+
 # Compute the matrix M for the higher-order shrinkage
 compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 {
@@ -8,17 +44,13 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
     c_n = p/n
   }
   
-  v <- rep(NA, 2*m)
   h <- rep(NA, 2*m+1)
   d <- matrix(NA, nrow = 2 * m, ncol = 2)
   
   h[2] <- h2
   h[3] <- h3
   
-  for (i in 1:(2*m))
-  {
-    v[i] <- (-1)^i * factorial(i) * c_n * (1/p) * tr(D_MP^(i+1))
-  }
+  v <- estimator_vhat_derivative_t0(m = 2 * m, c_n, p = p, Splus = D_MP)
   
   if (m > 1)
   { 
@@ -213,7 +245,7 @@ Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov)
   trS2 <- tr(iS_MP %*% iS_MP) / p
   trS3 <- tr(iS_MP %*% iS_MP %*% iS_MP) / p
   
-  hv0 <- c_n * trS1
+  hv0 <- estimator_vhat_t0(c_n = c_n, p = p, Splus = D_MP)
   ihv0 <- 1 / hv0
   ihv0_2 <- ihv0^2
   ihv0_3 <- ihv0^3
