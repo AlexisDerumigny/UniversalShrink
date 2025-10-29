@@ -191,7 +191,7 @@ ridge_target_identity_optimal <- function (Y, centeredCov){
 #' @export
 ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
   
-  if (verbose){
+  if (verbose > 0){
     cat("Starting `ridge_target_identity_semioptimal`...\n")
   }
   
@@ -199,7 +199,7 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
   p = nrow(Y)
   n = ncol(Y)
   
-  if (verbose){
+  if (verbose > 0){
     cat("*  n = ", n, "\n")
     cat("*  p = ", p, "\n")
     cat("*  t = ", t, "\n")
@@ -209,7 +209,7 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
   Ip = diag(nrow = p)
   
   if (centeredCov){
-    if (verbose){
+    if (verbose > 0){
       cat("*  centered case\n")
     }
     
@@ -231,7 +231,7 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
     
     c_n = p / (n-1)
   } else {
-    if (verbose){
+    if (verbose > 0){
       cat("*  non-centered case\n")
     }
     
@@ -246,7 +246,7 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
     c_n = p / n
   }
   
-  if (verbose){
+  if (verbose > 0){
     cat("*  c_n = ", c_n, "\n\n")
   }
   
@@ -276,7 +276,7 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
   num_b_ShRt1 <- (d0Sig2_t1 / t + hvprt1 * d1Sig2_t1) * q1 - d0Sig_t1 * d0Sig2_t1 / t
   
   
-  if (verbose){
+  if (verbose > 0){
     cat("Estimators: \n")
     cat("*  hat_v_t0 = ", hvt1, "\n")
     cat("*  hat_vprime_t0 = ", hvprt1, "\n")
@@ -299,7 +299,7 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
         d0Sig2_t1 / t                       , d0Sig2_t1 / t^2 + hvprt1 * d1Sig2_t1 / t) |>
     matrix(ncol = 2, byrow = TRUE)
   
-  if (verbose){
+  if (verbose > 0){
     cat("Term of M[2,2] computed as:\n")
     cat("*  d0Sig2_t1 / t^2: ", d0Sig2_t1 / t^2, "\n")
     cat("*  hvprt1 * d1Sig2_t1 / t: ", hvprt1 * d1Sig2_t1 / t, "\n\n")
@@ -318,7 +318,7 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
   
   iS_ShRt1 <- alpha * iS_ridge + beta * Ip
   
-  if (verbose){
+  if (verbose > 0){
     cat("Optimal values: \n")
     cat("*  numerator_alpha = ", num_a_ShRt1, "\n")
     cat("*  numerator_beta = ", num_b_ShRt1, "\n")

@@ -48,7 +48,7 @@ estimator_d0_1p_Sigma2 <- function(t0, hat_v_t0, cn, Sn, verbose = verbose){
   
   result = (1 / hat_v_t0) * (tr(Sn) / p - (1 / (cn * hat_v_t0)) + t0 / cn)
   
-  if (verbose){
+  if (verbose > 0){
     cat("Estimator of d0(t0, Sigma^2 / p) : \n")
     cat("*  first_term = ", first_term, "\n")
     cat("*  second_term = ", second_term, "\n")
@@ -70,7 +70,7 @@ estimator_d0_1p_Sigma2_Pi0 <- function(t0, hat_v_t0, cn, Pi0, Ip, Sn, verbose){
   
   result = first_term - second_term
   
-  if (verbose){
+  if (verbose > 0){
     cat("Estimator of d0(t0, Sigma^2 * Pi_0 / p) : \n")
     cat("*  first_term = ", first_term, "\n")
     cat("*  second_term = ", second_term, "\n")
@@ -118,7 +118,7 @@ best_alphabeta_ridge_shrinkage <- function(t0, cn, Pi0, Ip, Sn, verbose = verbos
   q1 = estimator_q1(Sn = Sn, Theta = Pi0 / p)
   q2 = estimator_q2(Sn = Sn, Theta = Pi0 %*% Pi0 / p, p = p, cn = cn)
   
-  if (verbose){
+  if (verbose > 0){
     cat("Estimators: \n")
     cat("*  hat_v_t0 = ", hat_v_t0, "\n")
     cat("*  hat_vprime_t0 = ", hat_vprime_t0, "\n")
@@ -159,7 +159,7 @@ best_alphabeta_ridge_shrinkage <- function(t0, cn, Pi0, Ip, Sn, verbose = verbos
   # Note: beta has the same denominator as alpha, so it can be directly reused.
   beta = numerator_beta / denominator_alpha
   
-  if (verbose){
+  if (verbose > 0){
     cat("Optimal values: \n")
     cat("*  numerator_alpha = ", numerator_alpha, "\n")
     cat("*  numerator_beta = ", numerator_beta, "\n")
@@ -200,14 +200,14 @@ estimator_vhat_derivative <- function(t, m, Sn, Ip, cn){
 #' @export
 ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose = 2){
   
-  if (verbose){
+  if (verbose > 0){
     cat("Starting `ridge_target_general`...\n")
   }
   
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  if (verbose){
+  if (verbose > 0){
     cat("*  n = ", n, "\n")
     cat("*  p = ", p, "\n")
     cat("*  t = ", t, "\n")
@@ -217,7 +217,7 @@ ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose =
   Ip = diag(nrow = p)
   
   if (centeredCov){
-    if (verbose){
+    if (verbose > 0){
       cat("*  centered case\n")
     }
     
@@ -239,7 +239,7 @@ ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose =
     
     c_n = p / (n-1)
   } else {
-    if (verbose){
+    if (verbose > 0){
       cat("*  non-centered case\n")
     }
     
@@ -254,7 +254,7 @@ ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose =
     c_n = p / n
   }
   
-  if (verbose){
+  if (verbose > 0){
     cat("*  c_n = ", c_n, "\n\n")
   }
   
@@ -279,14 +279,14 @@ ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose =
 #' @export
 ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 2){
   
-  if (verbose){
+  if (verbose > 0){
     cat("Starting `ridge_target_general_semioptimal`...\n")
   }
   
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  if (verbose){
+  if (verbose > 0){
     cat("*  n = ", n, "\n")
     cat("*  p = ", p, "\n")
     cat("*  t = ", t, "\n")
@@ -296,7 +296,7 @@ ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 
   Ip = diag(nrow = p)
   
   if (centeredCov){
-    if (verbose){
+    if (verbose > 0){
       cat("*  centered case\n")
     }
     
@@ -318,7 +318,7 @@ ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 
     
     c_n = p / (n-1)
   } else {
-    if (verbose){
+    if (verbose > 0){
       cat("*  non-centered case\n")
     }
     
@@ -333,7 +333,7 @@ ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 
     c_n = p / n
   }
   
-  if (verbose){
+  if (verbose > 0){
     cat("*  c_n = ", c_n, "\n\n")
   }
   
@@ -364,14 +364,14 @@ ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 
 #' @export
 ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2){
   
-  if (verbose){
+  if (verbose > 0){
     cat("Starting `ridge_target_general_optimal`...\n")
   }
   
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  if (verbose){
+  if (verbose > 0){
     cat("*  n = ", n, "\n")
     cat("*  p = ", p, "\n")
   }
@@ -380,7 +380,7 @@ ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2){
   Ip = diag(nrow = p)
   
   if (centeredCov){
-    if (verbose){
+    if (verbose > 0){
       cat("*  centered case\n")
     }
     
@@ -402,7 +402,7 @@ ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2){
     
     c_n = p / (n-1)
   } else {
-    if (verbose){
+    if (verbose > 0){
       cat("*  non-centered case\n")
     }
     
@@ -417,7 +417,7 @@ ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2){
     c_n = p / n
   }
   
-  if (verbose){
+  if (verbose > 0){
     cat("*  c_n = ", c_n, "\n\n")
   }
   
@@ -439,7 +439,7 @@ ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2){
   
   u_R <- hL2R_max$par
   t <- tan(u_R)
-  if (verbose){
+  if (verbose > 0){
     cat("*  optimal t =", t ,"\n")
   }
   

@@ -196,7 +196,7 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
   num_beta_MP <- -(d2Sig2 - d1Sig2 * h3 / h2) * q1Pi0 / h2 - d1Sig * d1Sig2Pi0 / h2
   den_MP   <- -(d2Sig2 - d1Sig2 * h3 / h2) * q2Pi02 / h2 - d1Sig2Pi0^2 / h2
   
-  if (verbose){
+  if (verbose > 0){
     cat("num_alpha_MP = ", num_alpha_MP, "\n")
     cat("num_beta_MP = ", num_beta_MP, "\n")
     cat("den_MP = ", den_MP, "\n")
@@ -284,7 +284,7 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov, verbose = 0)
   num_beta_MP<--(d2Sig2-d1Sig2*h3/h2)*q1/h2-d1Sig*d1Sig2/h2
   den_MP<--(d2Sig2-d1Sig2*h3/h2)*q2/h2-d1Sig2^2/h2
   
-  if (verbose){
+  if (verbose > 0){
     cat("num_alpha_MP = ", num_alpha_MP, "\n")
     cat("num_beta_MP = ", num_beta_MP, "\n")
     cat("den_MP = ", den_MP, "\n")

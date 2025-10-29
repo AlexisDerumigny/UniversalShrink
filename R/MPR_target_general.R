@@ -170,7 +170,7 @@ estimator_d1_1p_Sigma2Pi0 <- function(t0, hat_v_t0, cn, p, Sn, Pi0, verbose){
   
   result = first_term + second_term - third_term
   
-  if (verbose){
+  if (verbose > 0){
     cat("Estimator of d1(t, Sigma^2 Pi0) : \n")
     cat("*  first_term = ", first_term, "\n")
     cat("*  second_term = ", second_term, "\n")
@@ -194,7 +194,7 @@ estimator_d2_1p_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0,
   
   result = (d1_1p_Sigma2 - second_term) / hat_v_t0
   
-  if (verbose){
+  if (verbose > 0){
     cat("Estimator of d2(t, Sigma^2 / p) : \n")
     cat("*  first_term = ", d1_1p_Sigma2, "\n")
     cat("*  second_term = ", second_term, "\n")
@@ -222,7 +222,7 @@ estimator_d3_1p_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0, hat_
   
   result = (d2_1p_Sigma2 - second_term) / hat_v_t0
   
-  if (verbose){
+  if (verbose > 0){
     cat("Estimator of d2(t, Sigma^2 / p) : \n")
     cat("*  first_term = ", d2_1p_Sigma2, "\n")
     cat("*  second_term = ", second_term, "\n")
@@ -264,7 +264,7 @@ estimator_MPR_s2_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0, hat
   
   result = first_term + second_term
   
-  if (verbose){
+  if (verbose > 0){
     cat("Estimator of MPR s2(t, Sigma^2) : \n")
     cat("*  d1_1p_Sigma2 = ", d1_1p_Sigma2, "\n")
     cat("*  d2_1p_Sigma2 = ", d2_1p_Sigma2, "\n")
@@ -316,7 +316,7 @@ best_alphabeta_MPR_shrinkage <- function(t0, cn, Pi0, Ip, Sn, verbose = verbose)
                                       t0 = t0, cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
                                       verbose = verbose - 1)
   
-  if (verbose){
+  if (verbose > 0){
     cat("Estimators: \n")
     cat("*  hat_v_t0 = ", hat_v_t0, "\n")
     cat("*  hat_vprime_t0 = ", hat_vprime_t0, "\n")
@@ -363,7 +363,7 @@ best_alphabeta_MPR_shrinkage <- function(t0, cn, Pi0, Ip, Sn, verbose = verbose)
   # Note: beta has the same denominator as alpha, so it can be directly reused.
   beta = numerator_beta / denominator_alpha
   
-  if (verbose){
+  if (verbose > 0){
     cat("Optimal values: \n")
     cat("*  numerator_alpha = ", numerator_alpha, "\n")
     cat("*  numerator_beta = ", numerator_beta, "\n")

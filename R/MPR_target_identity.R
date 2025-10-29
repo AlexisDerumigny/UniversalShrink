@@ -84,7 +84,7 @@ MPR_target_identity_optimal <- function (Y, centeredCov, verbose = 2,
     cn = p / n
   }
   
-  if (verbose){
+  if (verbose > 0){
     cat("*  cn = ", cn, "\n\n")
   }
   
@@ -260,7 +260,7 @@ MPR_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
   
   hgs2Sig2_t = first_term_s2_Sigma2 + second_term_s2_Sigma2
   
-  if (verbose){
+  if (verbose > 0){
     cat("*  s2_Sigma2 = ", hgs2Sig2_t, "\n")
     cat("*    first_term = ", first_term_s2_Sigma2, "\n")
     cat("*    second_term = ", second_term_s2_Sigma2, "\n")
@@ -284,7 +284,7 @@ MPR_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
   alpha = numerator_alpha / denominator
   beta  = numerator_beta  / denominator
   
-  if (verbose){
+  if (verbose > 0){
     cat("Optimal values: \n")
     cat("*  numerator_alpha = ", numerator_alpha, "\n")
     cat("*    numerator_alpha_1 = ", numerator_alpha_1, "\n")

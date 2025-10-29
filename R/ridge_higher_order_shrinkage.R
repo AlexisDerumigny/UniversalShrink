@@ -119,7 +119,7 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
                          S_t_inverse_pow_jp1 = S_t_inverse_pow_jp1,
                          c_n = c_n)
   }
-  if (verbose){
+  if (verbose > 0){
     cat("Estimation of v(t0) = ", v_0_t, "\n\n")
     cat("Estimation of the derivatives of v:\n")
     print(v)
@@ -137,7 +137,7 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     }
   }
   
-  if (verbose){
+  if (verbose > 0){
     cat("Estimation of h:\n")
     print(h)
     cat("\n")
@@ -151,7 +151,7 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     stop("d should be of the right size.")
   }
   
-  if (verbose){
+  if (verbose > 0){
     cat("Estimation of d[k,l]:\n")
     print(d)
     cat("\n")
@@ -161,7 +161,7 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
   for (index in 1:(2 * m)){
     j = index - 1
     # so that index = j + 1
-    if (verbose){
+    if (verbose > 0){
       cat("We are now computing s[", index, ",], corresponding to j =", j, "\n",
           sep = "")
     }
@@ -171,7 +171,7 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     s[index, 1] = t^(-j - 1) * d[1, 1]
     s[index, 2] = t^(-j - 1) * d[1, 2]
     
-    if (verbose){
+    if (verbose > 0){
       cat("d[0, 2] = ", d[1, 2], "\n")
       cat("s[", index, ", 2] =", s[index, 2], "\n", sep = "")
     }
@@ -180,7 +180,7 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
       # Otherwise the sum is empty
       for (i in 1:j){
         for (k in 1:i){
-          if (verbose){
+          if (verbose > 0){
             cat("This is term i =", i, ", k =", k, "\n")
           }
           Bell_polynomial = 
@@ -189,7 +189,7 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
           multiplicative_factor = t^(- (j - i) - 1) * (-1)^(i + k) * 
             factorial(k) / factorial(i) * Bell_polynomial
           
-          if (verbose){
+          if (verbose > 0){
             cat("Bell_polynomial = ", Bell_polynomial, "\n")
           }
           
@@ -209,7 +209,7 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     }
   }
   
-  if (verbose){
+  if (verbose > 0){
     cat("Estimation of s:\n")
     print(s)
     cat("\n")
@@ -228,7 +228,7 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
   # Computation of hm  =========================================================
   hm = c(q1, s[1:m, 1])
   
-  if (verbose){
+  if (verbose > 0){
     cat("Estimation of hm:\n")
     print(hm)
     cat("\n")
@@ -313,7 +313,7 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 #' 
 ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 2)
 {
-  if (verbose){
+  if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage`...\n")
   }
   
@@ -321,7 +321,7 @@ ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 2)
   p = nrow(Y)
   n = ncol(Y)
   
-  if (verbose){
+  if (verbose > 0){
     cat("*  n = ", n, "\n")
     cat("*  p = ", p, "\n")
     cat("*  t = ", t, "\n")
@@ -332,7 +332,7 @@ ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 2)
   Ip = diag(nrow = p)
   
   if (centeredCov){
-    if (verbose){
+    if (verbose > 0){
       cat("*  centered case\n")
     }
     Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
@@ -343,7 +343,7 @@ ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 2)
     c_n = p / (n-1)
     
   } else {
-    if (verbose){
+    if (verbose > 0){
       cat("*  non-centered case\n")
     }
     
@@ -351,7 +351,7 @@ ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 2)
     
     c_n = p / n
   }
-  if (verbose){
+  if (verbose > 0){
     cat("*  c_n = ", c_n, "\n\n")
   }
   
@@ -362,7 +362,7 @@ ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 2)
   
   q1 <- tr(S) / p
   q2 <- tr(S %*% S) / p - c_n * q1^2
-  if (verbose){
+  if (verbose > 0){
     cat("Starting values: \n")
     cat("*  q1 = ", q1, "\n")
     cat("*  q2 = ", q2, "\n\n")
@@ -375,7 +375,7 @@ ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 2)
   # TODO: compute all estimators for smaller m here using submatrices of this matrix
   
   alpha = solve(estimatedM$M) %*% estimatedM$hm
-  if (verbose){
+  if (verbose > 0){
     cat("Optimal alpha: \n")
     print(alpha)
   }
