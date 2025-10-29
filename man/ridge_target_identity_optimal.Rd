@@ -14,8 +14,6 @@ ridge_target_general(Y, centeredCov, t, Pi0, alpha, beta, verbose = 2)
 
 ridge_target_general_semioptimal(Y, centeredCov, t, Pi0, verbose = 2)
 
-ridge_target_general(Y, centeredCov, t, Pi0, alpha, beta, verbose = 2)
-
 ridge_target_general_optimal(Y, centeredCov, Pi0, verbose = 2)
 
 ridge_target_identity_optimal(Y, centeredCov)
