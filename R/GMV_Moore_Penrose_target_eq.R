@@ -117,21 +117,23 @@ GMV_Moore_Penrose_target_eq <- function(Y, centeredCov = TRUE, verbose = 2){
   bip<-matrix(rep(1,p),p,1)
   tbip<-t(bip)
   
-  bipiSbip  <- sum(tbip %*% iS_MP %*% bip) / p
-  bipiS2bip <- sum(tbip %*% iS_MP %*% iS_MP %*% bip)/p
-  bipiS3bip <- sum(tbip %*% iS_MP %*% iS_MP %*% iS_MP %*% bip) / p
+  # No division by p here below
   
-  bipSbip<-sum(tbip%*%S%*%bip)/p
+  bipiSbip  <- sum(tbip %*% iS_MP %*% bip)
+  bipiS2bip <- sum(tbip %*% iS_MP %*% iS_MP %*% bip)
+  bipiS3bip <- sum(tbip %*% iS_MP %*% iS_MP %*% iS_MP %*% bip)
+  
+  bipSbip   <- sum(tbip %*% S %*% bip)
   
   hv0 <- c_n * trS1
   
   d0   <- 1 - tbip %*% S %*% iS_MP %*% bip / p
-  d1   <- bipiSbip / (c_n * p * trS2)
+  d1   <- bipiSbip / (p * c_n * trS2)
   d1_bSigma <- ( (1 - d0) / hv0 - d1) / hv0
   
-  d3_first_term = bipiS3bip / (c_n^3 * trS2^3)
+  d3_first_term = bipiS3bip / (p * c_n^3 * trS2^3)
   d3_second_term = 2 * bipiSbip * trS3^2 / (c_n^3 * p * trS2^5)
-  d3_third_term = (bipiS2bip + trS4 * bipiSbip / p) / (c_n^3 * trS2^4)
+  d3_third_term = (bipiS2bip + trS4 * bipiSbip) / (p * c_n^3 * trS2^4)
   
   d3 = d3_first_term + d3_second_term - d3_third_term
   
