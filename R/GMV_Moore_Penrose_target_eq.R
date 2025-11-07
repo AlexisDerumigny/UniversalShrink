@@ -37,14 +37,14 @@
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
 #' GMV_MP_shrinkage_Cent = 
-#'   GMV_Moore_Penrose_shrinkage_toEq(Y = t(X), centeredCov = TRUE)
+#'   GMV_Moore_Penrose_target_eq(Y = t(X), centeredCov = TRUE)
 #' 
 #' outOfSampleVariance = t(GMV_MP_shrinkage_Cent) %*% Sigma %*% GMV_MP_shrinkage_Cent
 #' 
 #' ones = rep(1, length = p)
 #' V_GMV = 1 / ( t(ones) %*% solve(Sigma) %*% ones)
 #' 
-#' Loss_GMV_Moore_Penrose_shrinkage_toEq = (outOfSampleVariance - V_GMV) / V_GMV
+#' Loss_GMV_Moore_Penrose_target_eq = (outOfSampleVariance - V_GMV) / V_GMV
 #' 
 #' GMV_MP_Cent = GMV_Moore_Penrose(Y = t(X), centeredCov = TRUE)
 #' outOfSampleVariance = t(GMV_MP_Cent) %*% Sigma %*% GMV_MP_Cent
@@ -52,12 +52,12 @@
 #' Loss_GMV_Moore_Penrose = (outOfSampleVariance - V_GMV) / V_GMV
 #' 
 #' # Shrinkage helps to reduce the loss
-#' stopifnot(Loss_GMV_Moore_Penrose_shrinkage_toEq < Loss_GMV_Moore_Penrose)
+#' stopifnot(Loss_GMV_Moore_Penrose_target_eq < Loss_GMV_Moore_Penrose)
 #' 
 #' 
 #' 
 #' @export
-GMV_Moore_Penrose_shrinkage_toEq <- function(Y, centeredCov = TRUE){
+GMV_Moore_Penrose_target_eq <- function(Y, centeredCov = TRUE){
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)

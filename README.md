@@ -75,7 +75,7 @@ TODO: clean documentation of the following functions:
 - `GMV_Moore_Penrose()`: using the Moore-Penrose inverse `Moore_Penrose()` of
   the precision matrix as an input for the plug-in estimation.
 
-- `GMV_Moore_Penrose_shrinkage_toEq()`: performs a first-order shrinkage of the
+- `GMV_Moore_Penrose_target_eq()`: performs a first-order shrinkage of the
   estimator given by `GMV_Moore_Penrose()` towards the equally-weighted portfolio.
 
 TODO: do the first-order shrinkage of the GMV to a general target.
