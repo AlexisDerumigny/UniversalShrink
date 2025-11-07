@@ -72,13 +72,13 @@
 #' FrobeniusLoss2(precision_QISshrink, Sigma = Sigma)
 #' 
 #' # We now use the true value of the precision matrix as a target for shrinkage
-#' precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(t(X), centeredCov = TRUE,
-#'                                                       Pi0 = solve(Sigma))
-#' precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(t(X), centeredCov = FALSE,
-#'                                                         Pi0 = solve(Sigma))                                                        
+#' precision_MoorePenrose_Cent_trueSigma = 
+#'   Moore_Penrose_shrinkage(t(X), centeredCov = TRUE, Pi0 = solve(Sigma))
+#' precision_MoorePenrose_NoCent_trueSigma = 
+#'   Moore_Penrose_shrinkage(t(X), centeredCov = FALSE, Pi0 = solve(Sigma))                                                        
 #'                                                         
-#' FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
-#' FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
+#' FrobeniusLoss2(precision_MoorePenrose_Cent_trueSigma, Sigma = Sigma)
+#' FrobeniusLoss2(precision_MoorePenrose_NoCent_trueSigma, Sigma = Sigma)
 #' # this is indeed much closer than before
 #' 
 #' 
