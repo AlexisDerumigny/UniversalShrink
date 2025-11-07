@@ -117,9 +117,9 @@ GMV_Moore_Penrose_target_eq <- function(Y, centeredCov = TRUE, verbose = 2){
   bip<-matrix(rep(1,p),p,1)
   tbip<-t(bip)
   
-  bipiSbip  <-sum(tbip %*% iS_MP %*% bip) / p
-  bipiS2bip <-sum(tbip %*% iS_MP %*% iS_MP %*% bip)/p
-  bipiS3bip <-sum(tbip %*% iS_MP %*% iS_MP %*% iS_MP %*% bip) / p
+  bipiSbip  <- sum(tbip %*% iS_MP %*% bip) / p
+  bipiS2bip <- sum(tbip %*% iS_MP %*% iS_MP %*% bip)/p
+  bipiS3bip <- sum(tbip %*% iS_MP %*% iS_MP %*% iS_MP %*% bip) / p
   
   bipSbip<-sum(tbip%*%S%*%bip)/p
   
@@ -129,8 +129,17 @@ GMV_Moore_Penrose_target_eq <- function(Y, centeredCov = TRUE, verbose = 2){
   d1   <- bipiSbip / (c_n * p * trS2)
   d1_bSigma <- ( (1 - d0) / hv0 - d1) / hv0
   
-  d3   <- (bipiS3bip / trS2^3 + 2 * bipiSbip * trS3^2 / p / trS2^5 - 
-         (bipiS2bip + trS4 * bipiSbip) / trS2^4) / c_n^3
+  d3_first_term = bipiS3bip / (c_n^3 * trS2^3)
+  d3_second_term = 2 * bipiSbip * trS3^2 / (c_n^3 * p * trS2^5)
+  d3_third_term = (bipiS2bip + trS4 * bipiSbip / p) / (c_n^3 * trS2^4)
+  
+  d3 = d3_first_term + d3_second_term - d3_third_term
+  
+  if (verbose > 1){
+    cat("  * d3_first_term  = ", d3_first_term, "\n")
+    cat("  * d3_second_term = ", d3_second_term, "\n")
+    cat("  * d3_third_term  = ", d3_third_term, "\n")
+  }
   
   if (verbose > 1){
     cat("* hv0 = ", hv0, "\n")
