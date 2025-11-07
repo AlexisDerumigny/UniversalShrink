@@ -6,7 +6,7 @@
 \alias{MPR_target_general}
 \title{Moore-Penrose-Ridge with general target}
 \usage{
-MPR_target_general_optimal(Y, centeredCov, Pi0, verbose = 2)
+MPR_target_general_optimal(Y, centeredCov, Pi0, verbose = 3)
 
 MPR_target_general_semioptimal(Y, centeredCov, t, Pi0, verbose = 2)
 
@@ -64,6 +64,20 @@ cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_semioptimal, Sigma = Sigma),
 
 precision_MPR_Cent_gen_optimal = 
   MPR_target_general_optimal(Y = Y, centeredCov = TRUE, Pi0 = Ip)
+  
+cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_gen_optimal, Sigma = Sigma),
+    ", t = ", precision_MPR_Cent_gen_optimal$t_optimal, 
+    ", alpha opt = ", precision_MPR_Cent_gen_optimal$alpha_optimal,
+    ", beta opt = ", precision_MPR_Cent_gen_optimal$beta_optimal, "\n", sep = "")
+
+precision_MPR_Cent_gen_optimal_oracle = 
+  MPR_target_general_optimal(Y = Y, centeredCov = TRUE,
+  Pi0 = solve(0.99 * Sigma + 0.01 * Ip))
+  
+cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_gen_optimal_oracle, Sigma = Sigma),
+    ", t = ", precision_MPR_Cent_gen_optimal_oracle$t_optimal, 
+    ", alpha opt = ", precision_MPR_Cent_gen_optimal_oracle$alpha_optimal,
+    ", beta opt = ", precision_MPR_Cent_gen_optimal_oracle$beta_optimal, "\n", sep = "")
 
 }
 \references{

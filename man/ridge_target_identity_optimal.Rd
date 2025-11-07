@@ -81,6 +81,17 @@ FrobeniusLoss2(precision_ridge_target_Cent_g, Sigma = Sigma)
 FrobeniusLoss2(precision_ridge_target_NoCent_g, Sigma = Sigma)
 
 
+# TODO: explore the convergence issues with good and bad target.
+# This works not as good as the MPR. The MPR takes a lot of time for the
+# (classical) optimization using the "L-BFGS-B" algorithm, but has finally
+# a smaller (true) loss. This is what we expected because we have a better
+# target.
+
+precision_ridge_target_Cent_g_oracle = 
+    ridge_target_general_optimal(Y = t(X), centeredCov = TRUE, Pi0 = solve(Sigma))
+
+FrobeniusLoss2(precision_ridge_target_Cent_g_oracle, Sigma = Sigma)
+
 }
 \references{
 Nestor Parolya & Taras Bodnar (2024).
