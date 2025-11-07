@@ -138,9 +138,16 @@ GMV_Moore_Penrose_target_general <- function(Y, centeredCov = TRUE, b = NULL,
   
   d0 <- 1 - tbip %*% S %*% iS_MP %*% ones
   
-  d1   <- sum(tones %*% iS_MP %*% ones) / (c_n * trS2)
-  d1_b <- sum(tones %*% iS_MP %*% bip)  / trS2 / c_n  
+  d1   <- estimator_GMV_d1(iS = iS_MP,
+                           Theta = matrix(1/p, nrow = p, ncol = p),
+                           c_n = c_n, p = p, verbose = verbose - 1)
   
+  d1_b <- estimator_GMV_d1(iS = iS_MP,
+                           Theta = bip %*% tones,
+                           c_n = c_n, p = p, verbose = verbose - 1)
+  
+  # Note that you cannot use the function `estimator_GMV_d1` because
+  # Sigma is unknown, so this is not a true function. We must use the expression:
   d1_bSigma <- ((1 - d0) / hv0 - d1_b) / hv0
   
   d3 <- estimator_GMV_d3(iS = iS_MP,
@@ -200,16 +207,22 @@ estimator_GMV_d3 <- function(iS, Theta, c_n, verbose){
   third_term_den = c_n^3 * (tr(iS2) / p)^4
   third_term = third_term_num / third_term_den
   
+  if (verbose > 0){
+    cat("  * d3_first_term  = ", first_term, "\n")
+    cat("  * d3_second_term = ", second_term, "\n")
+    cat("  * d3_third_term  = ", third_term, "\n")
+  }
+  
   result = first_term + second_term - third_term
   
   return (result)
 }
 
 
-estimator_GMV_d1 <- function(iS, Theta, c_n, verbose){
+estimator_GMV_d1 <- function(iS, Theta, c_n, p, verbose){
   
   num = tr(iS %*% Theta)
-  den = (c_n * (1/p) * tr(iS %*% iS))
+  den = c_n * (1/p) * tr(iS %*% iS)
   
   result = num / den
   return (result)
