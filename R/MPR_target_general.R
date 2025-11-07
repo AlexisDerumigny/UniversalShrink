@@ -282,7 +282,7 @@ estimator_d1_1p_Sigma2Pi0 <- function(t0, hat_v_t0, cn, p, Sn, Pi0, verbose){
   d1_1p_Pi0 = estimator_ridge_d1_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p,
                                       p = p, cn = cn)
   
-  d0_1p_Pi0 = estimator_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
+  d0_1p_Pi0 = estimator_ridge_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
   
   first_term = d0_1p_Sigma2_Pi0 / hat_v_t0
   second_term = d1_1p_Pi0 / hat_v_t0^2
@@ -441,7 +441,7 @@ best_alphabeta_MPR_shrinkage <- function(t0, cn, Pi0, Ip, Sn, verbose = verbose)
     cat("*  hat_v_t0 = ", hat_v_t0, "\n")
     cat("*  hat_vprime_t0 = ", hat_vprime_t0, "\n")
     
-    d0_t0_1p_Pi0 = estimator_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
+    d0_t0_1p_Pi0 = estimator_ridge_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
     
     d1_t0_1p_Ip = estimator_ridge_d1_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Ip / p,
                                           p = p, cn = cn)

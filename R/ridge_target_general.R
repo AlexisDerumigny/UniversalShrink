@@ -1,5 +1,5 @@
 
-estimator_d0_thetaknown <- function(Ip, Sn, t, Theta){
+estimator_ridge_d0_thetaknown <- function(Ip, Sn, t, Theta){
   
   result = t * tr( solve(Sn + t * Ip) %*% Theta )
   return (result)
@@ -10,7 +10,7 @@ estimator_ridge_d1_thetaknown <- function(Ip, Sn, t, Theta, p, cn){
   iS_ridge = solve(Sn + t * Ip)
   
   numerator_term1 = t * tr( iS_ridge %*% iS_ridge %*% Theta )
-  numerator_term2 = t^(-1) * estimator_d0_thetaknown(Ip, Sn, t, Theta)
+  numerator_term2 = t^(-1) * estimator_ridge_d0_thetaknown(Ip, Sn, t, Theta)
   
   numerator = numerator_term1 - numerator_term2
   
@@ -66,7 +66,7 @@ estimator_d0_1p_Sigma2 <- function(t0, hat_v_t0, cn, Sn, verbose = verbose){
 estimator_d0_1p_Sigma2_Pi0 <- function(t0, hat_v_t0, cn, Pi0, Ip, Sn, verbose){
   first_term = (1 / hat_v_t0) * (1 / p) * tr(Sn %*% Pi0)
   
-  d0_t0_1p_Pi0 = estimator_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
+  d0_t0_1p_Pi0 = estimator_ridge_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
   second_term = (1 / hat_v_t0^2) * (tr(Pi0) / p - d0_t0_1p_Pi0)
   
   result = first_term - second_term
@@ -124,7 +124,7 @@ best_alphabeta_ridge_shrinkage <- function(t0, cn, Pi0, Ip, Sn, verbose = verbos
     cat("*  hat_v_t0 = ", hat_v_t0, "\n")
     cat("*  hat_vprime_t0 = ", hat_vprime_t0, "\n")
     
-    d0_t0_1p_Pi0 = estimator_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
+    d0_t0_1p_Pi0 = estimator_ridge_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
     
     d1_t0_1p_Ip = estimator_ridge_d1_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Ip / p,
                                           p = p, cn = cn)
