@@ -180,7 +180,7 @@ GMV_Moore_Penrose_target_general <- function(Y, centeredCov = TRUE, b = NULL,
   }
   
   
-  w_ShMP <- alp_ShMP * w_MP + (1 - alp_ShMP) * bip / p
+  w_ShMP <- alp_ShMP * w_MP + (1 - alp_ShMP) * b
   
   return (w_ShMP)
 }
