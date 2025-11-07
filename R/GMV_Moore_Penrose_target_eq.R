@@ -57,7 +57,7 @@
 #' 
 #' 
 #' @export
-GMV_Moore_Penrose_target_eq <- function(Y, centeredCov = TRUE){
+GMV_Moore_Penrose_target_eq <- function(Y, centeredCov = TRUE, verbose = 2){
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
@@ -117,23 +117,39 @@ GMV_Moore_Penrose_target_eq <- function(Y, centeredCov = TRUE){
   bip<-matrix(rep(1,p),p,1)
   tbip<-t(bip)
   
-  bipiSbip<-sum(tbip%*%iS_MP%*%bip)/p
-  bipiS2bip<-sum(tbip%*%iS_MP%*%iS_MP%*%bip)/p
-  bipiS3bip<-sum(tbip%*%iS_MP%*%iS_MP%*%iS_MP%*%bip)/p
+  bipiSbip  <-sum(tbip %*% iS_MP %*% bip) / p
+  bipiS2bip <-sum(tbip %*% iS_MP %*% iS_MP %*% bip)/p
+  bipiS3bip <-sum(tbip %*% iS_MP %*% iS_MP %*% iS_MP %*% bip) / p
   
   bipSbip<-sum(tbip%*%S%*%bip)/p
   
   hv0 <- c_n * trS1
   
-  d0<-1-tbip%*%S%*%iS_MP%*%bip/p
-  d1<-bipiSbip/p/trS2/c_n  
-  d1_b<-((1-d0)/(hv0)-d1)/hv0
-  d3<-(bipiS3bip / trS2^3 + 2*bipiSbip*trS3^2 / p / trS2^5 - 
-         (bipiS2bip+trS4*bipiSbip) / trS2^4) / c_n^3
+  d0   <- 1 - tbip %*% S %*% iS_MP %*% bip / p
+  d1   <- bipiSbip / (c_n * p * trS2)
+  d1_bSigma <- ( (1 - d0) / hv0 - d1) / hv0
   
-  alp_ShMP <- sum(bipSbip - d1_b / d1) / sum(bipSbip-2*d1_b/d1+d3/d1^2)
+  d3   <- (bipiS3bip / trS2^3 + 2 * bipiSbip * trS3^2 / p / trS2^5 - 
+         (bipiS2bip + trS4 * bipiSbip) / trS2^4) / c_n^3
   
-  cat("alp_ShMP = ", alp_ShMP, "\n")
+  if (verbose > 1){
+    cat("* hv0 = ", hv0, "\n")
+    cat("* d0 = ", d0, "\n")
+    cat("* d1 = ", d1, "\n")
+    cat("* d1_bSigma = ", d1_bSigma, "\n")
+    cat("* d3 = ", d3, "\n")
+  }
+  
+  num = sum(bipSbip - d1_bSigma  / d1)
+  den = sum(bipSbip - 2 * d1_bSigma / d1 + d3 / d1^2)
+  
+  alp_ShMP <- num / den
+  
+  if (verbose > 0){
+    cat("num = ", num, "\n")
+    cat("den = ", den, "\n")
+    cat("alp_ShMP = ", alp_ShMP, "\n")
+  }
   
   w_ShMP <- alp_ShMP * w_MP + (1 - alp_ShMP) * bip / p
   
