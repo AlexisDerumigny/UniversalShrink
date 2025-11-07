@@ -279,7 +279,7 @@ estimator_d1_1p_Sigma2Pi0 <- function(t0, hat_v_t0, cn, p, Sn, Pi0, verbose){
                                                 cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn, 
                                                 verbose = verbose)
   
-  d1_1p_Pi0 = estimator_d1_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p,
+  d1_1p_Pi0 = estimator_ridge_d1_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p,
                                       p = p, cn = cn)
   
   d0_1p_Pi0 = estimator_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
@@ -443,7 +443,7 @@ best_alphabeta_MPR_shrinkage <- function(t0, cn, Pi0, Ip, Sn, verbose = verbose)
     
     d0_t0_1p_Pi0 = estimator_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
     
-    d1_t0_1p_Ip = estimator_d1_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Ip / p,
+    d1_t0_1p_Ip = estimator_ridge_d1_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Ip / p,
                                           p = p, cn = cn)
     
     cat("*  d0(t, Theta) = ", d0_t0_1p_Pi0, "\n")
