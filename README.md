@@ -78,6 +78,8 @@ TODO: clean documentation of the following functions:
 - `GMV_Moore_Penrose_target_eq()`: performs a first-order shrinkage of the
   estimator given by `GMV_Moore_Penrose()` towards the equally-weighted portfolio.
 
-TODO: do the first-order shrinkage of the GMV to a general target.
+- `GMV_Moore_Penrose_target_general()`: performs a first-order shrinkage of the
+  estimator given by `GMV_Moore_Penrose()` towards an arbitrary, fixed, portfolio.
+
 
 

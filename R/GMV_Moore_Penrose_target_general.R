@@ -63,6 +63,28 @@
 #' stopifnot(Loss_GMV_Moore_Penrose_target_eq < Loss_GMV_Moore_Penrose)
 #' 
 #' 
+#' # We now compare with the true target
+#' perfect_GMV_portfolio = GMV_PlugIn(solve(Sigma))
+#' 
+#' GMV_MP_shrinkage_Cent_oracle = 
+#'   GMV_Moore_Penrose_target_general(Y = t(X), centeredCov = TRUE,
+#'                                    b = perfect_GMV_portfolio)
+#'                                    
+#' outOfSampleVariance = 
+#'   t(GMV_MP_shrinkage_Cent_oracle) %*% Sigma %*% GMV_MP_shrinkage_Cent_oracle
+#' 
+#' outOfSampleVarianceGMV = 
+#'   t(perfect_GMV_portfolio) %*% Sigma %*% perfect_GMV_portfolio
+#' 
+#' ones = rep(1, length = p)
+#' V_GMV = 1 / ( t(ones) %*% solve(Sigma) %*% ones)
+#' 
+#' Loss_GMV_MP_shrinkage_Cent_oracle = (outOfSampleVariance - V_GMV) / V_GMV
+#' 
+#' cat("GMV_Moore_Penrose_target_eq:", Loss_GMV_Moore_Penrose_target_eq, "\n")
+#' cat("GMV_Moore_Penrose:", Loss_GMV_Moore_Penrose, "\n")
+#' cat("GMV_Moore_Penrose_target_oracle:", Loss_GMV_MP_shrinkage_Cent_oracle, "\n")
+#' 
 #' 
 #' @export
 GMV_Moore_Penrose_target_general <- function(Y, centeredCov = TRUE, b = NULL,
