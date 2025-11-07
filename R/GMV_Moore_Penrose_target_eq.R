@@ -151,8 +151,8 @@ GMV_Moore_Penrose_target_eq <- function(Y, centeredCov = TRUE, verbose = 2){
     cat("* d3 = ", d3, "\n")
   }
   
-  num = sum(bipSbip - d1_bSigma  / d1)
-  den = sum(bipSbip - 2 * d1_bSigma / d1 + d3 / d1^2)
+  num = sum(bipSbip / p - d1_bSigma  / d1)
+  den = sum(bipSbip / p - 2 * d1_bSigma / d1 + d3 / d1^2)
   
   alp_ShMP <- num / den
   
