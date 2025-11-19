@@ -8,7 +8,7 @@
 # - the estimator of v
 compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 {
-  s_and_v = compute_sv_ridge(m = m + 1, # we need an additional power compared
+  s_and_v = compute_sv_ridge(m = 2 * m, # we need additional powers compared
                                         # to the ridge
                              c_n = c_n,
                              S_t_inverse = S_t_inverse, q1 = q1, q2 = q2, t = t,
@@ -20,7 +20,10 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
   s = matrix(nrow = 2 * m, ncol = 2)
   for (j in 1:(2*m)){
     s[j, ] = 0
-    # FIXME
+    for (k in 0:j){
+      additional_term = (-t)^(j - k) * choose(n = j, k = k) * s_ridge[2 * j - k, ]
+      s[j, ] = s[j, ] + additional_term
+    }
   }
   
   # Computation of M  ==========================================================
