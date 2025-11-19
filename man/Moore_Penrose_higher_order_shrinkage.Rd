@@ -54,14 +54,14 @@ print(FrobeniusLoss2(precision_MoorePenrose_NoCent))
 for (m in 1:5){
   cat("m = ", m, "\n")
   precision_higher_order_shrinkage_Cent = 
-      Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE, t = 10)
+      Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE)
       
   precision_higher_order_shrinkage_NoCent = 
-      Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE, t = 10)
+      Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE)
       
-  print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix))
+  print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix, Sigma = Sigma))
   
-  print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent$estimated_precision_matrix))
+  print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent$estimated_precision_matrix, Sigma = Sigma))
 }
 
 
