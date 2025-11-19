@@ -4,7 +4,7 @@
 \alias{GMV_Moore_Penrose_target_eq}
 \title{First-order shrinkage of the Moore-Penrose portfolio towards the equally weighted portfolio}
 \usage{
-GMV_Moore_Penrose_target_eq(Y, centeredCov = TRUE)
+GMV_Moore_Penrose_target_eq(Y, centeredCov = TRUE, verbose = 2)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
