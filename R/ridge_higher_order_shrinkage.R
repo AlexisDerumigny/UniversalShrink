@@ -282,6 +282,20 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 #'   print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
 #' }
 #' 
+#' for (m in 1:5){
+#'   cat("m = ", m, "\n")
+#'   precision_higher_order_shrinkage_Cent = 
+#'       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE, t = 10,
+#'                                    inversionMethod = "ginv")
+#'       
+#'   precision_higher_order_shrinkage_NoCent = 
+#'       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE, t = 10,
+#'                                    inversionMethod = "ginv")
+#'       
+#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
+#'   
+#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
+#' }
 #' 
 #' precision_higher_order_shrinkage_Cent = 
 #'   ridge_higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE, t = 100)
@@ -311,7 +325,8 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 #' 
 #' @export
 #' 
-ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 0)
+ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 0,
+                                         inversionMethod = "solve")
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage`...\n")
@@ -374,7 +389,12 @@ ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 0)
   
   # TODO: compute all estimators for smaller m here using submatrices of this matrix
   
-  alpha = solve(estimatedM$M) %*% estimatedM$hm
+  if (inversionMethod == "solve"){
+    alpha = solve(estimatedM$M) %*% estimatedM$hm
+  } else if (inversionMethod == "ginv"){
+    alpha = MASS::ginv(estimatedM$M) %*% estimatedM$hm
+  }
+  
   if (verbose > 0){
     cat("Optimal alpha: \n")
     print(alpha)
