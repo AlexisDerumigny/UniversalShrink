@@ -294,10 +294,18 @@ ridge_higher_order_shrinkage_optimal <- function(
 }
 
 
-# Compute the vector hat s for the higher-order shrinkage of the ridge estimator
-# and also hat v
-#
-# Do we want to make it two separate functions?
+#' Compute the vector hat s for the higher-order shrinkage of the ridge estimator
+#' and also hat v
+#'
+#' Do we want to make it two separate functions?
+#'
+#' @return a list with the following components
+#' \itemize{
+#'    \item `s`: a matrix with 2m rows and 2 columns
+#'    \item `v`: a vector of size 2m-1
+#' }
+#' 
+#' @noRd
 compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 {
   v_0_t <- v_hat_j_of_t(t = t, j = 0, S_t_inverse_pow_jp1 = S_t_inverse, c_n = c_n)
