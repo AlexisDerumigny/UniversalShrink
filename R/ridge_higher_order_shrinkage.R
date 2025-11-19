@@ -294,13 +294,8 @@ ridge_higher_order_shrinkage_optimal <- function(
 }
 
 
-# Compute the matrix M for the higher-order shrinkage of the ridge estimator.
-# 
-# @return a list with
-# - a square matrix M of size (m + 1)
-# - a vector hm of size (m + 1)
-# - the estimator of v
-compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
+# Compute the vector hat s for the higher-order shrinkage of the ridge estimator
+compute_s_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 {
   v_0_t <- v_hat_j_of_t(t = t, j = 0, S_t_inverse_pow_jp1 = S_t_inverse, c_n = c_n)
   
@@ -409,6 +404,22 @@ compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     print(s)
     cat("\n")
   }
+  
+  return (s)
+}
+
+
+# Compute the matrix M for the higher-order shrinkage of the ridge estimator.
+# 
+# @return a list with
+# - a square matrix M of size (m + 1)
+# - a vector hm of size (m + 1)
+# - the estimator of v
+compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
+{
+  s = compute_s_ridge(m = m, c_n = c_n,
+                      S_t_inverse = S_t_inverse, q1 = q1, q2 = q2, t = t,
+                      verbose = verbose)
   
   # Computation of M  ==========================================================
   s2 = c(q2, s[, 2])
