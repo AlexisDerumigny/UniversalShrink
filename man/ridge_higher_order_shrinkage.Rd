@@ -4,7 +4,7 @@
 \alias{ridge_higher_order_shrinkage}
 \title{Ridge higher order shrinkage}
 \usage{
-ridge_higher_order_shrinkage(Y, m, centeredCov, t, verbose = 2)
+ridge_higher_order_shrinkage(Y, m, centeredCov, t, verbose = 0)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).

@@ -62,7 +62,7 @@
 #' @export
 #' 
 ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov, interval = c(0, 50),
-                                                 verbose = 2)
+                                                 verbose = 0)
 {
   # Get sizes of Y
   p = nrow(Y)

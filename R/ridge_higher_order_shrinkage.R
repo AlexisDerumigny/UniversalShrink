@@ -311,7 +311,7 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 #' 
 #' @export
 #' 
-ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 2)
+ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 0)
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage`...\n")

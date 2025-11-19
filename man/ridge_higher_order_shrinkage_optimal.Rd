@@ -9,7 +9,7 @@ ridge_higher_order_shrinkage_optimal(
   m,
   centeredCov,
   interval = c(0, 50),
-  verbose = 2
+  verbose = 0
 )
 }
 \arguments{
