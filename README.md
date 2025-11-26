@@ -15,6 +15,8 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
   estimation of the covariance matrix using non-linear shrinkage. Both estimators
   are optimal for the Frobenius norm (asymptotically).
 
+- `cov_higher_order_shrinkage()`: perform higher-order shrinkage of the covariance
+  matrix.
 
 
 # 2. Functions for estimation of the precision matrix
