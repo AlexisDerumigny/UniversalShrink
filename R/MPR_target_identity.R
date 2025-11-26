@@ -2,8 +2,10 @@
 #' Moore-Penrose-Ridge with identity target
 #' 
 #' This function computes
-#' \deqn{\widehat{\Sigma^{-1}}^{ridge}_t = (S + t I_p)^{-1} - t * (S + t I_p)^{-2}},
-#' where \eqn{S} is the sample covariance matrix and \eqn{t} is a given parameter.
+#' \deqn{\widehat{\Sigma^{-1}}^{ridge}_t
+#'       = (S + t I_p)^{-1} - t * (S + t I_p)^{-2}},
+#' where \eqn{S} is the sample covariance matrix and \eqn{t} is a given
+#' parameter.
 #' 
 #' 
 #' @param Y data matrix (rows are features, columns are observations).
@@ -37,22 +39,26 @@
 #' 
 #' Y = t(X)
 #' 
-#' precision_MPR_Cent_optimal = MPR_target_identity_optimal(Y = Y, centeredCov = TRUE)
+#' precision_MPR_Cent_optimal = MPR_target_identity_optimal(Y = Y,
+#'                                                          centeredCov = TRUE)
 #' cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_optimal, Sigma = Sigma),
 #'     ", t opt = ", precision_MPR_Cent_optimal$t_optimal, 
 #'     ", alpha opt = ", precision_MPR_Cent_optimal$alpha_optimal,
 #'     ", beta opt = ", precision_MPR_Cent_optimal$beta_optimal, "\n", sep = "")
 #' 
-#' precision_MPR_Cent = MPR_target_identity(Y = Y, centeredCov = TRUE,
-#'                                          t = precision_MPR_Cent_optimal$t_optimal,
-#'                                          alpha = precision_MPR_Cent_optimal$alpha_optimal,
-#'                                          beta = precision_MPR_Cent_optimal$beta_optimal)
+#' precision_MPR_Cent = MPR_target_identity(
+#'    Y = Y, centeredCov = TRUE,
+#'    t = precision_MPR_Cent_optimal$t_optimal,
+#'    alpha = precision_MPR_Cent_optimal$alpha_optimal,
+#'    beta = precision_MPR_Cent_optimal$beta_optimal)
+#'    
 #' cat("loss = ", FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma))
 #' 
-#' precision_MPR_Cent = MPR_target_identity(Y = Y, centeredCov = TRUE,
-#'                                          t = precision_MPR_Cent_optimal$t_optimal,
-#'                                          alpha = 1,
-#'                                          beta = 0)
+#' precision_MPR_Cent = MPR_target_identity(
+#'    Y = Y, centeredCov = TRUE,
+#'    t = precision_MPR_Cent_optimal$t_optimal,
+#'    alpha = 1, beta = 0)
+#'    
 #' cat("loss = ", FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma))
 #' 
 #' precision_MPR_Cent = MPR_no_shrinkage(Y = Y, centeredCov = TRUE,
@@ -95,7 +101,8 @@ MPR_target_identity_optimal <- function (Y, centeredCov, verbose = 2,
   }
   
   
-  hL2MPR_max<-optim(1.5, hL2MPr,lower = eps, upper = upp, method= "L-BFGS-B", control = list(fnscale = -1))
+  hL2MPR_max<-optim(1.5, hL2MPr,lower = eps, upper = upp, method= "L-BFGS-B",
+                    control = list(fnscale = -1))
   u_MPR<- hL2MPR_max$par
   t <- tan(u_MPR)
   
@@ -125,7 +132,8 @@ MPR_target_identity_optimal <- function (Y, centeredCov, verbose = 2,
   d1Sig2_t<-ihvt*(d0Sig2_t-d1Sig_t)
   d2Sig2_t<-ihvt*(d1Sig2_t-(ihvt^3+hvprprt/(hvprt^3)/2)/cn)
   d3Sig2_t<-ihvt*(d2Sig2_t-(ihvt^4+hvprprt^2/(hvprt^5)/2-hvprprprt/(hvprt^4)/6)/cn)
-  hgs2Sig2_t<- -(hvprt_2*d2Sig2_t-hvprprt*d1Sig2_t/2)+t*(hvprprprt*d1Sig2_t/6-hvprt*hvprprt*d2Sig2_t+d3Sig2_t*hvprt^3)
+  hgs2Sig2_t<- -(hvprt_2*d2Sig2_t-hvprprt*d1Sig2_t/2) +
+    t*(hvprprprt*d1Sig2_t/6-hvprt*hvprprt*d2Sig2_t+d3Sig2_t*hvprt^3)
   
   num_a_ShMPRt<- -hvprt*d1Sig_t*q2+hvprt*d1Sig2_t*q1
   num_b_ShMPRt<- hgs2Sig2_t*q1- hvprt_2*d1Sig_t*d1Sig2_t

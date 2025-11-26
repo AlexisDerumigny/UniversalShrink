@@ -30,8 +30,10 @@ the estimator of the precision matrix, of class
 }
 \description{
 This function computes
-\deqn{\widehat{\Sigma^{-1}}^{ridge}_t = (S + t I_p)^{-1} - t * (S + t I_p)^{-2}},
-where \eqn{S} is the sample covariance matrix and \eqn{t} is a given parameter.
+\deqn{\widehat{\Sigma^{-1}}^{ridge}_t
+      = (S + t I_p)^{-1} - t * (S + t I_p)^{-2}},
+where \eqn{S} is the sample covariance matrix and \eqn{t} is a given
+parameter.
 }
 \examples{
 
@@ -49,22 +51,26 @@ X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 
 Y = t(X)
 
-precision_MPR_Cent_optimal = MPR_target_identity_optimal(Y = Y, centeredCov = TRUE)
+precision_MPR_Cent_optimal = MPR_target_identity_optimal(Y = Y,
+                                                         centeredCov = TRUE)
 cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_optimal, Sigma = Sigma),
     ", t opt = ", precision_MPR_Cent_optimal$t_optimal, 
     ", alpha opt = ", precision_MPR_Cent_optimal$alpha_optimal,
     ", beta opt = ", precision_MPR_Cent_optimal$beta_optimal, "\n", sep = "")
 
-precision_MPR_Cent = MPR_target_identity(Y = Y, centeredCov = TRUE,
-                                         t = precision_MPR_Cent_optimal$t_optimal,
-                                         alpha = precision_MPR_Cent_optimal$alpha_optimal,
-                                         beta = precision_MPR_Cent_optimal$beta_optimal)
+precision_MPR_Cent = MPR_target_identity(
+   Y = Y, centeredCov = TRUE,
+   t = precision_MPR_Cent_optimal$t_optimal,
+   alpha = precision_MPR_Cent_optimal$alpha_optimal,
+   beta = precision_MPR_Cent_optimal$beta_optimal)
+   
 cat("loss = ", FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma))
 
-precision_MPR_Cent = MPR_target_identity(Y = Y, centeredCov = TRUE,
-                                         t = precision_MPR_Cent_optimal$t_optimal,
-                                         alpha = 1,
-                                         beta = 0)
+precision_MPR_Cent = MPR_target_identity(
+   Y = Y, centeredCov = TRUE,
+   t = precision_MPR_Cent_optimal$t_optimal,
+   alpha = 1, beta = 0)
+   
 cat("loss = ", FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma))
 
 precision_MPR_Cent = MPR_no_shrinkage(Y = Y, centeredCov = TRUE,
