@@ -2,8 +2,11 @@
 
 #' Higher order shrinkage for estimation of the covariance matrix
 #' 
-#' @param Y data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
+#' @param X data matrix (rows are observations, columns are features).
+#' 
+#' @param m order of the shrinkage. Should be at least 1.
+#' 
+#' @inheritParams cov_with_centering
 #' 
 #' @returns an object of class `EstimatedCovarianceMatrix` containing 
 #' \itemize{
@@ -13,7 +16,7 @@
 #' 
 #' 
 #' @examples
-#' p = 300
+#' p = 500
 #' n = 30
 #' Sigma = diag(seq(1, 0.02, length.out = p))
 #' mu = rep(0, p)
@@ -23,25 +26,30 @@
 #' estimatedCov_analytical = cov_analytical_NL_shrinkage(X)
 #' estimatedCov_QIS = cov_quadratic_inverse_shrinkage(X)
 #' 
-#' # We now compare the distance between the true and both estimators.
-#' LossEuclideanEigenvalues2(estimatedCov_sample, Sigma)
+#' # We now compare the distances between the truth and the estimators.
+#' LossEuclideanEigenvalues2(estimatedCov_sample, Sigma, type = "covariance")
 #' LossEuclideanEigenvalues2(estimatedCov_analytical, Sigma)
 #' LossEuclideanEigenvalues2(estimatedCov_QIS, Sigma)
-#' LossFrobenius2(estimatedCov_sample, Sigma)
+#'
+#' LossFrobenius2(estimatedCov_sample, Sigma, type = "covariance")
 #' LossFrobenius2(estimatedCov_analytical, Sigma)
 #' LossFrobenius2(estimatedCov_QIS, Sigma)
 #' 
 #' for (m in 1:4){
-#'   estimatedCov_shrink_higher = cov_higher_order_shrinkage(t(X), m = m)
+#'   estimatedCov_shrink_higher = cov_higher_order_shrinkage(X, m = m)
 #'   
 #'   loss = LossFrobenius2(estimatedCov_shrink_higher, Sigma)
 #'   cat("m = ", m, ", loss = ", loss, "\n")
+#'   
 #'   # cat("alpha = ", estimatedCov_shrink_higher$alpha)
 #'   cat("\n")
 #' }
 #' 
 #' estimator = sum(diag(estimatedCov_sample)) / p * diag(nrow = p)
-#' NormFrobenius2(estimator - Sigma)
+#' LossFrobenius2(estimator, Sigma, type = "covariance")
+#' 
+#' oracle_Estimator = cov_NL_oracle(X, Sigma = Sigma)
+#' LossFrobenius2(oracle_Estimator, Sigma)
 #' 
 #' 
 #' \donttest{
@@ -60,51 +68,26 @@
 #' }
 #' 
 #' @export
-cov_higher_order_shrinkage <- function(Y, centeredCov, m, verbose){
+cov_higher_order_shrinkage <- function(X, centeredCov = TRUE, m, verbose = 0){
   
   if (verbose > 0){
     cat("Starting `cov_higher_order_shrinkage`...\n")
   }
   
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
+  cn = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  
+  # Identity matrix of size p
+  Ip = diag(nrow = p)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   if (verbose > 0){
-    cat("*  n = ", n, "\n")
-    cat("*  p = ", p, "\n")
     cat("*  m = ", m, "\n")
   }
-  
-  # Identity matrix of size p
-  Ip = diag(nrow = p)
-  
-  if (centeredCov){
-    if (verbose > 0){
-      cat("*  centered case\n")
-    }
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    c_n = p / (n-1)
-    
-  } else {
-    if (verbose > 0){
-      cat("*  non-centered case\n")
-    }
-    
-    S <- Y %*% t(Y)/n
-    
-    c_n = p / n
-  }
-  if (verbose > 0){
-    cat("*  c_n = ", c_n, "\n\n")
-  }
-  
-  # Identity matrix of size p
-  Ip = diag(nrow = p)
   
   list_power_S = list()
   power_S = Ip
@@ -118,7 +101,7 @@ cov_higher_order_shrinkage <- function(Y, centeredCov, m, verbose){
     list_power_S[[k]] <- power_S
   }
   
-  estimatedM = compute_M_covariance(m = m, c_n = c_n, p = p,
+  estimatedM = compute_M_covariance(m = m, c_n = cn, p = p,
                                     S = S, verbose = verbose,
                                     list_power_S = list_power_S)
   

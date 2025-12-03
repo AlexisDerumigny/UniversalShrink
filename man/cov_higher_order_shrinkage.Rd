@@ -4,11 +4,23 @@
 \alias{cov_higher_order_shrinkage}
 \title{Higher order shrinkage for estimation of the covariance matrix}
 \usage{
-cov_higher_order_shrinkage(Y, centeredCov, m, verbose)
+cov_higher_order_shrinkage(X, centeredCov = TRUE, m, verbose = 0)
 }
 \arguments{
-\item{Y}{data matrix (rows are features, columns are observations).
-TODO: transpose everything.}
+\item{X}{data matrix (rows are observations, columns are features).}
+
+\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
+computed using centering (i.e. in the general case where the mean of the
+random vector may be non-zero).
+If \code{FALSE} the covariance matrix is computed assuming that the mean of
+the random vector of interest is \code{0} (i.e. does not need to be estimated).}
+
+\item{m}{order of the shrinkage. Should be at least 1.}
+
+\item{verbose}{a number indicating whether to print intermediary values and
+details about the progress of the computations. A value of \code{0} indicates
+no printing at all, while higher values indicate increasingly more detailed
+(more verbose) output.}
 }
 \value{
 an object of class \code{EstimatedCovarianceMatrix} containing
@@ -21,7 +33,7 @@ matrix (a \code{p} by \code{p} matrix).
 Higher order shrinkage for estimation of the covariance matrix
 }
 \examples{
-p = 300
+p = 500
 n = 30
 Sigma = diag(seq(1, 0.02, length.out = p))
 mu = rep(0, p)
@@ -31,25 +43,30 @@ estimatedCov_sample = cov(X)
 estimatedCov_analytical = cov_analytical_NL_shrinkage(X)
 estimatedCov_QIS = cov_quadratic_inverse_shrinkage(X)
 
-# We now compare the distance between the true and both estimators.
-LossEuclideanEigenvalues2(estimatedCov_sample, Sigma)
+# We now compare the distances between the truth and the estimators.
+LossEuclideanEigenvalues2(estimatedCov_sample, Sigma, type = "covariance")
 LossEuclideanEigenvalues2(estimatedCov_analytical, Sigma)
 LossEuclideanEigenvalues2(estimatedCov_QIS, Sigma)
-LossFrobenius2(estimatedCov_sample, Sigma)
+
+LossFrobenius2(estimatedCov_sample, Sigma, type = "covariance")
 LossFrobenius2(estimatedCov_analytical, Sigma)
 LossFrobenius2(estimatedCov_QIS, Sigma)
 
 for (m in 1:4){
-  estimatedCov_shrink_higher = cov_higher_order_shrinkage(t(X), m = m)
+  estimatedCov_shrink_higher = cov_higher_order_shrinkage(X, m = m)
   
   loss = LossFrobenius2(estimatedCov_shrink_higher, Sigma)
   cat("m = ", m, ", loss = ", loss, "\n")
+  
   # cat("alpha = ", estimatedCov_shrink_higher$alpha)
   cat("\n")
 }
 
 estimator = sum(diag(estimatedCov_sample)) / p * diag(nrow = p)
-NormFrobenius2(estimator - Sigma)
+LossFrobenius2(estimator, Sigma, type = "covariance")
+
+oracle_Estimator = cov_NL_oracle(X, Sigma = Sigma)
+LossFrobenius2(oracle_Estimator, Sigma)
 
 
 \donttest{
