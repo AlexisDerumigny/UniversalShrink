@@ -106,8 +106,21 @@ cov_higher_order_shrinkage <- function(Y, centeredCov, m, verbose){
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
+  list_power_S = list()
+  power_S = Ip
+  
+  for (k in 1:(2 * m)){
+    if (k == 1){
+      power_S = S
+    } else {
+      power_S = power_S %*% S
+    }
+    list_power_S[[k]] <- power_S
+  }
+  
   estimatedM = compute_M_covariance(m = m, c_n = c_n, p = p,
-                                    S = S, verbose = verbose)
+                                    S = S, verbose = verbose,
+                                    list_power_S = list_power_S)
   
   # TODO: compute all estimators for smaller m here using submatrices of this matrix
   
@@ -121,9 +134,8 @@ cov_higher_order_shrinkage <- function(Y, centeredCov, m, verbose){
   power_S = Ip
   
   for (k in 1:m){
-    power_S = power_S %*% S
     estimated_covariance_matrix = estimated_covariance_matrix + 
-      alpha[k + 1] * power_S
+      alpha[k + 1] * list_power_S[[k]]
   }
   
   result = list(
@@ -140,7 +152,7 @@ cov_higher_order_shrinkage <- function(Y, centeredCov, m, verbose){
 }
 
 
-compute_M_covariance <- function(m, c_n, p, S, verbose){
+compute_M_covariance <- function(m, c_n, p, S, verbose, list_power_S){
   q1 = tr(S) / p
   
   if (m == 0){
@@ -151,9 +163,10 @@ compute_M_covariance <- function(m, c_n, p, S, verbose){
   
   # Now m is at least 1
   
-  all_tr = compute_trace_power_matrix(S = S, m = 2 * m, verbose = verbose - 1)
+  all_tr = compute_trace_power_matrix(list_power_S = list_power_S,
+                                      m = 2 * m, verbose = verbose - 1)
   
-  u = compute_HigherOrderCov_hat_u(S = S, m = m + 1, c_n = c_n, p = p,
+  u = compute_HigherOrderCov_hat_u(m = m + 1, c_n = c_n, p = p,
                                    verbose = verbose - 1, all_tr = all_tr)
   
   f = compute_HigherOrderCov_hat_f(u = u, m = m, p = p, verbose = verbose - 1,
@@ -243,13 +256,11 @@ compute_HigherOrderCov_hat_f <- function(u, m, p, verbose, all_tr){
 }
 
 # This returns a vector of size m, where the j-th element corresponds to hat u_j.
-compute_HigherOrderCov_hat_u <- function(S, m, c_n, p, verbose,
-                                         all_tr){
+compute_HigherOrderCov_hat_u <- function(m, c_n, p, verbose, all_tr){
   u = rep(NA, m)
   u[1] = 1
-  power_S = diag(p)
+  
   for (j in 2:m){
-    power_S = power_S %*% S
     u[j] <- (-1)^(j - 1) * factorial(j) * (c_n / p) * all_tr[j - 1]
   }
   return (u)
@@ -261,14 +272,11 @@ compute_HigherOrderCov_hat_u <- function(S, m, c_n, p, verbose,
 #' @returns a vector of size `m` containing the trace of S^j for j = 1, ..., m.
 #' 
 #' @noRd
-compute_trace_power_matrix <- function(S, m, verbose){
+compute_trace_power_matrix <- function(list_power_S, m, verbose){
   all_tr = rep(NA, m)
-  power_S = S
-  all_tr[1] = tr(S)
   
-  for (j in 2:m){
-    power_S = power_S %*% S
-    all_tr[j] <- tr(power_S)
+  for (j in 1:m){
+    all_tr[j] <- tr(list_power_S[[j]])
   }
   return (all_tr)
 }
