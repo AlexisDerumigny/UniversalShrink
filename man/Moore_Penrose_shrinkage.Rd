@@ -60,8 +60,8 @@ precision_MoorePenrose_toIPNoCent =
 
 precisionTrue = solve(Sigma)
 
-estimatedCov_NLshrink = analytical_NL_shrinkage(t(X))
-estimatedCov_QISshrink = quadratic_inverse_shrinkage(X)
+estimatedCov_NLshrink = cov_analytical_NL_shrinkage(t(X))
+estimatedCov_QISshrink = cov_quadratic_inverse_shrinkage(X)
 
 precision_NLshrink = solve(estimatedCov_NLshrink)
 precision_QISshrink = solve(estimatedCov_QISshrink)

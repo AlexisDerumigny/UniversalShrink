@@ -24,14 +24,14 @@
 #' mu = rep(0, p)
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' estimatedCov_sample = cov(X)
-#' estimatedCov_shrink = quadratic_inverse_shrinkage(X)
+#' estimatedCov_shrink = cov_quadratic_inverse_shrinkage(X)
 #' 
 #' # We now compare the distance between the true and both estimators.
 #' mean((eigen(Sigma)$values - eigen(estimatedCov_sample)$values)^2)
 #' mean((eigen(Sigma)$values - eigen(estimatedCov_shrink)$values)^2)
 #' 
 #' @export
-quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE) {
+cov_quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE) {
   Y = t(X)
   n <- nrow(X) # Sample size
   p <- ncol(X) # Matrix dimension

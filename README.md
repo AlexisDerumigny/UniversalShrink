@@ -11,7 +11,7 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 # 1. Functions for estimation of the covariance matrix
 
 
-- `analytical_NL_shrinkage()` and `quadratic_inverse_shrinkage()`: perform
+- `cov_analytical_NL_shrinkage()` and `cov_quadratic_inverse_shrinkage()`: perform
   estimation of the covariance matrix using non-linear shrinkage. Both estimators
   are optimal for the Frobenius norm (asymptotically).
 

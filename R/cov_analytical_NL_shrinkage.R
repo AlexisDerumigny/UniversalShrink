@@ -24,14 +24,14 @@
 #' mu = rep(0, p)
 #' X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
 #' estimatedCov_sample = cov(X)
-#' estimatedCov_shrink = analytical_NL_shrinkage(t(X))
+#' estimatedCov_shrink = cov_analytical_NL_shrinkage(t(X))
 #' 
 #' # We now compare the distance between the true and both estimators.
 #' mean((eigen(Sigma)$values - eigen(estimatedCov_sample)$values)^2)
 #' mean((eigen(Sigma)$values - eigen(estimatedCov_shrink)$values)^2)
 #' 
 #' @export
-analytical_NL_shrinkage = function(x){
+cov_analytical_NL_shrinkage = function(x){
   # the original version suggested that p is # of columns
   p = nrow(x)
   n = ncol(x)
