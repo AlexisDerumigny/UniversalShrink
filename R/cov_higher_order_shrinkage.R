@@ -206,7 +206,7 @@ compute_HigherOrderCov_hat_f <- function(u, m, p, verbose, all_tr){
       
       if (verbose > 0){
         cat("This is term j =", j, ", k =", k,
-            ", Bell polynomial =", Bell_polynomial, "\n")
+            ", Bell polynomial =", all_Bell_polynomials[j, k], "\n")
       }
     }
   }
@@ -220,6 +220,11 @@ compute_HigherOrderCov_hat_f <- function(u, m, p, verbose, all_tr){
       corr_term = (-1)^(k+j) * (factorial(k) / factorial(j) ) * q[k] * Bell_polynomial
       
       q[j] = q[j] - corr_term
+      
+      if (verbose > 0){
+        cat("This is term j =", j, ", k =", k,
+            ", corr_term =", corr_term, "\n")
+      }
     }
   }
   
@@ -232,6 +237,11 @@ compute_HigherOrderCov_hat_f <- function(u, m, p, verbose, all_tr){
       add_term = (-1)^(k+j) * (factorial(k) / factorial(j) ) * q[k+1] * Bell_polynomial
       
       f[j] = f[j] + add_term
+      
+      if (verbose > 0){
+        cat("This is term j =", j, ", k =", k,
+            ", add_term =", add_term, "\n")
+      }
     }
   }
   
