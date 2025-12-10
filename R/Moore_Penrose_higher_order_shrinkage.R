@@ -9,34 +9,89 @@
 #' 
 #' @param p number of variables
 #' 
-#' @param Splus Moore-Penrose inverse of the sample covariance matrix
+#' @param D_MP diagonal matrix containing on the diagonal the eigenvalues of the
+#' Moore-Penrose inverse of the sample covariance matrix.
 #' 
 #' @returns a vector of size \code{m} containing
 #' \eqn{\widehat{v'}(0), \dots, \widehat{v^{(m)}}(0)}.
 #' 
 #' @noRd
-estimator_vhat_derivative_t0 <- function(m, c_n, p, Splus){
+estimator_vhat_derivative_t0 <- function(m, c_n, p, D_MP){
   v <- rep(NA, m)
   
   for (i in 1:m)
   {
-    v[i] <- (-1)^i * factorial(i) * c_n * (1/p) * tr(Splus^(i+1))
+    v[i] <- (-1)^i * factorial(i) * c_n * (1/p) * sum(diag(D_MP)^(i+1))
   }
   
   return (v)
+} 
+estimator_w_hat_derivative_t0 <- function(m, c_n, p, D_MP){
+  w <- rep(NA, m)
+  
+  for (i in 1:m)
+  {
+    w[i] <- (-1)^(i-1) * factorial(i) * c_n * (1/p) * sum(diag(D_MP)^(i))
+  }
+  return (w)
 } 
 
 #' This function estimates \eqn{\widehat{v(0)}}
 #'
 #' @noRd
-estimator_vhat_t0 <- function(c_n, p, Splus){
-  v <- c_n * (1/p) * tr(Splus)
+estimator_vhat_t0 <- function(c_n, p, D_MP){
+  v <- c_n * (1/p) * tr(D_MP)
   
   return (v)
 }
 
+estimator_w_hat_tilde_derivative_t0 <- function(m, c_n, w){
+  wtilde <- rep(NA, m)
+  wtilde[1] <- 1 / (1 - c_n)
+  
+  for (j in 2:m)
+  {
+    wtilde[j] <- 0
+    for (k in 1:(j-1)) {
+      Bell_polynomial = 
+        kStatistics::e_eBellPol(j - 1, k, c(w[1:(j - k)], rep(0, k - 1)))
+      
+      additional_term = 
+        ((-1)^k * factorial(k) / (1 - c_n)^(k + 1)) * Bell_polynomial
+      
+      wtilde[j] <- wtilde[j] + additional_term
+    }
+    wtilde[j] <- j * wtilde[j]
+  }
+  return (w)
+} 
+
+
+estimator_d_hat_tilde_p_small <- function(m, c_n, w_hat_tilde){
+  d = rep(NA, m)
+  for (j in 1:m){
+    second_term = 0
+    if (j > 1){
+      for (k in 1:(j - 1)) {
+        Bell_polynomial = 
+          kStatistics::e_eBellPol(j, k, c(w_hat_tilde[1:(j - k + 1)], rep(0, k - 1)))
+        
+        new_term = (-1)^k * factorial(k) * d[k] * Bell_polynomial
+        second_term = second_term + new_term
+      }
+      second_term = second_term * c_n
+    }
+    num = w_hat_tilde[j] + second_term
+    den = - c_n * (-1)^(j + 1) * factorial(j) * (1 - c_n)^(- j)
+    d[j] <- num / den
+  }
+  return (d)
+}
+
+  
+  
 # Compute the matrix M for the higher-order shrinkage
-compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
+compute_M <- function(m, n, p, ihv0, q1, q2, h2, h3, hv0, centeredCov, D_MP)
 {
   if (centeredCov){
     c_n = p / (n-1)
@@ -50,7 +105,7 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
   h[2] <- h2
   h[3] <- h3
   
-  v <- estimator_vhat_derivative_t0(m = 2 * m, c_n, p = p, Splus = D_MP)
+  v <- estimator_vhat_derivative_t0(m = 2 * m, c_n, p = p, D_MP = D_MP)
   
   if (m > 1)
   { 
@@ -241,7 +296,7 @@ Moore_Penrose_higher_order_shrinkage <- function(X, m, centeredCov = TRUE, verbo
   trS2 <- tr(iS_MP %*% iS_MP) / p
   trS3 <- tr(iS_MP %*% iS_MP %*% iS_MP) / p
   
-  hv0 <- estimator_vhat_t0(c_n = c_n, p = p, Splus = D_MP)
+  hv0 <- estimator_vhat_t0(c_n = c_n, p = p, D_MP = D_MP)
   ihv0 <- 1 / hv0
   ihv0_2 <- ihv0^2
   ihv0_3 <- ihv0^3
@@ -252,9 +307,9 @@ Moore_Penrose_higher_order_shrinkage <- function(X, m, centeredCov = TRUE, verbo
   q1 <- tr(S) / p
   q2 <- tr(S %*% S) / p - c_n * q1^2
   
-  estimatedM = compute_M(m = m, n = n, p = p, ihv0 = ihv0, D_MP = D_MP,
+  estimatedM = compute_M(m = m, n = n, p = p, ihv0 = ihv0,
                          q1 = q1, q2 = q2, h2 = h2, h3 = h3, hv0 = hv0,
-                         centeredCov = centeredCov)
+                         centeredCov = centeredCov, D_MP = D_MP)
   
   # TODO: compute all estimators for smaller m here using submatrices of this matrix
   
