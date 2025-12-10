@@ -18,6 +18,8 @@ Imports:
 Suggests: 
     MASS,
     ggplot2,
+    dplyr,
+    stringr,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
