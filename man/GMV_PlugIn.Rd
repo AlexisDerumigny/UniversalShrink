@@ -10,7 +10,8 @@ GMV_PlugIn(estimatedPrecisionMatrix)
 \item{estimatedPrecisionMatrix}{a matrix of size \eqn{p \times p}, which
 is estimating the precision matrix \eqn{\Sigma^{-1}}
 ( = the inverse of the covariance matrix of the vector of asset returns that
-are considered).}
+are considered).
+Or an object that can be converted to the matrix class by \code{as.matrix}.}
 }
 \value{
 a vector of size \eqn{p} with the computed portfolio weights, with

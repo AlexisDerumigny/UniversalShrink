@@ -85,21 +85,17 @@ list_GMV = list(
   # ,
   
   # GMV_plugin_higher_order_shrinkage_3 = GMV_PlugIn(
-  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 3, centeredCov = TRUE
-  #                                        )$estimated_precision_matrix),
+  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 3, centeredCov = TRUE)),
   
   # GMV_plugin_higher_order_shrinkage_4 = GMV_PlugIn(
-  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 4, centeredCov = TRUE
-  #                                        )$estimated_precision_matrix)
+  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 4, centeredCov = TRUE))
   # ,
   
   # GMV_plugin_higher_order_shrinkage_5 = GMV_PlugIn(
-  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 5, centeredCov = TRUE
-  #                                        )$estimated_precision_matrix),
+  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 5, centeredCov = TRUE)),
   
   # GMV_plugin_higher_order_shrinkage_6 = GMV_PlugIn(
-  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 6, centeredCov = TRUE
-  #                                        )$estimated_precision_matrix)
+  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 6, centeredCov = TRUE))
 )
 ```
 

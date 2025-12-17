@@ -216,7 +216,7 @@ Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov)
     
     c_n = p / n
   }
-  iS_MP = Moore_Penrose(Y, centeredCov = centeredCov)
+  iS_MP = as.matrix(Moore_Penrose(Y, centeredCov = centeredCov))
   
   D_MP <- diag(eigen(iS_MP)$values)
   

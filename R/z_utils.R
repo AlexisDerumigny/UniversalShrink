@@ -105,7 +105,7 @@ FrobeniusLoss2.EstimatedPrecisionMatrix <- function(
     stop("Type is chosen to be ", type,
          " but x is of class 'EstimatedPrecisionMatrix'.")
   }
-  result = FrobeniusLoss2(x$estimated_precision_matrix, Sigma,
+  result = FrobeniusLoss2(as.matrix(x), Sigma,
                           type = "precision matrix", normalized = normalized)
   
   return (result)
@@ -124,9 +124,28 @@ FrobeniusLoss2.EstimatedCovarianceMatrix <- function(
     stop("Type is chosen to be ", type,
          " but x is of class 'EstimatedCovarianceMatrix'.")
   }
-  result = FrobeniusLoss2(x$estimated_covariance_matrix, Sigma,
+  result = FrobeniusLoss2(as.matrix(x), Sigma,
                           type = "covariance matrix", normalized = normalized)
   
   return (result)
+}
+
+
+
+#' Conversion of estimated matrices to matrix class
+#' 
+#' @param x object to be converted
+#' 
+#' @return the underlying estimated matrix
+#' 
+#' @export
+as.matrix.EstimatedPrecisionMatrix <- function(x, ...){
+  return (x$estimated_precision_matrix)
+}
+
+#' @rdname as.matrix.EstimatedPrecisionMatrix
+#' @export
+as.matrix.EstimatedCovarianceMatrix <- function(x, ...){
+  return (x$estimated_covariance_matrix)
 }
 
