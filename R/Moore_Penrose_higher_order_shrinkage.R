@@ -209,8 +209,15 @@ Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov)
   Ip = diag(nrow = p)
   
   if (centeredCov){
+    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
+    
+    # Sample covariance matrix
+    S <- Y %*% Jn %*% t(Y) / (n-1)
+    
     c_n = p / (n-1)
   } else {
+    S <- Y %*% t(Y)/n
+    
     c_n = p / n
   }
   iS_MP = Moore_Penrose(Y, centeredCov = centeredCov)

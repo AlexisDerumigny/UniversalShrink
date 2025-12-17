@@ -42,7 +42,7 @@ estimator_d0_1p_Sigma <- function(t0, hat_v_t0, cn){
 
 #' Estimator of d0(t0, Sigma^2 / p)
 #' @noRd
-estimator_d0_1p_Sigma2 <- function(t0, hat_v_t0, cn, Sn, verbose = verbose){
+estimator_d0_1p_Sigma2 <- function(p, t0, hat_v_t0, cn, Sn, verbose = verbose){
   first_term = (1 / hat_v_t0) * (tr(Sn) / p)
   second_term = (1 / hat_v_t0) * ( (1 / (cn * hat_v_t0)) - t0 / cn)
   
@@ -63,7 +63,7 @@ estimator_d0_1p_Sigma2 <- function(t0, hat_v_t0, cn, Sn, verbose = verbose){
 
 #' Estimator of d0(t0, Sigma^2 * Pi_0 / p)
 #' @noRd
-estimator_d0_1p_Sigma2_Pi0 <- function(t0, hat_v_t0, cn, Pi0, Ip, Sn, verbose){
+estimator_d0_1p_Sigma2_Pi0 <- function(p, t0, hat_v_t0, cn, Pi0, Ip, Sn, verbose){
   first_term = (1 / hat_v_t0) * (1 / p) * tr(Sn %*% Pi0)
   
   d0_t0_1p_Pi0 = estimator_ridge_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
@@ -99,17 +99,17 @@ estimator_d1_1p_Sigma2 <- function(t0, hat_v_t0, cn, Pi0, Ip, Sn){
 }
 
 
-best_alphabeta_ridge_shrinkage <- function(t0, cn, Pi0, Ip, Sn, verbose = verbose){
+best_alphabeta_ridge_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, verbose = verbose){
   
   hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, Sn = Sn, Ip = Ip, cn = cn)
   hat_vprime_t0 = estimator_vhat_derivative(t = t0, m = 1, Sn = Sn, Ip = Ip, cn = cn)
   
   d0_1p_Sigma = estimator_d0_1p_Sigma(t0 = t0, hat_v_t0 = hat_v_t0, cn = cn)
   
-  d0_1p_Sigma2 = estimator_d0_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, cn = cn,
+  d0_1p_Sigma2 = estimator_d0_1p_Sigma2(p = p, t0 = t0, hat_v_t0 = hat_v_t0, cn = cn,
                                         Sn = Sn, verbose = verbose - 1)
   
-  d0_1p_Sigma2_Pi0 = estimator_d0_1p_Sigma2_Pi0(t0 = t0, hat_v_t0 = hat_v_t0,
+  d0_1p_Sigma2_Pi0 = estimator_d0_1p_Sigma2_Pi0(p = p, t0 = t0, hat_v_t0 = hat_v_t0,
                                                 cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
                                                 verbose = verbose - 1)
   
@@ -340,7 +340,7 @@ ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 
   
   iS_ridge <- solve(S + t * Ip)
   
-  best_alphabeta = best_alphabeta_ridge_shrinkage(t0 = t, cn = c_n,
+  best_alphabeta = best_alphabeta_ridge_shrinkage(p = p, t0 = t, cn = c_n,
                                                   Pi0 = Pi0, Ip = Ip, Sn = S,
                                                   verbose = verbose)
   
@@ -446,7 +446,7 @@ ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2){
   
   iS_ridge <- solve(S + t * Ip)
   
-  best_alphabeta = best_alphabeta_ridge_shrinkage(t0 = t, cn = c_n,
+  best_alphabeta = best_alphabeta_ridge_shrinkage(p = p, t0 = t, cn = c_n,
                                                   Pi0 = Pi0, Ip = Ip, Sn = S,
                                                   verbose = verbose)
   
@@ -487,10 +487,10 @@ loss_L2_ridge_optimal <- function(t, Sn, Ip, cn, Pi0, verbose)
   
   d0_1p_Sigma = estimator_d0_1p_Sigma(t0 = t, hat_v_t0 = hat_v_t0, cn = cn)
   
-  d0_1p_Sigma2 = estimator_d0_1p_Sigma2(t0 = t, hat_v_t0 = hat_v_t0, cn = cn,
+  d0_1p_Sigma2 = estimator_d0_1p_Sigma2(p = p, t0 = t, hat_v_t0 = hat_v_t0, cn = cn,
                                         Sn = Sn, verbose = verbose - 1)
   
-  d0_1p_Sigma2_Pi0 = estimator_d0_1p_Sigma2_Pi0(t0 = t, hat_v_t0 = hat_v_t0,
+  d0_1p_Sigma2_Pi0 = estimator_d0_1p_Sigma2_Pi0(p = p, t0 = t, hat_v_t0 = hat_v_t0,
                                                 cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
                                                 verbose = verbose - 1)
   

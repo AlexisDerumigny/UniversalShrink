@@ -172,7 +172,7 @@ GMV_Moore_Penrose_target_general <- function(Y, centeredCov = TRUE, b = NULL,
   # Sigma is unknown, so this is not a true function. We must use the expression:
   d1_bSigma <- ((1 - d0) / hv0 - d1_b) / hv0
   
-  d3 <- estimator_GMV_d3(iS = iS_MP,
+  d3 <- estimator_GMV_d3(p = p, iS = iS_MP,
                          Theta = matrix(1/p, nrow = p, ncol = p),
                          c_n = c_n,
                          verbose = verbose - 1)
@@ -211,7 +211,7 @@ GMV_Moore_Penrose_target_general <- function(Y, centeredCov = TRUE, b = NULL,
 #' @param iS the Moore-Penrose inverse of the sample covariance matrix
 #' 
 #' @noRd
-estimator_GMV_d3 <- function(iS, Theta, c_n, verbose){
+estimator_GMV_d3 <- function(p, iS, Theta, c_n, verbose){
   
   iS2 = iS %*% iS
   iS3 = iS2 %*% iS
