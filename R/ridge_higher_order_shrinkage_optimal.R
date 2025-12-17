@@ -24,14 +24,10 @@
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
-#' FrobeniusNorm2 <- function(M){sum(diag(M %*% t(M)))}
-#' 
 #' precision_MoorePenrose_Cent = 
 #'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
 #' precision_MoorePenrose_NoCent = 
 #'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
-#'
-#' FrobeniusLoss2 <- function(M){FrobeniusNorm2(M %*% Sigma - diag(p) ) / p}
 #'
 #' FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
 #' FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
