@@ -92,7 +92,13 @@ Moore_Penrose <- function(Y, centeredCov)
          "and for p = n in the non-centered case.")
   }
   
-  return (iS_MP)
+  result = list(
+    estimated_precision_matrix = iS_MP,
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return ()
 }
 
 

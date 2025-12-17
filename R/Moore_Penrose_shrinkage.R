@@ -208,7 +208,13 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
   beta     <- num_beta_MP / den_MP
   iS_ShMP  <- alpha * iS_MP + beta * Pi0
   
-  return (iS_ShMP)
+  result = list(
+    estimated_precision_matrix = iS_ShMP,
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
 }
 
 
@@ -296,7 +302,13 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov, verbose = 0)
   hb_MP <- num_beta_MP / den_MP
   iS_ShMP<-ha_MP * iS_MP + hb_MP * Ip
   
-  return(iS_ShMP)
+  result = list(
+    estimated_precision_matrix = iS_ShMP,
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return(result)
 }
 
 
