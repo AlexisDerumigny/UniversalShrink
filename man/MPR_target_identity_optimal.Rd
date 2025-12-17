@@ -37,7 +37,7 @@ parameter.
 }
 \examples{
 
-n = 100
+n = 10
 p = 5 * n
 mu = rep(0, p)
 

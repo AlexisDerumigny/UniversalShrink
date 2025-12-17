@@ -27,7 +27,7 @@ and \eqn{I_p} is the identity matrix of size \eqn{p}.
 }
 \examples{
 
-n = 50
+n = 10
 p = 2 * n
 mu = rep(0, p)
 

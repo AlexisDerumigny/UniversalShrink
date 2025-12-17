@@ -19,7 +19,7 @@ Ridge higher order shrinkage
 }
 \examples{
 
-n = 50
+n = 10
 p = 2 * n
 mu = rep(0, p)
 
@@ -37,7 +37,7 @@ precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(Y = t(X), centeredCov = 
 FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
 FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
 
-for (m in 1:5){
+for (m in 1:2){
   cat("m = ", m, "\n")
   precision_higher_order_shrinkage_Cent = 
       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE, t = 10)

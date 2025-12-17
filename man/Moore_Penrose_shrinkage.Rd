@@ -34,7 +34,7 @@ and \eqn{\Pi_0} is a given target (for \code{Moore_Penrose_shrinkage()})
 or the identity matrix (for \code{Moore_Penrose_shrinkage_toIP()}).
 }
 \examples{
-n = 100
+n = 10
 p = 5 * n
 mu = rep(0, p)
 

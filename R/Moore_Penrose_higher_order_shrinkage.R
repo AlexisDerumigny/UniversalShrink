@@ -158,7 +158,7 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' 
 #' @examples
 #' 
-#' n = 50
+#' n = 10
 #' p = 2 * n
 #' mu = rep(0, p)
 #' 

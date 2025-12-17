@@ -25,7 +25,7 @@ Ridge higher order shrinkage with optimal t
 }
 \examples{
 
-n = 50
+n = 10
 p = 2 * n
 mu = rep(0, p)
 
@@ -49,7 +49,7 @@ FrobeniusLoss2 <- function(M){FrobeniusNorm2(M \%*\% Sigma - diag(p) ) / p}
 FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
 FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
 
-for (m in 1:5){
+for (m in 1:2){
   cat("m = ", m, "\n")
   precision_higher_order_shrinkage_Cent = 
       ridge_higher_order_shrinkage_optimal(Y = t(X), m = m, centeredCov = TRUE)
