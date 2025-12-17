@@ -29,6 +29,10 @@
 #' @export
 GMV_PlugIn <- function(estimatedPrecisionMatrix){
   
+  if ("EstimatedPrecisionMatrix" %in% class(estimatedPrecisionMatrix)){
+    result = GMV_PlugIn(estimatedPrecisionMatrix$estimated_precision_matrix)
+    return (result)
+  }
   # result = (estimatedPrecisionMatrix %*% ones) / 
   #                 (ones %*% estimatedPrecisionMatrix %*% ones)
   # Faster and equivalent expression:
