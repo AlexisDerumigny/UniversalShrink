@@ -10,8 +10,8 @@
 #' @export
 GMV_Moore_Penrose <- function(Y, centeredCov = TRUE)
 {
-  iS_MP = Moore_Penrose(Y = Y, centeredCov = centeredCov)$estimated_precision_matrix
-  GMV_MP = GMV_PlugIn(iS_MP)
+  iS_MP = Moore_Penrose(Y = Y, centeredCov = centeredCov)
+  GMV_MP = GMV_PlugIn(iS_MP$estimated_precision_matrix)
   
   return (GMV_MP)
 }

@@ -93,12 +93,12 @@ Moore_Penrose <- function(Y, centeredCov)
   }
   
   result = list(
-    estimated_precision_matrix = iS_MP,
+    estimated_precision_matrix = iS_MP
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
   
-  return ()
+  return (result)
 }
 
 
