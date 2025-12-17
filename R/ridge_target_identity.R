@@ -306,9 +306,10 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
   # Equivalent representation in terms of hm and M
   hm = c(q1, d0Sig_t1 / t)
   
-  M = c(q2                                  , d0Sig2_t1 / t,
-        d0Sig2_t1 / t                       , d0Sig2_t1 / t^2 + hvprt1 * d1Sig2_t1 / t) |>
-    matrix(ncol = 2, byrow = TRUE)
+  M = c(q2            , d0Sig2_t1 / t,
+        d0Sig2_t1 / t , d0Sig2_t1 / t^2 + hvprt1 * d1Sig2_t1 / t)
+  
+  M = matrix(M, ncol = 2, byrow = TRUE)
   
   if (verbose > 0){
     cat("Term of M[2,2] computed as:\n")
