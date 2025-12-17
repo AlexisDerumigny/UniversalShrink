@@ -251,13 +251,16 @@ Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov)
     result = result + alpha[k + 1] * power_isMP
   }
   
-  
-  return(list(
+  result = list(
     estimated_precision_matrix = result,
     M = estimatedM$M,
     hm = estimatedM$hm,
     alpha = alpha,
     v = estimatedM$v
-  ) )
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
 }
 
