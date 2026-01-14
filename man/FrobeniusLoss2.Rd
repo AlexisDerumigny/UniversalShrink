@@ -11,6 +11,7 @@
 \alias{LossEuclideanEigenvalues2.matrix}
 \alias{LossEuclideanEigenvalues2.EstimatedPrecisionMatrix}
 \alias{LossEuclideanEigenvalues2.EstimatedCovarianceMatrix}
+\alias{LossRelativeOutOfSampleVariance}
 \title{Frobenius norm and Frobenius losses of the estimator of a matrix}
 \usage{
 FrobeniusNorm2(M, normalized)
@@ -58,6 +59,8 @@ LossEuclideanEigenvalues2(x, Sigma, type, normalized = TRUE, ...)
   normalized = TRUE,
   ...
 )
+
+LossRelativeOutOfSampleVariance(portfolioWeights, Sigma, SigmaInv = NULL)
 }
 \arguments{
 \item{normalized}{if \code{TRUE}, the Frobenius norm is divided by the matrix

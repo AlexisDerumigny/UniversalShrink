@@ -229,3 +229,21 @@ LossEuclideanEigenvalues2.EstimatedCovarianceMatrix <- function(
   return (result)
 }
 
+
+#' @export
+#' @rdname FrobeniusLoss2
+LossRelativeOutOfSampleVariance <- function(portfolioWeights, Sigma, SigmaInv = NULL){
+  if (is.null(SigmaInv)){
+    SigmaInv = solve(Sigma)
+  }
+  
+  outOfSampleVariance = t(portfolioWeights) %*% Sigma %*% portfolioWeights
+
+  ones = rep(1, length = p)
+  V_GMV = 1 / ( t(ones) %*% SigmaInv %*% ones)
+
+  Loss = as.numeric( (outOfSampleVariance - V_GMV) / V_GMV )
+  
+  return (Loss)
+}
+

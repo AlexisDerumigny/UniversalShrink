@@ -38,17 +38,13 @@ X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 GMV_MP_shrinkage_Cent = 
   GMV_Moore_Penrose_target_eq(Y = t(X), centeredCov = TRUE)
 
-outOfSampleVariance = t(GMV_MP_shrinkage_Cent) \%*\% Sigma \%*\% GMV_MP_shrinkage_Cent
-
-ones = rep(1, length = p)
-V_GMV = 1 / ( t(ones) \%*\% solve(Sigma) \%*\% ones)
-
-Loss_GMV_Moore_Penrose_target_eq = (outOfSampleVariance - V_GMV) / V_GMV
-
 GMV_MP_Cent = GMV_Moore_Penrose(Y = t(X), centeredCov = TRUE)
-outOfSampleVariance = t(GMV_MP_Cent) \%*\% Sigma \%*\% GMV_MP_Cent
 
-Loss_GMV_Moore_Penrose = (outOfSampleVariance - V_GMV) / V_GMV
+Loss_GMV_Moore_Penrose_target_eq = LossRelativeOutOfSampleVariance(
+  portfolioWeights = GMV_MP_shrinkage_Cent, Sigma = Sigma)
+
+Loss_GMV_Moore_Penrose = LossRelativeOutOfSampleVariance(
+  portfolioWeights = GMV_MP_Cent, Sigma = Sigma)
 
 # Shrinkage helps to reduce the loss
 stopifnot(Loss_GMV_Moore_Penrose_target_eq < Loss_GMV_Moore_Penrose)
