@@ -13,6 +13,7 @@ TODO: transpose everything.}
 \value{
 the estimator of the covariance matrix
 (a \code{p} by \code{p} matrix).
+TODO: update this
 }
 \description{
 This function estimates the covariance matrix as a given data set using
@@ -47,8 +48,8 @@ estimatedCov_sample = cov(X)
 estimatedCov_shrink = cov_analytical_NL_shrinkage(t(X))
 
 # We now compare the distance between the true and both estimators.
-mean((eigen(Sigma)$values - eigen(estimatedCov_sample)$values)^2)
-mean((eigen(Sigma)$values - eigen(estimatedCov_shrink)$values)^2)
+FrobeniusLoss2(estimatedCov_shrink, Sigma)
+FrobeniusLoss2(estimatedCov_sample, Sigma, type = "covariance")
 
 }
 \references{

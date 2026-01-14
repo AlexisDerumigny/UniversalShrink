@@ -30,6 +30,7 @@
 #' 
 #' @returns the estimator of the covariance matrix
 #' (a `p` by `p` matrix).
+#' TODO: update this
 #' 
 #' @references 
 #' Ledoit, O., & Wolf, M. (2020).
@@ -50,8 +51,8 @@
 #' estimatedCov_shrink = cov_analytical_NL_shrinkage(t(X))
 #' 
 #' # We now compare the distance between the true and both estimators.
-#' mean((eigen(Sigma)$values - eigen(estimatedCov_sample)$values)^2)
-#' mean((eigen(Sigma)$values - eigen(estimatedCov_shrink)$values)^2)
+#' FrobeniusLoss2(estimatedCov_sample, Sigma, type = "covariance")
+#' FrobeniusLoss2(estimatedCov_shrink, Sigma)
 #' 
 #' @export
 cov_analytical_NL_shrinkage = function(x){
@@ -90,7 +91,16 @@ cov_analytical_NL_shrinkage = function(x){
     dtilde1 = lambda/(pi^2*lambda^2 * (ftilde^2 + Hftilde^2))
     dtilde = c(dtilde0 * rep(1, p-n+1), dtilde1)
   }
-  u %*% diag(dtilde) %*% t(u)
+  
+  estimatedSigma = u %*% diag(dtilde) %*% t(u)
+  
+  result = list(
+    estimated_covariance_matrix = estimatedSigma
+  )
+  
+  class(result) <- c("EstimatedCovarianceMatrix")
+  
+  return (result)
 }
 
 

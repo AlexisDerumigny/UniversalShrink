@@ -10,6 +10,7 @@
 #' 
 #' @returns the estimator of the covariance matrix
 #' (a `p` by `p` matrix).
+#' TODO: update this
 #' 
 #' @references 
 #' Ledoit, O., & Wolf, M. (2022).
@@ -29,6 +30,9 @@
 #' # We now compare the distance between the true and both estimators.
 #' mean((eigen(Sigma)$values - eigen(estimatedCov_sample)$values)^2)
 #' mean((eigen(Sigma)$values - eigen(estimatedCov_shrink)$values)^2)
+#' 
+#' FrobeniusLoss2(estimatedCov_sample, Sigma, type = "covariance")
+#' FrobeniusLoss2(estimatedCov_shrink, Sigma)
 #' 
 #' @export
 cov_quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE) {
@@ -70,6 +74,7 @@ cov_quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE) {
   Atheta2 <- theta^2 + Htheta^2 # Squared amplitude
   
   if (p <= n_adjusted) {
+    # Theorem 4,1, Eq 4.12, page 1532-1533 of (Ledoit, O., & Wolf, M., 2022).
     # Case where sample covariance matrix is not singular
     delta <- 1 / ((1 - c)^2 * invlambda + 2 * c * (1 - c) * invlambda * theta +
                     c^2 * invlambda * Atheta2) # Optimally shrunk eigenvalues
@@ -83,6 +88,12 @@ cov_quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE) {
   
   sigmahat <- u %*% diag(deltaQIS) %*% t(u) # Reconstruct covariance matrix
   
-  return(sigmahat)
+  result = list(
+    estimated_covariance_matrix = sigmahat
+  )
+  
+  class(result) <- c("EstimatedCovarianceMatrix")
+  
+  return(result)
 }
 
