@@ -34,6 +34,8 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
 iS_MP = Moore_Penrose(Y = t(X), centeredCov = TRUE)
+# Convert to matrix class for computations
+iS_MP = as.matrix(iS_MP)
 
 # Sample covariance matrix
 Y = t(X)

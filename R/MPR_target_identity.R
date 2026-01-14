@@ -25,7 +25,7 @@
 #' 
 #' @examples
 #' 
-#' n = 100
+#' n = 10
 #' p = 5 * n
 #' mu = rep(0, p)
 #' 
@@ -101,8 +101,8 @@ MPR_target_identity_optimal <- function (Y, centeredCov, verbose = 2,
   }
   
   
-  hL2MPR_max<-optim(1.5, hL2MPr,lower = eps, upper = upp, method= "L-BFGS-B",
-                    control = list(fnscale = -1))
+  hL2MPR_max <- stats::optim(1.5, hL2MPr,lower = eps, upper = upp,
+                             method = "L-BFGS-B", control = list(fnscale = -1))
   u_MPR<- hL2MPR_max$par
   t <- tan(u_MPR)
   

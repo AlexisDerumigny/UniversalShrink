@@ -23,7 +23,7 @@ where \eqn{S} is the sample covariance matrix and \eqn{t} is a given parameter.
 }
 \examples{
 
-n = 100
+n = 10
 p = 5 * n
 mu = rep(0, p)
 
@@ -48,13 +48,14 @@ for (t in c(0.01, 0.2, 0.5, 1, 2)){
   precision_MP = Moore_Penrose(Y = t(X), centeredCov = TRUE)
 
   cat("t = ", t,", Moore-Penrose  , loss =", 
-    FrobeniusLoss2(precision_MP, Sigma = Sigma), "\n")
+    FrobeniusLoss2(precision_MP, Sigma = Sigma, type = "precision"), "\n")
   cat("t = ", t,", ridge          , loss =", 
-    FrobeniusLoss2(precision_ridge, Sigma = Sigma), "\n")
+    FrobeniusLoss2(precision_ridge, Sigma = Sigma, type = "precision"), "\n")
   cat("t = ", t,", MPR            , loss =", 
-    FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma), "\n")
+    FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma, type = "precision"), "\n")
   cat("t = ", t,", MPR alternative, loss =", 
-    FrobeniusLoss2(precision_MPR_Cent_alternative_expression, Sigma = Sigma), "\n")
+    FrobeniusLoss2(precision_MPR_Cent_alternative_expression, Sigma = Sigma,
+                   type = "precision"), "\n")
 }
 
 

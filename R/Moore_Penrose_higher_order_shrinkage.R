@@ -158,7 +158,7 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' 
 #' @examples
 #' 
-#' n = 50
+#' n = 10
 #' p = 2 * n
 #' mu = rep(0, p)
 #' 
@@ -170,17 +170,13 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
-#' FrobeniusNorm2 <- function(M){sum(diag(M %*% t(M)))}
-#' 
 #' precision_MoorePenrose_Cent = 
 #'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
 #' precision_MoorePenrose_NoCent = 
 #'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
-#'   
-#' FrobeniusLoss2 <- function(M){FrobeniusNorm2(M %*% Sigma - diag(p) ) / p}
 #'
-#' print(FrobeniusLoss2(precision_MoorePenrose_Cent))
-#' print(FrobeniusLoss2(precision_MoorePenrose_NoCent))
+#' print(FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma))
+#' print(FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma))
 #' 
 #' for (m in 1:5){
 #'   cat("m = ", m, "\n")
@@ -190,9 +186,9 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #'   precision_higher_order_shrinkage_NoCent = 
 #'       Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE)
 #'       
-#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix, Sigma = Sigma))
+#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma))
 #'   
-#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent$estimated_precision_matrix, Sigma = Sigma))
+#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent, Sigma))
 #' }
 #' 
 #' 
@@ -209,11 +205,18 @@ Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov)
   Ip = diag(nrow = p)
   
   if (centeredCov){
+    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
+    
+    # Sample covariance matrix
+    S <- Y %*% Jn %*% t(Y) / (n-1)
+    
     c_n = p / (n-1)
   } else {
+    S <- Y %*% t(Y)/n
+    
     c_n = p / n
   }
-  iS_MP = Moore_Penrose(Y, centeredCov = centeredCov)
+  iS_MP = as.matrix(Moore_Penrose(Y, centeredCov = centeredCov))
   
   D_MP <- diag(eigen(iS_MP)$values)
   
@@ -248,13 +251,16 @@ Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov)
     result = result + alpha[k + 1] * power_isMP
   }
   
-  
-  return(list(
+  result = list(
     estimated_precision_matrix = result,
     M = estimatedM$M,
     hm = estimatedM$hm,
     alpha = alpha,
     v = estimatedM$v
-  ) )
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
 }
 

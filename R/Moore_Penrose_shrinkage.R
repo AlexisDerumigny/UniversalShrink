@@ -32,7 +32,7 @@
 #' \link{https://doi.org/10.48550/arXiv.2403.15792}
 #' 
 #' @examples
-#' n = 100
+#' n = 10
 #' p = 5 * n
 #' mu = rep(0, p)
 #' 
@@ -209,7 +209,7 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
   iS_ShMP  <- alpha * iS_MP + beta * Pi0
   
   result = list(
-    estimated_precision_matrix = iS_ShMP,
+    estimated_precision_matrix = iS_ShMP
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
@@ -303,7 +303,7 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov, verbose = 0)
   iS_ShMP<-ha_MP * iS_MP + hb_MP * Ip
   
   result = list(
-    estimated_precision_matrix = iS_ShMP,
+    estimated_precision_matrix = iS_ShMP
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")

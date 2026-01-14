@@ -25,7 +25,7 @@ Ridge higher order shrinkage with optimal t
 }
 \examples{
 
-n = 50
+n = 10
 p = 2 * n
 mu = rep(0, p)
 
@@ -37,19 +37,15 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-FrobeniusNorm2 <- function(M){sum(diag(M \%*\% t(M)))}
-
 precision_MoorePenrose_Cent = 
   Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
 precision_MoorePenrose_NoCent = 
   Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
 
-FrobeniusLoss2 <- function(M){FrobeniusNorm2(M \%*\% Sigma - diag(p) ) / p}
-
 FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
 FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
 
-for (m in 1:5){
+for (m in 1:2){
   cat("m = ", m, "\n")
   precision_higher_order_shrinkage_Cent = 
       ridge_higher_order_shrinkage_optimal(Y = t(X), m = m, centeredCov = TRUE)

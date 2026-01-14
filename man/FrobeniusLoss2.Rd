@@ -12,7 +12,13 @@ FrobeniusNorm2(M, normalized)
 
 FrobeniusLoss2(x, Sigma, type, normalized = TRUE, ...)
 
-\method{FrobeniusLoss2}{matrix}(x, Sigma, type, normalized = TRUE, ...)
+\method{FrobeniusLoss2}{matrix}(
+  x,
+  Sigma,
+  type = c("precision matrix", "covariance matrix"),
+  normalized = TRUE,
+  ...
+)
 
 \method{FrobeniusLoss2}{EstimatedPrecisionMatrix}(x, Sigma, type = "precision matrix", normalized = TRUE, ...)
 

@@ -32,6 +32,8 @@
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
 #' iS_MP = Moore_Penrose(Y = t(X), centeredCov = TRUE)
+#' # Convert to matrix class for computations
+#' iS_MP = as.matrix(iS_MP)
 #' 
 #' # Sample covariance matrix
 #' Y = t(X)
@@ -93,12 +95,12 @@ Moore_Penrose <- function(Y, centeredCov)
   }
   
   result = list(
-    estimated_precision_matrix = iS_MP,
+    estimated_precision_matrix = iS_MP
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
   
-  return ()
+  return (result)
 }
 
 

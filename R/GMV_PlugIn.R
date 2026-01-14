@@ -21,6 +21,7 @@
 #' is estimating the precision matrix \eqn{\Sigma^{-1}} 
 #' ( = the inverse of the covariance matrix of the vector of asset returns that
 #' are considered).
+#' Or an object that can be converted to the matrix class by \code{as.matrix}.
 #' 
 #' @returns a vector of size \eqn{p} with the computed portfolio weights, with
 #' the minimum variance, i.e. the portfolio that has the lowest variance among
@@ -28,6 +29,8 @@
 #' 
 #' @export
 GMV_PlugIn <- function(estimatedPrecisionMatrix){
+  
+  estimatedPrecisionMatrix = as.matrix(estimatedPrecisionMatrix)
   
   # result = (estimatedPrecisionMatrix %*% ones) / 
   #                 (ones %*% estimatedPrecisionMatrix %*% ones)

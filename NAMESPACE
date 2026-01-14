@@ -3,6 +3,8 @@
 S3method(FrobeniusLoss2,EstimatedCovarianceMatrix)
 S3method(FrobeniusLoss2,EstimatedPrecisionMatrix)
 S3method(FrobeniusLoss2,matrix)
+S3method(as.matrix,EstimatedCovarianceMatrix)
+S3method(as.matrix,EstimatedPrecisionMatrix)
 export(FrobeniusLoss2)
 export(FrobeniusNorm2)
 export(GMV_Moore_Penrose)

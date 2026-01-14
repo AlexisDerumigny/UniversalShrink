@@ -69,39 +69,33 @@ list_GMV = list(
     Moore_Penrose_shrinkage_toIP(Y = t(X), centeredCov = TRUE)),
   
   GMV_plugin_ridge_target_shrinked_toIP = GMV_PlugIn(
-    ridge_target_identity_optimal(Y = t(X), centeredCov = TRUE
-                                  )$estimated_precision_matrix),
+    ridge_target_identity_optimal(Y = t(X), centeredCov = TRUE)),
   
   GMV_plugin_optimal_ridge_shrinkage = GMV_PlugIn(
-    ridge_shrinkage_rescaled_optimal(Y = t(X))$estimated_precision_matrix),
+    ridge_shrinkage_rescaled_optimal(Y = t(X))),
   
   GMV_plugin_inv_cov_quadratic_inverse_shrinkage = GMV_PlugIn(
     solve(cov_quadratic_inverse_shrinkage(X = X, centeredCov = TRUE))),
   
   GMV_plugin_higher_order_shrinkage_2 = GMV_PlugIn(
-    ridge_higher_order_shrinkage_optimal(Y = t(X), m = 2, centeredCov = TRUE
-                                         )$estimated_precision_matrix)
+    ridge_higher_order_shrinkage_optimal(Y = t(X), m = 2, centeredCov = TRUE))
   
   # TODO: add other forms of shrinkage
   # FIXME: see why below does not work
   # ,
   
   # GMV_plugin_higher_order_shrinkage_3 = GMV_PlugIn(
-  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 3, centeredCov = TRUE
-  #                                        )$estimated_precision_matrix),
+  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 3, centeredCov = TRUE)),
   
   # GMV_plugin_higher_order_shrinkage_4 = GMV_PlugIn(
-  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 4, centeredCov = TRUE
-  #                                        )$estimated_precision_matrix)
+  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 4, centeredCov = TRUE))
   # ,
   
   # GMV_plugin_higher_order_shrinkage_5 = GMV_PlugIn(
-  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 5, centeredCov = TRUE
-  #                                        )$estimated_precision_matrix),
+  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 5, centeredCov = TRUE)),
   
   # GMV_plugin_higher_order_shrinkage_6 = GMV_PlugIn(
-  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 6, centeredCov = TRUE
-  #                                        )$estimated_precision_matrix)
+  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 6, centeredCov = TRUE))
 )
 ```
 

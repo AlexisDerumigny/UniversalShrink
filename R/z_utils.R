@@ -58,7 +58,10 @@ FrobeniusLoss2 <- function(x, Sigma, type, normalized = TRUE, ...) {
 
 #' @export
 #' @rdname FrobeniusLoss2
-FrobeniusLoss2.matrix <- function(x, Sigma, type, normalized = TRUE, ...)
+FrobeniusLoss2.matrix <- function(x,
+                                  Sigma,
+                                  type = c("precision matrix", "covariance matrix"),
+                                  normalized = TRUE, ...)
 {
   if (ncol(x) != nrow(x) || ncol(x) != nrow(Sigma) || ncol(x) != ncol(Sigma)){
     stop("x and Sigma should be square matrices of the same dimension. ",
@@ -66,6 +69,8 @@ FrobeniusLoss2.matrix <- function(x, Sigma, type, normalized = TRUE, ...)
          ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")." )
   }
   p = ncol(Sigma)
+  
+  type = match.arg(type)
   
   switch (
     type,
@@ -94,11 +99,13 @@ FrobeniusLoss2.matrix <- function(x, Sigma, type, normalized = TRUE, ...)
 FrobeniusLoss2.EstimatedPrecisionMatrix <- function(
     x, Sigma, type = "precision matrix", normalized = TRUE, ...)
 {
+  type = match.arg(type)
+  
   if (type != "precision matrix"){
     stop("Type is chosen to be ", type,
          " but x is of class 'EstimatedPrecisionMatrix'.")
   }
-  result = FrobeniusLoss2(x$estimated_precision_matrix, Sigma,
+  result = FrobeniusLoss2(as.matrix(x), Sigma,
                           type = "precision matrix", normalized = normalized)
   
   return (result)
@@ -111,13 +118,34 @@ FrobeniusLoss2.EstimatedPrecisionMatrix <- function(
 FrobeniusLoss2.EstimatedCovarianceMatrix <- function(
     x, Sigma, type = "covariance matrix", normalized = TRUE, ...)
 {
-  if (type != "precision matrix"){
+  type = match.arg(type)
+  
+  if (type != "covariance matrix"){
     stop("Type is chosen to be ", type,
-         " but x is of class 'EstimatedPrecisionMatrix'.")
+         " but x is of class 'EstimatedCovarianceMatrix'.")
   }
-  result = FrobeniusLoss2(x$estimated_covariance_matrix, Sigma,
+  result = FrobeniusLoss2(as.matrix(x), Sigma,
                           type = "covariance matrix", normalized = normalized)
   
   return (result)
+}
+
+
+
+#' Conversion of estimated matrices to matrix class
+#' 
+#' @param x object to be converted
+#' 
+#' @return the underlying estimated matrix
+#' 
+#' @export
+as.matrix.EstimatedPrecisionMatrix <- function(x, ...){
+  return (x$estimated_precision_matrix)
+}
+
+#' @rdname as.matrix.EstimatedPrecisionMatrix
+#' @export
+as.matrix.EstimatedCovarianceMatrix <- function(x, ...){
+  return (x$estimated_covariance_matrix)
 }
 

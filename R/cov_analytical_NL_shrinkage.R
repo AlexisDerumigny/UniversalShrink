@@ -58,7 +58,7 @@ cov_analytical_NL_shrinkage = function(x){
   # the original version suggested that p is # of columns
   p = nrow(x)
   n = ncol(x)
-  sampleC = cov(t(x))
+  sampleC = stats::cov(t(x))
   eig = eigen(sampleC)
   u = eig$vectors[,p:1]
   lambda = rev(eig$values)
