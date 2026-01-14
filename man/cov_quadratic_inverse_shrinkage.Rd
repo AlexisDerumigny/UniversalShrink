@@ -28,8 +28,11 @@ estimatedCov_sample = cov(X)
 estimatedCov_shrink = cov_quadratic_inverse_shrinkage(X)
 
 # We now compare the distance between the true and both estimators.
-FrobeniusLoss2(estimatedCov_shrink, Sigma)
 FrobeniusLoss2(estimatedCov_sample, Sigma, type = "covariance")
+FrobeniusLoss2(estimatedCov_shrink, Sigma)
+
+LossEuclideanEigenvalues2(estimatedCov_sample, Sigma, type = "covariance")
+LossEuclideanEigenvalues2(estimatedCov_shrink, Sigma)
 
 }
 \references{

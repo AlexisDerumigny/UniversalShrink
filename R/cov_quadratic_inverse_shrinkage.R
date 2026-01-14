@@ -28,11 +28,11 @@
 #' estimatedCov_shrink = cov_quadratic_inverse_shrinkage(X)
 #' 
 #' # We now compare the distance between the true and both estimators.
-#' mean((eigen(Sigma)$values - eigen(estimatedCov_sample)$values)^2)
-#' mean((eigen(Sigma)$values - eigen(estimatedCov_shrink)$values)^2)
-#' 
 #' FrobeniusLoss2(estimatedCov_sample, Sigma, type = "covariance")
 #' FrobeniusLoss2(estimatedCov_shrink, Sigma)
+#' 
+#' LossEuclideanEigenvalues2(estimatedCov_sample, Sigma, type = "covariance")
+#' LossEuclideanEigenvalues2(estimatedCov_shrink, Sigma)
 #' 
 #' @export
 cov_quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE) {

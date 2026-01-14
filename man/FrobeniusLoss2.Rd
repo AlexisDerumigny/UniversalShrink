@@ -6,6 +6,11 @@
 \alias{FrobeniusLoss2.matrix}
 \alias{FrobeniusLoss2.EstimatedPrecisionMatrix}
 \alias{FrobeniusLoss2.EstimatedCovarianceMatrix}
+\alias{DistanceEuclideanEigenvalues2}
+\alias{LossEuclideanEigenvalues2}
+\alias{LossEuclideanEigenvalues2.matrix}
+\alias{LossEuclideanEigenvalues2.EstimatedPrecisionMatrix}
+\alias{LossEuclideanEigenvalues2.EstimatedCovarianceMatrix}
 \title{Frobenius norm and Frobenius losses of the estimator of a matrix}
 \usage{
 FrobeniusNorm2(M, normalized)
@@ -23,6 +28,36 @@ FrobeniusLoss2(x, Sigma, type, normalized = TRUE, ...)
 \method{FrobeniusLoss2}{EstimatedPrecisionMatrix}(x, Sigma, type = "precision matrix", normalized = TRUE, ...)
 
 \method{FrobeniusLoss2}{EstimatedCovarianceMatrix}(x, Sigma, type = "covariance matrix", normalized = TRUE, ...)
+
+DistanceEuclideanEigenvalues2(M1, M2, normalized)
+
+LossEuclideanEigenvalues2(x, Sigma, type, normalized = TRUE, ...)
+
+\method{LossEuclideanEigenvalues2}{matrix}(
+  x,
+  Sigma,
+  SigmaInv = NULL,
+  type = c("precision matrix", "covariance matrix"),
+  normalized = TRUE,
+  ...
+)
+
+\method{LossEuclideanEigenvalues2}{EstimatedPrecisionMatrix}(
+  x,
+  Sigma,
+  SigmaInv = NULL,
+  type = "precision matrix",
+  normalized = TRUE,
+  ...
+)
+
+\method{LossEuclideanEigenvalues2}{EstimatedCovarianceMatrix}(
+  x,
+  Sigma,
+  type = "covariance matrix",
+  normalized = TRUE,
+  ...
+)
 }
 \arguments{
 \item{normalized}{if \code{TRUE}, the Frobenius norm is divided by the matrix

@@ -54,6 +54,9 @@
 #' FrobeniusLoss2(estimatedCov_sample, Sigma, type = "covariance")
 #' FrobeniusLoss2(estimatedCov_shrink, Sigma)
 #' 
+#' LossEuclideanEigenvalues2(estimatedCov_sample, Sigma, type = "covariance")
+#' LossEuclideanEigenvalues2(estimatedCov_shrink, Sigma)
+#' 
 #' @export
 cov_analytical_NL_shrinkage = function(x){
   # the original version suggested that p is # of columns
