@@ -2,11 +2,30 @@
 
 #' Analytical non-linear shrinkage from Ledoit and Wolf (2020)
 #' 
+#' This function estimates the covariance matrix as a given data set using 
+#' classical nonlinear shrinkage from Ledoit and Wolf (2020).
 #' 
-#' This function estimates the covariance matrix as a given data set using
-#' non-linear shrinkage.
+#' For \eqn{i\in\{1,\ldots,p\}}, the nonlinear shrinkage estimator of 
+#' Ledoit and Wolf is given by
+#' \deqn{
+#' \mathbf{S}_{NLSh}= \mathbf{U} \text{diag}(d_1^{or},...,d_p^{or})
+#' \mathbf{U}^\top, \quad d_i^{or}=\left\{
+#'  \begin{array}{ll}
+#'  \frac{d_i}{|1-c-c d_i \breve{m}_{F}(d_i)|^2},    & \text{if}~~ d_i>0,\\
+#'  \frac{1}{(c-1)\breve{m}_{\underline{F}}(0)}, & \text{if}~~ d_i=0,
+#'  \end{array}
+#'  \right.
+#'  }
+#'  where \eqn{\mathbf{U}=(\mathbf{u}_1,...\mathbf{u}_p)} is the matrix with the
+#'   sample eigenvectors of \eqn{\mathbf{S}_n}, \eqn{d_i}, \eqn{i=1,\ldots,} are
+#'   the sample eigenvalues of \eqn{\mathbf{S}_n} and 
+#'   \eqn{\breve{m}_{F}(x)=\lim\limits_{z\to x}m_{F}(z)} with \eqn{m_{F}(z)} the
+#'    limiting Stieltjes transform of the sample covariance matrix. A numerical 
+#'    approach to estimate \eqn{\breve{m}_{F}(x)} is provided in Ledoit and Wolf
+#'     (2020) and is available in the R-package \eqn{\textit{HDShOP}}. 
 #' 
-#' @param x data matrix (rows are features, columns are observations).
+#' 
+#' @param X data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
 #' @returns the estimator of the covariance matrix
@@ -16,7 +35,11 @@
 #' Ledoit, O., & Wolf, M. (2020).
 #' Analytical nonlinear shrinkage of large-dimensional covariance matrices.
 #' The Annals of Statistics, 48(5), 3043-3065.
-#' \link{https://doi.org/10.1214/19-AOS1921}
+#' \doi{10.1214/19-AOS1921}
+#' 
+#' Bodnar, T., S. Dmytriv, Y. Okhrin, D. Otryakhin, & N. Parolya. 2024. HDShOP: 
+#' High-Dimensional Shrinkage Optimal Portfolios. 
+#' R package version 0.1.7. \doi{10.32614/CRAN.package.HDShOP}
 #' 
 #' @examples
 #' p = 200
