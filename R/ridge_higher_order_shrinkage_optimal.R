@@ -112,7 +112,7 @@ ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov, interval = c
   # eps <- 1/(10^6)
   # upp <- pi/2 - eps
   
-  result_optim <- optimize(f = estimatedLoss, interval = interval)
+  result_optim <- stats::optimize(f = estimatedLoss, interval = interval)
   
   optimal_t = result_optim$minimum
   

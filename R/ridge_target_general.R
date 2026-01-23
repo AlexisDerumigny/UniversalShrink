@@ -90,7 +90,7 @@ estimator_d1_1p_Sigma2 <- function(t0, hat_v_t0, p, cn, Pi0, Ip, Sn){
   first_term = (1 / hat_v_t0^2)
   
   d1_t0_1p_Ip = estimator_ridge_d1_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Ip / p,
-                                        p = p, cn = cn)
+                                              p = p, cn = cn)
   
   second_term = tr(Sn) / p  +  d1_t0_1p_Ip  - 2 / (cn * hat_v_t0)  +  2 * t0 / cn
   
@@ -128,7 +128,7 @@ best_alphabeta_ridge_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, verbose = ver
     d0_t0_1p_Pi0 = estimator_ridge_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
     
     d1_t0_1p_Ip = estimator_ridge_d1_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Ip / p,
-                                          p = p, cn = cn)
+                                                p = p, cn = cn)
     
     cat("*  d0(t, Theta) = ", d0_t0_1p_Pi0, "\n")
     cat("*  d1(t, Theta) = ", d1_t0_1p_Ip, "\n")
@@ -155,7 +155,7 @@ best_alphabeta_ridge_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, verbose = ver
   # Computation of beta ========================================================
   numerator_beta_term1 = (t0^(-1) * d0_1p_Sigma2 + hat_vprime_t0 * d1_1p_Sigma2) * q1
   numerator_beta_term2 = t0^(-1) * d0_1p_Sigma * d0_1p_Sigma2_Pi0
-    
+  
   numerator_beta = numerator_beta_term1 - numerator_beta_term2
   
   # Note: beta has the same denominator as alpha, so it can be directly reused.
@@ -189,7 +189,7 @@ estimator_vhat_derivative <- function(t, m, Sn, p, Ip, cn){
   for (i in 1:(m+1)){
     iS_ridge_power_m1 = iS_ridge_power_m1 %*% iS_ridge
   }
-    
+  
   term2 = tr(iS_ridge_power_m1) / p - t^(- (m+1) ) * (cn - 1) / cn
   
   result = term1 * term2
@@ -435,9 +435,9 @@ ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2){
     return(loss)
   }
   
-  hL2R_max <- optim(par = initialValue, fn = hL2R,
-                    lower = eps, upper = upp,
-                    method= "L-BFGS-B", control = list(fnscale = -1))
+  hL2R_max <- stats::optim(par = initialValue, fn = hL2R,
+                           lower = eps, upper = upp,
+                           method= "L-BFGS-B", control = list(fnscale = -1))
   
   u_R <- hL2R_max$par
   t <- tan(u_R)
@@ -502,7 +502,7 @@ loss_L2_ridge_optimal <- function(t, Sn, p, Ip, cn, Pi0, verbose)
   numerator = (d0_1p_Sigma * q2 - d0_1p_Sigma2_Pi0 * q1)^2
   
   denominator_main = (d0_1p_Sigma2 + t * hat_vprime_t0 * d1_1p_Sigma2) * q2 
-    
+  
   denominator = q2 * (denominator_main - d0_1p_Sigma2_Pi0^2)
   
   loss_L2 = numerator / denominator
