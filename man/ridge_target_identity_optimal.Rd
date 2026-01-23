@@ -51,7 +51,7 @@ optimal choice of \eqn{t, \alpha, \beta}.
 }
 \examples{
 
-n = 100
+n = 20
 p = 5 * n
 mu = rep(0, p)
 
