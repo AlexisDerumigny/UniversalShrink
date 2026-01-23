@@ -236,6 +236,7 @@ LossRelativeOutOfSampleVariance <- function(portfolioWeights, Sigma, SigmaInv = 
   if (is.null(SigmaInv)){
     SigmaInv = solve(Sigma)
   }
+  p = length(portfolioWeights)
   
   outOfSampleVariance = t(portfolioWeights) %*% Sigma %*% portfolioWeights
 

@@ -107,7 +107,7 @@ MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3){
   
   hL2R <- function(u){
     loss = loss_L2_MPR_optimal_target_general(
-      t = tan(u), Sn = S, Ip = Ip, cn = cn, Pi0 = Pi0,
+      t = tan(u), Sn = S, p = p, Ip = Ip, cn = cn, Pi0 = Pi0,
       verbose = verbose - 3)
     
     if (verbose > 1){
@@ -172,12 +172,16 @@ MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3){
 #' @returns an estimator of the L2 loss
 #'
 #' @noRd
-loss_L2_MPR_optimal_target_general <- function(t, Sn, Ip, cn, Pi0, verbose)
+loss_L2_MPR_optimal_target_general <- function(t, Sn, p, Ip, cn, Pi0, verbose)
 {
-  hat_v_t0 = estimator_vhat_derivative(t = t, m = 0, Sn = Sn, Ip = Ip, cn = cn)
-  hat_vprime_t0 = estimator_vhat_derivative(t = t, m = 1, Sn = Sn, Ip = Ip, cn = cn)
-  hat_vsecond_t0 = estimator_vhat_derivative(t = t, m = 2, Sn = Sn, Ip = Ip, cn = cn)
-  hat_vthird_t0 = estimator_vhat_derivative(t = t, m = 3, Sn = Sn, Ip = Ip, cn = cn)
+  hat_v_t0 = estimator_vhat_derivative(t = t, m = 0, Sn = Sn, p = p, 
+                                       Ip = Ip, cn = cn)
+  hat_vprime_t0 = estimator_vhat_derivative(t = t, m = 1, Sn = Sn, p = p, 
+                                            Ip = Ip, cn = cn)
+  hat_vsecond_t0 = estimator_vhat_derivative(t = t, m = 2, Sn = Sn, p = p, 
+                                             Ip = Ip, cn = cn)
+  hat_vthird_t0 = estimator_vhat_derivative(t = t, m = 3, Sn = Sn, p = p, 
+                                            Ip = Ip, cn = cn)
   
   q1 = estimator_q1(Sn = Sn, Theta = Pi0 / p)
   q2 = estimator_q2(Sn = Sn, Theta = Pi0 %*% Pi0 / p, p = p, cn = cn)
@@ -186,14 +190,14 @@ loss_L2_MPR_optimal_target_general <- function(t, Sn, Ip, cn, Pi0, verbose)
                                       hat_vprime_t0 = hat_vprime_t0, cn = cn)
   
   d1_1p_Sigma2_Pi0 = estimator_d1_1p_Sigma2Pi0(t0 = t, hat_v_t0 = hat_v_t0,
-                                               cn = cn, p = p, Sn = Sn, Pi0 = Pi0,
-                                               verbose = verbose)
+                                               cn = cn, p = p, Ip = Ip, Sn = Sn,
+                                               Pi0 = Pi0, verbose = verbose)
   
   s2_Sigma2 = estimator_MPR_s2_Sigma2(hat_v_t0 = hat_v_t0,
                                       hat_vprime_t0 = hat_vprime_t0,
                                       hat_vsecond_t0 = hat_vsecond_t0,
                                       hat_vthird_t0 = hat_vthird_t0,
-                                      t0 = t, cn = cn, Pi0 = Pi0, Ip = Ip,
+                                      t0 = t, p = p, cn = cn, Pi0 = Pi0, Ip = Ip,
                                       Sn = Sn, verbose = verbose)
   
   numerator = hat_vprime_t0^2 * (d1_1p_Sigma * q2 - d1_1p_Sigma2_Pi0 * q1)^2
@@ -273,7 +277,7 @@ estimator_d1_1p_Sigma <- function(hat_v_t0, hat_vprime_t0, cn){
 }
 
 # Estimator of d1(t, Sigma^2 Pi0)
-estimator_d1_1p_Sigma2Pi0 <- function(t0, hat_v_t0, cn, p, Sn, Pi0, verbose){
+estimator_d1_1p_Sigma2Pi0 <- function(t0, hat_v_t0, cn, p, Ip, Sn, Pi0, verbose){
   
   d0_1p_Sigma2_Pi0 = estimator_d0_1p_Sigma2_Pi0(p = p, t0 = t0, hat_v_t0 = hat_v_t0,
                                                 cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn, 
@@ -303,10 +307,10 @@ estimator_d1_1p_Sigma2Pi0 <- function(t0, hat_v_t0, cn, p, Sn, Pi0, verbose){
 
 # Estimator of d2(t, Sigma^2 / p)
 estimator_d2_1p_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0,
-                                   t0, cn, Pi0, Ip, Sn, verbose){
+                                   t0, p, cn, Pi0, Ip, Sn, verbose){
   
-  d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, cn = cn,
-                                        Pi0 = Pi0, Ip = Ip, Sn = Sn)
+  d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
+                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn)
   
   second_term_1 = 1 / hat_v_t0^3
   second_term_2 = hat_vsecond_t0 / (2 * hat_vprime_t0^3)
@@ -326,13 +330,13 @@ estimator_d2_1p_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0,
 
 # Estimator of d3(t, Sigma^2 / p)
 estimator_d3_1p_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0, hat_vthird_t0,
-                                   t0, cn, Pi0, Ip, Sn, verbose){
+                                   t0, p, cn, Pi0, Ip, Sn, verbose){
   
   d2_1p_Sigma2 = estimator_d2_1p_Sigma2(hat_v_t0 = hat_v_t0,
                                         hat_vprime_t0 = hat_vprime_t0,
                                         hat_vsecond_t0 = hat_vsecond_t0,
-                                        t0 = t0, cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
-                                        verbose = verbose - 1)
+                                        t0 = t0, p = p, cn = cn, Pi0 = Pi0,
+                                        Ip = Ip, Sn = Sn, verbose = verbose - 1)
   
   second_term_1 = 1 / hat_v_t0^4
   second_term_2 = hat_vsecond_t0^2 / (2 * hat_vprime_t0^5)
@@ -355,23 +359,23 @@ estimator_d3_1p_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0, hat_
 
 # Estimator of s2(t, Sigma^2)
 estimator_MPR_s2_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0, hat_vthird_t0,
-                                    t0, cn, Pi0, Ip, Sn, verbose){
+                                    t0, p, cn, Pi0, Ip, Sn, verbose){
   
-  d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, cn = cn,
-                                        Pi0 = Pi0, Ip = Ip, Sn = Sn)
+  d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
+                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn)
   
   d2_1p_Sigma2 = estimator_d2_1p_Sigma2(hat_v_t0 = hat_v_t0,
                                         hat_vprime_t0 = hat_vprime_t0,
                                         hat_vsecond_t0 = hat_vsecond_t0,
-                                        t0 = t0, cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
-                                        verbose = verbose - 1)
+                                        t0 = t0, p = p, cn = cn, Pi0 = Pi0,
+                                        Ip = Ip, Sn = Sn, verbose = verbose - 1)
   
   d3_1p_Sigma2 = estimator_d3_1p_Sigma2(hat_v_t0 = hat_v_t0,
                                         hat_vprime_t0 = hat_vprime_t0,
                                         hat_vsecond_t0 = hat_vsecond_t0,
                                         hat_vthird_t0 = hat_vthird_t0,
-                                        t0 = t0, cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
-                                        verbose = verbose - 1)
+                                        t0 = t0, p = p, cn = cn, Pi0 = Pi0,
+                                        Ip = Ip, Sn = Sn, verbose = verbose - 1)
   
   first_term_1 = hat_vprime_t0^2 * d2_1p_Sigma2
   first_term_2 = hat_vsecond_t0 * d1_1p_Sigma2 / 2
@@ -403,10 +407,14 @@ estimator_MPR_s2_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0, hat
 
 best_alphabeta_MPR_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, verbose = verbose){
   
-  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, Sn = Sn, Ip = Ip, cn = cn)
-  hat_vprime_t0 = estimator_vhat_derivative(t = t0, m = 1, Sn = Sn, Ip = Ip, cn = cn)
-  hat_vsecond_t0 = estimator_vhat_derivative(t = t0, m = 2, Sn = Sn, Ip = Ip, cn = cn)
-  hat_vthird_t0 = estimator_vhat_derivative(t = t0, m = 3, Sn = Sn, Ip = Ip, cn = cn)
+  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, Sn = Sn, p = p,
+                                       Ip = Ip, cn = cn)
+  hat_vprime_t0 = estimator_vhat_derivative(t = t0, m = 1, Sn = Sn, p = p,
+                                            Ip = Ip, cn = cn)
+  hat_vsecond_t0 = estimator_vhat_derivative(t = t0, m = 2, Sn = Sn, p = p,
+                                             Ip = Ip, cn = cn)
+  hat_vthird_t0 = estimator_vhat_derivative(t = t0, m = 3, Sn = Sn, p = p, 
+                                            Ip = Ip, cn = cn)
   
   d0_1p_Sigma = estimator_d0_1p_Sigma(t0 = t0, hat_v_t0 = hat_v_t0, cn = cn)
   
@@ -420,12 +428,12 @@ best_alphabeta_MPR_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, verbose = verbo
   d1_1p_Sigma = estimator_d1_1p_Sigma(hat_v_t0 = hat_v_t0, hat_vprime_t0 = hat_vprime_t0,
                                       cn = cn)
   
-  d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, cn = cn,
-                                        Pi0 = Pi0, Ip = Ip, Sn = Sn)
+  d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
+                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn)
   
   d1_1p_Sigma2Pi0 = estimator_d1_1p_Sigma2Pi0(t0 = t0, hat_v_t0 = hat_v_t0,
-                                              cn = cn, p = p, Sn = Sn, Pi0 = Pi0,
-                                              verbose = verbose - 1)
+                                              cn = cn, p = p, Ip = Ip, Sn = Sn,
+                                              Pi0 = Pi0, verbose = verbose - 1)
   
   q1 = estimator_q1(Sn = Sn, Theta = Pi0 / p)
   q2 = estimator_q2(Sn = Sn, Theta = Pi0 %*% Pi0 / p, p = p, cn = cn)
@@ -433,7 +441,7 @@ best_alphabeta_MPR_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, verbose = verbo
   s2_Sigma2 = estimator_MPR_s2_Sigma2(hat_v_t0 = hat_v_t0, hat_vprime_t0 = hat_vprime_t0,
                                       hat_vsecond_t0 = hat_vsecond_t0,
                                       hat_vthird_t0 = hat_vthird_t0,
-                                      t0 = t0, cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
+                                      t0 = t0, p = p, cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
                                       verbose = verbose - 1)
   
   if (verbose > 0){
