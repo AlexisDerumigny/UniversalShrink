@@ -37,18 +37,18 @@ LossEuclideanEigenvalues2(x, Sigma, type, normalized = TRUE, ...)
 \method{LossEuclideanEigenvalues2}{matrix}(
   x,
   Sigma,
-  SigmaInv = NULL,
   type = c("precision matrix", "covariance matrix"),
   normalized = TRUE,
+  SigmaInv = NULL,
   ...
 )
 
 \method{LossEuclideanEigenvalues2}{EstimatedPrecisionMatrix}(
   x,
   Sigma,
-  SigmaInv = NULL,
   type = "precision matrix",
   normalized = TRUE,
+  SigmaInv = NULL,
   ...
 )
 

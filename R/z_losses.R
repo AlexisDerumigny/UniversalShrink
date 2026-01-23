@@ -141,7 +141,8 @@ DistanceEuclideanEigenvalues2 <- function(M1, M2, normalized){
 
 #' @export
 #' @rdname FrobeniusLoss2
-LossEuclideanEigenvalues2 <- function(x, Sigma, type, normalized = TRUE, ...) {
+LossEuclideanEigenvalues2 <- function(x, Sigma, type,
+                                      normalized = TRUE, ...) {
   UseMethod("LossEuclideanEigenvalues2")
 }
 
@@ -151,9 +152,9 @@ LossEuclideanEigenvalues2 <- function(x, Sigma, type, normalized = TRUE, ...) {
 LossEuclideanEigenvalues2.matrix <- function(
     x,
     Sigma,
-    SigmaInv = NULL,
     type = c("precision matrix", "covariance matrix"),
-    normalized = TRUE, ...)
+    normalized = TRUE, 
+    SigmaInv = NULL, ...)
 {
   if (ncol(x) != nrow(x) || ncol(x) != nrow(Sigma) || ncol(x) != ncol(Sigma)){
     stop("x and Sigma should be square matrices of the same dimension. ",
@@ -195,7 +196,7 @@ LossEuclideanEigenvalues2.matrix <- function(
 #' @export
 #' @rdname FrobeniusLoss2
 LossEuclideanEigenvalues2.EstimatedPrecisionMatrix <- function(
-    x, Sigma, SigmaInv = NULL, type = "precision matrix", normalized = TRUE, ...)
+    x, Sigma, type = "precision matrix", normalized = TRUE, SigmaInv = NULL, ...)
 {
   type = match.arg(type)
   
@@ -204,8 +205,8 @@ LossEuclideanEigenvalues2.EstimatedPrecisionMatrix <- function(
          " but x is of class 'EstimatedPrecisionMatrix'.")
   }
   result = LossEuclideanEigenvalues2(
-    as.matrix(x), Sigma,
-    type = "precision matrix", normalized = normalized)
+    as.matrix(x), Sigma = Sigma,
+    type = "precision matrix", normalized = normalized, SigmaInv = SigmaInv)
   
   return (result)
 }
