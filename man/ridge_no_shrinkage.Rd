@@ -48,5 +48,5 @@ for (t in c(0.2, 0.5, 1)){
 Nestor Parolya & Taras Bodnar (2024).
 Reviving pseudo-inverses: Asymptotic properties of large dimensional
 Moore-Penrose and Ridge-type inverses with applications.
-\link{https://doi.org/10.48550/arXiv.2403.15792}
+\doi{10.48550/arXiv.2403.15792}
 }

@@ -16,7 +16,7 @@
 #' Wang, C., Pan, G., Tong, T., & Zhu, L. (2015).
 #' Shrinkage estimation of large dimensional precision matrix using random matrix theory.
 #' Statistica Sinica, 993-1008.
-#' \link{http://dx.doi.org/10.5705/ss.2012.328}
+#' \doi{10.5705/ss.2012.328}
 #' 
 #' @examples
 #' p = 200
