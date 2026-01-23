@@ -44,8 +44,6 @@
 #' Moore-Penrose and Ridge-type inverses with applications.
 #' \doi{10.48550/arXiv.2403.15792}
 #' 
-#' 
-#' 
 #' @examples
 #' n = 50
 #' p = 2 * n
