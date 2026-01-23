@@ -17,13 +17,38 @@ the estimator of the precision matrix
 (a \code{p} by \code{p} matrix, i.e. the inverse of the covariance matrix).
 }
 \description{
-This function compute an estimator of the precision matrix by using the
+This function computes an estimator of the precision matrix by using the
 polynomial
-\deqn{\alpha_0 I_p + \sum_{k = 1}^m \alpha_k \left(\widehat{\Sigma^{-1}}^{MP}\right)^k}
-where \eqn{\alpha_0, \dots, \alpha_p} are carefully chosen coefficients,
-\eqn{\widehat{\Sigma^{-1}}^{MP}} is the Moore-Penrose inverse of the sample
-covariance matrix
-and \eqn{I_p} is the identity matrix of size \eqn{p}.
+\deqn{
+\mathbf{S}_{n;HOS}^+=\hat{\alpha}_0^+\mathbf{I}_p 
++\sum_{j=1}^m\hat{\alpha}^+_j(\mathbf{S}^+_n)^j,
+}
+where \eqn{\hat{\boldsymbol{\alpha}}^{+}(m)=(\hat{\alpha}_0^+,\hat{\alpha}_1^+,
+\ldots,\hat{\alpha}_m^+)^\top} given by
+\deqn{
+\hat{\boldsymbol{\alpha}}^{+}(m)=\widehat{\mathbf{M}}^+(m)^{-1} \hat{\mathbf{m}}^+(m)
+}  with
+\deqn{
+\hat{\mathbf{m}}^+(m)=
+ \begin{pmatrix}
+\hat{q}_1\\
+\hat{s}_{1,1}\\
+\vdots\\
+\hat{s}_{m,1}
+\end{pmatrix}
+\quad \text{and}\quad
+\widehat{\mathbf{M}}^+(m)=\begin{pmatrix}
+\hat{q}_2 & \hat{s}_{1,2}  & \ldots & \hat{s}_{m,2} \\
+\hat{s}_{1,2}& \hat{s}_{2,2}  & \ldots & \hat{s}_{m+1,2} \\
+\vdots&\vdots&\ddots&\vdots\\
+\hat{s}_{m,2}& \hat{s}_{m+1,2} & \ldots & \hat{s}_{2m,2}
+\end{pmatrix},
+} where
+\eqn{\mathbf{S}^+_n} is the Moore-Penrose inverse of the sample
+covariance matrix and \eqn{\mathbf{I}_p} is the identity matrix of size \eqn{p}.
+The details on the computation of the terms \eqn{\hat q_1}, \eqn{\hat q_2} and
+\eqn{s_{i,j}} are given in
+Theorem 2.5 of Bodnar and Parolya (2025).
 }
 \examples{
 
@@ -64,6 +89,7 @@ for (m in 1:5){
 
 }
 \references{
-Nestor Parolya & Taras Bodnar (2024).
+Nestor Parolya & Taras Bodnar (2025).
 Higher-order nonlinear shrinkage estimator of large-dimensional precision matrix.
+\doi{10.1090/tpms/1239}
 }
