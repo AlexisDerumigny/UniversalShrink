@@ -42,9 +42,13 @@ GMV_MP_Cent = GMV_Moore_Penrose(Y = t(X), centeredCov = TRUE)
 
 Loss_GMV_Moore_Penrose_target_eq = LossRelativeOutOfSampleVariance(
   portfolioWeights = GMV_MP_shrinkage_Cent, Sigma = Sigma)
+  
+print(Loss_GMV_Moore_Penrose_target_eq)
 
 Loss_GMV_Moore_Penrose = LossRelativeOutOfSampleVariance(
   portfolioWeights = GMV_MP_Cent, Sigma = Sigma)
+  
+print(Loss_GMV_Moore_Penrose)
 
 # Shrinkage helps to reduce the loss
 stopifnot(Loss_GMV_Moore_Penrose_target_eq < Loss_GMV_Moore_Penrose)
