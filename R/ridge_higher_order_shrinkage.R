@@ -309,6 +309,32 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 #' FrobeniusLoss2(precision_target_identity_semioptimal_Cent, Sigma = Sigma)
 #' 
 #' 
+#' # Examples for `ridge_higher_order_shrinkage_optimal`
+#' 
+#' for (m in 1:2){
+#'   cat("m = ", m, "\n")
+#'   precision_higher_order_shrinkage_Cent = 
+#'       ridge_higher_order_shrinkage_optimal(Y = t(X), m = m, centeredCov = TRUE)
+#'       
+#'   precision_higher_order_shrinkage_NoCent = 
+#'       ridge_higher_order_shrinkage_optimal(Y = t(X), m = m, centeredCov = FALSE)
+#'       
+#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
+#'   
+#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
+#' }
+#' 
+#' precision_higher_order_shrinkage_Cent = 
+#'       ridge_higher_order_shrinkage_optimal(Y = t(X), m = 1, centeredCov = TRUE)
+#' 
+#' precision_ridge_target_Cent = 
+#'     ridge_target_identity_optimal(Y = t(X), centeredCov = TRUE)
+#'   
+#' FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
+#' FrobeniusLoss2(precision_ridge_target_Cent, Sigma = Sigma)
+#' 
+#' 
+#' 
 #' @export
 #' 
 ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 0)
