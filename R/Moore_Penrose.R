@@ -79,9 +79,6 @@ Moore_Penrose <- function(Y, centeredCov)
   if (centeredCov){
     Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
     
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
     # We remove the last eigenvector because the eigenvalues are sorted
     # in decreasing order.
     Hn = eigen(Jn)$vectors[, -n]
@@ -89,7 +86,6 @@ Moore_Penrose <- function(Y, centeredCov)
     
     n_adjusted = n - 1
   } else {
-    S <- Y %*% t(Y)/n
     Ytilde <- Y
     
     n_adjusted = n
@@ -99,13 +95,19 @@ Moore_Penrose <- function(Y, centeredCov)
   
   # Moore-Penrose inverse
   if (n_adjusted < p){
+    if (centeredCov){
+      S <- Y %*% Jn %*% t(Y) / (n-1)
+    } else {
+      S <- S <- Y %*% t(Y) / n
+    }
     iS_MP <- MASS::ginv(S)
   } else if (n_adjusted > p){
     # Explicit expression which could outperform `MASS::ginv`
     iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
   } else {
     stop("This estimator is not defined for p = n - 1 in the centered case,",
-         "and for p = n in the non-centered case.")
+         "and for p = n in the non-centered case. Here p = ", p,
+         "and n = ", n, ".")
   }
   
   result = list(
