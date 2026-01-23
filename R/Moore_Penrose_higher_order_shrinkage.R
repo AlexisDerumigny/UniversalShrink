@@ -204,7 +204,7 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' print(FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma))
 #' print(FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma))
 #' 
-#' for (m in 1:5){
+#' for (m in 1:3){
 #'   cat("m = ", m, "\n")
 #'   precision_higher_order_shrinkage_Cent = 
 #'       Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE)
@@ -221,7 +221,7 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' 
 #' @export
 #' 
-Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov)
+Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov = TRUE, verbose = 0)
 {
   # Get sizes of Y
   p = nrow(Y)
@@ -230,19 +230,14 @@ Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov)
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    c_n = p / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-    
-    c_n = p / n
-  }
-  iS_MP = as.matrix(Moore_Penrose(Y, centeredCov = centeredCov))
+  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                             verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  
+  # Moore-Penrose inverse of the sample covariance matrix
+  iS_MP <- as.matrix(Moore_Penrose(Y = Y, centeredCov = centeredCov))
   
   D_MP <- diag(eigen(iS_MP)$values)
   

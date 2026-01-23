@@ -4,7 +4,7 @@
 \alias{Moore_Penrose}
 \title{Moore-Penrose inverse of the sample covariance matrix}
 \usage{
-Moore_Penrose(Y, centeredCov)
+Moore_Penrose(Y, centeredCov = TRUE)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).

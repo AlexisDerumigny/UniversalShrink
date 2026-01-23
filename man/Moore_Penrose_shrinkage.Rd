@@ -7,7 +7,7 @@
 \usage{
 Moore_Penrose_shrinkage(Y, Pi0 = NULL, centeredCov, verbose = 0)
 
-Moore_Penrose_shrinkage_toIP(Y, centeredCov, verbose = 0)
+Moore_Penrose_shrinkage_toIP(Y, centeredCov = TRUE, verbose = 0)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
@@ -45,7 +45,7 @@ and \eqn{\Pi_0} is a given target (for \code{Moore_Penrose_shrinkage()})
 or the identity matrix (for \code{Moore_Penrose_shrinkage_toIP()}).
 }
 \examples{
-n = 100
+n = 50
 p = 5 * n
 mu = rep(0, p)
 

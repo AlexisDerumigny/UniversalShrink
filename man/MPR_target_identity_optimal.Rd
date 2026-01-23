@@ -8,15 +8,15 @@
 \usage{
 MPR_target_identity_optimal(
   Y,
-  centeredCov,
+  centeredCov = TRUE,
   verbose = 2,
   eps = 1/(10^6),
   upp = pi/2 - eps
 )
 
-MPR_target_identity_semioptimal(Y, centeredCov, t, verbose = 2)
+MPR_target_identity_semioptimal(Y, centeredCov = TRUE, t, verbose = 2)
 
-MPR_target_identity(Y, centeredCov, t, alpha, beta)
+MPR_target_identity(Y, centeredCov = TRUE, t, alpha, beta, verbose = 0)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).

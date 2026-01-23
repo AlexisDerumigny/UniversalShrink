@@ -33,7 +33,7 @@
 #' \doi{10.48550/arXiv.2403.15792}
 #' 
 #' @examples
-#' n = 100
+#' n = 50
 #' p = 5 * n
 #' mu = rep(0, p)
 #' 
@@ -100,35 +100,15 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
     stop("'Pi0' should be a 'p' by 'p' matrix.")
   }
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    # We remove the last eigenvector because the eigenvalues are sorted
-    # in decreasing order.
-    Hn = eigen(Jn)$vectors[, -n]
-    Ytilde = Y %*% Hn
-    
-    # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1))
-    
-    # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
-    
-    c_n = p / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-    
-    # Inverse companion covariance
-    iY <- solve(t(Y) %*% Y / n)
-    
-    # Moore-Penrose inverse
-    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
-    
-    c_n = p / n
-  }
+  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                             verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  
+  # Moore-Penrose inverse of the sample covariance matrix
+  iS_MP <- as.matrix(Moore_Penrose(Y = Y, centeredCov = centeredCov))
+  
   
   ##### shrinkage MP
   trS1 <- tr(iS_MP) / p
@@ -221,7 +201,7 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
 
 #' @rdname Moore_Penrose_shrinkage
 #' @export
-Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov, verbose = 0)
+Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov = TRUE, verbose = 0)
 {
   # Get sizes of Y
   p = nrow(Y)
@@ -230,35 +210,14 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov, verbose = 0)
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    # We remove the last eigenvector because the eigenvalues are sorted
-    # in decreasing order.
-    Hn = eigen(Jn)$vectors[, -n]
-    Ytilde = Y %*% Hn
-    
-    # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
-    
-    # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
-    
-    c_n = p / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-    
-    # Inverse companion covariance
-    iY <- solve(t(Y) %*% Y / n)
-    
-    # Moore-Penrose inverse
-    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
-    
-    c_n = p / n
-  }
+  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                             verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  
+  # Moore-Penrose inverse of the sample covariance matrix
+  iS_MP <- as.matrix(Moore_Penrose(Y = Y, centeredCov = centeredCov))
   
   ##### shrinkage MP
   trS1<-sum(diag(iS_MP))/p

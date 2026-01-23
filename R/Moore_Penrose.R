@@ -67,7 +67,7 @@
 #' sum((iS_MP %*% S - t(iS_MP %*% S))^2)
 #' 
 #' @export
-Moore_Penrose <- function(Y, centeredCov)
+Moore_Penrose <- function(Y, centeredCov = TRUE)
 {
   # Get sizes of Y
   p = nrow(Y)

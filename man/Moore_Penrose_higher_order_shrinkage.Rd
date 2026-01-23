@@ -4,7 +4,7 @@
 \alias{Moore_Penrose_higher_order_shrinkage}
 \title{Moore-Penrose higher order shrinkage of the precision matrix}
 \usage{
-Moore_Penrose_higher_order_shrinkage(Y, m, centeredCov)
+Moore_Penrose_higher_order_shrinkage(Y, m, centeredCov = TRUE, verbose = 0)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
@@ -17,6 +17,11 @@ computed using centering (i.e. in the general case where the mean of the
 random vector may be non-zero).
 If \code{FALSE} the covariance matrix is computed assuming that the mean of
 the random vector of interest is \code{0} (i.e. does not need to be estimated).}
+
+\item{verbose}{a number indicating whether to print intermediary values and
+details about the progress of the computations. A value of \code{0} indicates
+no printing at all, while higher values indicate increasingly more detailed
+(more verbose) output.}
 }
 \value{
 the estimator of the precision matrix
@@ -78,7 +83,7 @@ precision_MoorePenrose_NoCent =
 print(FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma))
 print(FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma))
 
-for (m in 1:5){
+for (m in 1:3){
   cat("m = ", m, "\n")
   precision_higher_order_shrinkage_Cent = 
       Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE)

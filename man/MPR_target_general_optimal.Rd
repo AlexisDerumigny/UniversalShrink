@@ -10,7 +10,7 @@ MPR_target_general_optimal(Y, centeredCov, Pi0, verbose = 3)
 
 MPR_target_general_semioptimal(Y, centeredCov, t, Pi0, verbose = 2)
 
-MPR_target_general(Y, centeredCov, t, alpha, beta, Pi0)
+MPR_target_general(Y, centeredCov, t, alpha, beta, Pi0, verbose)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).

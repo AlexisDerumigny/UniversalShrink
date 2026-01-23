@@ -69,7 +69,7 @@
 #' 
 #' 
 #' @export
-MPR_target_identity_optimal <- function (Y, centeredCov, verbose = 2,
+MPR_target_identity_optimal <- function (Y, centeredCov = TRUE, verbose = 2,
                                          eps = 1/(10^6), upp = pi/2 - eps){
   
   # Get sizes of Y
@@ -79,22 +79,11 @@ MPR_target_identity_optimal <- function (Y, centeredCov, verbose = 2,
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    cn = p / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-    
-    cn = p / n
-  }
+  cn <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                            verbose = verbose)
   
-  if (verbose > 0){
-    cat("*  cn = ", cn, "\n\n")
-  }
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   
   
   hL2MPr <- function(u){
@@ -209,7 +198,7 @@ loss_L2_MPR_optimal <- function(t, S, cn, p, Ip){
 
 #' @rdname MPR_target_identity_optimal
 #' @export
-MPR_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
+MPR_target_identity_semioptimal <- function (Y, centeredCov = TRUE, t, verbose = 2){
   
   # Get sizes of Y
   p = nrow(Y)
@@ -218,18 +207,11 @@ MPR_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    cn = p / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-    
-    cn = p / n
-  }
+  cn <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                             verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   
   
   iS_ridge <- solve(S + t * Ip)
@@ -332,7 +314,7 @@ MPR_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
 
 #' @rdname MPR_target_identity_optimal
 #' @export
-MPR_target_identity <- function (Y, centeredCov, t, alpha, beta){
+MPR_target_identity <- function (Y, centeredCov = TRUE, t, alpha, beta, verbose = 0){
   
   # Get sizes of Y
   p = nrow(Y)
@@ -341,15 +323,11 @@ MPR_target_identity <- function (Y, centeredCov, t, alpha, beta){
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-  }
+  cn <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                            verbose = verbose)
   
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   
   iS_ridge <- solve(S + t * Ip)
   

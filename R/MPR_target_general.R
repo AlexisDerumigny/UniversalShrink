@@ -88,18 +88,11 @@ MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3){
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    cn = p / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-    
-    cn = p / n
-  }
+  cn <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                             verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   
   
   # TODO: provide this as an option for the user
@@ -225,18 +218,11 @@ MPR_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 2)
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    cn = p / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-    
-    cn = p / n
-  }
+  cn <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                            verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   
   
   iS_ridge <- solve(S + t * Ip)
@@ -512,7 +498,7 @@ best_alphabeta_MPR_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, verbose = verbo
 
 #' @rdname MPR_target_general_optimal
 #' @export
-MPR_target_general <- function (Y, centeredCov, t, alpha, beta, Pi0){
+MPR_target_general <- function (Y, centeredCov, t, alpha, beta, Pi0, verbose){
   
   # Get sizes of Y
   p = nrow(Y)
@@ -521,15 +507,11 @@ MPR_target_general <- function (Y, centeredCov, t, alpha, beta, Pi0){
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-  }
+  cn <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                            verbose = verbose)
   
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   
   iS_ridge <- solve(S + t * Ip)
   
