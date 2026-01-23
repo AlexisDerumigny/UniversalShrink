@@ -28,6 +28,8 @@
 #' @param X data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
+#' @inheritParams cov_with_centering
+#' 
 #' @returns the estimator of the covariance matrix
 #' (a `p` by `p` matrix).
 #' TODO: update this
@@ -58,11 +60,12 @@
 #' LossEuclideanEigenvalues2(estimatedCov_shrink, Sigma)
 #' 
 #' @export
-cov_analytical_NL_shrinkage = function(X){
+cov_analytical_NL_shrinkage = function(X, centeredCov = TRUE){
   # the original version suggested that p is # of columns
   p = nrow(X)
   n = ncol(X)
-  sampleC = stats::cov(t(X))
+  sampleC = cov_with_centering(X = t(X), centeredCov = centeredCov)
+  
   eig = eigen(sampleC)
   u = eig$vectors[,p:1]
   lambda = rev(eig$values)

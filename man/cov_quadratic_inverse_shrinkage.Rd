@@ -4,7 +4,7 @@
 \alias{cov_quadratic_inverse_shrinkage}
 \title{Quadratic inverse shrinkage (QIS)}
 \usage{
-cov_quadratic_inverse_shrinkage(X, centeredCov = TRUE)
+cov_quadratic_inverse_shrinkage(X, centeredCov = TRUE, verbose = 0)
 }
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
@@ -14,6 +14,11 @@ computed using centering (i.e. in the general case where the mean of the
 random vector may be non-zero).
 If \code{FALSE} the covariance matrix is computed assuming that the mean of
 the random vector of interest is \code{0} (i.e. does not need to be estimated).}
+
+\item{verbose}{a number indicating whether to print intermediary values and
+details about the progress of the computations. A value of \code{0} indicates
+no printing at all, while higher values indicate increasingly more detailed
+(more verbose) output.}
 }
 \value{
 the estimator of the covariance matrix

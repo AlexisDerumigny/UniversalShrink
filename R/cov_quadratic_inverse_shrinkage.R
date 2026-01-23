@@ -83,26 +83,17 @@
 #' LossEuclideanEigenvalues2(estimatedCov_shrink, Sigma)
 #' 
 #' @export
-cov_quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE) {
-  Y = t(X)
+cov_quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE, verbose = 0) {
+  
   n <- nrow(X) # Sample size
   p <- ncol(X) # Matrix dimension
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    sample <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    # Adjusted sample size
-    n_adjusted <- n - 1
-    
-  } else {
-    sample <- Y %*% t(Y)/n
-    
-    n_adjusted <- n
-  }
-  c = p / n_adjusted
+  n_adjusted <- if (centeredCov) (n - 1) else n
+  c <- concentration_ratio(n = n, p = p, centeredCov = centeredCov, 
+                           verbose = verbose)
+  
+  # Sample covariance matrix
+  sample <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   eig_decomp <- eigen(sample, symmetric = TRUE) # Spectral decomposition
   lambda <- sort(eig_decomp$values)  # Sorted eigenvalues (ascending)

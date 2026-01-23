@@ -22,35 +22,14 @@ GMV_Moore_Penrose_target_eq <- function(Y, centeredCov = TRUE, verbose = 2){
   # }
   # 
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    # We remove the last eigenvector because the eigenvalues are sorted
-    # in decreasing order.
-    Hn = eigen(Jn)$vectors[, -n]
-    Ytilde = Y %*% Hn
-    
-    # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1))
-    
-    # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
-    
-    c_n = p / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-    
-    # Inverse companion covariance
-    iY <- solve(t(Y) %*% Y / n)
-    
-    # Moore-Penrose inverse
-    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
-    
-    c_n = p / n
-  }
+  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                             verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  
+  # Moore-Penrose inverse of the sample covariance matrix
+  iS_MP <- as.matrix(Moore_Penrose(Y = Y, centeredCov = centeredCov))
   
   w_MP = GMV_PlugIn(estimatedPrecisionMatrix = iS_MP)
   
