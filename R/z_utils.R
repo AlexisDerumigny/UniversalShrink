@@ -9,6 +9,7 @@ tr <- function(M){
 #' Conversion of estimated matrices to matrix class
 #' 
 #' @param x object to be converted
+#' @param ... other arguments passed from methods, currently ignored.
 #' 
 #' @return the underlying estimated matrix
 #' 

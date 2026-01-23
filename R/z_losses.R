@@ -16,9 +16,10 @@ FrobeniusNorm2 <- function(M, normalized){
 #' Generic function to calculate the Frobenius norm/loss of (the estimator of) a
 #' matrix.
 #'
-#' @param x,M An (estimated) square matrix of size \code{p},
+#' @param x,M An (estimated) square matrix of size \code{p}
+#' @param M1,M2 two square matrices of the same dimension
 #' 
-#' @param Sigma the true covariance matrix
+#' @param Sigma,SigmaInv the true covariance matrix and its inverse
 #' 
 #' @param type target of the estimator. Must be a character vector of length 1
 #' with one of the following:
@@ -31,6 +32,9 @@ FrobeniusNorm2 <- function(M, normalized){
 #'   Frobenius loss for the estimation of the precision matrix, i.e.
 #'   \code{FrobeniusNorm2(x - Sigma ) / p}.
 #' }
+#' 
+#' @param portfolioWeights the vector of weights of a given portfolio, of which
+#' we want to determine the loss
 #' 
 #' @param normalized if \code{TRUE}, the Frobenius norm is divided by the matrix
 #' size \code{p}.
