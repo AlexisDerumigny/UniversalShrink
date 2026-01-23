@@ -209,38 +209,18 @@ ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose =
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  if (verbose > 0){
-    cat("*  n = ", n, "\n")
-    cat("*  p = ", p, "\n")
-    cat("*  t = ", t, "\n")
-  }
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    if (verbose > 0){
-      cat("*  centered case\n")
-    }
-    
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    c_n = p / (n-1)
-  } else {
-    if (verbose > 0){
-      cat("*  non-centered case\n")
-    }
-    
-    S <- Y %*% t(Y)/n
-    
-    c_n = p / n
-  }
+  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                             verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   
   if (verbose > 0){
-    cat("*  c_n = ", c_n, "\n\n")
+    cat("*  t = ", t, "\n")
   }
   
   iS_ridge <- solve(S + t * Ip)
@@ -271,39 +251,18 @@ ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
+  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                             verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  
   if (verbose > 0){
-    cat("*  n = ", n, "\n")
-    cat("*  p = ", p, "\n")
     cat("*  t = ", t, "\n")
   }
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
-  
-  if (centeredCov){
-    if (verbose > 0){
-      cat("*  centered case\n")
-    }
-    
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    c_n = p / (n-1)
-  } else {
-    if (verbose > 0){
-      cat("*  non-centered case\n")
-    }
-    
-    S <- Y %*% t(Y)/n
-    
-    c_n = p / n
-  }
-  
-  if (verbose > 0){
-    cat("*  c_n = ", c_n, "\n\n")
-  }
   
   iS_ridge <- solve(S + t * Ip)
   
@@ -342,11 +301,11 @@ ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2){
   c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
                              verbose = verbose)
   
-  # Identity matrix of size p
-  Ip = diag(nrow = p)
-  
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  
+  # Identity matrix of size p
+  Ip = diag(nrow = p)
   
   
   # TODO: provide this as an option for the user

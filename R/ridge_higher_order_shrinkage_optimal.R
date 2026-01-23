@@ -5,7 +5,8 @@
 #' @rdname ridge_higher_order_shrinkage
 #' @export
 #' 
-ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov, interval = c(0, 50),
+ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov = TRUE,
+                                                 interval = c(0, 50),
                                                  verbose = 0)
 {
   # Get sizes of Y
@@ -15,19 +16,11 @@ ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov, interval = c
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    c_n = p / (n-1)
-    
-  } else {
-    S <- Y %*% t(Y)/n
-    
-    c_n = p / n
-  }
+  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                             verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   
   q1 <- tr(S) / p
   q2 <- tr(S %*% S) / p - c_n * q1^2

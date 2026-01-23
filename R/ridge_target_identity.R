@@ -80,44 +80,20 @@
 #' FrobeniusLoss2(precision_ridge_target_Cent_g_oracle, Sigma = Sigma)
 #' 
 #' @export
-ridge_target_identity_optimal <- function (Y, centeredCov){
+ridge_target_identity_optimal <- function (Y, centeredCov = TRUE, verbose = 0){
   
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
+  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                             verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    # We remove the last eigenvector because the eigenvalues are sorted
-    # in decreasing order.
-    Hn = eigen(Jn)$vectors[, -n]
-    Ytilde = Y %*% Hn
-    
-    # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
-    
-    # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
-    
-    c_n = p / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-    
-    # Inverse companion covariance
-    iY <- solve(t(Y) %*% Y / n)
-    
-    # Moore-Penrose inverse
-    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
-    
-    c_n = p / n
-  }
   
   r = (c_n - 1)/c_n
   
@@ -211,57 +187,19 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
+  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                             verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   
   if (verbose > 0){
-    cat("*  n = ", n, "\n")
-    cat("*  p = ", p, "\n")
     cat("*  t = ", t, "\n")
   }
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    if (verbose > 0){
-      cat("*  centered case\n")
-    }
-    
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    # We remove the last eigenvector because the eigenvalues are sorted
-    # in decreasing order.
-    Hn = eigen(Jn)$vectors[, -n]
-    Ytilde = Y %*% Hn
-    
-    # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
-    
-    # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
-    
-    c_n = p / (n-1)
-  } else {
-    if (verbose > 0){
-      cat("*  non-centered case\n")
-    }
-    
-    S <- Y %*% t(Y)/n
-    
-    # Inverse companion covariance
-    iY <- solve(t(Y) %*% Y / n)
-    
-    # Moore-Penrose inverse
-    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
-    
-    c_n = p / n
-  }
-  
-  if (verbose > 0){
-    cat("*  c_n = ", c_n, "\n\n")
-  }
   
   r = (c_n - 1)/c_n
   
@@ -360,24 +298,24 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
 
 #' @rdname ridge_target_identity_optimal
 #' @export
-ridge_target_identity <- function (Y, centeredCov, t, alpha, beta){
+ridge_target_identity <- function (Y, centeredCov = TRUE, t, alpha, beta,
+                                   verbose = 0){
   
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
+  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                             verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  
+  if (verbose > 0){
+    cat("*  t = ", t, "\n")
+  }
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
-  
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-  }
-  
   
   iS_ridge <- solve(S + t * Ip)
   

@@ -16,11 +16,11 @@ ridge_target_general_semioptimal(Y, centeredCov, t, Pi0, verbose = 2)
 
 ridge_target_general_optimal(Y, centeredCov, Pi0, verbose = 2)
 
-ridge_target_identity_optimal(Y, centeredCov)
+ridge_target_identity_optimal(Y, centeredCov = TRUE, verbose = 0)
 
 ridge_target_identity_semioptimal(Y, centeredCov, t, verbose = 2)
 
-ridge_target_identity(Y, centeredCov, t, alpha, beta)
+ridge_target_identity(Y, centeredCov = TRUE, t, alpha, beta, verbose = 0)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).

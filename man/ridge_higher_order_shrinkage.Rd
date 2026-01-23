@@ -11,7 +11,7 @@ ridge_higher_order_shrinkage(Y, m, centeredCov, t, verbose = 0)
 ridge_higher_order_shrinkage_optimal(
   Y,
   m,
-  centeredCov,
+  centeredCov = TRUE,
   interval = c(0, 50),
   verbose = 0
 )
