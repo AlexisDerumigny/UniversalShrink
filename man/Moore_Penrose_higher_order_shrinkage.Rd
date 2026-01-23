@@ -11,6 +11,12 @@ Moore_Penrose_higher_order_shrinkage(Y, m, centeredCov)
 TODO: transpose everything.}
 
 \item{m}{order of the shrinkage. Should be at least 1.}
+
+\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
+computed using centering (i.e. in the general case where the mean of the
+random vector may be non-zero).
+If \code{FALSE} the covariance matrix is computed assuming that the mean of
+the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 }
 \value{
 the estimator of the precision matrix

@@ -13,6 +13,8 @@
 #' 
 #' @param t parameter of the estimation.
 #' 
+#' @inheritParams cov_with_centering
+#' 
 #' @returns the estimator of the precision matrix, of class
 #' `EstimatedPrecisionMatrix`.
 #' 

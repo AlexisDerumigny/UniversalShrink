@@ -249,6 +249,8 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 #' 
 #' @param t penalization parameter
 #' 
+#' @inheritParams cov_with_centering
+#' 
 #' @examples
 #' 
 #' n = 10

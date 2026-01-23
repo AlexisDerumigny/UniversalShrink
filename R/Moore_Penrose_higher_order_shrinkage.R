@@ -172,6 +172,7 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' 
 #' @param m order of the shrinkage. Should be at least 1.
 #' 
+#' @inheritParams cov_with_centering
 #' 
 #' @returns the estimator of the precision matrix
 #' (a `p` by `p` matrix, i.e. the inverse of the covariance matrix).

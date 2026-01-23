@@ -10,6 +10,12 @@ GMV_Moore_Penrose(Y, centeredCov = TRUE)
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
 TODO: transpose everything.}
+
+\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
+computed using centering (i.e. in the general case where the mean of the
+random vector may be non-zero).
+If \code{FALSE} the covariance matrix is computed assuming that the mean of
+the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 }
 \description{
 Having the obervation matrix \eqn{\mathbf{Y}_n} and the corresponding sample

@@ -54,6 +54,8 @@
 #' 
 #' @param X data matrix (rows are observations, columns are features).
 #' 
+#' @inheritParams cov_with_centering
+#' 
 #' @returns the estimator of the covariance matrix
 #' (a `p` by `p` matrix).
 #' TODO: update this

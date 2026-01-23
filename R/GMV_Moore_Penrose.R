@@ -16,6 +16,8 @@
 #' @param Y data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
+#' @inheritParams Moore_Penrose
+#' 
 #' @export
 GMV_Moore_Penrose <- function(Y, centeredCov = TRUE)
 {

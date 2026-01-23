@@ -20,7 +20,7 @@
 #' @param Y data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
-#' @param centeredCov Boolean: do we center (\code{TRUE}) or not (\code{FALSE}).
+#' @inheritParams cov_with_centering
 #' 
 #' @returns the estimator of the precision matrix
 #' (a `p` by `p` matrix, i.e. the inverse of the covariance matrix).

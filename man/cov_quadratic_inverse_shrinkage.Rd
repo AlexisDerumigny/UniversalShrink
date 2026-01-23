@@ -8,6 +8,12 @@ cov_quadratic_inverse_shrinkage(X, centeredCov = TRUE)
 }
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
+
+\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
+computed using centering (i.e. in the general case where the mean of the
+random vector may be non-zero).
+If \code{FALSE} the covariance matrix is computed assuming that the mean of
+the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 }
 \value{
 the estimator of the covariance matrix
