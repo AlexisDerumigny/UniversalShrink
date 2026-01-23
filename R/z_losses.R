@@ -172,7 +172,7 @@ LossEuclideanEigenvalues2.matrix <- function(
     type,
     
     "precision matrix" = {
-      if (if.null(SigmaInv)) {
+      if (is.null(SigmaInv)) {
         SigmaInv = solve(Sigma)
       }
       result = DistanceEuclideanEigenvalues2(x, SigmaInv, normalized = normalized)
