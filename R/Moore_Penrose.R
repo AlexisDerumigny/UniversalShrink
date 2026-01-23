@@ -26,7 +26,7 @@
 #' (a `p` by `p` matrix, i.e. the inverse of the covariance matrix).
 #' 
 #' @references 
-#' Nestor Parolya & Taras Bodnar (2024).
+#' Nestor Parolya & Taras Bodnar (2026).
 #' Reviving pseudo-inverses: Asymptotic properties of large dimensional
 #' Moore-Penrose and Ridge-type inverses with applications.
 #' \doi{10.48550/arXiv.2403.15792}
