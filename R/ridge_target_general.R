@@ -228,17 +228,6 @@ ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose =
     # Sample covariance matrix
     S <- Y %*% Jn %*% t(Y) / (n-1)
     
-    # We remove the last eigenvector because the eigenvalues are sorted
-    # in decreasing order.
-    Hn = eigen(Jn)$vectors[, -n]
-    Ytilde = Y %*% Hn
-    
-    # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
-    
-    # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
-    
     c_n = p / (n-1)
   } else {
     if (verbose > 0){
@@ -246,12 +235,6 @@ ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose =
     }
     
     S <- Y %*% t(Y)/n
-    
-    # Inverse companion covariance
-    iY <- solve(t(Y) %*% Y / n)
-    
-    # Moore-Penrose inverse
-    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
     
     c_n = p / n
   }
@@ -307,17 +290,6 @@ ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 
     # Sample covariance matrix
     S <- Y %*% Jn %*% t(Y) / (n-1)
     
-    # We remove the last eigenvector because the eigenvalues are sorted
-    # in decreasing order.
-    Hn = eigen(Jn)$vectors[, -n]
-    Ytilde = Y %*% Hn
-    
-    # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
-    
-    # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
-    
     c_n = p / (n-1)
   } else {
     if (verbose > 0){
@@ -325,12 +297,6 @@ ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 
     }
     
     S <- Y %*% t(Y)/n
-    
-    # Inverse companion covariance
-    iY <- solve(t(Y) %*% Y / n)
-    
-    # Moore-Penrose inverse
-    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
     
     c_n = p / n
   }
@@ -391,17 +357,6 @@ ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2){
     # Sample covariance matrix
     S <- Y %*% Jn %*% t(Y) / (n-1)
     
-    # We remove the last eigenvector because the eigenvalues are sorted
-    # in decreasing order.
-    Hn = eigen(Jn)$vectors[, -n]
-    Ytilde = Y %*% Hn
-    
-    # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
-    
-    # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
-    
     c_n = p / (n-1)
   } else {
     if (verbose > 0){
@@ -409,13 +364,6 @@ ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2){
     }
     
     S <- Y %*% t(Y)/n
-    
-    # Inverse companion covariance
-    iY <- solve(t(Y) %*% Y / n)
-    
-    # Moore-Penrose inverse
-    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
-    
     c_n = p / n
   }
   
