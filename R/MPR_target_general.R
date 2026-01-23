@@ -11,7 +11,9 @@
 #' @param Y data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
-#' @param t parameter of the estimation.
+#' @param t,alpha,beta parameters of the estimation.
+#' 
+#' @param Pi0 shrinkage target
 #' 
 #' @inheritParams cov_with_centering
 #' 

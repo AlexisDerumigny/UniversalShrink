@@ -22,12 +22,14 @@ random vector may be non-zero).
 If \code{FALSE} the covariance matrix is computed assuming that the mean of
 the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 
+\item{Pi0}{shrinkage target}
+
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates
 no printing at all, while higher values indicate increasingly more detailed
 (more verbose) output.}
 
-\item{t}{parameter of the estimation.}
+\item{t, alpha, beta}{parameters of the estimation.}
 }
 \value{
 the estimator of the precision matrix, of class

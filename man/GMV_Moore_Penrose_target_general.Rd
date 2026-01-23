@@ -25,6 +25,8 @@ the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 details about the progress of the computations. A value of \code{0} indicates
 no printing at all, while higher values indicate increasingly more detailed
 (more verbose) output.}
+
+\item{b}{shrinkage target}
 }
 \value{
 a vector of size \eqn{p} of (estimated) optimal portfolio weights,

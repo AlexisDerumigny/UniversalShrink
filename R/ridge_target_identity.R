@@ -24,6 +24,8 @@
 #' 
 #' @param t,alpha,beta parameters of the estimation.
 #' 
+#' @param Pi0 shrinkage target
+#' 
 #' @inheritParams cov_with_centering
 #' 
 #' @returns the estimator of the precision matrix

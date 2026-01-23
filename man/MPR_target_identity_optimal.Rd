@@ -33,7 +33,9 @@ details about the progress of the computations. A value of \code{0} indicates
 no printing at all, while higher values indicate increasingly more detailed
 (more verbose) output.}
 
-\item{t}{parameter of the estimation.}
+\item{t, alpha, beta, eps, upp}{\code{t}, \code{alpha} and \code{beta} are
+parameters of the estimation. In the optimized version, the loss is optimized
+with respect to \eqn{u = arctan(t)} over the interval \code{[eps, upp]}.}
 }
 \value{
 the estimator of the precision matrix, of class

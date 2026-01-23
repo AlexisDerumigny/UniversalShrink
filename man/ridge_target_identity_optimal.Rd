@@ -34,6 +34,8 @@ the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 
 \item{t, alpha, beta}{parameters of the estimation.}
 
+\item{Pi0}{shrinkage target}
+
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates
 no printing at all, while higher values indicate increasingly more detailed

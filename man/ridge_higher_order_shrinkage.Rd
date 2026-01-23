@@ -28,7 +28,8 @@ random vector may be non-zero).
 If \code{FALSE} the covariance matrix is computed assuming that the mean of
 the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 
-\item{t}{penalization parameter}
+\item{t, interval}{\code{t} is the penalization parameter, and \code{interval}
+is the interval over which the loss is optimized over (with respect to \code{t}).}
 
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates

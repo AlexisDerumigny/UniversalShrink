@@ -11,7 +11,9 @@
 #' @param Y data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
-#' @param t parameter of the estimation.
+#' @param t,alpha,beta,eps,upp \code{t}, \code{alpha} and \code{beta} are
+#' parameters of the estimation. In the optimized version, the loss is optimized
+#' with respect to \eqn{u = arctan(t)} over the interval \code{[eps, upp]}.
 #' 
 #' @inheritParams cov_with_centering
 #' 

@@ -66,6 +66,8 @@
 #' @param Y data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
+#' @param b shrinkage target
+#' 
 #' @inheritParams cov_with_centering
 #' 
 #' @return a vector of size \eqn{p} of (estimated) optimal portfolio weights,

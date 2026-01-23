@@ -247,7 +247,8 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 #' 
 #' @param m order of the shrinkage. Should be at least 1.
 #' 
-#' @param t penalization parameter
+#' @param t,interval \code{t} is the penalization parameter, and \code{interval}
+#' is the interval over which the loss is optimized over (with respect to \code{t}).
 #' 
 #' @inheritParams cov_with_centering
 #' 
