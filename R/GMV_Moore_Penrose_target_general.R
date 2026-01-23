@@ -32,6 +32,37 @@
 #'   and \eqn{\mathbf{1}} is a vector of ones of size \eqn{p}.
 #'
 #'
+# In the particular case of the shrinkage to the equally weighted portfolio,
+# this function computes
+# \deqn{\hat{\alpha}^*\times \mathbf{w}_{MP} + (1 - \hat{\alpha}^*) \times \mathbf{1}/p}
+# where \eqn{\hat{\alpha}^*} is given by
+# \deqn{
+# \hat{\alpha}^*=
+# \frac{\frac{1}{p}\mathbf{1}^\top\mathbf{S}_n\mathbf{1}-
+# \frac{\hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\boldsymbol{\Sigma} \right)}
+# {\hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}}
+# {\frac{1}{p}\mathbf{1}^\top\mathbf{S}_n\mathbf{1} - 
+# 2\frac{\hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\boldsymbol{\Sigma} \right)}
+# {\hat{d}_1\left( \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}
+# +\frac{\hat{d}_3\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}
+# {\hat{d}_1^2\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}},
+# } where
+# \deqn{
+# \hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\boldsymbol{\Sigma}\right)   = \frac{1}{\hat{v}(0)}
+# \left[\frac{1}{\hat{v}(0)}\left(1-\hat{d}_0(0,\frac{\mathbf{1}\mathbf{1}^\top}{p}) \right) 
+# - \hat{d}_1(\frac{\mathbf{1}\mathbf{1}^\top}{p}) \right],
+#}
+# with \eqn{\hat{v}(0)}, \eqn{\hat{d}_1\left( \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}, 
+# \eqn{\hat{d}_1\left( \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}, 
+# \eqn{d_3(\frac{\mathbf{1}\mathbf{1}^\top}{p})}, and
+#  \eqn{\hat{d}_0\left(0, \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)} given in (8) and 
+#  in (S.41), (S.44), and (S.45)  from the supplement of Bodnar and Parolya (2026).
+#  The vector \eqn{w_{MP}} are the optimal portfolio weights 
+#  estimated as the plug-in of the Moore-Penrose estimate of the precision matrix
+#   and \eqn{\mathbf{1}} is a vector of ones of size \eqn{p}.
+#
+#'
+#'
 #' @param Y data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
@@ -103,6 +134,27 @@
 #' cat("GMV_Moore_Penrose_target_eq:", Loss_GMV_Moore_Penrose_target_eq, "\n")
 #' cat("GMV_Moore_Penrose:", Loss_GMV_Moore_Penrose, "\n")
 #' cat("GMV_Moore_Penrose_target_oracle:", Loss_GMV_MP_shrinkage_Cent_oracle, "\n")
+#' 
+#' 
+#' # Example of shrinkage to the equally weighted portfolio
+#' 
+#' GMV_MP_shrinkage_Cent = 
+#'   GMV_Moore_Penrose_target_eq(Y = t(X), centeredCov = TRUE)
+#' 
+#' GMV_MP_Cent = GMV_Moore_Penrose(Y = t(X), centeredCov = TRUE)
+#' 
+#' Loss_GMV_Moore_Penrose_target_eq = LossRelativeOutOfSampleVariance(
+#'   portfolioWeights = GMV_MP_shrinkage_Cent, Sigma = Sigma)
+#'   
+#' print(Loss_GMV_Moore_Penrose_target_eq)
+#' 
+#' Loss_GMV_Moore_Penrose = LossRelativeOutOfSampleVariance(
+#'   portfolioWeights = GMV_MP_Cent, Sigma = Sigma)
+#'   
+#' print(Loss_GMV_Moore_Penrose)
+#' 
+#' # Shrinkage helps to reduce the loss
+#' stopifnot(Loss_GMV_Moore_Penrose_target_eq < Loss_GMV_Moore_Penrose)
 #' 
 #' 
 #' @export
