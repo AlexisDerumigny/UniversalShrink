@@ -37,18 +37,18 @@ LossEuclideanEigenvalues2(x, Sigma, type, normalized = TRUE, ...)
 \method{LossEuclideanEigenvalues2}{matrix}(
   x,
   Sigma,
-  SigmaInv = NULL,
   type = c("precision matrix", "covariance matrix"),
   normalized = TRUE,
+  SigmaInv = NULL,
   ...
 )
 
 \method{LossEuclideanEigenvalues2}{EstimatedPrecisionMatrix}(
   x,
   Sigma,
-  SigmaInv = NULL,
   type = "precision matrix",
   normalized = TRUE,
+  SigmaInv = NULL,
   ...
 )
 
@@ -66,9 +66,9 @@ LossRelativeOutOfSampleVariance(portfolioWeights, Sigma, SigmaInv = NULL)
 \item{normalized}{if \code{TRUE}, the Frobenius norm is divided by the matrix
 size \code{p}.}
 
-\item{x, M}{An (estimated) square matrix of size \code{p},}
+\item{x, M}{An (estimated) square matrix of size \code{p}}
 
-\item{Sigma}{the true covariance matrix}
+\item{Sigma, SigmaInv}{the true covariance matrix and its inverse}
 
 \item{type}{target of the estimator. Must be a character vector of length 1
 with one of the following:
@@ -83,6 +83,11 @@ Frobenius loss for the estimation of the precision matrix, i.e.
 }}
 
 \item{...}{Additional arguments passed to methods.}
+
+\item{M1, M2}{two square matrices of the same dimension}
+
+\item{portfolioWeights}{the vector of weights of a given portfolio, of which
+we want to determine the loss}
 }
 \value{
 All these functions return a positive numeric value.

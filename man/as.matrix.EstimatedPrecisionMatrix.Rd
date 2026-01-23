@@ -11,6 +11,8 @@
 }
 \arguments{
 \item{x}{object to be converted}
+
+\item{...}{other arguments passed from methods, currently ignored.}
 }
 \value{
 the underlying estimated matrix

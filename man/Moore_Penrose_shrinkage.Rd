@@ -34,7 +34,7 @@ and \eqn{\Pi_0} is a given target (for \code{Moore_Penrose_shrinkage()})
 or the identity matrix (for \code{Moore_Penrose_shrinkage_toIP()}).
 }
 \examples{
-n = 10
+n = 100
 p = 5 * n
 mu = rep(0, p)
 
@@ -70,8 +70,8 @@ FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
 FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
 FrobeniusLoss2(precision_MoorePenrose_toIPCent, Sigma = Sigma)
 FrobeniusLoss2(precision_MoorePenrose_toIPNoCent, Sigma = Sigma)
-FrobeniusLoss2(precision_NLshrink, Sigma = Sigma)
-FrobeniusLoss2(precision_QISshrink, Sigma = Sigma)
+FrobeniusLoss2(precision_NLshrink, Sigma = Sigma, type = "precision")
+FrobeniusLoss2(precision_QISshrink, Sigma = Sigma, type = "precision")
 
 # We now use the true value of the precision matrix as a target for shrinkage
 precision_MoorePenrose_Cent_trueSigma = 

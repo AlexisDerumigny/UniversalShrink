@@ -16,9 +16,10 @@ FrobeniusNorm2 <- function(M, normalized){
 #' Generic function to calculate the Frobenius norm/loss of (the estimator of) a
 #' matrix.
 #'
-#' @param x,M An (estimated) square matrix of size \code{p},
+#' @param x,M An (estimated) square matrix of size \code{p}
+#' @param M1,M2 two square matrices of the same dimension
 #' 
-#' @param Sigma the true covariance matrix
+#' @param Sigma,SigmaInv the true covariance matrix and its inverse
 #' 
 #' @param type target of the estimator. Must be a character vector of length 1
 #' with one of the following:
@@ -31,6 +32,9 @@ FrobeniusNorm2 <- function(M, normalized){
 #'   Frobenius loss for the estimation of the precision matrix, i.e.
 #'   \code{FrobeniusNorm2(x - Sigma ) / p}.
 #' }
+#' 
+#' @param portfolioWeights the vector of weights of a given portfolio, of which
+#' we want to determine the loss
 #' 
 #' @param normalized if \code{TRUE}, the Frobenius norm is divided by the matrix
 #' size \code{p}.
@@ -141,7 +145,8 @@ DistanceEuclideanEigenvalues2 <- function(M1, M2, normalized){
 
 #' @export
 #' @rdname FrobeniusLoss2
-LossEuclideanEigenvalues2 <- function(x, Sigma, type, normalized = TRUE, ...) {
+LossEuclideanEigenvalues2 <- function(x, Sigma, type,
+                                      normalized = TRUE, ...) {
   UseMethod("LossEuclideanEigenvalues2")
 }
 
@@ -151,9 +156,9 @@ LossEuclideanEigenvalues2 <- function(x, Sigma, type, normalized = TRUE, ...) {
 LossEuclideanEigenvalues2.matrix <- function(
     x,
     Sigma,
-    SigmaInv = NULL,
     type = c("precision matrix", "covariance matrix"),
-    normalized = TRUE, ...)
+    normalized = TRUE, 
+    SigmaInv = NULL, ...)
 {
   if (ncol(x) != nrow(x) || ncol(x) != nrow(Sigma) || ncol(x) != ncol(Sigma)){
     stop("x and Sigma should be square matrices of the same dimension. ",
@@ -172,7 +177,7 @@ LossEuclideanEigenvalues2.matrix <- function(
     type,
     
     "precision matrix" = {
-      if (if.null(SigmaInv)) {
+      if (is.null(SigmaInv)) {
         SigmaInv = solve(Sigma)
       }
       result = DistanceEuclideanEigenvalues2(x, SigmaInv, normalized = normalized)
@@ -195,7 +200,7 @@ LossEuclideanEigenvalues2.matrix <- function(
 #' @export
 #' @rdname FrobeniusLoss2
 LossEuclideanEigenvalues2.EstimatedPrecisionMatrix <- function(
-    x, Sigma, SigmaInv = NULL, type = "precision matrix", normalized = TRUE, ...)
+    x, Sigma, type = "precision matrix", normalized = TRUE, SigmaInv = NULL, ...)
 {
   type = match.arg(type)
   
@@ -204,8 +209,8 @@ LossEuclideanEigenvalues2.EstimatedPrecisionMatrix <- function(
          " but x is of class 'EstimatedPrecisionMatrix'.")
   }
   result = LossEuclideanEigenvalues2(
-    as.matrix(x), Sigma,
-    type = "precision matrix", normalized = normalized)
+    as.matrix(x), Sigma = Sigma,
+    type = "precision matrix", normalized = normalized, SigmaInv = SigmaInv)
   
   return (result)
 }
@@ -236,6 +241,7 @@ LossRelativeOutOfSampleVariance <- function(portfolioWeights, Sigma, SigmaInv = 
   if (is.null(SigmaInv)){
     SigmaInv = solve(Sigma)
   }
+  p = length(portfolioWeights)
   
   outOfSampleVariance = t(portfolioWeights) %*% Sigma %*% portfolioWeights
 

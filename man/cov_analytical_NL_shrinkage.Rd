@@ -4,7 +4,7 @@
 \alias{cov_analytical_NL_shrinkage}
 \title{Analytical non-linear shrinkage from Ledoit and Wolf (2020)}
 \usage{
-cov_analytical_NL_shrinkage(x)
+cov_analytical_NL_shrinkage(X)
 }
 \arguments{
 \item{X}{data matrix (rows are features, columns are observations).

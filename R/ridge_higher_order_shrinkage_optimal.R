@@ -1,60 +1,8 @@
 
 
-#' Ridge higher order shrinkage with optimal t
 #' 
 #' 
-#' @param Y data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
-#' 
-#' @param m order of the shrinkage. Should be at least 1.
-#' 
-#' @param t penalization parameter
-#' 
-#' @examples
-#' 
-#' n = 10
-#' p = 2 * n
-#' mu = rep(0, p)
-#' 
-#' # Generate Sigma
-#' X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
-#' H <- eigen(t(X0) %*% X0)$vectors
-#' Sigma = H %*% diag(seq(1, 0.02, length.out = p)) %*% t(H)
-#' 
-#' # Generate example dataset
-#' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
-#' 
-#' precision_MoorePenrose_Cent = 
-#'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
-#' precision_MoorePenrose_NoCent = 
-#'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
-#'
-#' FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
-#' FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
-#' 
-#' for (m in 1:2){
-#'   cat("m = ", m, "\n")
-#'   precision_higher_order_shrinkage_Cent = 
-#'       ridge_higher_order_shrinkage_optimal(Y = t(X), m = m, centeredCov = TRUE)
-#'       
-#'   precision_higher_order_shrinkage_NoCent = 
-#'       ridge_higher_order_shrinkage_optimal(Y = t(X), m = m, centeredCov = FALSE)
-#'       
-#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
-#'   
-#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
-#' }
-#' 
-#' precision_higher_order_shrinkage_Cent = 
-#'       ridge_higher_order_shrinkage_optimal(Y = t(X), m = 1, centeredCov = TRUE)
-#' 
-#' precision_ridge_target_Cent = 
-#'     ridge_target_identity_optimal(Y = t(X), centeredCov = TRUE)
-#'   
-#' FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
-#' FrobeniusLoss2(precision_ridge_target_Cent, Sigma = Sigma)
-#' 
-#' 
+#' @rdname ridge_higher_order_shrinkage
 #' @export
 #' 
 ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov, interval = c(0, 50),
@@ -112,7 +60,7 @@ ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov, interval = c
   # eps <- 1/(10^6)
   # upp <- pi/2 - eps
   
-  result_optim <- optimize(f = estimatedLoss, interval = interval)
+  result_optim <- stats::optimize(f = estimatedLoss, interval = interval)
   
   optimal_t = result_optim$minimum
   

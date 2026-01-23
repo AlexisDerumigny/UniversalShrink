@@ -58,11 +58,11 @@
 #' LossEuclideanEigenvalues2(estimatedCov_shrink, Sigma)
 #' 
 #' @export
-cov_analytical_NL_shrinkage = function(x){
+cov_analytical_NL_shrinkage = function(X){
   # the original version suggested that p is # of columns
-  p = nrow(x)
-  n = ncol(x)
-  sampleC = stats::cov(t(x))
+  p = nrow(X)
+  n = ncol(X)
+  sampleC = stats::cov(t(X))
   eig = eigen(sampleC)
   u = eig$vectors[,p:1]
   lambda = rev(eig$values)
@@ -72,10 +72,10 @@ cov_analytical_NL_shrinkage = function(x){
     L = matrix(rep(lambda, min(p, n)), nrow = length(lambda))
     h = n^(-1/3)
     H = h * t(L)
-    x <- (L - t(L)) / H # This is a different x than before
-    ftilde = (3/4/sqrt(5)) * rowMeans(pmax(1-x^2/5, 0) / H)
-    Hftemp = (-3/10/pi) * x + (3/4/sqrt(5)/pi) * (1 - x^2./5) * log(abs((sqrt(5) - x)/(sqrt(5) + x)))
-    Hftemp[abs(x) == sqrt(5)] = (-3/10/pi) * x[abs(x) == sqrt(5)]
+    Xmod <- (L - t(L)) / H # This is a different x than before
+    ftilde = (3/4/sqrt(5)) * rowMeans(pmax(1-Xmod^2/5, 0) / H)
+    Hftemp = (-3/10/pi) * Xmod + (3/4/sqrt(5)/pi) * (1 - Xmod^2./5) * log(abs((sqrt(5) - Xmod)/(sqrt(5) + Xmod)))
+    Hftemp[abs(Xmod) == sqrt(5)] = (-3/10/pi) * Xmod[abs(Xmod) == sqrt(5)]
     Hftilde = rowMeans(Hftemp / H)
     dtilde = lambda / ((pi*(p/n)*lambda*ftilde)^2 + (1-(p/n)-pi*(p/n)*lambda*Hftilde)^2);
   } else{
@@ -83,10 +83,10 @@ cov_analytical_NL_shrinkage = function(x){
     L = matrix(rep(lambda, min(p, n-1)), nrow = length(lambda))
     h = n^(-1/3)
     H = h * t(L)
-    x <- (L - t(L)) / H # This is a different x than before
-    ftilde = (3/4/sqrt(5)) * rowMeans(pmax(1-x^2/5, 0) / H)
-    Hftemp = (-3/10/pi) * x + (3/4/sqrt(5)/pi) * (1 - x^2./5) * log(abs((sqrt(5) - x)/(sqrt(5) + x)))
-    Hftemp[abs(x) == sqrt(5)] = (-3/10/pi) * x[abs(x) == sqrt(5)]
+    Xmod <- (L - t(L)) / H # This is a different x than before
+    ftilde = (3/4/sqrt(5)) * rowMeans(pmax(1-Xmod^2/5, 0) / H)
+    Hftemp = (-3/10/pi) * Xmod + (3/4/sqrt(5)/pi) * (1 - Xmod^2./5) * log(abs((sqrt(5) - Xmod)/(sqrt(5) + Xmod)))
+    Hftemp[abs(Xmod) == sqrt(5)] = (-3/10/pi) * Xmod[abs(Xmod) == sqrt(5)]
     Hftilde = rowMeans(Hftemp / H)
     
     Hftilde0 = (1/pi)*(3/10/h^2+3/4/sqrt(5)/h*(1-1/5/h^2) * log((1+sqrt(5)*h)/(1-sqrt(5)*h))) * mean(1/lambda)

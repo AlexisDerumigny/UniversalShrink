@@ -155,9 +155,9 @@ ridge_target_identity_optimal <- function (Y, centeredCov){
   eps <- 1/(10^6)
   upp <- pi/2 - eps
   
-  hL2R_max <- optim(par = initialValue, fn = hL2R,
-                    lower = eps, upper = upp,
-                    method= "L-BFGS-B", control = list(fnscale = -1))
+  hL2R_max <- stats::optim(par = initialValue, fn = hL2R,
+                           lower = eps, upper = upp,
+                           method= "L-BFGS-B", control = list(fnscale = -1))
   
   u_R <- hL2R_max$par
   
