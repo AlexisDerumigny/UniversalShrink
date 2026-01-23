@@ -24,6 +24,8 @@
 #' 
 #' @param t,alpha,beta parameters of the estimation.
 #' 
+#' @inheritParams cov_with_centering
+#' 
 #' @returns the estimator of the precision matrix
 #' (a `p` by `p` matrix).
 #' 
