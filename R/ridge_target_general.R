@@ -213,9 +213,6 @@ ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose =
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                             verbose = verbose)
-  
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   

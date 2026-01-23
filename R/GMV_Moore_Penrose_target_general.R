@@ -165,9 +165,9 @@ GMV_Moore_Penrose_target_general <- function(Y, centeredCov = TRUE, b = NULL,
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
+  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                             verbose = verbose)
   
-  # Identity matrix of size p
-  Ip = diag(nrow = p)
   # Vector of ones of size p
   ones = rep(1, length = p)
   
@@ -179,10 +179,6 @@ GMV_Moore_Penrose_target_general <- function(Y, centeredCov = TRUE, b = NULL,
   if (abs(sum(b) - 1) > 0.001){
     stop("The weights (b) should sum up to 1.")
   }
-
-  
-  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                             verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)

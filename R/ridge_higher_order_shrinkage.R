@@ -348,15 +348,14 @@ ridge_higher_order_shrinkage <- function(Y, m, centeredCov, t, verbose = 0)
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  
-  # Identity matrix of size p
-  Ip = diag(nrow = p)
-  
   c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
                              verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  
+  # Identity matrix of size p
+  Ip = diag(nrow = p)
   
   if (verbose > 0){
     cat("*  t = ", t, "\n")

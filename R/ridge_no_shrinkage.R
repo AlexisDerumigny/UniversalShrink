@@ -55,12 +55,8 @@ ridge_no_shrinkage <- function (Y, centeredCov = TRUE, t, verbose = 0){
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                             verbose = verbose)
-  
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
-  
   
   iS_ridge <- solve(S + t * Ip)
   

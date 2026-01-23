@@ -3,25 +3,10 @@
 #' @rdname GMV_Moore_Penrose_target_general
 #' @export
 GMV_Moore_Penrose_target_eq <- function(Y, centeredCov = TRUE, verbose = 2){
+  
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  
-  # Identity matrix of size p
-  Ip = diag(nrow = p)
-  # Vector of ones of size p
-  ones = rep(1, length = p)
-  
-  # if (is.null(b)){
-  #   b = rep(1/p, length = p)
-  # } else if (length(b) != p){
-  #   stop("'b' should be a vector of length 'p'.")
-  # }
-  # if (abs(sum(b) - 1) > 0.001){
-  #   stop("The weights (b) should sum up to 1.")
-  # }
-  # 
-  
   c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
                              verbose = verbose)
   

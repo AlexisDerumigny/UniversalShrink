@@ -90,6 +90,8 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
+  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
+                             verbose = verbose)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
@@ -99,9 +101,6 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
   } else if (nrow(Pi0) != p || ncol(Pi0) != p){
     stop("'Pi0' should be a 'p' by 'p' matrix.")
   }
-  
-  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                             verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)

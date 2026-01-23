@@ -67,15 +67,14 @@ MPR_no_shrinkage <- function (Y, centeredCov, t, verbose = 0){
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  
-  # Identity matrix of size p
-  Ip = diag(nrow = p)
-  
   c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
                              verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  
+  # Identity matrix of size p
+  Ip = diag(nrow = p)
   
   iS_ridge <- solve(S + t * Ip)
   
