@@ -18,7 +18,7 @@
 #' (more verbose) output. 
 #' 
 #' @returns \code{cov_with_centering} returns a \code{p * p} matrix.
-#' \code{concentration_ratio} returns a numeric vector of length 1.
+#' \code{concentr_ratio} returns a numeric vector of length 1.
 #' 
 #' @export
 #' 
@@ -42,7 +42,7 @@ cov_with_centering <- function(X, centeredCov){
 
 #' @rdname cov_with_centering
 #' @export
-concentration_ratio <- function(n, p, centeredCov, verbose){
+concentr_ratio <- function(n, p, centeredCov, verbose){
   if (verbose > 0){
     cat("*  n = ", n, "\n")
     cat("*  p = ", p, "\n")

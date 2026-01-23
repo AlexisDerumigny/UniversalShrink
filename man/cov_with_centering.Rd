@@ -2,12 +2,12 @@
 % Please edit documentation in R/cov_with_centering.R
 \name{cov_with_centering}
 \alias{cov_with_centering}
-\alias{concentration_ratio}
+\alias{concentr_ratio}
 \title{Compute the covariance matrix with possible centering and the corresponding concentration ratio}
 \usage{
 cov_with_centering(X, centeredCov)
 
-concentration_ratio(n, p, centeredCov, verbose)
+concentr_ratio(n, p, centeredCov, verbose)
 }
 \arguments{
 \item{X, n, p}{data matrix (rows are observations, columns are features).
@@ -27,7 +27,7 @@ no printing at all, while higher values indicate increasingly more detailed
 }
 \value{
 \code{cov_with_centering} returns a \code{p * p} matrix.
-\code{concentration_ratio} returns a numeric vector of length 1.
+\code{concentr_ratio} returns a numeric vector of length 1.
 }
 \description{
 Compute the covariance matrix with possible centering and the corresponding concentration ratio

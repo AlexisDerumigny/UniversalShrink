@@ -226,8 +226,7 @@ Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov = TRUE, verbo
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                             verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)

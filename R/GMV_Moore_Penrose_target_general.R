@@ -165,8 +165,7 @@ GMV_Moore_Penrose_target_general <- function(Y, centeredCov = TRUE, b = NULL,
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                             verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Vector of ones of size p
   ones = rep(1, length = p)

@@ -90,8 +90,7 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                             verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
@@ -205,15 +204,13 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov = TRUE, verbose = 0)
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  
-  # Identity matrix of size p
-  Ip = diag(nrow = p)
-  
-  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                             verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  
+  # Identity matrix of size p
+  Ip = diag(nrow = p)
   
   # Moore-Penrose inverse of the sample covariance matrix
   iS_MP <- as.matrix(Moore_Penrose(Y = Y, centeredCov = centeredCov))

@@ -85,8 +85,7 @@ ridge_target_identity_optimal <- function (Y, centeredCov = TRUE, verbose = 0){
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                             verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
@@ -187,8 +186,7 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                             verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
@@ -304,8 +302,7 @@ ridge_target_identity <- function (Y, centeredCov = TRUE, t, alpha, beta,
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  c_n <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                             verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)

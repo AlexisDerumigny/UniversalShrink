@@ -84,12 +84,10 @@ MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3){
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
+  cn = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
-  
-  cn <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                             verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
@@ -214,8 +212,7 @@ MPR_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 2)
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  cn <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                            verbose = verbose)
+  cn = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
@@ -501,8 +498,7 @@ MPR_target_general <- function (Y, centeredCov, t, alpha, beta, Pi0, verbose){
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  cn <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                            verbose = verbose)
+  cn = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)

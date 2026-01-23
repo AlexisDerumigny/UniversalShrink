@@ -89,8 +89,7 @@ cov_quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE, verbose = 0) 
   p <- ncol(X) # Matrix dimension
   
   n_adjusted <- if (centeredCov) (n - 1) else n
-  c <- concentration_ratio(n = n, p = p, centeredCov = centeredCov, 
-                           verbose = verbose)
+  c <- concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
   sample <- cov_with_centering(X = X, centeredCov = centeredCov)

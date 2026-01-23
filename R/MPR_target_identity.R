@@ -75,8 +75,7 @@ MPR_target_identity_optimal <- function (Y, centeredCov = TRUE, verbose = 2,
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  cn <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                            verbose = verbose)
+  cn = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
@@ -202,8 +201,7 @@ MPR_target_identity_semioptimal <- function (Y, centeredCov = TRUE, t, verbose =
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
-  cn <- concentration_ratio(n = n, p = p, centeredCov = centeredCov,
-                            verbose = verbose)
+  cn = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
