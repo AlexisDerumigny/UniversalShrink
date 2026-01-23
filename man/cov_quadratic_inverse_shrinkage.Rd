@@ -2,7 +2,7 @@
 % Please edit documentation in R/cov_quadratic_inverse_shrinkage.R
 \name{cov_quadratic_inverse_shrinkage}
 \alias{cov_quadratic_inverse_shrinkage}
-\title{Quadratic inverse shrinkage}
+\title{Quadratic inverse shrinkage (QIS)}
 \usage{
 cov_quadratic_inverse_shrinkage(X, centeredCov = TRUE)
 }
@@ -17,6 +17,52 @@ TODO: update this
 \description{
 This function estimates the covariance matrix as a given data set using
 quadratic inverse shrinkage.
+}
+\details{
+The quadratic inverse shrinkage estimator (QIS) of
+Ledoit and Wolf is given by
+\eqn{\mathbf{S}_{QIS}= 
+\mathbf{U} \text{diag}(\hat\delta_{n,1},\ldots,\hat\delta_{n,p})\mathbf{U}^\top}
+with
+\deqn{\hat{\delta}^{-1}_{n,i}=
+\left(1-\frac{p}{n}\right)^2 \lambda^{-1}_{n,i}+
+2\frac{p}{n}\left(1-\frac{p}{n}\right)
+\lambda^{-1}_{n,i}\hat{\theta}_n(\lambda^{-1}_{n,i})+\left(\frac{p}{n}\right)^2
+\lambda^{-1}_{n,i}\mathcal{A}^2_{\theta_n}(\lambda^{-1}_{n,i}),
+ }
+for \eqn{i\in\{1,\ldots,p\}}, where
+
+\deqn{
+\hat{\theta}_n(x)
+:=
+ \frac{1}{p}
+\sum_{j=1}^{p}
+\lambda^{-1}_{n,j}
+\frac{\lambda^{-1}_{n,j}-x}
+{(\lambda^{-1}_{n,j}-x)^2 + h_n^2 \lambda^{-2}_{n,j}}
+} and
+\deqn{
+\mathcal{A}^2_{\theta_n}(x)
+=
+ \left[
+   \frac{1}{p}
+   \sum_{j=1}^{p}
+   \lambda^{-1}_{n,j}
+   \frac{\lambda^{-1}_{n,j}-x}
+   {(\lambda^{-1}_{n,j}-x)^2 + h_n^2 \lambda^{-2}_{n,j}}
+   \right]^2
++
+ \left[
+   \frac{1}{p}
+   \sum_{j=1}^{p}
+   \lambda^{-1}_{n,j}
+   \frac{h_n \lambda^{-1}_{n,j}}
+   {(\lambda^{-1}_{n,j}-x)^2 + h_n^2 \lambda^{-2}_{n,j}}
+   \right]^2.
+   }
+The smoothing parameter \eqn{h_n} satisfies the conditions
+\eqn{h_n\sim Kn^{-\alpha}} for some \eqn{K>0} and \eqn{\alpha\in(0, 2/5)}.
+See, Theorem 4.1 of Ledoit and Wolf (2022) for more details.
 }
 \examples{
 p = 200
@@ -39,5 +85,5 @@ LossEuclideanEigenvalues2(estimatedCov_shrink, Sigma)
 Ledoit, O., & Wolf, M. (2022).
 Quadratic shrinkage for large covariance matrices.
 Bernoulli, 28(3), 1519-1547.
-\link{https://doi.org/10.3150/20-BEJ1315}
+\doi{10.3150/20-BEJ1315}
 }

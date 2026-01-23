@@ -1,28 +1,49 @@
 
 
-#' First-order shrinkage of the Moore-Penrose portfolio towards a general target portfolio
+#' First-order shrinkage of the Moore-Penrose portfolio towards a general target 
+#' portfolio \eqn{\mathbf{b}}
 #'
 #' This function computes
-#' \deqn{\alpha \times w_{MP} + (1 - \alpha) \times \mathbf{b}}
-#' where \eqn{\alpha} is a carefully chosen coefficient, \eqn{w_{MP}} is the
-#' vector of optimal portfolio weights estimated as the plug-in of the Moore-Penrose
-#' estimate of the precision matrix and \eqn{\mathbf{b}} is the target.
+#' \deqn{\hat{\alpha}^*\times \mathbf{w}_{MP} + (1 - \hat{\alpha}^*) \times \mathbf{b}}
+#' where \eqn{\hat{\alpha}^*} is given by
+#' \deqn{
+#' \hat{\alpha}^*=
+#' \frac{\mathbf{b}^\top\mathbf{S}_n\mathbf{b}-
+#' \frac{\hat{d}_1\left(\mathbf{1}\mathbf{b}^\top\boldsymbol{\Sigma} \right)}
+#' {\hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}}
+#' {\mathbf{b}^\top\mathbf{S}_n\mathbf{b} - 
+#' 2\frac{\hat{d}_1\left(\mathbf{1}\mathbf{b}^\top\boldsymbol{\Sigma} \right)}
+#' {\hat{d}_1\left( \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}
+#' +\frac{\hat{d}_3\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}
+#' {\hat{d}_1^2\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}},
+#' } where
+#' \deqn{
+#' \hat{d}_1\left(\mathbf{1}\mathbf{b}^\top\boldsymbol{\Sigma}\right)   = \frac{1}{\hat{v}(0)}
+#' \left[\frac{1}{\hat{v}(0)}\left(1-\hat{d}_0(0,\mathbf{1}\mathbf{b}^\top) \right) 
+#' - \hat{d}_1(\mathbf{1}\mathbf{b}^\top) \right],
+#'}
+#' with \eqn{\hat{v}(0)}, \eqn{\hat{d}_1\left( \mathbf{1}\mathbf{b}^\top\right)}, 
+#' \eqn{\hat{d}_1\left( \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}, 
+#' \eqn{d_3(\frac{\mathbf{1}\mathbf{1}^\top}{p})}, and
+#'  \eqn{\hat{d}_0\left(0, \mathbf{1}\mathbf{b}^\top\right)} given in (8) and 
+#'  in (S.41), (S.44), and (S.45)  from the supplement of Bodnar and Parolya (2026).
+#'  The vector \eqn{\mathbf{w}_{MP}} are the optimal portfolio weights 
+#'  estimated as the plug-in of the Moore-Penrose estimate of the precision matrix
+#'   and \eqn{\mathbf{1}} is a vector of ones of size \eqn{p}.
 #'
 #'
 #' @param Y data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
-#' @param b target portfolio. This is a vector of size \code{p} which sums to 1.
-#' By default this is the equally weighted portfolio.
-#' 
 #' @return a vector of size \eqn{p} of (estimated) optimal portfolio weights,
 #' where \eqn{p} is the number of assets.
 #' 
 #' @references 
-#' Nestor Parolya & Taras Bodnar (2024).
+#' Nestor Parolya & Taras Bodnar (2026).
 #' Reviving pseudo-inverses: Asymptotic properties of large dimensional
 #' Moore-Penrose and Ridge-type inverses with applications.
-#' \link{https://doi.org/10.48550/arXiv.2403.15792}
+#' \doi{10.48550/arXiv.2403.15792}
+#' 
 #' 
 #' 
 #' @examples

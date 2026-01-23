@@ -16,11 +16,32 @@ where \eqn{p} is the number of assets.
 }
 \description{
 This function computes
-\deqn{\alpha \times w_{MP} + (1 - \alpha) \times \mathbf{1}/p}
-where \eqn{\alpha} is a carefully chosen coefficient, \eqn{w_{MP}} is the
-vector of optimal portfolio weights estimated as the plug-in of the Moore-Penrose
-estimate of the precision matrix and \eqn{\mathbf{1}} is a vector of ones of
-size \eqn{p}.
+\deqn{\hat{\alpha}^*\times \mathbf{w}_{MP} + (1 - \hat{\alpha}^*) \times \mathbf{1}/p}
+where \eqn{\hat{\alpha}^*} is given by
+\deqn{
+\hat{\alpha}^*=
+\frac{\frac{1}{p}\mathbf{1}^\top\mathbf{S}_n\mathbf{1}-
+\frac{\hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\boldsymbol{\Sigma} \right)}
+{\hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}}
+{\frac{1}{p}\mathbf{1}^\top\mathbf{S}_n\mathbf{1} - 
+2\frac{\hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\boldsymbol{\Sigma} \right)}
+{\hat{d}_1\left( \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}
++\frac{\hat{d}_3\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}
+{\hat{d}_1^2\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}},
+} where
+\deqn{
+\hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\boldsymbol{\Sigma}\right)   = \frac{1}{\hat{v}(0)}
+\left[\frac{1}{\hat{v}(0)}\left(1-\hat{d}_0(0,\frac{\mathbf{1}\mathbf{1}^\top}{p}) \right) 
+- \hat{d}_1(\frac{\mathbf{1}\mathbf{1}^\top}{p}) \right],
+}
+with \eqn{\hat{v}(0)}, \eqn{\hat{d}_1\left( \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)},
+\eqn{\hat{d}_1\left( \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)},
+\eqn{d_3(\frac{\mathbf{1}\mathbf{1}^\top}{p})}, and
+\eqn{\hat{d}_0\left(0, \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)} given in (8) and
+in (S.41), (S.44), and (S.45)  from the supplement of Bodnar and Parolya (2026).
+The vector \eqn{w_{MP}} are the optimal portfolio weights
+estimated as the plug-in of the Moore-Penrose estimate of the precision matrix
+and \eqn{\mathbf{1}} is a vector of ones of size \eqn{p}.
 }
 \examples{
 n = 50
@@ -57,8 +78,8 @@ stopifnot(Loss_GMV_Moore_Penrose_target_eq < Loss_GMV_Moore_Penrose)
 
 }
 \references{
-Nestor Parolya & Taras Bodnar (2024).
+Nestor Parolya & Taras Bodnar (2026).
 Reviving pseudo-inverses: Asymptotic properties of large dimensional
 Moore-Penrose and Ridge-type inverses with applications.
-\link{https://doi.org/10.48550/arXiv.2403.15792}
+\doi{10.48550/arXiv.2403.15792}
 }
