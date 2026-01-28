@@ -75,11 +75,9 @@ TODO: clean documentation of the following functions:
 - `GMV_Moore_Penrose()`: using the Moore-Penrose inverse `Moore_Penrose()` of
   the precision matrix as an input for the plug-in estimation.
 
-- `GMV_Moore_Penrose_target_eq()`: performs a first-order shrinkage of the
-  estimator given by `GMV_Moore_Penrose()` towards the equally-weighted portfolio.
-
-- `GMV_Moore_Penrose_target_general()`: performs a first-order shrinkage of the
-  estimator given by `GMV_Moore_Penrose()` towards an arbitrary, fixed, portfolio.
+- `GMV_Moore_Penrose_target()`: performs a first-order shrinkage of the
+  estimator given by `GMV_Moore_Penrose()` towards an arbitrary (fixed) portfolio
+  such as the equally weighted portfolio.
 
 
 
