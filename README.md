@@ -35,19 +35,15 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 
 ## 2.2. Ridge-type estimators
 
+- `ridge_no_shrinkage()`: the usual ridge estimator
+
 - `ridge_target()`: perform first-order shrinkage of the Ridge estimator towards
   an arbitrary (fixed) target such as the identity matrix.
   
-- `ridge_higher_order_shrinkage`: perform higher-order shrinkage of the Ridge
+- `ridge_higher_order_shrinkage()`: perform higher-order shrinkage of the Ridge
   estimator
   
-  
-TODO: 
-- implement an optimized in $t$ version of `ridge_no_shrinkage`
-
-TODO: clean documentation of the following functions:
-- `ridge_no_shrinkage`
-- `ridge_shrinkage_rescaled`
+- `ridge_shrinkage_rescaled()`
 
 
 ## 2.3. Moore-Penrose-Ridge "hybrid" estimators
