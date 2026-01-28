@@ -2,27 +2,24 @@
 % Please edit documentation in R/Moore_Penrose_target.R
 \name{Moore_Penrose_target}
 \alias{Moore_Penrose_target}
-\alias{Moore_Penrose_target_identity}
-\title{First-order shrinkage of the Moore-Penrose inverse towards a general target}
+\title{First-order shrinkage of the Moore-Penrose inverse towards a fixed target}
 \usage{
-Moore_Penrose_target(Y, Pi0 = NULL, centeredCov, verbose = 0)
-
-Moore_Penrose_target_identity(Y, centeredCov = TRUE, verbose = 0)
+Moore_Penrose_target(Y, centeredCov = TRUE, Pi0 = NULL, verbose = 0)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
 TODO: transpose everything.}
-
-\item{Pi0}{prior of the precision matrix. This a \code{p} by \code{p} matrix, used as
-a target for the shrinkage. Default value is the identity matrix of size \code{p}.
-As an advice, it should be a symmetric positive-definite matrix, but this is
-not checked for.}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
 computed using centering (i.e. in the general case where the mean of the
 random vector may be non-zero).
 If \code{FALSE} the covariance matrix is computed assuming that the mean of
 the random vector of interest is \code{0} (i.e. does not need to be estimated).}
+
+\item{Pi0}{prior of the precision matrix. This a \code{p} by \code{p} matrix, used as
+a target for the shrinkage. Default value is the identity matrix of size \code{p}.
+As an advice, it should be a symmetric positive-definite matrix, but this is
+not checked for.}
 
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates
@@ -41,8 +38,7 @@ This function computes
 where \eqn{\alpha} is a carefully chosen coefficient,
 \eqn{\widehat{\Sigma^{-1}}^{MP}} is the Moore-Penrose inverse of the sample
 covariance matrix
-and \eqn{\Pi_0} is a given target (for \code{Moore_Penrose_target()})
-or the identity matrix (for \code{Moore_Penrose_target_identity()}).
+and \eqn{\Pi_0} is a given target such as the identity matrix.
 }
 \examples{
 n = 50
@@ -62,12 +58,6 @@ precision_MoorePenrose_Cent =
    
 precision_MoorePenrose_NoCent = 
    Moore_Penrose_target(t(X), centeredCov = FALSE)
-   
-precision_MoorePenrose_toIPCent = 
-   Moore_Penrose_target_identity(t(X), centeredCov = TRUE)
-   
-precision_MoorePenrose_toIPNoCent = 
-   Moore_Penrose_target_identity(t(X), centeredCov = FALSE)
 
 precisionTrue = solve(Sigma)
 
@@ -79,8 +69,6 @@ precision_QISshrink = solve(estimatedCov_QISshrink)
 
 FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
 FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
-FrobeniusLoss2(precision_MoorePenrose_toIPCent, Sigma = Sigma)
-FrobeniusLoss2(precision_MoorePenrose_toIPNoCent, Sigma = Sigma)
 FrobeniusLoss2(precision_NLshrink, Sigma = Sigma, type = "precision")
 FrobeniusLoss2(precision_QISshrink, Sigma = Sigma, type = "precision")
 
@@ -93,7 +81,6 @@ precision_MoorePenrose_NoCent_trueSigma =
 FrobeniusLoss2(precision_MoorePenrose_Cent_trueSigma, Sigma = Sigma)
 FrobeniusLoss2(precision_MoorePenrose_NoCent_trueSigma, Sigma = Sigma)
 # this is indeed much closer than before
-
 
 
 }

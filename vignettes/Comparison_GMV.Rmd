@@ -66,7 +66,7 @@ list_GMV = list(
   GMV_MP = GMV_Moore_Penrose(Y = t(X), centeredCov = TRUE),
   
   GMV_plugin_MP_shrinked_toIP = GMV_PlugIn(
-    Moore_Penrose_shrinkage_toIP(Y = t(X), centeredCov = TRUE)),
+    Moore_Penrose_target(Y = t(X), centeredCov = TRUE)),
   
   GMV_plugin_ridge_target_shrinked_toIP = GMV_PlugIn(
     ridge_target_identity_optimal(Y = t(X), centeredCov = TRUE)),

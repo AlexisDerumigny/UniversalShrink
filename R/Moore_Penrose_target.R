@@ -1,13 +1,12 @@
 
-#' First-order shrinkage of the Moore-Penrose inverse towards a general target
+#' First-order shrinkage of the Moore-Penrose inverse towards a fixed target
 #' 
 #' This function computes
 #' \deqn{\alpha \times \widehat{\Sigma^{-1}}^{MP} + (1 - \alpha) \times \Pi_0}
 #' where \eqn{\alpha} is a carefully chosen coefficient,
 #' \eqn{\widehat{\Sigma^{-1}}^{MP}} is the Moore-Penrose inverse of the sample
 #' covariance matrix
-#' and \eqn{\Pi_0} is a given target (for `Moore_Penrose_target()`) 
-#' or the identity matrix (for `Moore_Penrose_target_identity()`).
+#' and \eqn{\Pi_0} is a given target such as the identity matrix.
 #'
 #'
 #' @param Y data matrix (rows are features, columns are observations).
@@ -50,12 +49,6 @@
 #'    
 #' precision_MoorePenrose_NoCent = 
 #'    Moore_Penrose_target(t(X), centeredCov = FALSE)
-#'    
-#' precision_MoorePenrose_toIPCent = 
-#'    Moore_Penrose_target_identity(t(X), centeredCov = TRUE)
-#'    
-#' precision_MoorePenrose_toIPNoCent = 
-#'    Moore_Penrose_target_identity(t(X), centeredCov = FALSE)
 #' 
 #' precisionTrue = solve(Sigma)
 #' 
@@ -67,8 +60,6 @@
 #' 
 #' FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
 #' FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
-#' FrobeniusLoss2(precision_MoorePenrose_toIPCent, Sigma = Sigma)
-#' FrobeniusLoss2(precision_MoorePenrose_toIPNoCent, Sigma = Sigma)
 #' FrobeniusLoss2(precision_NLshrink, Sigma = Sigma, type = "precision")
 #' FrobeniusLoss2(precision_QISshrink, Sigma = Sigma, type = "precision")
 #' 
@@ -83,9 +74,21 @@
 #' # this is indeed much closer than before
 #' 
 #' 
-#' 
 #' @export
-Moore_Penrose_target <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
+Moore_Penrose_target <- function(Y, centeredCov = TRUE, Pi0 = NULL, verbose = 0)
+{
+  if (is.null(Pi0)) {
+    result = Moore_Penrose_target_general(Y = Y, centeredCov = centeredCov,
+                                          Pi0 = Pi0, verbose = verbose)
+  } else {
+    result = Moore_Penrose_target_identity(Y = Y, centeredCov = centeredCov,
+                                           verbose = verbose)
+  }
+  
+  return (result)
+}
+
+Moore_Penrose_target_general <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
 {
   # Get sizes of Y
   p = nrow(Y)
@@ -197,8 +200,6 @@ Moore_Penrose_target <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
 }
 
 
-#' @rdname Moore_Penrose_target
-#' @export
 Moore_Penrose_target_identity <- function (Y, centeredCov = TRUE, verbose = 0)
 {
   # Get sizes of Y
