@@ -35,16 +35,12 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 
 ## 2.2. Ridge-type estimators
 
-- `ridge_target_identity()`, `ridge_target_identity_semioptimal()` and 
-  `ridge_target_identity_optimal`: perform first-order shrinkage of the Ridge
-  estimator towards the identity matrix.
-  
-- `ridge_target_general()`, `ridge_target_general_semioptimal()`,
-  `ridge_target_general_optimal()`:  perform first-order shrinkage of the Ridge
-  estimator towards a general target.
+- `ridge_target()`: perform first-order shrinkage of the Ridge estimator towards
+  an arbitrary (fixed) target such as the identity matrix.
   
 - `ridge_higher_order_shrinkage`: perform higher-order shrinkage of the Ridge
   estimator
+  
   
 TODO: 
 - implement an optimized in $t$ version of `ridge_no_shrinkage`

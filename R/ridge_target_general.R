@@ -198,8 +198,7 @@ estimator_vhat_derivative <- function(t, m, Sn, p, Ip, cn){
 }
 
 
-#' @rdname ridge_target_identity_optimal
-#' @export
+
 ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose = 2){
   
   if (verbose > 0){
@@ -237,8 +236,7 @@ ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose =
 }
 
 
-#' @rdname ridge_target_identity_optimal
-#' @export
+
 ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 2){
   
   if (verbose > 0){
@@ -283,9 +281,10 @@ ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 
 }
 
 
-#' @rdname ridge_target_identity_optimal
-#' @export
-ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2){
+
+ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2,
+                                          eps = 1/(10^6), upp = pi/2 - eps,
+                                          initialValue = 1.5){
   
   if (verbose > 0){
     cat("Starting `ridge_target_general_optimal`...\n")
@@ -301,12 +300,6 @@ ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2){
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
-  
-  
-  # TODO: provide this as an option for the user
-  initialValue = 1.5
-  eps <- 1/(10^6)
-  upp <- pi/2 - eps
   
   hL2R <- function(u){
     loss = loss_L2_ridge_optimal(t = tan(u), Sn = S, p = p, Ip = Ip, cn = c_n,
