@@ -70,7 +70,7 @@ GMV_Moore_Penrose_target_eq <- function(Y, centeredCov = TRUE, verbose = 2){
     cat("alp_ShMP = ", alp_ShMP, "\n")
   }
   
-  w_ShMP <- alp_ShMP * w_MP + (1 - alp_ShMP) * bip / p
+  w_ShMP <- alp_ShMP * w_MP + (1 - alp_ShMP) * rep(1,p) / p
   
   return (w_ShMP)
 }
