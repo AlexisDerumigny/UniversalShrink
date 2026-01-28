@@ -117,11 +117,11 @@ MPR_target <- function(Y, centeredCov = TRUE, Pi0 = NULL,
       optimizationType,
       
       none = MPR_target_general(Y = Y, centeredCov = centeredCov,
-                                 t = t, alpha = alpha, beta = beta, Pi0 = Pi0,
-                                 verbose = verbose),
+                                t = t, alpha = alpha, beta = beta, Pi0 = Pi0,
+                                verbose = verbose),
       
       alpha_beta = MPR_target_general_semioptimal(Y = Y, centeredCov = centeredCov,
-                                                  t = t, verbose = verbose),
+                                                  t = t, Pi0 = Pi0, verbose = verbose),
       
       all = MPR_target_general_optimal(Y = Y, centeredCov = centeredCov,
                                        Pi0 = Pi0,
@@ -141,14 +141,14 @@ selectOptimizationType <- function (t, alpha, beta)
     # if t is not given, we need full optimization anyway
     
     if (!is.null(alpha) || !is.null(beta)){
-      UniversalShrink_warning_condition_base(
+      warning(UniversalShrink_warning_condition_base(
         message = paste0(
           "The input t is NULL: ", t,
           " , but (at least) one of alpha and/or beta is provided:",
           "alpha = ", alpha, ", beta = ", "beta. \n",
           "Therefore optimization in t is done, and alpha and/or beta are ignored.",
           "If you want t alpha and beta to be used, please also specify t."
-        ), subclass = "MissingParametersWarning")
+        ), subclass = "MissingParametersWarning") )
       
       optimizationType = "all"
     } else {
@@ -163,25 +163,25 @@ selectOptimizationType <- function (t, alpha, beta)
     } else if (is.null(beta)) {
       # alpha is not null but beta is null
       
-      UniversalShrink_warning_condition_base(
+      warning(UniversalShrink_warning_condition_base(
         message = paste0(
           "The input alpha is non-NULL: ",
           "alpha = ", alpha, ", but beta is NULL. \n",
           "Therefore alpha is ignored. If you want alpha to be used, please also ",
           "specify beta."
-        ), subclass = "MissingParametersWarning")
+        ), subclass = "MissingParametersWarning") )
       
       optimizationType = "alpha_beta"
     } else if (is.null(alpha)) {
       # beta is not null but alpha is null
       
-      UniversalShrink_warning_condition_base(
+      warning(UniversalShrink_warning_condition_base(
         message = paste0(
           "The input beta is non-NULL: ",
           "beta = ", beta, ", but alpha is NULL. \n",
           "Therefore beta is ignored. If you want beta to be used, please also ",
           "specify alpha."
-        ), subclass = "MissingParametersWarning")
+        ), subclass = "MissingParametersWarning") )
       
       optimizationType = "alpha_beta"
     } else {
