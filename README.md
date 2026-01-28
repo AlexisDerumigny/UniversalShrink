@@ -47,7 +47,7 @@ TODO:
 
 TODO: clean documentation of the following functions:
 - `ridge_no_shrinkage`
-- `ridge_shrinkage_rescaled_optimal`
+- `ridge_shrinkage_rescaled`
 
 
 ## 2.3. Moore-Penrose-Ridge "hybrid" estimators

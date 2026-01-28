@@ -23,7 +23,7 @@
 #' Sigma = diag(seq(1, 0.02, length.out = p))
 #' mu = rep(0, p)
 #' X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
-#' precision_OptimalRidge = ridge_shrinkage_rescaled_optimal(t(X))
+#' precision_OptimalRidge = ridge_shrinkage_rescaled(t(X))
 #' 
 #' precisionTrue = solve(Sigma)
 #' 
@@ -39,7 +39,7 @@
 #' 
 #' 
 #' @export
-ridge_shrinkage_rescaled_optimal <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
+ridge_shrinkage_rescaled <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
 {
   if (eps <= 0 || eps > pi/2){
     stop("'eps' must be between 0 and pi/2")
