@@ -1,5 +1,6 @@
 
 test_that("GMV_Moore_Penrose_target is coherent for eq weighted targets", {
+  set.seed(1)
   n = 50
   p = 2 * n
   mu = rep(0, p)

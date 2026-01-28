@@ -17,7 +17,8 @@ random vector may be non-zero).
 If \code{FALSE} the covariance matrix is computed assuming that the mean of
 the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 
-\item{b}{shrinkage target}
+\item{b}{shrinkage target. By default, the equally-weighted potfolio is used
+as a target.}
 
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates
@@ -58,6 +59,7 @@ estimated as the plug-in of the Moore-Penrose estimate of the precision matrix
 and \eqn{\mathbf{1}} is a vector of ones of size \eqn{p}.
 }
 \examples{
+set.seed(1)
 n = 50
 p = 2 * n
 mu = rep(0, p)
@@ -70,73 +72,36 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-GMV_MP_shrinkage_Cent = 
-  GMV_Moore_Penrose_target_eq(Y = t(X), centeredCov = TRUE)
-  
-GMV_MP_shrinkage_Cent_new = 
-  GMV_Moore_Penrose_target_general(Y = t(X), centeredCov = TRUE)
-  
-# This should coincide with GMV_MP_shrinkage_Cent since by default this is
-# shrinked to the equally weighted portfolio.
+# Compute GMV portfolio based on the Moore-Penrose inverse (no shrinkage)
+GMV_MP = GMV_Moore_Penrose(Y = t(X))
 
-outOfSampleVariance = t(GMV_MP_shrinkage_Cent) \%*\% Sigma \%*\% GMV_MP_shrinkage_Cent
+Loss_GMV_MP = LossRelativeOutOfSampleVariance(
+  portfolioWeights = GMV_MP, Sigma = Sigma)
 
-ones = rep(1, length = p)
-V_GMV = 1 / ( t(ones) \%*\% solve(Sigma) \%*\% ones)
+# Compute GMV portfolio based on the Moore-Penrose inverse with shrinkage
+# towards the equally weighted portfolio
+GMV_MP_shrink_eq = GMV_Moore_Penrose_target(Y = t(X))
 
-Loss_GMV_Moore_Penrose_target_eq = (outOfSampleVariance - V_GMV) / V_GMV
+Loss_GMV_MP_shrink_eq = LossRelativeOutOfSampleVariance(
+  portfolioWeights = GMV_MP_shrink_eq, Sigma = Sigma)
 
-GMV_MP_Cent = GMV_Moore_Penrose(Y = t(X), centeredCov = TRUE)
-outOfSampleVariance = t(GMV_MP_Cent) \%*\% Sigma \%*\% GMV_MP_Cent
-
-Loss_GMV_Moore_Penrose = (outOfSampleVariance - V_GMV) / V_GMV
 
 # Shrinkage helps to reduce the loss
-stopifnot(Loss_GMV_Moore_Penrose_target_eq < Loss_GMV_Moore_Penrose)
+stopifnot(Loss_GMV_MP_shrink_eq < Loss_GMV_MP)
 
 
-# We now compare with the true target
-perfect_GMV_portfolio = GMV_PlugIn(solve(Sigma))
+# Compute GMV portfolio based on the Moore-Penrose inverse with shrinkage
+# towards the true GMV portfolio
+GMV_true = GMV_PlugIn(solve(Sigma))
 
-GMV_MP_shrinkage_Cent_oracle = 
-  GMV_Moore_Penrose_target_general(Y = t(X), centeredCov = TRUE,
-                                   b = perfect_GMV_portfolio)
-                                   
-outOfSampleVariance = 
-  t(GMV_MP_shrinkage_Cent_oracle) \%*\% Sigma \%*\% GMV_MP_shrinkage_Cent_oracle
+GMV_MP_shrink_oracle = GMV_Moore_Penrose_target(Y = t(X), b = GMV_true)
 
-outOfSampleVarianceGMV = 
-  t(perfect_GMV_portfolio) \%*\% Sigma \%*\% perfect_GMV_portfolio
+Loss_GMV_MP_shrink_oracle = LossRelativeOutOfSampleVariance(
+  portfolioWeights = GMV_MP_shrink_oracle, Sigma = Sigma)
 
-ones = rep(1, length = p)
-V_GMV = 1 / ( t(ones) \%*\% solve(Sigma) \%*\% ones)
-
-Loss_GMV_MP_shrinkage_Cent_oracle = (outOfSampleVariance - V_GMV) / V_GMV
-
-cat("GMV_Moore_Penrose_target_eq:", Loss_GMV_Moore_Penrose_target_eq, "\n")
-cat("GMV_Moore_Penrose:", Loss_GMV_Moore_Penrose, "\n")
-cat("GMV_Moore_Penrose_target_oracle:", Loss_GMV_MP_shrinkage_Cent_oracle, "\n")
-
-
-# Example of shrinkage to the equally weighted portfolio
-
-GMV_MP_shrinkage_Cent = 
-  GMV_Moore_Penrose_target_eq(Y = t(X), centeredCov = TRUE)
-
-GMV_MP_Cent = GMV_Moore_Penrose(Y = t(X), centeredCov = TRUE)
-
-Loss_GMV_Moore_Penrose_target_eq = LossRelativeOutOfSampleVariance(
-  portfolioWeights = GMV_MP_shrinkage_Cent, Sigma = Sigma)
-  
-print(Loss_GMV_Moore_Penrose_target_eq)
-
-Loss_GMV_Moore_Penrose = LossRelativeOutOfSampleVariance(
-  portfolioWeights = GMV_MP_Cent, Sigma = Sigma)
-  
-print(Loss_GMV_Moore_Penrose)
-
-# Shrinkage helps to reduce the loss
-stopifnot(Loss_GMV_Moore_Penrose_target_eq < Loss_GMV_Moore_Penrose)
+cat("GMV Moore-Penrose no shrinkage:" , Loss_GMV_MP, "\n")
+cat("GMV Moore-Penrose target eq:"    , Loss_GMV_MP_shrink_eq, "\n")
+cat("GMV Moore-Penrose_target oracle:", Loss_GMV_MP_shrink_oracle, "\n")
 
 
 }

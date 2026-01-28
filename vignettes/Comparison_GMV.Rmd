@@ -61,7 +61,7 @@ OutOfSampleVariance <- function(weights){
 
 ```{r}
 list_GMV = list(
-  GMV_MP_shrinkage = GMV_Moore_Penrose_target_eq(Y = t(X), centeredCov = TRUE),
+  GMV_MP_shrinkage = GMV_Moore_Penrose_target(Y = t(X), centeredCov = TRUE),
   
   GMV_MP = GMV_Moore_Penrose(Y = t(X), centeredCov = TRUE),
   
