@@ -1,7 +1,5 @@
 
 
-#' @rdname GMV_Moore_Penrose_target_general
-#' @export
 GMV_Moore_Penrose_target_eq <- function(Y, centeredCov = TRUE, verbose = 2){
   
   # Get sizes of Y
