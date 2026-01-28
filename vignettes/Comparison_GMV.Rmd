@@ -69,7 +69,7 @@ list_GMV = list(
     Moore_Penrose_target(Y = t(X), centeredCov = TRUE)),
   
   GMV_plugin_ridge_target_shrinked_toIP = GMV_PlugIn(
-    ridge_target_identity_optimal(Y = t(X), centeredCov = TRUE)),
+    ridge_target(Y = t(X), centeredCov = TRUE)),
   
   GMV_plugin_optimal_ridge_shrinkage = GMV_PlugIn(
     ridge_shrinkage_rescaled_optimal(Y = t(X))),
@@ -78,7 +78,7 @@ list_GMV = list(
     solve(cov_quadratic_inverse_shrinkage(X = X, centeredCov = TRUE))),
   
   GMV_plugin_higher_order_shrinkage_2 = GMV_PlugIn(
-    ridge_higher_order_shrinkage_optimal(Y = t(X), m = 2, centeredCov = TRUE))
+    ridge_higher_order_shrinkage(Y = t(X), m = 2, centeredCov = TRUE))
   
   # TODO: add other forms of shrinkage
   # FIXME: see why below does not work

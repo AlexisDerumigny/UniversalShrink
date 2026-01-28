@@ -49,38 +49,30 @@
 #' precision_higher_order_shrinkage_Cent = 
 #'   ridge_higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE, t = 100)
 #' 
-#' precision_target_identity_semioptimal_Cent = 
-#'   ridge_target_identity_semioptimal(Y = t(X), centeredCov = TRUE, t = 100)
-#'       
-#' precision_target_general_semioptimal_Cent = 
-#'   ridge_target_general_semioptimal(Y = t(X), centeredCov = TRUE, t = 100, Pi0 = diag(p))
-#'
+#' 
 #' precision_higher_order_shrinkage_Cent$alpha
-#' precision_target_identity_semioptimal_Cent$beta_optimal
-#' precision_target_identity_semioptimal_Cent$alpha_optimal
-#' 
-#' precision_target_general_semioptimal_Cent$beta_optimal
-#' precision_target_general_semioptimal_Cent$alpha_optimal
-#' 
 #' precision_higher_order_shrinkage_Cent$M
-#' precision_target_identity_semioptimal_Cent$M
-#' 
 #' precision_higher_order_shrinkage_Cent$hm
-#' precision_target_identity_semioptimal_Cent$hm
 #' 
 #' FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
-#' FrobeniusLoss2(precision_target_identity_semioptimal_Cent, Sigma = Sigma)
 #' 
 #' 
-#' # Examples for `ridge_higher_order_shrinkage_optimal`
+#' # For comparison TODO: move this as unit test
+#' 
+#' precision_target = ridge_target(Y = t(X), centeredCov = TRUE, t = 100)
+#' FrobeniusLoss2(precision_target, Sigma = Sigma)
+#' 
+#' 
+#' # Examples for ridge_higher_order_shrinkage where the optimization is done 
+#' # with respect to t
 #' 
 #' for (m in 1:2){
 #'   cat("m = ", m, "\n")
 #'   precision_higher_order_shrinkage_Cent = 
-#'       ridge_higher_order_shrinkage_optimal(Y = t(X), m = m, centeredCov = TRUE)
+#'       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE)
 #'       
 #'   precision_higher_order_shrinkage_NoCent = 
-#'       ridge_higher_order_shrinkage_optimal(Y = t(X), m = m, centeredCov = FALSE)
+#'       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE)
 #'       
 #'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
 #'   
@@ -88,10 +80,9 @@
 #' }
 #' 
 #' precision_higher_order_shrinkage_Cent = 
-#'       ridge_higher_order_shrinkage_optimal(Y = t(X), m = 1, centeredCov = TRUE)
+#'       ridge_higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE)
 #' 
-#' precision_ridge_target_Cent = 
-#'     ridge_target_identity_optimal(Y = t(X), centeredCov = TRUE)
+#' precision_ridge_target_Cent = ridge_target(Y = t(X), centeredCov = TRUE)
 #'   
 #' FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
 #' FrobeniusLoss2(precision_ridge_target_Cent, Sigma = Sigma)
@@ -104,8 +95,9 @@ ridge_higher_order_shrinkage <- function(
     Y, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50), verbose = 0)
 {
   if (is.null(t)){
-    result = ridge_higher_order_shrinkage(Y = Y, m = m, centeredCov = centeredCov,
-                                          verbose = verbose, interval = interval)
+    result = ridge_higher_order_shrinkage_optimal(
+      Y = Y, m = m, centeredCov = centeredCov, verbose = verbose, interval = interval)
+    
   } else {
     result = ridge_higher_order_shrinkage_non_optimized(
       Y = Y, m = m, centeredCov = centeredCov, t = t, verbose = verbose)

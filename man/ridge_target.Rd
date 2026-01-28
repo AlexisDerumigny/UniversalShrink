@@ -84,7 +84,7 @@ FrobeniusLoss2(precision_ridge_target_NoCent, Sigma = Sigma)
 precision_ridge_target_Cent_oracle = 
     ridge_target(Y = t(X), centeredCov = TRUE, Pi0 = solve(Sigma))
 
-FrobeniusLoss2(precision_ridge_target_Cent_g_oracle, Sigma = Sigma)
+FrobeniusLoss2(precision_ridge_target_Cent_oracle, Sigma = Sigma)
 
 
 }
