@@ -266,8 +266,8 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
-#' precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
-#' precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
+#' precision_MoorePenrose_Cent = Moore_Penrose_target(Y = t(X), centeredCov = TRUE)
+#' precision_MoorePenrose_NoCent = Moore_Penrose_target(Y = t(X), centeredCov = FALSE)
 #'
 #' FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
 #' FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)

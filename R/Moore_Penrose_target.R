@@ -6,8 +6,8 @@
 #' where \eqn{\alpha} is a carefully chosen coefficient,
 #' \eqn{\widehat{\Sigma^{-1}}^{MP}} is the Moore-Penrose inverse of the sample
 #' covariance matrix
-#' and \eqn{\Pi_0} is a given target (for `Moore_Penrose_shrinkage()`) 
-#' or the identity matrix (for `Moore_Penrose_shrinkage_toIP()`).
+#' and \eqn{\Pi_0} is a given target (for `Moore_Penrose_target()`) 
+#' or the identity matrix (for `Moore_Penrose_target_identity()`).
 #'
 #'
 #' @param Y data matrix (rows are features, columns are observations).
@@ -46,16 +46,16 @@
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
 #' precision_MoorePenrose_Cent =
-#'    Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
+#'    Moore_Penrose_target(Y = t(X), centeredCov = TRUE)
 #'    
 #' precision_MoorePenrose_NoCent = 
-#'    Moore_Penrose_shrinkage(t(X), centeredCov = FALSE)
+#'    Moore_Penrose_target(t(X), centeredCov = FALSE)
 #'    
 #' precision_MoorePenrose_toIPCent = 
-#'    Moore_Penrose_shrinkage_toIP(t(X), centeredCov = TRUE)
+#'    Moore_Penrose_target_identity(t(X), centeredCov = TRUE)
 #'    
 #' precision_MoorePenrose_toIPNoCent = 
-#'    Moore_Penrose_shrinkage_toIP(t(X), centeredCov = FALSE)
+#'    Moore_Penrose_target_identity(t(X), centeredCov = FALSE)
 #' 
 #' precisionTrue = solve(Sigma)
 #' 
@@ -74,9 +74,9 @@
 #' 
 #' # We now use the true value of the precision matrix as a target for shrinkage
 #' precision_MoorePenrose_Cent_trueSigma = 
-#'   Moore_Penrose_shrinkage(t(X), centeredCov = TRUE, Pi0 = solve(Sigma))
+#'   Moore_Penrose_target(t(X), centeredCov = TRUE, Pi0 = solve(Sigma))
 #' precision_MoorePenrose_NoCent_trueSigma = 
-#'   Moore_Penrose_shrinkage(t(X), centeredCov = FALSE, Pi0 = solve(Sigma))                                                        
+#'   Moore_Penrose_target(t(X), centeredCov = FALSE, Pi0 = solve(Sigma))                                                        
 #'                                                         
 #' FrobeniusLoss2(precision_MoorePenrose_Cent_trueSigma, Sigma = Sigma)
 #' FrobeniusLoss2(precision_MoorePenrose_NoCent_trueSigma, Sigma = Sigma)
@@ -85,7 +85,7 @@
 #' 
 #' 
 #' @export
-Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
+Moore_Penrose_target <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
 {
   # Get sizes of Y
   p = nrow(Y)
@@ -197,9 +197,9 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
 }
 
 
-#' @rdname Moore_Penrose_shrinkage
+#' @rdname Moore_Penrose_target
 #' @export
-Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov = TRUE, verbose = 0)
+Moore_Penrose_target_identity <- function (Y, centeredCov = TRUE, verbose = 0)
 {
   # Get sizes of Y
   p = nrow(Y)

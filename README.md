@@ -25,7 +25,7 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 - `Moore_Penrose()`: Moore-Penrose estimator of the precision matrix, obtained
   by computing the Moore-Penrose inverse of the sample covariance matrix.
 
-- `Moore_Penrose_shrinkage()` and `Moore_Penrose_shrinkage_toIP`: perform a
+- `Moore_Penrose_target()` and `Moore_Penrose_target_identity`: perform a
   first-order shrinkage of the Moore-Penrose estimator of the precision matrix,
   respectively towards a general target and towards the identity matrix.
   

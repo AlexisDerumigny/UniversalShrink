@@ -197,9 +197,9 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
 #' precision_MoorePenrose_Cent = 
-#'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
+#'   Moore_Penrose_target(Y = t(X), centeredCov = TRUE)
 #' precision_MoorePenrose_NoCent = 
-#'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
+#'   Moore_Penrose_target(Y = t(X), centeredCov = FALSE)
 #'
 #' print(FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma))
 #' print(FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma))
