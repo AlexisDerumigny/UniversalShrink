@@ -4,7 +4,7 @@
 \alias{MPR_no_shrinkage}
 \title{Moore-Penrose-Ridge}
 \usage{
-MPR_no_shrinkage(Y, centeredCov, t, verbose = 0)
+MPR_no_shrinkage(Y, centeredCov = TRUE, t, verbose = 0)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).

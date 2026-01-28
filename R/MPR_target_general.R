@@ -1,87 +1,9 @@
 
 
-#' Moore-Penrose-Ridge with general target
-#' 
 
-#' This function computes
-#' \deqn{\widehat{\Sigma^{-1}}^{ridge}_t = (S + t I_p)^{-1} - t * (S + t I_p)^{-2}},
-#' where \eqn{S} is the sample covariance matrix and \eqn{t} is a given parameter.
-#' 
-#' 
-#' @param Y data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
-#' 
-#' @param t,alpha,beta parameters of the estimation.
-#' 
-#' @param Pi0 shrinkage target
-#' 
-#' @inheritParams cov_with_centering
-#' 
-#' @returns the estimator of the precision matrix, of class
-#' `EstimatedPrecisionMatrix`.
-#' 
-#' @references 
-#' Nestor Parolya & Taras Bodnar (2024).
-#' Reviving pseudo-inverses: Asymptotic properties of large dimensional
-#' Moore-Penrose and Ridge-type inverses with applications.
-#' \doi{10.48550/arXiv.2403.15792}
-#' 
-#' 
-#' @examples
-#' 
-#' n = 10
-#' p = 5 * n
-#' mu = rep(0, p)
-#' 
-#' # Generate Sigma
-#' X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
-#' H <- eigen(t(X0) %*% X0)$vectors
-#' Sigma = H %*% diag(seq(1, 0.02, length.out = p)) %*% t(H)
-#' 
-#' # Generate example dataset
-#' X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
-#' 
-#' Y = t(X)
-#' Ip = diag(nrow = p)
-#' 
-#' t = 1
-#' 
-#' precision_MPR_Cent_gen_semioptimal = 
-#'   MPR_target_general_semioptimal(Y = Y, centeredCov = TRUE, Pi0 = Ip, t = t)
-#'                                                                 
-#' cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_gen_semioptimal, Sigma = Sigma),
-#'     ", t = ", t, 
-#'     ", alpha opt = ", precision_MPR_Cent_gen_semioptimal$alpha_optimal,
-#'     ", beta opt = ", precision_MPR_Cent_gen_semioptimal$beta_optimal, "\n", sep = "")
-#' 
-#' precision_MPR_Cent_semioptimal = 
-#'   MPR_target_identity_semioptimal(Y = Y, centeredCov = TRUE, t = t)
-#'   
-#' cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_semioptimal, Sigma = Sigma),
-#'     ", t = ", t, 
-#'     ", alpha opt = ", precision_MPR_Cent_semioptimal$alpha_optimal,
-#'     ", beta opt = ", precision_MPR_Cent_semioptimal$beta_optimal, "\n", sep = "")
-#' 
-#' precision_MPR_Cent_gen_optimal = 
-#'   MPR_target_general_optimal(Y = Y, centeredCov = TRUE, Pi0 = Ip)
-#'   
-#' cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_gen_optimal, Sigma = Sigma),
-#'     ", t = ", precision_MPR_Cent_gen_optimal$t_optimal, 
-#'     ", alpha opt = ", precision_MPR_Cent_gen_optimal$alpha_optimal,
-#'     ", beta opt = ", precision_MPR_Cent_gen_optimal$beta_optimal, "\n", sep = "")
-#' 
-#' precision_MPR_Cent_gen_optimal_oracle = 
-#'   MPR_target_general_optimal(Y = Y, centeredCov = TRUE,
-#'   Pi0 = solve(0.99 * Sigma + 0.01 * Ip))
-#'   
-#' cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_gen_optimal_oracle, Sigma = Sigma),
-#'     ", t = ", precision_MPR_Cent_gen_optimal_oracle$t_optimal, 
-#'     ", alpha opt = ", precision_MPR_Cent_gen_optimal_oracle$alpha_optimal,
-#'     ", beta opt = ", precision_MPR_Cent_gen_optimal_oracle$beta_optimal, "\n", sep = "")
-#' 
-#' @export
-#' 
-MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3){
+MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3, 
+                                        eps = 1/(10^6), upp = pi/2 - eps,
+                                        initialValue = 1.5){
   
   # Get sizes of Y
   p = nrow(Y)
@@ -93,12 +15,6 @@ MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3){
   
   # Sample covariance matrix
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
-  
-  
-  # TODO: provide this as an option for the user
-  initialValue = 1.5
-  eps <- 1/(10^6)
-  upp <- pi/2 - eps
   
   hL2R <- function(u){
     loss = loss_L2_MPR_optimal_target_general(
@@ -207,8 +123,7 @@ loss_L2_MPR_optimal_target_general <- function(t, Sn, p, Ip, cn, Pi0, verbose)
 }
 
 
-#' @rdname MPR_target_general_optimal
-#' @export
+
 MPR_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 2){
   
   # Get sizes of Y
@@ -493,8 +408,6 @@ best_alphabeta_MPR_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, verbose = verbo
 
 
 
-#' @rdname MPR_target_general_optimal
-#' @export
 MPR_target_general <- function (Y, centeredCov, t, alpha, beta, Pi0, verbose){
   
   # Get sizes of Y

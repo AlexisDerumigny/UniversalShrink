@@ -57,11 +57,7 @@ TODO: clean documentation of the following functions:
 
 - `MPR_no_shrinkage()`
 
-- `MPR_target_identity_optimal()`, `MPR_target_identity_semioptimal()`,
-  `MPR_target_identity()`
-
-- `MPR_target_general()`, `MPR_target_general_semioptimal()`,
-  `MPR_target_general_optimal()`
+- `MPR_target()`
 
 
 # 3. Functions for estimation of optimal portfolio weights

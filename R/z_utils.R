@@ -24,3 +24,19 @@ as.matrix.EstimatedCovarianceMatrix <- function(x, ...){
   return (x$estimated_covariance_matrix)
 }
 
+
+#' Constructor for warning conditions of the package
+#'
+#' @noRd
+UniversalShrink_warning_condition_base <- function(message, subclass = NULL,
+                                                   call = sys.call(-1), ...) {
+  # warningCondition() automatically adds 'warning' and 'condition' to the class
+  return (
+    warningCondition(
+      message = message,
+      class = c(subclass, "UniversalShrinkWarning"), # We add a base warning class
+      call = call,
+      ... # Allows for additional custom fields
+    )
+  )
+}

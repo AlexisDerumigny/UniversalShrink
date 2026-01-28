@@ -1,78 +1,8 @@
 
-#' Moore-Penrose-Ridge with identity target
-#' 
-#' This function computes
-#' \deqn{\widehat{\Sigma^{-1}}^{ridge}_t
-#'       = (S + t I_p)^{-1} - t * (S + t I_p)^{-2}},
-#' where \eqn{S} is the sample covariance matrix and \eqn{t} is a given
-#' parameter.
-#' 
-#' 
-#' @param Y data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
-#' 
-#' @param t,alpha,beta,eps,upp \code{t}, \code{alpha} and \code{beta} are
-#' parameters of the estimation. In the optimized version, the loss is optimized
-#' with respect to \eqn{u = arctan(t)} over the interval \code{[eps, upp]}.
-#' 
-#' @inheritParams cov_with_centering
-#' 
-#' @returns the estimator of the precision matrix, of class
-#' `EstimatedPrecisionMatrix`.
-#' 
-#' @references 
-#' Nestor Parolya & Taras Bodnar (2024).
-#' Reviving pseudo-inverses: Asymptotic properties of large dimensional
-#' Moore-Penrose and Ridge-type inverses with applications.
-#' \doi{10.48550/arXiv.2403.15792}
-#' 
-#' 
-#' @examples
-#' 
-#' n = 10
-#' p = 5 * n
-#' mu = rep(0, p)
-#' 
-#' # Generate Sigma
-#' X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
-#' H <- eigen(t(X0) %*% X0)$vectors
-#' Sigma = H %*% diag(seq(1, 0.02, length.out = p)) %*% t(H)
-#' 
-#' # Generate example dataset
-#' X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
-#' 
-#' Y = t(X)
-#' 
-#' precision_MPR_Cent_optimal = MPR_target_identity_optimal(Y = Y,
-#'                                                          centeredCov = TRUE)
-#' cat("loss = ", FrobeniusLoss2(precision_MPR_Cent_optimal, Sigma = Sigma),
-#'     ", t opt = ", precision_MPR_Cent_optimal$t_optimal, 
-#'     ", alpha opt = ", precision_MPR_Cent_optimal$alpha_optimal,
-#'     ", beta opt = ", precision_MPR_Cent_optimal$beta_optimal, "\n", sep = "")
-#' 
-#' precision_MPR_Cent = MPR_target_identity(
-#'    Y = Y, centeredCov = TRUE,
-#'    t = precision_MPR_Cent_optimal$t_optimal,
-#'    alpha = precision_MPR_Cent_optimal$alpha_optimal,
-#'    beta = precision_MPR_Cent_optimal$beta_optimal)
-#'    
-#' cat("loss = ", FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma))
-#' 
-#' precision_MPR_Cent = MPR_target_identity(
-#'    Y = Y, centeredCov = TRUE,
-#'    t = precision_MPR_Cent_optimal$t_optimal,
-#'    alpha = 1, beta = 0)
-#'    
-#' cat("loss = ", FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma))
-#' 
-#' precision_MPR_Cent = MPR_no_shrinkage(Y = Y, centeredCov = TRUE,
-#'                                       t = precision_MPR_Cent_optimal$t_optimal)
-#' cat("loss = ", FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma))
-#' 
-#' 
-#' @export
+
 MPR_target_identity_optimal <- function (Y, centeredCov = TRUE, verbose = 2,
-                                         eps = 1/(10^6), upp = pi/2 - eps){
+                                         eps = 1/(10^6), upp = pi/2 - eps, 
+                                         initialValue = 1.5){
   
   # Get sizes of Y
   p = nrow(Y)
@@ -91,8 +21,7 @@ MPR_target_identity_optimal <- function (Y, centeredCov = TRUE, verbose = 2,
     return(loss)
   }
   
-  
-  hL2MPR_max <- stats::optim(1.5, hL2MPr,lower = eps, upper = upp,
+  hL2MPR_max <- stats::optim(par = initialValue, hL2MPr,lower = eps, upper = upp,
                              method = "L-BFGS-B", control = list(fnscale = -1))
   u_MPR<- hL2MPR_max$par
   t <- tan(u_MPR)
@@ -196,8 +125,7 @@ loss_L2_MPR_optimal <- function(t, S, cn, p, Ip){
 }
 
 
-#' @rdname MPR_target_identity_optimal
-#' @export
+
 MPR_target_identity_semioptimal <- function (Y, centeredCov = TRUE, t, verbose = 2){
   
   # Get sizes of Y
@@ -309,8 +237,7 @@ MPR_target_identity_semioptimal <- function (Y, centeredCov = TRUE, t, verbose =
 }
 
 
-#' @rdname MPR_target_identity_optimal
-#' @export
+
 MPR_target_identity <- function (Y, centeredCov = TRUE, t, alpha, beta, verbose = 0){
   
   # Get sizes of Y

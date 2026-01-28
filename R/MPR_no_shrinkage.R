@@ -62,7 +62,7 @@
 #' 
 #' 
 #' @export
-MPR_no_shrinkage <- function (Y, centeredCov, t, verbose = 0){
+MPR_no_shrinkage <- function (Y, centeredCov = TRUE, t, verbose = 0){
   
   # Get sizes of Y
   p = nrow(Y)
