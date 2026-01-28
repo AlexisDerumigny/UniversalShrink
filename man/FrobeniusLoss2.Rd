@@ -93,6 +93,11 @@ we want to determine the loss}
 All these functions return a positive numeric value.
 \code{FrobeniusNorm2} returns the squared Frobenius norm of a matrix.
 \code{FrobeniusLoss2} returns the (normalized) Frobenius loss.
+
+\code{LossRelativeOutOfSampleVariance} returns a positive numeric value,
+with attributes \code{"V_portfolio"} and \code{"V_GMV"}, which are respectively
+the (out of sample) variances of the given \code{portfolioWeights} and of the
+GMV portfolio.
 }
 \description{
 Generic function to calculate the Frobenius norm/loss of (the estimator of) a

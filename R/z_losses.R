@@ -41,10 +41,17 @@ FrobeniusNorm2 <- function(M, normalized){
 #' 
 #' @param ... Additional arguments passed to methods.
 #' 
+#' 
 #' @returns All these functions return a positive numeric value.
 #' \code{FrobeniusNorm2} returns the squared Frobenius norm of a matrix.
 #' \code{FrobeniusLoss2} returns the (normalized) Frobenius loss.
 #'
+#' \code{LossRelativeOutOfSampleVariance} returns a positive numeric value,
+#' with attributes \code{"V_portfolio"} and \code{"V_GMV"}, which are respectively
+#' the (out of sample) variances of the given \code{portfolioWeights} and of the
+#' GMV portfolio.
+#' 
+#' 
 #' @export
 FrobeniusLoss2 <- function(x, Sigma, type, normalized = TRUE, ...) {
   UseMethod("FrobeniusLoss2")
@@ -249,6 +256,9 @@ LossRelativeOutOfSampleVariance <- function(portfolioWeights, Sigma, SigmaInv = 
   V_GMV = 1 / ( t(ones) %*% SigmaInv %*% ones)
 
   Loss = as.numeric( (outOfSampleVariance - V_GMV) / V_GMV )
+  
+  attr(Loss, "V_portfolio") <- outOfSampleVariance
+  attr(Loss, "V_GMV") <- V_GMV
   
   return (Loss)
 }
