@@ -1,5 +1,5 @@
 
-test_that("`d1_1p_Sigma2` and `d1_1p_Sigma2Pi0` give the same result for `Pi0 = Ip`", {
+test_that("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result for `Pi0 = Ip`", {
   set.seed(1)
   n = 10
   p = 5 * n
@@ -27,6 +27,16 @@ test_that("`d1_1p_Sigma2` and `d1_1p_Sigma2Pi0` give the same result for `Pi0 = 
   
   hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, Sn = S, p = p,
                                        Ip = Ip, cn = cn)
+  
+  d0_1p_Sigma2 = estimator_d0_1p_Sigma2(p = p, t0 = t0, hat_v_t0 = hat_v_t0,
+                                        cn = cn, Sn = S, verbose = 0)
+  
+  d0_1p_Sigma2Pi0 = estimator_d0_1p_Sigma2Pi0(p = p, t0 = t0, hat_v_t0 = hat_v_t0,
+                                              cn = cn, Pi0 = Ip, Ip = Ip, Sn = S,
+                                              verbose = 0)
+  
+  expect_equal(d0_1p_Sigma2, d0_1p_Sigma2Pi0)
+  
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
                                         cn = cn, Pi0 = Ip, Ip = Ip, Sn = S,
