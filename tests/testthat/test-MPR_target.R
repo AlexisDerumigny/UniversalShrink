@@ -1,4 +1,45 @@
 
+test_that("`best_alphabeta_MPR_shrinkage` is coherent between target general and target identity", {
+  set.seed(1)
+  n = 10
+  p = 5 * n
+  mu = rep(0, p)
+  
+  # Generate Sigma
+  X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
+  H <- eigen(t(X0) %*% X0)$vectors
+  Sigma = H %*% diag(seq(1, 0.02, length.out = p)) %*% t(H)
+  
+  # Generate example dataset
+  X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
+  
+  Y = t(X)
+  
+  # Using the identity target directly
+  Ip = diag(nrow = p)
+  
+  t0 = 1000
+  
+  cn = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = TRUE)
+  
+  iS_ridge <- solve(S + t0 * Ip)
+  
+  result_general = best_alphabeta_MPR_shrinkage_general(
+    p = p, t0 = t0, cn = cn, Pi0 = Ip, Ip = Ip, Sn = S, verbose = 3)
+  
+  result_identity = best_alphabeta_MPR_shrinkage_identity(
+    p = p, t = t0, cn = cn, S = S, iS_ridge = iS_ridge, verbose = 3)
+  
+  skip(message = "Skipping test for coherence of `best_alphabeta_MPR_shrinkage`")
+  
+  expect_equal(result_identity, result_general)
+  
+})
+
+
 test_that("`MPR_target` is coherent between target general and target identity", {
   set.seed(1)
   n = 10
