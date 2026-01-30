@@ -86,15 +86,32 @@ estimator_d0_1p_Sigma2_Pi0 <- function(p, t0, hat_v_t0, cn, Pi0, Ip, Sn, verbose
 
 #' Estimator of d1(t0, Sigma^2 / p)
 #' @noRd
-estimator_d1_1p_Sigma2 <- function(t0, hat_v_t0, p, cn, Pi0, Ip, Sn){
+estimator_d1_1p_Sigma2 <- function(t0, hat_v_t0, p, cn, Pi0, Ip, Sn, verbose){
   first_term = (1 / hat_v_t0^2)
   
   d1_t0_1p_Ip = estimator_ridge_d1_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Ip / p,
                                               p = p, cn = cn)
   
-  second_term = tr(Sn) / p  +  d1_t0_1p_Ip  - 2 / (cn * hat_v_t0)  +  2 * t0 / cn
+  second_term_1 = tr(Sn) / p
+  second_term_2 = d1_t0_1p_Ip
+  second_term_3 = 2 / (cn * hat_v_t0)
+  second_term_4 = 2 * t0 / cn
+  
+  second_term = second_term_1 + second_term_2 - second_term_3 + second_term_4
   
   result = first_term * second_term
+  
+  if (verbose > 0){
+    cat("Estimator of d1(t0, Sigma^2 / p) : \n")
+    cat("*  first_term = ", first_term, "\n")
+    cat("*  second_term = ", second_term, "\n")
+    cat("   *  second_term_1 = tr(Sn) / p = ",          second_term_1, "\n")
+    cat("   *  second_term_2 = d1_t0_1p_Ip = ",         second_term_2, "\n")
+    cat("   *  second_term_3 = 2 / (cn * hat_v_t0) = ", second_term_3, "\n")
+    cat("   *  second_term_4 = 2 * t0 / cn = ",         second_term_4, "\n")
+    cat("*  result = ", result, "\n\n")
+  }
+  
   return (result)
 }
 
@@ -115,7 +132,8 @@ best_alphabeta_ridge_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, verbose = ver
                                                 verbose = verbose - 1)
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
-                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn)
+                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
+                                        verbose = verbose - 1)
   
   q1 = estimator_q1(Sn = Sn, Theta = Pi0 / p)
   q2 = estimator_q2(Sn = Sn, Theta = Pi0 %*% Pi0 / p, p = p, cn = cn)
@@ -369,7 +387,8 @@ loss_L2_ridge_optimal <- function(t, Sn, p, Ip, cn, Pi0, verbose)
                                                 verbose = verbose - 1)
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t, hat_v_t0 = hat_v_t0, p = p,
-                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn)
+                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
+                                        verbose = verbose - 1)
   
   numerator = (d0_1p_Sigma * q2 - d0_1p_Sigma2_Pi0 * q1)^2
   

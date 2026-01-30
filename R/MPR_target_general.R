@@ -213,7 +213,8 @@ estimator_d2_1p_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0,
                                    t0, p, cn, Pi0, Ip, Sn, verbose){
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
-                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn)
+                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
+                                        verbose = verbose - 1)
   
   second_term_1 = 1 / hat_v_t0^3
   second_term_2 = hat_vsecond_t0 / (2 * hat_vprime_t0^3)
@@ -265,7 +266,8 @@ estimator_MPR_s2_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0, hat
                                     t0, p, cn, Pi0, Ip, Sn, verbose){
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
-                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn)
+                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
+                                        verbose = verbose - 1)
   
   d2_1p_Sigma2 = estimator_d2_1p_Sigma2(hat_v_t0 = hat_v_t0,
                                         hat_vprime_t0 = hat_vprime_t0,
@@ -332,7 +334,8 @@ best_alphabeta_MPR_shrinkage_general <- function(p, t0, cn, Pi0, Ip, Sn, verbose
                                       cn = cn)
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
-                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn)
+                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
+                                        verbose = verbose - 1)
   
   d1_1p_Sigma2Pi0 = estimator_d1_1p_Sigma2Pi0(t0 = t0, hat_v_t0 = hat_v_t0,
                                               cn = cn, p = p, Ip = Ip, Sn = Sn,
@@ -349,8 +352,10 @@ best_alphabeta_MPR_shrinkage_general <- function(p, t0, cn, Pi0, Ip, Sn, verbose
   
   if (verbose > 0){
     cat("Estimators: \n")
-    cat("*  hat_v_t0 = ", hat_v_t0, "\n")
-    cat("*  hat_vprime_t0 = ", hat_vprime_t0, "\n")
+    cat("*  hat_v_t0 = ",       hat_v_t0,       "\n")
+    cat("*  hat_vprime_t0 = ",  hat_vprime_t0,  "\n")
+    cat("*  hat_vsecond_t0 = ", hat_vsecond_t0, "\n")
+    cat("*  hat_vthird_t0 = ",  hat_vthird_t0,  "\n")
     
     d0_t0_1p_Pi0 = estimator_ridge_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
     

@@ -184,20 +184,35 @@ best_alphabeta_MPR_shrinkage_identity <- function(p, t, cn, S, iS_ridge, verbose
   
   hgs2Sig2_t = first_term_s2_Sigma2 + second_term_s2_Sigma2
   
+  if (verbose > 0){
+    cat("Estimator of MPR s2(t, Sigma^2) : \n")
+    cat("*  d1_1p_Sigma2 = ", d1Sig2_t, "\n")
+    cat("*  d2_1p_Sigma2 = ", d2Sig2_t, "\n")
+    cat("*  d3_1p_Sigma2 = ", d3Sig2_t, "\n")
+    cat("*  first_term = ", first_term_s2_Sigma2, "\n")
+    cat("*  second_term = ", second_term_s2_Sigma2, "\n")
+    cat("*    second_term_1 = ", second_term_s2_Sigma2_1, "\n")
+    cat("*    second_term_2 = ", second_term_s2_Sigma2_2, "\n")
+    cat("*    second_term_3 = ", second_term_s2_Sigma2_3, "\n")
+    cat("*  result = ", hgs2Sig2_t, "\n\n")
+  }
+  
   if (verbose > 1){
     cat("Estimators: \n")
-    cat("*  hat_v_t0 = ", hvt, "\n")
-    cat("*  hat_vprime_t0 = ", hvprt, "\n")
+    cat("*  hat_v_t0 = ",       hvt,       "\n")
+    cat("*  hat_vprime_t0 = ",  hvprt,     "\n")
+    cat("*  hat_vsecond_t0 = ", hvprprt,   "\n")
+    cat("*  hat_vthird_t0 = ",  hvprprprt, "\n")
+    
+    cat("*  d0_1p_Sigma = ", d0Sig_t, "\n")
+    cat("*  d0_1p_Sigma2 = ", d0Sig2_t, "\n")
+    cat("*  d1_1p_Sigma = ", d1Sig_t, "\n")
+    cat("*  d1_1p_Sigma2 = ", d1Sig2_t, "\n")
     
     cat("*  q1 = ", q1, "\n")
     cat("*  q2 = ", q2, "\n")
     
     cat("*  s2_Sigma2 = ", hgs2Sig2_t, "\n")
-    cat("*    first_term = ", first_term_s2_Sigma2, "\n")
-    cat("*    second_term = ", second_term_s2_Sigma2, "\n")
-    cat("*      second_term_1 = ", second_term_s2_Sigma2_1, "\n")
-    cat("*      second_term_2 = ", second_term_s2_Sigma2_2, "\n")
-    cat("*      second_term_3 = ", second_term_s2_Sigma2_3, "\n")
     
     cat("\n")
   }
