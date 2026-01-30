@@ -2,7 +2,14 @@
 
 # Trace function of a matrix
 tr <- function(M){
-  return (sum(diag(M)))
+  if (is.matrix(M)){
+    result = sum(diag(M))
+  } else {
+    n = nrow(M)
+    diagM = M[cbind(1:n, 1:n)]
+    result = sum(diagM)
+  }
+  return (result)
 }
 
 
