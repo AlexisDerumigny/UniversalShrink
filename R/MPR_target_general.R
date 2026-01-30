@@ -20,12 +20,16 @@ MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3,
   S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   
   hL2R <- function(u){
+    t = tan(u)
+    
+    iS_ridge <- solve(S + t * Ip)
+    
     loss = loss_L2_MPR_optimal_target_general(
-      t = tan(u), Sn = S, p = p, Ip = Ip, cn = cn, Pi0 = Pi0,
+      t = t, Sn = S, p = p, Ip = Ip, cn = cn, Pi0 = Pi0, iS_ridge = iS_ridge, 
       verbose = verbose - 3)
     
     if (verbose > 1){
-      cat("t = ", tan(u), "; loss = ", loss, ". ")
+      cat("t = ", t, "; loss = ", loss, ". ")
     }
     
     return(loss)
@@ -35,7 +39,7 @@ MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3,
                  trace = if(verbose > 2){6} else {0},
                  factr = 1e8
                  # ndeps = 0.01
-                 )
+  )
   
   hL2R_max <- stats::optim(par = initialValue, fn = hL2R,
                            lower = eps, upper = upp,
@@ -49,8 +53,10 @@ MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3,
   
   iS_ridge <- solve(S + t * Ip)
   
-  best_alphabeta = best_alphabeta_MPR_shrinkage_general(p = p, t0 = t, cn = cn, Pi0 = Pi0,
-                                                Ip = Ip, Sn = S, verbose = verbose)
+  best_alphabeta =
+    best_alphabeta_MPR_shrinkage_general(p = p, t0 = t, cn = cn, Pi0 = Pi0,
+                                         Ip = Ip, Sn = S, iS_ridge = iS_ridge,
+                                         verbose = verbose)
   
   alpha <- best_alphabeta$alpha
   beta <- best_alphabeta$beta
@@ -86,7 +92,7 @@ MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3,
 #' @returns an estimator of the L2 loss
 #'
 #' @noRd
-loss_L2_MPR_optimal_target_general <- function(t, Sn, p, Ip, cn, Pi0, verbose)
+loss_L2_MPR_optimal_target_general <- function(t, Sn, p, Ip, cn, Pi0, iS_ridge, verbose)
 {
   hat_v_t0 = estimator_vhat_derivative(t = t, m = 0, Sn = Sn, p = p, 
                                        Ip = Ip, cn = cn)
@@ -103,16 +109,17 @@ loss_L2_MPR_optimal_target_general <- function(t, Sn, p, Ip, cn, Pi0, verbose)
   d1_1p_Sigma = estimator_d1_1p_Sigma(hat_v_t0 = hat_v_t0,
                                       hat_vprime_t0 = hat_vprime_t0, cn = cn)
   
-  d1_1p_Sigma2_Pi0 = estimator_d1_1p_Sigma2Pi0(t0 = t, hat_v_t0 = hat_v_t0,
-                                               cn = cn, p = p, Ip = Ip, Sn = Sn,
-                                               Pi0 = Pi0, verbose = verbose)
+  d1_1p_Sigma2_Pi0 = 
+    estimator_d1_1p_Sigma2Pi0(t0 = t, hat_v_t0 = hat_v_t0, cn = cn, p = p,
+                              Ip = Ip, Sn = Sn, iS_ridge = iS_ridge, Pi0 = Pi0,
+                              verbose = verbose)
   
   s2_Sigma2 = estimator_MPR_s2_Sigma2(hat_v_t0 = hat_v_t0,
                                       hat_vprime_t0 = hat_vprime_t0,
                                       hat_vsecond_t0 = hat_vsecond_t0,
                                       hat_vthird_t0 = hat_vthird_t0,
                                       t0 = t, p = p, cn = cn, Pi0 = Pi0, Ip = Ip,
-                                      Sn = Sn, verbose = verbose)
+                                      Sn = Sn, iS_ridge = iS_ridge, verbose = verbose)
   
   numerator = hat_vprime_t0^2 * (d1_1p_Sigma * q2 - d1_1p_Sigma2_Pi0 * q1)^2
   
@@ -142,8 +149,9 @@ MPR_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 2)
   
   iS_ridge <- solve(S + t * Ip)
   
-  best_alphabeta = best_alphabeta_MPR_shrinkage_general(p = p, t0 = t, cn = cn, Pi0 = Pi0,
-                                                Ip = Ip, Sn = S, verbose = verbose)
+  best_alphabeta = 
+    best_alphabeta_MPR_shrinkage_general(p = p, t0 = t, cn = cn, Pi0 = Pi0, Ip = Ip,
+                                         Sn = S, iS_ridge = iS_ridge, verbose = verbose)
   
   alpha <- best_alphabeta$alpha
   beta <- best_alphabeta$beta
@@ -180,16 +188,17 @@ estimator_d1_1p_Sigma <- function(hat_v_t0, hat_vprime_t0, cn){
 }
 
 # Estimator of d1(t, Sigma^2 Pi0)
-estimator_d1_1p_Sigma2Pi0 <- function(t0, hat_v_t0, cn, p, Ip, Sn, Pi0, verbose){
+estimator_d1_1p_Sigma2Pi0 <- function(t0, hat_v_t0, cn, p, Ip, Sn, iS_ridge, Pi0, verbose){
   
   d0_1p_Sigma2Pi0 = estimator_d0_1p_Sigma2Pi0(p = p, t0 = t0, hat_v_t0 = hat_v_t0,
-                                                cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn, 
-                                                verbose = verbose)
+                                              cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
+                                              iS_ridge = iS_ridge, verbose = verbose)
   
-  d1_1p_Pi0 = estimator_ridge_d1_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p,
-                                      p = p, cn = cn)
+  d1_1p_Pi0 = estimator_ridge_d1_thetaknown(iS_ridge = iS_ridge, t = t0,
+                                            Theta = Pi0 / p, p = p, cn = cn)
   
-  d0_1p_Pi0 = estimator_ridge_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
+  d0_1p_Pi0 = estimator_ridge_d0_thetaknown(iS_ridge = iS_ridge, t = t0,
+                                            Theta = Pi0 / p)
   
   first_term = d0_1p_Sigma2Pi0 / hat_v_t0
   second_term = d1_1p_Pi0 / hat_v_t0^2
@@ -212,11 +221,11 @@ estimator_d1_1p_Sigma2Pi0 <- function(t0, hat_v_t0, cn, p, Ip, Sn, Pi0, verbose)
 
 # Estimator of d2(t, Sigma^2 / p)
 estimator_d2_1p_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0,
-                                   t0, p, cn, Pi0, Ip, Sn, verbose){
+                                   t0, p, cn, Pi0, Ip, Sn, iS_ridge, verbose){
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
                                         cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
-                                        verbose = verbose - 1)
+                                        iS_ridge = iS_ridge, verbose = verbose - 1)
   
   second_term_1 = 1 / hat_v_t0^3
   second_term_2 = hat_vsecond_t0 / (2 * hat_vprime_t0^3)
@@ -236,13 +245,14 @@ estimator_d2_1p_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0,
 
 # Estimator of d3(t, Sigma^2 / p)
 estimator_d3_1p_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0, hat_vthird_t0,
-                                   t0, p, cn, Pi0, Ip, Sn, verbose){
+                                   t0, p, cn, Pi0, Ip, Sn, iS_ridge, verbose){
   
   d2_1p_Sigma2 = estimator_d2_1p_Sigma2(hat_v_t0 = hat_v_t0,
                                         hat_vprime_t0 = hat_vprime_t0,
                                         hat_vsecond_t0 = hat_vsecond_t0,
                                         t0 = t0, p = p, cn = cn, Pi0 = Pi0,
-                                        Ip = Ip, Sn = Sn, verbose = verbose - 1)
+                                        Ip = Ip, Sn = Sn, iS_ridge = iS_ridge, 
+                                        verbose = verbose - 1)
   
   second_term_1 = 1 / hat_v_t0^4
   second_term_2 = hat_vsecond_t0^2 / (2 * hat_vprime_t0^5)
@@ -265,24 +275,26 @@ estimator_d3_1p_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0, hat_
 
 # Estimator of s2(t, Sigma^2)
 estimator_MPR_s2_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0, hat_vthird_t0,
-                                    t0, p, cn, Pi0, Ip, Sn, verbose){
+                                    t0, p, cn, Pi0, Ip, Sn, iS_ridge, verbose){
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
                                         cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
-                                        verbose = verbose - 1)
+                                        iS_ridge = iS_ridge, verbose = verbose - 1)
   
   d2_1p_Sigma2 = estimator_d2_1p_Sigma2(hat_v_t0 = hat_v_t0,
                                         hat_vprime_t0 = hat_vprime_t0,
                                         hat_vsecond_t0 = hat_vsecond_t0,
                                         t0 = t0, p = p, cn = cn, Pi0 = Pi0,
-                                        Ip = Ip, Sn = Sn, verbose = verbose - 1)
+                                        Ip = Ip, Sn = Sn, iS_ridge = iS_ridge,
+                                        verbose = verbose - 1)
   
   d3_1p_Sigma2 = estimator_d3_1p_Sigma2(hat_v_t0 = hat_v_t0,
                                         hat_vprime_t0 = hat_vprime_t0,
                                         hat_vsecond_t0 = hat_vsecond_t0,
                                         hat_vthird_t0 = hat_vthird_t0,
                                         t0 = t0, p = p, cn = cn, Pi0 = Pi0,
-                                        Ip = Ip, Sn = Sn, verbose = verbose - 1)
+                                        Ip = Ip, Sn = Sn, iS_ridge = iS_ridge, 
+                                        verbose = verbose - 1)
   
   first_term_1 = hat_vprime_t0^2 * d2_1p_Sigma2
   first_term_2 = hat_vsecond_t0 * d1_1p_Sigma2 / 2
@@ -312,7 +324,7 @@ estimator_MPR_s2_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0, hat
 }
 
 
-best_alphabeta_MPR_shrinkage_general <- function(p, t0, cn, Pi0, Ip, Sn, verbose = verbose){
+best_alphabeta_MPR_shrinkage_general <- function(p, t0, cn, Pi0, Ip, Sn, iS_ridge, verbose){
   
   hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, Sn = Sn, p = p,
                                        Ip = Ip, cn = cn)
@@ -329,19 +341,20 @@ best_alphabeta_MPR_shrinkage_general <- function(p, t0, cn, Pi0, Ip, Sn, verbose
                                         Sn = Sn, verbose = verbose - 1)
   
   d0_1p_Sigma2Pi0 = estimator_d0_1p_Sigma2Pi0(p = p, t0 = t0, hat_v_t0 = hat_v_t0,
-                                                cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
-                                                verbose = verbose - 1)
+                                              cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
+                                              iS_ridge = iS_ridge, verbose = verbose - 1)
   
   d1_1p_Sigma = estimator_d1_1p_Sigma(hat_v_t0 = hat_v_t0, hat_vprime_t0 = hat_vprime_t0,
                                       cn = cn)
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
                                         cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
-                                        verbose = verbose - 1)
+                                        iS_ridge = iS_ridge, verbose = verbose - 1)
   
-  d1_1p_Sigma2Pi0 = estimator_d1_1p_Sigma2Pi0(t0 = t0, hat_v_t0 = hat_v_t0,
-                                              cn = cn, p = p, Ip = Ip, Sn = Sn,
-                                              Pi0 = Pi0, verbose = verbose - 1)
+  d1_1p_Sigma2Pi0 = 
+    estimator_d1_1p_Sigma2Pi0(t0 = t0, hat_v_t0 = hat_v_t0, cn = cn, p = p,
+                              Ip = Ip, Sn = Sn, iS_ridge = iS_ridge, Pi0 = Pi0,
+                              verbose = verbose - 1)
   
   q1 = estimator_q1(Sn = Sn, Theta = Pi0 / p)
   q2 = estimator_q2(Sn = Sn, Theta = Pi0 %*% Pi0 / p, p = p, cn = cn)
@@ -350,7 +363,7 @@ best_alphabeta_MPR_shrinkage_general <- function(p, t0, cn, Pi0, Ip, Sn, verbose
                                       hat_vsecond_t0 = hat_vsecond_t0,
                                       hat_vthird_t0 = hat_vthird_t0,
                                       t0 = t0, p = p, cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
-                                      verbose = verbose - 1)
+                                      iS_ridge = iS_ridge, verbose = verbose - 1)
   
   if (verbose > 0){
     cat("Estimators: \n")
@@ -359,10 +372,11 @@ best_alphabeta_MPR_shrinkage_general <- function(p, t0, cn, Pi0, Ip, Sn, verbose
     cat("*  hat_vsecond_t0 = ", hat_vsecond_t0, "\n")
     cat("*  hat_vthird_t0 = ",  hat_vthird_t0,  "\n")
     
-    d0_t0_1p_Pi0 = estimator_ridge_d0_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Pi0 / p)
+    d0_t0_1p_Pi0 = estimator_ridge_d0_thetaknown(iS_ridge = iS_ridge, t = t0,
+                                                 Theta = Pi0 / p)
     
-    d1_t0_1p_Ip = estimator_ridge_d1_thetaknown(Ip = Ip, Sn = Sn, t = t0, Theta = Ip / p,
-                                                p = p, cn = cn)
+    d1_t0_1p_Ip = estimator_ridge_d1_thetaknown(iS_ridge = iS_ridge, t = t0,
+                                                Theta = Ip / p, p = p, cn = cn)
     
     cat("*  d0(t, Theta) = ", d0_t0_1p_Pi0, "\n")
     cat("*  d1(t, Theta) = ", d1_t0_1p_Ip, "\n")
@@ -384,7 +398,7 @@ best_alphabeta_MPR_shrinkage_general <- function(p, t0, cn, Pi0, Ip, Sn, verbose
   numerator_alpha_term1 = hat_vprime_t0 * d1_1p_Sigma * q2
   numerator_alpha_term2 = hat_vprime_t0 * d1_1p_Sigma2Pi0 * q1
   numerator_alpha = - numerator_alpha_term1 + numerator_alpha_term2
-    
+  
   denominator_term1 = s2_Sigma2 * q2
   denominator_term2 = hat_vprime_t0^2 * d1_1p_Sigma2Pi0^2
   
