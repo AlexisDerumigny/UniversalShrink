@@ -103,7 +103,7 @@ estimator_d1_1p_Sigma2 <- function(t0, hat_v_t0, p, cn, Pi0, Ip, Sn, verbose){
   
   if (verbose > 0){
     cat("Estimator of d1(t0, Sigma^2 / p) : \n")
-    cat("*  first_term = ", first_term, "\n")
+    cat("*  first_term = 1 / hat_v_t0^2 = ", first_term, "\n")
     cat("*  second_term = ", second_term, "\n")
     cat("   *  second_term_1 = tr(Sn) / p = ",          second_term_1, "\n")
     cat("   *  second_term_2 = d1_t0_1p_Ip = ",         second_term_2, "\n")

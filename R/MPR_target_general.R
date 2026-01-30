@@ -199,9 +199,11 @@ estimator_d1_1p_Sigma2Pi0 <- function(t0, hat_v_t0, cn, p, Ip, Sn, Pi0, verbose)
   
   if (verbose > 0){
     cat("Estimator of d1(t, Sigma^2 Pi0) : \n")
-    cat("*  first_term = ", first_term, "\n")
-    cat("*  second_term = ", second_term, "\n")
-    cat("*  third_term = ", third_term, "\n")
+    cat("*  d0_1p_Sigma2_Pi0 = ", d0_1p_Sigma2_Pi0, "\n")
+    cat("*  d1_1p_Pi0 = ", d1_1p_Pi0, "\n")
+    cat("*  first_term = d0_1p_Sigma2_Pi0 / hat_v_t0 = ", first_term, "\n")
+    cat("*  second_term = d1_1p_Pi0 / hat_v_t0^2 = ", second_term, "\n")
+    cat("*  third_term = ( (tr(Pi0) / p) - d0_1p_Pi0 ) / hat_v_t0^3 = ", third_term, "\n")
     cat("*  result = ", result, "\n\n")
   }
   
