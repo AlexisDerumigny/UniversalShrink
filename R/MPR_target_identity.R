@@ -3,6 +3,9 @@
 MPR_target_identity_optimal <- function (Y, centeredCov = TRUE, verbose = 2,
                                          eps = 1/(10^6), upp = pi/2 - eps, 
                                          initialValue = 1.5){
+  if (verbose > 0){
+    cat("Starting `MPR_target_identity_optimal`...\n")
+  }
   
   # Get sizes of Y
   p = nrow(Y)
@@ -25,6 +28,10 @@ MPR_target_identity_optimal <- function (Y, centeredCov = TRUE, verbose = 2,
                              method = "L-BFGS-B", control = list(fnscale = -1))
   u_MPR<- hL2MPR_max$par
   t <- tan(u_MPR)
+  
+  if (verbose > 0){
+    cat("*  optimal t =", t ,"\n\n")
+  }
   
   iS_ridge <- solve(S + t * Ip)
   
@@ -55,12 +62,59 @@ MPR_target_identity_optimal <- function (Y, centeredCov = TRUE, verbose = 2,
   hgs2Sig2_t<- -(hvprt_2*d2Sig2_t-hvprprt*d1Sig2_t/2) +
     t*(hvprprprt*d1Sig2_t/6-hvprt*hvprprt*d2Sig2_t+d3Sig2_t*hvprt^3)
   
-  num_a_ShMPRt<- -hvprt*d1Sig_t*q2+hvprt*d1Sig2_t*q1
-  num_b_ShMPRt<- hgs2Sig2_t*q1- hvprt_2*d1Sig_t*d1Sig2_t
-  den_ShMPRt<-hgs2Sig2_t*q2-hvprt_2*d1Sig2_t^2
-  alpha <- num_a_ShMPRt/den_ShMPRt
-  beta  <- num_b_ShMPRt/den_ShMPRt
   
+  if (verbose > 1){
+    cat("Estimators: \n")
+    cat("*  hat_v_t0 = ", hvt, "\n")
+    cat("*  hat_vprime_t0 = ", hvprt, "\n")
+    
+    cat("*  q1 = ", q1, "\n")
+    cat("*  q2 = ", q2, "\n")
+    cat("\n")
+  }
+  
+  
+  numerator_alpha_term1 = hvprt * d1Sig_t * q2
+  numerator_alpha_term2 = hvprt * d1Sig2_t * q1
+  
+  numerator_beta_term1 = hgs2Sig2_t * q1
+  numerator_beta_term2 = hvprt_2 * d1Sig_t * d1Sig2_t
+  
+  denominator_term1 = hgs2Sig2_t * q2
+  denominator_term2 = hvprt_2 * d1Sig2_t^2
+  
+  numerator_alpha = - numerator_alpha_term1 + numerator_alpha_term2
+  numerator_beta  =   numerator_beta_term1  - numerator_beta_term2
+  denominator     = denominator_term1 - denominator_term2
+  
+  alpha = numerator_alpha / denominator
+  beta  = numerator_beta  / denominator
+  
+  if (verbose > 0){
+    cat("Optimal values: \n")
+    
+    cat("*  numerator_alpha = ", numerator_alpha, "\n")
+    if (verbose > 1){
+      cat("   *  first_term = ", numerator_alpha_term1, "\n")
+      cat("   *  second_term = ", numerator_alpha_term2, "\n")
+    }
+    
+    cat("*  numerator_beta = ", numerator_beta, "\n")
+    if (verbose > 1){
+      cat("   *  first_term = ", numerator_beta_term1, "\n")
+      cat("   *  second_term = ", numerator_beta_term2, "\n")
+    }
+    
+    cat("*  denominator = ", denominator, "\n")
+    if (verbose > 1){
+      cat("   *  first_term = ", denominator_term1, "\n")
+      cat("   *  second_term = ", denominator_term2, "\n")
+    }
+    
+    cat("*  alpha = ", alpha, "\n")
+    cat("*  beta = ", beta, "\n")
+    cat("\n")
+  }
   
   MPR_estimator <- iS_ridge - t * iS_ridge %*% iS_ridge
   

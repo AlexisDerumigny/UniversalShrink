@@ -4,6 +4,9 @@
 MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3, 
                                         eps = 1/(10^6), upp = pi/2 - eps,
                                         initialValue = 1.5){
+  if (verbose > 0){
+    cat("Starting `MPR_target_general_optimal`...\n")
+  }
   
   # Get sizes of Y
   p = nrow(Y)
@@ -375,12 +378,12 @@ best_alphabeta_MPR_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, verbose = verbo
   numerator_alpha_term2 = hat_vprime_t0 * d1_1p_Sigma2Pi0 * q1
   numerator_alpha = - numerator_alpha_term1 + numerator_alpha_term2
     
-  denominator_alpha_term1 = s2_Sigma2 * q2
-  denominator_alpha_term2 = hat_vprime_t0^2 * d1_1p_Sigma2Pi0^2
+  denominator_term1 = s2_Sigma2 * q2
+  denominator_term2 = hat_vprime_t0^2 * d1_1p_Sigma2Pi0^2
   
-  denominator_alpha = denominator_alpha_term1 - denominator_alpha_term2
+  denominator = denominator_term1 - denominator_term2
   
-  alpha = numerator_alpha / denominator_alpha
+  alpha = numerator_alpha / denominator
   
   # Computation of beta ========================================================
   numerator_beta_term1 = s2_Sigma2 * q1
@@ -389,13 +392,29 @@ best_alphabeta_MPR_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, verbose = verbo
   numerator_beta = numerator_beta_term1 - numerator_beta_term2
   
   # Note: beta has the same denominator as alpha, so it can be directly reused.
-  beta = numerator_beta / denominator_alpha
+  beta = numerator_beta / denominator
   
   if (verbose > 0){
     cat("Optimal values: \n")
+    
     cat("*  numerator_alpha = ", numerator_alpha, "\n")
+    if (verbose > 1){
+      cat("   *  first_term = ", numerator_alpha_term1, "\n")
+      cat("   *  second_term = ", numerator_alpha_term2, "\n")
+    }
+    
     cat("*  numerator_beta = ", numerator_beta, "\n")
-    cat("*  denominator = ", denominator_alpha, "\n")
+    if (verbose > 1){
+      cat("   *  first_term = ", numerator_beta_term1, "\n")
+      cat("   *  second_term = ", numerator_beta_term2, "\n")
+    }
+    
+    cat("*  denominator = ", denominator, "\n")
+    if (verbose > 1){
+      cat("   *  first_term = ", denominator_term1, "\n")
+      cat("   *  second_term = ", denominator_term2, "\n")
+    }
+    
     cat("*  alpha = ", alpha, "\n")
     cat("*  beta = ", beta, "\n")
     cat("\n")
