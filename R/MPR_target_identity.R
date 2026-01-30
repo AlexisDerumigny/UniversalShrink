@@ -35,86 +35,11 @@ MPR_target_identity_optimal <- function (Y, centeredCov = TRUE, verbose = 2,
   
   iS_ridge <- solve(S + t * Ip)
   
-  trS1_t<-sum(diag(iS_ridge))/p
-  trS2_t<-sum(diag(iS_ridge%*%iS_ridge))/p
-  trS3_t<-sum(diag(iS_ridge%*%iS_ridge%*%iS_ridge))/p
-  trS4_t<-sum(diag(iS_ridge%*%iS_ridge%*%iS_ridge%*%iS_ridge))/p
+  best_alphabeta = best_alphabeta_MPR_shrinkage_identity(
+    p = p, t = t, cn = cn, S = S, iS_ridge = iS_ridge, verbose = verbose)
   
-  r = (cn - 1) / cn
-  
-  hvt<-cn*(trS1_t-r/t)
-  hvprt<--cn*(trS2_t-r/t/t)
-  hvprprt<-2*cn*(trS3_t-r/t/t/t)
-  hvprprprt<- -6*cn*(trS4_t-r/t/t/t/t)
-  
-  q1 <- tr(S) / p
-  q2 <- tr(S %*% S) / p - cn * q1^2
-  
-  ihvt<-1/hvt
-  ihvt_2<-ihvt^2
-  hvprt_2<-hvprt^2
-  d0Sig_t<-ihvt/cn-t/cn
-  d0Sig2_t<-ihvt*(q1-d0Sig_t)
-  d1Sig_t<- (ihvt_2+1/hvprt)/cn
-  d1Sig2_t<-ihvt*(d0Sig2_t-d1Sig_t)
-  d2Sig2_t<-ihvt*(d1Sig2_t-(ihvt^3+hvprprt/(hvprt^3)/2)/cn)
-  d3Sig2_t<-ihvt*(d2Sig2_t-(ihvt^4+hvprprt^2/(hvprt^5)/2-hvprprprt/(hvprt^4)/6)/cn)
-  hgs2Sig2_t<- -(hvprt_2*d2Sig2_t-hvprprt*d1Sig2_t/2) +
-    t*(hvprprprt*d1Sig2_t/6-hvprt*hvprprt*d2Sig2_t+d3Sig2_t*hvprt^3)
-  
-  
-  if (verbose > 1){
-    cat("Estimators: \n")
-    cat("*  hat_v_t0 = ", hvt, "\n")
-    cat("*  hat_vprime_t0 = ", hvprt, "\n")
-    
-    cat("*  q1 = ", q1, "\n")
-    cat("*  q2 = ", q2, "\n")
-    cat("\n")
-  }
-  
-  
-  numerator_alpha_term1 = hvprt * d1Sig_t * q2
-  numerator_alpha_term2 = hvprt * d1Sig2_t * q1
-  
-  numerator_beta_term1 = hgs2Sig2_t * q1
-  numerator_beta_term2 = hvprt_2 * d1Sig_t * d1Sig2_t
-  
-  denominator_term1 = hgs2Sig2_t * q2
-  denominator_term2 = hvprt_2 * d1Sig2_t^2
-  
-  numerator_alpha = - numerator_alpha_term1 + numerator_alpha_term2
-  numerator_beta  =   numerator_beta_term1  - numerator_beta_term2
-  denominator     = denominator_term1 - denominator_term2
-  
-  alpha = numerator_alpha / denominator
-  beta  = numerator_beta  / denominator
-  
-  if (verbose > 0){
-    cat("Optimal values: \n")
-    
-    cat("*  numerator_alpha = ", numerator_alpha, "\n")
-    if (verbose > 1){
-      cat("   *  first_term = ", numerator_alpha_term1, "\n")
-      cat("   *  second_term = ", numerator_alpha_term2, "\n")
-    }
-    
-    cat("*  numerator_beta = ", numerator_beta, "\n")
-    if (verbose > 1){
-      cat("   *  first_term = ", numerator_beta_term1, "\n")
-      cat("   *  second_term = ", numerator_beta_term2, "\n")
-    }
-    
-    cat("*  denominator = ", denominator, "\n")
-    if (verbose > 1){
-      cat("   *  first_term = ", denominator_term1, "\n")
-      cat("   *  second_term = ", denominator_term2, "\n")
-    }
-    
-    cat("*  alpha = ", alpha, "\n")
-    cat("*  beta = ", beta, "\n")
-    cat("\n")
-  }
+  alpha <- best_alphabeta$alpha
+  beta <- best_alphabeta$beta
   
   MPR_estimator <- iS_ridge - t * iS_ridge %*% iS_ridge
   
@@ -195,6 +120,34 @@ MPR_target_identity_semioptimal <- function (Y, centeredCov = TRUE, t, verbose =
   
   iS_ridge <- solve(S + t * Ip)
   
+  best_alphabeta = best_alphabeta_MPR_shrinkage_identity(
+    p = p, t = t, cn = cn, S = S, iS_ridge = iS_ridge, verbose = verbose)
+  
+  alpha <- best_alphabeta$alpha
+  beta <- best_alphabeta$beta
+  
+  MPR_estimator <- iS_ridge - t * iS_ridge %*% iS_ridge
+  
+  # This can also be written as:
+  # iS_ridge %*% S %*% iS_ridge
+  
+  MPR_target_identity = alpha * MPR_estimator + beta * Ip
+  
+  result = list(
+    estimated_precision_matrix = MPR_target_identity,
+    t = t,
+    alpha_optimal = alpha,
+    beta_optimal = beta
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
+}
+
+
+best_alphabeta_MPR_shrinkage_identity <- function(p, t, cn, S, iS_ridge, verbose)
+{
   trS1_t<-sum(diag(iS_ridge))/p
   trS2_t<-sum(diag(iS_ridge%*%iS_ridge))/p
   trS3_t<-sum(diag(iS_ridge%*%iS_ridge%*%iS_ridge))/p
@@ -231,65 +184,70 @@ MPR_target_identity_semioptimal <- function (Y, centeredCov = TRUE, t, verbose =
   
   hgs2Sig2_t = first_term_s2_Sigma2 + second_term_s2_Sigma2
   
-  if (verbose > 0){
+  if (verbose > 1){
+    cat("Estimators: \n")
+    cat("*  hat_v_t0 = ", hvt, "\n")
+    cat("*  hat_vprime_t0 = ", hvprt, "\n")
+    
+    cat("*  q1 = ", q1, "\n")
+    cat("*  q2 = ", q2, "\n")
+    
     cat("*  s2_Sigma2 = ", hgs2Sig2_t, "\n")
     cat("*    first_term = ", first_term_s2_Sigma2, "\n")
     cat("*    second_term = ", second_term_s2_Sigma2, "\n")
     cat("*      second_term_1 = ", second_term_s2_Sigma2_1, "\n")
     cat("*      second_term_2 = ", second_term_s2_Sigma2_2, "\n")
     cat("*      second_term_3 = ", second_term_s2_Sigma2_3, "\n")
+    
+    cat("\n")
   }
   
-  numerator_alpha_1 = hvprt*d1Sig_t*q2
-  numerator_alpha_2 = hvprt*d1Sig2_t*q1
-  numerator_alpha   = - numerator_alpha_1 + numerator_alpha_2
+  numerator_alpha_term1 = hvprt * d1Sig_t * q2
+  numerator_alpha_term2 = hvprt * d1Sig2_t * q1
   
-  numerator_beta_1 = hgs2Sig2_t*q1
-  numerator_beta_2 = hvprt_2*d1Sig_t*d1Sig2_t
-  numerator_beta   = numerator_beta_1 - numerator_beta_2
+  numerator_beta_term1 = hgs2Sig2_t * q1
+  numerator_beta_term2 = hvprt_2 * d1Sig_t * d1Sig2_t
   
-  denominator_1 = hgs2Sig2_t*q2
-  denominator_2 = hvprt_2*d1Sig2_t^2
-  denominator <- denominator_1 - denominator_2
+  denominator_term1 = hgs2Sig2_t * q2
+  denominator_term2 = hvprt_2 * d1Sig2_t^2
+  
+  numerator_alpha = - numerator_alpha_term1 + numerator_alpha_term2
+  numerator_beta  =   numerator_beta_term1  - numerator_beta_term2
+  denominator     = denominator_term1 - denominator_term2
   
   alpha = numerator_alpha / denominator
   beta  = numerator_beta  / denominator
   
   if (verbose > 0){
     cat("Optimal values: \n")
+    
     cat("*  numerator_alpha = ", numerator_alpha, "\n")
-    cat("*    numerator_alpha_1 = ", numerator_alpha_1, "\n")
-    cat("*    numerator_alpha_2 = ", numerator_alpha_2, "\n")
+    if (verbose > 1){
+      cat("   *  first_term = ", numerator_alpha_term1, "\n")
+      cat("   *  second_term = ", numerator_alpha_term2, "\n")
+    }
+    
     cat("*  numerator_beta = ", numerator_beta, "\n")
-    cat("*    numerator_beta_1 = ", numerator_beta_1, "\n")
-    cat("*    numerator_beta_2 = ", numerator_beta_2, "\n")
+    if (verbose > 1){
+      cat("   *  first_term = ", numerator_beta_term1, "\n")
+      cat("   *  second_term = ", numerator_beta_term2, "\n")
+    }
+    
     cat("*  denominator = ", denominator, "\n")
-    cat("*    denominator_1 = ", denominator_1, "\n")
-    cat("*    denominator_2 = ", denominator_2, "\n")
+    if (verbose > 1){
+      cat("   *  first_term = ", denominator_term1, "\n")
+      cat("   *  second_term = ", denominator_term2, "\n")
+    }
+    
     cat("*  alpha = ", alpha, "\n")
     cat("*  beta = ", beta, "\n")
     cat("\n")
   }
   
-  MPR_estimator <- iS_ridge - t * iS_ridge %*% iS_ridge
-  
-  # This can also be written as:
-  # iS_ridge %*% S %*% iS_ridge
-  
-  MPR_target_identity = alpha * MPR_estimator + beta * Ip
-  
-  result = list(
-    estimated_precision_matrix = MPR_target_identity,
-    t = t,
-    alpha_optimal = alpha,
-    beta_optimal = beta
-  )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
+  result = list(alpha = alpha, beta = beta)
   
   return (result)
 }
-
 
 
 MPR_target_identity <- function (Y, centeredCov = TRUE, t, alpha, beta, verbose = 0){
