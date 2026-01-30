@@ -1,4 +1,45 @@
 
+test_that("`d1_1p_Sigma2` and `d1_1p_Sigma2Pi0` give the same result for `Pi0 = Ip`", {
+  set.seed(1)
+  n = 10
+  p = 5 * n
+  mu = rep(0, p)
+  
+  # Generate Sigma
+  X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
+  H <- eigen(t(X0) %*% X0)$vectors
+  Sigma = H %*% diag(seq(1, 0.02, length.out = p)) %*% t(H)
+  
+  # Generate example dataset
+  X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
+  
+  Y = t(X)
+  
+  # Using the identity target directly
+  Ip = diag(nrow = p)
+  
+  t0 = 10000
+  
+  cn = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = TRUE)
+  
+  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, Sn = S, p = p,
+                                       Ip = Ip, cn = cn)
+  
+  d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
+                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = S,
+                                        verbose = 1)
+  
+  d1_1p_Sigma2Pi0 = estimator_d1_1p_Sigma2Pi0(t0 = t0, hat_v_t0 = hat_v_t0,
+                                              cn = cn, p = p, Ip = Ip, Sn = S,
+                                              Pi0 = Ip, verbose = 1)
+  
+  expect_equal(d1_1p_Sigma2, d1_1p_Sigma2Pi0)
+})
+
+
 test_that("`best_alphabeta_MPR_shrinkage` is coherent between target general and target identity", {
   set.seed(1)
   n = 10
@@ -27,13 +68,13 @@ test_that("`best_alphabeta_MPR_shrinkage` is coherent between target general and
   
   iS_ridge <- solve(S + t0 * Ip)
   
+  skip(message = "Skipping test for coherence of `best_alphabeta_MPR_shrinkage`")
+  
   result_general = best_alphabeta_MPR_shrinkage_general(
-    p = p, t0 = t0, cn = cn, Pi0 = Ip, Ip = Ip, Sn = S, verbose = 3)
+    p = p, t0 = t0, cn = cn, Pi0 = Ip, Ip = Ip, Sn = S, verbose = 0)
   
   result_identity = best_alphabeta_MPR_shrinkage_identity(
-    p = p, t = t0, cn = cn, S = S, iS_ridge = iS_ridge, verbose = 3)
-  
-  skip(message = "Skipping test for coherence of `best_alphabeta_MPR_shrinkage`")
+    p = p, t = t0, cn = cn, S = S, iS_ridge = iS_ridge, verbose = 0)
   
   expect_equal(result_identity, result_general)
   
@@ -56,18 +97,27 @@ test_that("`MPR_target` is coherent between target general and target identity",
   
   Y = t(X)
   
-  precision_MPR_optimal = MPR_target(Y = Y)
+  precision_MPR_optimal = MPR_target(Y = Y, verbose = 0)
   
   
   # Using the identity target directly
   Ip = diag(nrow = p)
   
-  precision_MPR_optimal_Ip = MPR_target(Y = Y, Pi0 = Ip)
+  precision_MPR_optimal_Ip = MPR_target(Y = Y, Pi0 = Ip, verbose = 0)
+  
+  expect_equal(precision_MPR_optimal_Ip$t_optimal,
+               precision_MPR_optimal$t_optimal)
+  
+  skip(message = "Skipping test `MPR_target` is coherent between target general and target identity")
+  
+  expect_equal(precision_MPR_optimal_Ip$alpha_optimal,
+               precision_MPR_optimal$alpha_optimal)
+  
+  expect_equal(precision_MPR_optimal_Ip$beta_optimal,
+               precision_MPR_optimal$beta_optimal)
   
   distFrob = FrobeniusNorm2(as.matrix(precision_MPR_optimal_Ip) - 
                               as.matrix(precision_MPR_optimal), normalized = TRUE)
-  
-  skip(message = "Skipping test `MPR_target` is coherent between target general and target identity")
   
   expect_equal(distFrob, 0)
   
