@@ -29,6 +29,15 @@ test_that("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result for `Pi0 = 
   hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, Sn = S, p = p,
                                        Ip = Ip, cn = cn)
   
+  precBits = 500
+  
+  hat_v_t0 = Rmpfr::mpfr(hat_v_t0, precBits = precBits)
+  t0 = Rmpfr::mpfr(t0, precBits = precBits)
+  S = Rmpfr::mpfr(S, precBits = precBits)
+  cn = Rmpfr::mpfr(cn, precBits = precBits)
+  p = Rmpfr::mpfr(p, precBits = precBits)
+  iS_ridge = Rmpfr::mpfr(iS_ridge, precBits = precBits)
+  
   d0_1p_Sigma2 = estimator_d0_1p_Sigma2(p = p, t0 = t0, hat_v_t0 = hat_v_t0,
                                         cn = cn, Sn = S, verbose = 0)
   
@@ -36,19 +45,31 @@ test_that("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result for `Pi0 = 
                                               cn = cn, Pi0 = Ip, Ip = Ip, Sn = S,
                                               iS_ridge = iS_ridge, verbose = 0)
   
-  expect_equal(d0_1p_Sigma2, d0_1p_Sigma2Pi0)
+  diff = d0_1p_Sigma2 - d0_1p_Sigma2Pi0
+  relative_diff = abs(diff / d0_1p_Sigma2)
+  print(d0_1p_Sigma2)
+  print(d0_1p_Sigma2Pi0)
+  print(diff)
+  print(relative_diff)
+  expect_true(relative_diff < 1e-8)
   
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
                                         cn = cn, Pi0 = Ip, Ip = Ip, Sn = S,
-                                        iS_ridge = iS_ridge, verbose = 1)
+                                        iS_ridge = iS_ridge, verbose = 0)
   
   d1_1p_Sigma2Pi0 = estimator_d1_1p_Sigma2Pi0(t0 = t0, hat_v_t0 = hat_v_t0,
                                               cn = cn, p = p, Ip = Ip, Sn = S,
                                               iS_ridge = iS_ridge, Pi0 = Ip,
-                                              verbose = 1)
+                                              verbose = 0)
   
-  expect_equal(d1_1p_Sigma2, d1_1p_Sigma2Pi0)
+  diff = d1_1p_Sigma2 - d1_1p_Sigma2Pi0
+  relative_diff = abs(diff / d1_1p_Sigma2)
+  print(d1_1p_Sigma2)
+  print(d1_1p_Sigma2Pi0)
+  print(diff)
+  print(relative_diff)
+  expect_true(relative_diff < 1e-8)
 })
 
 
