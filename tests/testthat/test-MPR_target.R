@@ -29,7 +29,7 @@ test_that("`d1_1p_Sigma2` and `d1_1p_Sigma2Pi0` give the same result for `Pi0 = 
                                        Ip = Ip, cn = cn)
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
-                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = S,
+                                        cn = cn, Pi0 = Ip, Ip = Ip, Sn = S,
                                         verbose = 1)
   
   d1_1p_Sigma2Pi0 = estimator_d1_1p_Sigma2Pi0(t0 = t0, hat_v_t0 = hat_v_t0,
