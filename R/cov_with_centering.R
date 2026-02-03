@@ -1,6 +1,40 @@
 
 
-#' Compute the covariance matrix with possible centering and the corresponding concentration ratio
+#' Compute the covariance matrix with possible centering and the corresponding 
+#' concentration ratio
+#' 
+#' Having the number of dimensions \eqn{p}, the sample size \eqn{n} and the 
+#' corresponding observation matrix \eqn{\mathbf{X}_n}, the user can choose 
+#' between two versions of the sample covariance matrix: centered (mean is unknown) 
+#' and noncentered one (mean is known to be zero). The noncentered sample covariance matrix 
+#' (\code{centeredCov=FALSE}) is constructed simply by 
+#' \deqn{\mathbf{S}_n=\frac{1}{n}\mathbf{X}_n^\top\mathbf{X}_n\,.
+#' }  
+#' In the case of unknown mean vector, one has to center the observation matrix
+#' in the following way: 
+#' let \eqn{\mathbf{J}_n = \mathbf{I}_n - \frac{1}{n}\mathbf{1}_n \mathbf{1}_n^\top}
+#' with \eqn{\mathbf{1}} being the \eqn{n}-dimensional vector with all entries equal to one.
+#' Then, \eqn{\mathbf{J}_n} is a projection matrix of rank \eqn{n-1}.
+#' As such, all \eqn{n-1} nonzero eigenvalues of \eqn{\mathbf{J}_n} are equal to
+#'  one, and its singular value decomposition is
+#'\deqn{
+#'  \mathbf{J}_n = \mathbf{H}_n \mathbf{H}_n^\top.
+#'}
+#'where \eqn{\mathbf{H}_n} is a \eqn{n \times (n-1)} orthogonal matrix, i.e.,
+#'\eqn{\mathbf{H}_n^\top \mathbf{H}_n = \mathbf{I}_{n-1}}. Then, the centered sample
+#'covariance matrix (\code{centeredCov=TRUE}) is defined in the following way
+#'\deqn{
+#'  \mathbf{S}_n
+#'  = \frac{1}{n-1} \mathbf{X}^\top_n \mathbf{J}_n \mathbf{X}_n
+#'  = \frac{1}{n-1} \tilde{\mathbf{X}}^\top_n \tilde{\mathbf{X}}_n,
+#'  \quad \text{with} \quad
+#'  \tilde{\mathbf{X}}_n = \mathbf{H}^\top_n\mathbf{X}_n.
+#'  }
+#'Similarly, the concentration ratio in the noncentered case is defined by 
+#'\eqn{c_n=\frac{p}{n}}, while in the centered one it is given by 
+#'\eqn{c_n=\frac{p}{n-1}}. Even though this difference looks somewhat subtle, it 
+#'can have some significant influence on the performance of the estimators in 
+#'finite sample regime.
 #' 
 #' @param X,n,p data matrix (rows are observations, columns are features).
 #' \code{n} is the number of observations of the data matrix, and \code{p}
