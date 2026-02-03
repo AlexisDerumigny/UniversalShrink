@@ -47,7 +47,8 @@ test_that("basic identity", {
 })
 
 
-test_that("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result for `Pi0 = Ip`", {
+test_that(paste0("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result ",
+                 "for `Pi0 = Ip`"), {
   set.seed(1)
   n = 10
   p = 5 * n
@@ -128,7 +129,8 @@ test_that("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result for `Pi0 = 
 })
 
 
-test_that("`best_alphabeta_MPR_shrinkage` is coherent between target general and target identity", {
+test_that(paste0("`best_alphabeta_MPR_shrinkage` is coherent ",
+                 "between target general and target identity"), {
   set.seed(1)
   n = 10
   p = 5 * n
@@ -147,7 +149,7 @@ test_that("`best_alphabeta_MPR_shrinkage` is coherent between target general and
   # Using the identity target directly
   Ip = diag(nrow = p)
   
-  t0 = 1000
+  t0 = 100
   
   cn = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
   
@@ -156,15 +158,14 @@ test_that("`best_alphabeta_MPR_shrinkage` is coherent between target general and
   
   iS_ridge <- solve(S + t0 * Ip)
   
-  skip(message = "Skipping test for coherence of `best_alphabeta_MPR_shrinkage`")
-  
   result_general = best_alphabeta_MPR_shrinkage_general(
-    p = p, t0 = t0, cn = cn, Pi0 = Ip, Ip = Ip, Sn = S, verbose = 0)
+    p = p, t0 = t0, cn = cn, Pi0 = Ip, Ip = Ip, Sn = S,
+    iS_ridge = iS_ridge, verbose = 0)
   
   result_identity = best_alphabeta_MPR_shrinkage_identity(
     p = p, t = t0, cn = cn, S = S, iS_ridge = iS_ridge, verbose = 0)
   
-  expect_equal(result_identity, result_general)
+  expect_equal(result_identity, result_general, tolerance = 1e-4)
   
 })
 
@@ -185,45 +186,33 @@ test_that("`MPR_target` is coherent between target general and target identity",
   
   Y = t(X)
   
-  precision_MPR_optimal = MPR_target(Y = Y, verbose = 0)
+  precision_MPR_optimal = MPR_target(Y = Y, verbose = 0, upp = atan(10^2))
   
   
   # Using the identity target directly
   Ip = diag(nrow = p)
   
-  precision_MPR_optimal_Ip = MPR_target(Y = Y, Pi0 = Ip, verbose = 0)
+  precision_MPR_optimal_Ip = MPR_target(Y = Y, Pi0 = Ip,
+                                        verbose = 0, upp = atan(10^2))
   
   expect_equal(precision_MPR_optimal_Ip$t_optimal,
                precision_MPR_optimal$t_optimal)
   
-  skip(message = "Skipping test `MPR_target` is coherent between target general and target identity")
-  
   expect_equal(precision_MPR_optimal_Ip$alpha_optimal,
-               precision_MPR_optimal$alpha_optimal)
+               precision_MPR_optimal$alpha_optimal,
+               tolerance = 1e-4)
   
   expect_equal(precision_MPR_optimal_Ip$beta_optimal,
-               precision_MPR_optimal$beta_optimal)
+               precision_MPR_optimal$beta_optimal,
+               tolerance = 1e-4)
   
   distFrob = FrobeniusNorm2(as.matrix(precision_MPR_optimal_Ip) - 
                               as.matrix(precision_MPR_optimal), normalized = TRUE)
   
-  expect_equal(distFrob, 0)
+  expect_equal(distFrob, 0, tolerance = 1e-8)
   
   FrobeniusLoss2(precision_MPR_optimal_Ip, solve(Sigma))
   FrobeniusLoss2(precision_MPR_optimal, solve(Sigma))
-  
-  
-  ## For small sample sizes, the optimization is unreliable and differences can
-  ## appear
-  
-  expect_equal(precision_MPR_optimal_Ip$t_optimal,
-               precision_MPR_optimal$t_optimal )
-
-  expect_equal(precision_MPR_optimal_Ip$alpha_optimal,
-               precision_MPR_optimal$alpha_optimal )
-
-  expect_equal(precision_MPR_optimal_Ip$beta_optimal,
-               precision_MPR_optimal$beta_optimal )
   
   
   # For the non-optimized versions:
