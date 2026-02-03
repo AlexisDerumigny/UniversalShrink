@@ -239,6 +239,22 @@ estimator_vhat_derivative <- function(t, m, Sn, p, Ip, cn){
 }
 
 
+estimator_vhat_derivative_direct <- function(t, m, iS_ridge, p, Ip, cn){
+  
+  term1 = (-1)^m * factorial(m) * cn
+  
+  # We put this matrix to the power m+1
+  iS_ridge_power_m1 = Ip
+  for (i in 1:(m+1)){
+    iS_ridge_power_m1 = iS_ridge_power_m1 %*% iS_ridge
+  }
+  
+  term2 = tr(iS_ridge_power_m1) / p - t^(- (m+1) ) * (cn - 1) / cn
+  
+  result = term1 * term2
+  
+  return (result)
+}
 
 ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose = 2){
   
