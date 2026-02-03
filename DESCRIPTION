@@ -22,7 +22,8 @@ Suggests:
     stringr,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    Rmpfr
 VignetteBuilder: knitr
 URL: https://github.com/AlexisDerumigny/UniversalShrink/issues
 BugReports: https://github.com/AlexisDerumigny/UniversalShrink

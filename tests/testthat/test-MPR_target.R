@@ -1,5 +1,6 @@
 
-test_that("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result for `Pi0 = Ip`", {
+test_that("basic identity", {
+  
   set.seed(1)
   n = 10
   p = 5 * n
@@ -18,7 +19,7 @@ test_that("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result for `Pi0 = 
   # Using the identity target directly
   Ip = diag(nrow = p)
   
-  t0 = 10000
+  t0 = 10^8
   
   cn = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
   
@@ -26,8 +27,66 @@ test_that("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result for `Pi0 = 
   S <- cov_with_centering(X = t(Y), centeredCov = TRUE)
   iS_ridge <- solve(S + t0 * Ip)
   
-  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, Sn = S, p = p,
-                                       Ip = Ip, cn = cn)
+  precBits = 100
+  
+  t0 = Rmpfr::mpfr(t0, precBits = precBits)
+  S = Rmpfr::mpfr(S, precBits = precBits)
+  cn = Rmpfr::mpfr(cn, precBits = precBits)
+  p = Rmpfr::mpfr(p, precBits = precBits)
+  iS_ridge = Rmpfr::mpfr(iS_ridge, precBits = precBits)
+  
+  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, iS_ridge = iS_ridge,
+                                       p = p, Ip = Ip, cn = cn)
+  
+  do_t0_1p_Ip = estimator_ridge_d0_thetaknown(iS_ridge = iS_ridge, t = t0,
+                                              Theta = Ip / p)
+  do_t0_1p_Ip_other = (t0 / cn) * (hat_v_t0 + (cn - 1) / t0)
+  
+  diff = do_t0_1p_Ip - do_t0_1p_Ip_other
+  expect_lt(as.numeric(diff), 1e-16)
+})
+
+
+test_that(paste0("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result ",
+                 "for `Pi0 = Ip`"), {
+  set.seed(1)
+  n = 10
+  p = 5 * n
+  mu = rep(0, p)
+  
+  # Generate Sigma
+  X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
+  H <- eigen(t(X0) %*% X0)$vectors
+  Sigma = H %*% diag(seq(1, 0.02, length.out = p)) %*% t(H)
+  
+  # Generate example dataset
+  X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
+  
+  Y = t(X)
+  
+  # Using the identity target directly
+  Ip = diag(nrow = p)
+  
+  t0 = 10^6
+  
+  cn = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = TRUE)
+  iS_ridge <- solve(S + t0 * Ip)
+  
+  precBits = 100
+  
+  t0 = Rmpfr::mpfr(t0, precBits = precBits)
+  S = Rmpfr::mpfr(S, precBits = precBits)
+  cn = Rmpfr::mpfr(cn, precBits = precBits)
+  p = Rmpfr::mpfr(p, precBits = precBits)
+  iS_ridge = Rmpfr::mpfr(iS_ridge, precBits = precBits)
+  
+  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, iS_ridge = iS_ridge,
+                                       p = p, Ip = Ip, cn = cn)
+  hat_vprime_t0 = estimator_vhat_derivative(t = t0, m = 1, iS_ridge = iS_ridge,
+                                            p = p, Ip = Ip, cn = cn)
   
   d0_1p_Sigma2 = estimator_d0_1p_Sigma2(p = p, t0 = t0, hat_v_t0 = hat_v_t0,
                                         cn = cn, Sn = S, verbose = 0)
@@ -36,23 +95,42 @@ test_that("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result for `Pi0 = 
                                               cn = cn, Pi0 = Ip, Ip = Ip, Sn = S,
                                               iS_ridge = iS_ridge, verbose = 0)
   
-  expect_equal(d0_1p_Sigma2, d0_1p_Sigma2Pi0)
+  diff = d0_1p_Sigma2 - d0_1p_Sigma2Pi0
+  relative_diff = abs(diff / d0_1p_Sigma2)
+  # print(d0_1p_Sigma2)
+  # print(d0_1p_Sigma2Pi0)
+  # print(diff)
+  # print(relative_diff)
+  expect_lt(as.numeric(relative_diff), 1e-16)
   
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
                                         cn = cn, Ip = Ip, Sn = S,
-                                        iS_ridge = iS_ridge, verbose = 1)
+                                        iS_ridge = iS_ridge, verbose = 0)
+  
+  d1_1p_Sigma2_rec = estimator_d1_1p_Sigma2_rec(
+    t0 = t0, hat_v_t0 = hat_v_t0, hat_vprime_t0 = hat_vprime_t0,
+    p = p, cn = cn, Ip = Ip, Sn = S, verbose = 0)
   
   d1_1p_Sigma2Pi0 = estimator_d1_1p_Sigma2Pi0(t0 = t0, hat_v_t0 = hat_v_t0,
                                               cn = cn, p = p, Ip = Ip, Sn = S,
                                               iS_ridge = iS_ridge, Pi0 = Ip,
-                                              verbose = 1)
+                                              verbose = 0)
   
-  expect_equal(d1_1p_Sigma2, d1_1p_Sigma2Pi0)
+  diff = d1_1p_Sigma2 - d1_1p_Sigma2_rec
+  relative_diff = abs(diff / d1_1p_Sigma2)
+  
+  expect_lt(as.numeric(relative_diff), 1e-13)
+  
+  diff = d1_1p_Sigma2 - d1_1p_Sigma2Pi0
+  relative_diff = abs(diff / d1_1p_Sigma2)
+  
+  expect_lt(as.numeric(relative_diff), 1e-13)
 })
 
 
-test_that("`best_alphabeta_MPR_shrinkage` is coherent between target general and target identity", {
+test_that(paste0("`best_alphabeta_MPR_shrinkage` is coherent ",
+                 "between target general and target identity"), {
   set.seed(1)
   n = 10
   p = 5 * n
@@ -71,7 +149,7 @@ test_that("`best_alphabeta_MPR_shrinkage` is coherent between target general and
   # Using the identity target directly
   Ip = diag(nrow = p)
   
-  t0 = 1000
+  t0 = 100
   
   cn = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
   
@@ -80,15 +158,14 @@ test_that("`best_alphabeta_MPR_shrinkage` is coherent between target general and
   
   iS_ridge <- solve(S + t0 * Ip)
   
-  skip(message = "Skipping test for coherence of `best_alphabeta_MPR_shrinkage`")
-  
   result_general = best_alphabeta_MPR_shrinkage_general(
-    p = p, t0 = t0, cn = cn, Pi0 = Ip, Ip = Ip, Sn = S, verbose = 0)
+    p = p, t0 = t0, cn = cn, Pi0 = Ip, Ip = Ip, Sn = S,
+    iS_ridge = iS_ridge, verbose = 0)
   
   result_identity = best_alphabeta_MPR_shrinkage_identity(
     p = p, t = t0, cn = cn, S = S, iS_ridge = iS_ridge, verbose = 0)
   
-  expect_equal(result_identity, result_general)
+  expect_equal(result_identity, result_general, tolerance = 1e-4)
   
 })
 
@@ -109,45 +186,33 @@ test_that("`MPR_target` is coherent between target general and target identity",
   
   Y = t(X)
   
-  precision_MPR_optimal = MPR_target(Y = Y, verbose = 0)
+  precision_MPR_optimal = MPR_target(Y = Y, verbose = 0, upp = atan(10^2))
   
   
   # Using the identity target directly
   Ip = diag(nrow = p)
   
-  precision_MPR_optimal_Ip = MPR_target(Y = Y, Pi0 = Ip, verbose = 0)
+  precision_MPR_optimal_Ip = MPR_target(Y = Y, Pi0 = Ip,
+                                        verbose = 0, upp = atan(10^2))
   
   expect_equal(precision_MPR_optimal_Ip$t_optimal,
                precision_MPR_optimal$t_optimal)
   
-  skip(message = "Skipping test `MPR_target` is coherent between target general and target identity")
-  
   expect_equal(precision_MPR_optimal_Ip$alpha_optimal,
-               precision_MPR_optimal$alpha_optimal)
+               precision_MPR_optimal$alpha_optimal,
+               tolerance = 1e-4)
   
   expect_equal(precision_MPR_optimal_Ip$beta_optimal,
-               precision_MPR_optimal$beta_optimal)
+               precision_MPR_optimal$beta_optimal,
+               tolerance = 1e-4)
   
   distFrob = FrobeniusNorm2(as.matrix(precision_MPR_optimal_Ip) - 
                               as.matrix(precision_MPR_optimal), normalized = TRUE)
   
-  expect_equal(distFrob, 0)
+  expect_equal(distFrob, 0, tolerance = 1e-8)
   
   FrobeniusLoss2(precision_MPR_optimal_Ip, solve(Sigma))
   FrobeniusLoss2(precision_MPR_optimal, solve(Sigma))
-  
-  
-  ## For small sample sizes, the optimization is unreliable and differences can
-  ## appear
-  
-  expect_equal(precision_MPR_optimal_Ip$t_optimal,
-               precision_MPR_optimal$t_optimal )
-
-  expect_equal(precision_MPR_optimal_Ip$alpha_optimal,
-               precision_MPR_optimal$alpha_optimal )
-
-  expect_equal(precision_MPR_optimal_Ip$beta_optimal,
-               precision_MPR_optimal$beta_optimal )
   
   
   # For the non-optimized versions:

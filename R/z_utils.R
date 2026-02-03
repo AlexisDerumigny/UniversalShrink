@@ -2,9 +2,23 @@
 
 # Trace function of a matrix
 tr <- function(M){
-  return (sum(diag(M)))
+  if (is.matrix(M)){
+    result = sum(diag(M))
+  } else {
+    n = nrow(M)
+    diagM = M[cbind(1:n, 1:n)]
+    result = sum(diagM)
+  }
+  return (result)
 }
 
+
+format_ <- function(x, ...){
+  if (is.numeric(x)){
+    return (format(x, ...))
+  }
+  return (Rmpfr::formatMpfr(x, ...))
+}
 
 #' Conversion of estimated matrices to matrix class
 #' 
