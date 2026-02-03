@@ -73,12 +73,12 @@ estimator_d0_1p_Sigma2Pi0 <- function(p, t0, hat_v_t0, cn, Pi0, Ip, Sn, iS_ridge
   
   if (verbose > 0){
     cat("Estimator of d0(t0, Sigma^2 * Pi_0 / p) : \n")
-    cat("*  first_term = ", first_term, "\n")
-    cat("*  second_term = ", second_term, "\n")
-    cat("   *  1 / hat_v_t0^2 = ", 1 / hat_v_t0^2, "\n")
-    cat("   *  tr(Pi0) / p = ", tr(Pi0) / p, "\n")
-    cat("   *  d0_t0_1p_Pi0 = ", d0_t0_1p_Pi0, "\n")
-    cat("*  result = ", result, "\n\n")
+    cat("*  first_term = ", format_(first_term), "\n")
+    cat("*  second_term = ", format_(second_term), "\n")
+    cat("   *  1 / hat_v_t0^2 = ", format_(1 / hat_v_t0^2), "\n")
+    cat("   *  tr(Pi0) / p = ", format_(tr(Pi0) / p), "\n")
+    cat("   *  d0_t0_1p_Pi0 = ", format_(d0_t0_1p_Pi0), "\n")
+    cat("*  result = ", format_(result), "\n\n")
   }
   
   return (result)

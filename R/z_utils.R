@@ -13,6 +13,13 @@ tr <- function(M){
 }
 
 
+format_ <- function(x, ...){
+  if (is.numeric(x)){
+    return (format(x, ...))
+  }
+  return (Rmpfr::formatMpfr(x, ...))
+}
+
 #' Conversion of estimated matrices to matrix class
 #' 
 #' @param x object to be converted
