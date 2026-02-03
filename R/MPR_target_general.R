@@ -94,14 +94,14 @@ MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3,
 #' @noRd
 loss_L2_MPR_optimal_target_general <- function(t, Sn, p, Ip, cn, Pi0, iS_ridge, verbose)
 {
-  hat_v_t0 = estimator_vhat_derivative(t = t, m = 0, Sn = Sn, p = p, 
+  hat_v_t0 = estimator_vhat_derivative(t = t, m = 0, iS_ridge = iS_ridge, p = p, 
                                        Ip = Ip, cn = cn)
-  hat_vprime_t0 = estimator_vhat_derivative(t = t, m = 1, Sn = Sn, p = p, 
-                                            Ip = Ip, cn = cn)
-  hat_vsecond_t0 = estimator_vhat_derivative(t = t, m = 2, Sn = Sn, p = p, 
-                                             Ip = Ip, cn = cn)
-  hat_vthird_t0 = estimator_vhat_derivative(t = t, m = 3, Sn = Sn, p = p, 
-                                            Ip = Ip, cn = cn)
+  hat_vprime_t0 = estimator_vhat_derivative(t = t, m = 1, iS_ridge = iS_ridge,
+                                            p = p, Ip = Ip, cn = cn)
+  hat_vsecond_t0 = estimator_vhat_derivative(t = t, m = 2, iS_ridge = iS_ridge, 
+                                             p = p, Ip = Ip, cn = cn)
+  hat_vthird_t0 = estimator_vhat_derivative(t = t, m = 3, iS_ridge = iS_ridge,
+                                            p = p, Ip = Ip, cn = cn)
   
   q1 = estimator_q1(Sn = Sn, Theta = Pi0 / p)
   q2 = estimator_q2(Sn = Sn, Theta = Pi0 %*% Pi0 / p, p = p, cn = cn)
@@ -326,14 +326,14 @@ estimator_MPR_s2_Sigma2 <- function(hat_v_t0, hat_vprime_t0, hat_vsecond_t0, hat
 
 best_alphabeta_MPR_shrinkage_general <- function(p, t0, cn, Pi0, Ip, Sn, iS_ridge, verbose){
   
-  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, Sn = Sn, p = p,
-                                       Ip = Ip, cn = cn)
-  hat_vprime_t0 = estimator_vhat_derivative(t = t0, m = 1, Sn = Sn, p = p,
-                                            Ip = Ip, cn = cn)
-  hat_vsecond_t0 = estimator_vhat_derivative(t = t0, m = 2, Sn = Sn, p = p,
-                                             Ip = Ip, cn = cn)
-  hat_vthird_t0 = estimator_vhat_derivative(t = t0, m = 3, Sn = Sn, p = p, 
-                                            Ip = Ip, cn = cn)
+  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, iS_ridge = iS_ridge,
+                                       p = p, Ip = Ip, cn = cn)
+  hat_vprime_t0 = estimator_vhat_derivative(t = t0, m = 1, iS_ridge = iS_ridge,
+                                            p = p, Ip = Ip, cn = cn)
+  hat_vsecond_t0 = estimator_vhat_derivative(t = t0, m = 2, iS_ridge = iS_ridge,
+                                             p = p, Ip = Ip, cn = cn)
+  hat_vthird_t0 = estimator_vhat_derivative(t = t0, m = 3, iS_ridge = iS_ridge,
+                                            p = p, Ip = Ip, cn = cn)
   
   d0_1p_Sigma = estimator_d0_1p_Sigma(t0 = t0, hat_v_t0 = hat_v_t0, cn = cn)
   

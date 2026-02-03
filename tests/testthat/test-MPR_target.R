@@ -27,28 +27,20 @@ test_that("basic identity", {
   S <- cov_with_centering(X = t(Y), centeredCov = TRUE)
   iS_ridge <- solve(S + t0 * Ip)
   
-  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, Sn = S, p = p,
-                                       Ip = Ip, cn = cn)
-  
-  # This hat_v_t0 should not be used, because the rounding inside is done
-  # without high precision.
-  
   precBits = 100
   
-  hat_v_t0 = Rmpfr::mpfr(hat_v_t0, precBits = precBits)
   t0 = Rmpfr::mpfr(t0, precBits = precBits)
   S = Rmpfr::mpfr(S, precBits = precBits)
   cn = Rmpfr::mpfr(cn, precBits = precBits)
   p = Rmpfr::mpfr(p, precBits = precBits)
   iS_ridge = Rmpfr::mpfr(iS_ridge, precBits = precBits)
   
-  hat_v_t0_direct = estimator_vhat_derivative_direct(
-    t = t0, m = 0, iS_ridge = iS_ridge, p = p,
-    Ip = Ip, cn = cn)
+  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, iS_ridge = iS_ridge,
+                                       p = p, Ip = Ip, cn = cn)
   
   do_t0_1p_Ip = estimator_ridge_d0_thetaknown(iS_ridge = iS_ridge, t = t0,
                                               Theta = Ip / p)
-  do_t0_1p_Ip_other = (t0 / cn) * (hat_v_t0_direct + (cn - 1) / t0)
+  do_t0_1p_Ip_other = (t0 / cn) * (hat_v_t0 + (cn - 1) / t0)
   
   diff = do_t0_1p_Ip - do_t0_1p_Ip_other
   expect_lt(as.numeric(diff), 1e-16)
@@ -90,10 +82,10 @@ test_that("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result for `Pi0 = 
   p = Rmpfr::mpfr(p, precBits = precBits)
   iS_ridge = Rmpfr::mpfr(iS_ridge, precBits = precBits)
   
-  hat_v_t0 = estimator_vhat_derivative_direct(
-    t = t0, m = 0, iS_ridge = iS_ridge, p = p, Ip = Ip, cn = cn)
-  hat_vprime_t0 = estimator_vhat_derivative_direct(
-    t = t0, m = 1, iS_ridge = iS_ridge, p = p, Ip = Ip, cn = cn)
+  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, iS_ridge = iS_ridge,
+                                       p = p, Ip = Ip, cn = cn)
+  hat_vprime_t0 = estimator_vhat_derivative(t = t0, m = 1, iS_ridge = iS_ridge,
+                                            p = p, Ip = Ip, cn = cn)
   
   d0_1p_Sigma2 = estimator_d0_1p_Sigma2(p = p, t0 = t0, hat_v_t0 = hat_v_t0,
                                         cn = cn, Sn = S, verbose = 0)

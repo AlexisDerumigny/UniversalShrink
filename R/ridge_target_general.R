@@ -140,9 +140,10 @@ estimator_d1_1p_Sigma2_rec <- function(t0, hat_v_t0, hat_vprime_t0,
 
 best_alphabeta_ridge_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, iS_ridge, verbose){
   
-  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, Sn = Sn, p = p, Ip = Ip, cn = cn)
-  hat_vprime_t0 = estimator_vhat_derivative(t = t0, m = 1, Sn = Sn, p = p, 
-                                            Ip = Ip, cn = cn)
+  hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, iS_ridge = iS_ridge,
+                                       p = p, Ip = Ip, cn = cn)
+  hat_vprime_t0 = estimator_vhat_derivative(t = t0, m = 1, iS_ridge = iS_ridge,
+                                            p = p, Ip = Ip, cn = cn)
   
   d0_1p_Sigma = estimator_d0_1p_Sigma(t0 = t0, hat_v_t0 = hat_v_t0, cn = cn)
   
@@ -218,28 +219,7 @@ best_alphabeta_ridge_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, iS_ridge, ver
 }
 
 
-
-estimator_vhat_derivative <- function(t, m, Sn, p, Ip, cn){
-  
-  term1 = (-1)^m * factorial(m) * cn
-  
-  iS_ridge = solve(Sn + t * Ip)
-  
-  # We put this matrix to the power m+1
-  iS_ridge_power_m1 = Ip
-  for (i in 1:(m+1)){
-    iS_ridge_power_m1 = iS_ridge_power_m1 %*% iS_ridge
-  }
-  
-  term2 = tr(iS_ridge_power_m1) / p - t^(- (m+1) ) * (cn - 1) / cn
-  
-  result = term1 * term2
-  
-  return (result)
-}
-
-
-estimator_vhat_derivative_direct <- function(t, m, iS_ridge, p, Ip, cn){
+estimator_vhat_derivative <- function(t, m, iS_ridge, p, Ip, cn){
   
   term1 = (-1)^m * factorial(m) * cn
   
@@ -411,9 +391,10 @@ ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2,
 #' @noRd
 loss_L2_ridge_optimal <- function(t, Sn, p, Ip, cn, Pi0, iS_ridge, verbose)
 {
-  hat_v_t0 = estimator_vhat_derivative(t = t, m = 0, Sn = Sn, p = p, Ip = Ip, cn = cn)
-  hat_vprime_t0 = estimator_vhat_derivative(t = t, m = 1, Sn = Sn, p = p,
-                                            Ip = Ip, cn = cn)
+  hat_v_t0 = estimator_vhat_derivative(t = t, m = 0, iS_ridge = iS_ridge,
+                                       p = p, Ip = Ip, cn = cn)
+  hat_vprime_t0 = estimator_vhat_derivative(t = t, m = 1, iS_ridge = iS_ridge,
+                                            p = p, Ip = Ip, cn = cn)
   
   q1 = estimator_q1(Sn = Sn, Theta = Pi0 / p)
   q2 = estimator_q2(Sn = Sn, Theta = Pi0 %*% Pi0 / p, p = p, cn = cn)
