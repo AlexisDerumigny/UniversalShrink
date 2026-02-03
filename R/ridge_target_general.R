@@ -92,24 +92,22 @@ estimator_d1_1p_Sigma2 <- function(t0, hat_v_t0, p, cn, Ip, Sn, iS_ridge, verbos
   d1_t0_1p_Ip = estimator_ridge_d1_thetaknown(iS_ridge = iS_ridge, t = t0,
                                               Theta = Ip / p, p = p, cn = cn)
   
-  second_term_1 = tr(Sn) / p
-  second_term_2 = d1_t0_1p_Ip
-  second_term_3 = 2 / (cn * hat_v_t0)
-  second_term_4 = 2 * t0 / cn
+  term_1 = first_term * tr(Sn) / p
+  term_2 = first_term * d1_t0_1p_Ip
+  term_3 = first_term * 2 / (cn * hat_v_t0)
+  term_4 = first_term * 2 * t0 / cn
   
-  second_term = second_term_1 + second_term_2 - second_term_3 + second_term_4
-  
-  result = first_term * second_term
+  result = term_1 + term_2 - term_3 + term_4
   
   if (verbose > 0){
     cat("Estimator of d1(t0, Sigma^2 / p) : \n")
-    cat("*  first_term = 1 / hat_v_t0^2 = ", first_term, "\n")
-    cat("*  second_term = ", second_term, "\n")
-    cat("   *  second_term_1 = tr(Sn) / p = ",          second_term_1, "\n")
-    cat("   *  second_term_2 = d1_t0_1p_Ip = ",         second_term_2, "\n")
-    cat("   *  second_term_3 = 2 / (cn * hat_v_t0) = ", second_term_3, "\n")
-    cat("   *  second_term_4 = 2 * t0 / cn = ",         second_term_4, "\n")
-    cat("*  result = ", result, "\n\n")
+    # cat("*  first_term = 1 / hat_v_t0^2 = ", first_term, "\n")
+    # cat("*  second_term = ", second_term, "\n")
+    cat("   *  term_1 = (1 / hat_v_t0^2) * tr(Sn) / p = ",          format_(term_1), "\n")
+    cat("   *  term_2 = (1 / hat_v_t0^2) * d1_t0_1p_Ip = ",         format_(term_2), "\n")
+    cat("   *  term_3 = (1 / hat_v_t0^2) * 2 / (cn * hat_v_t0) = ", format_(term_3), "\n")
+    cat("   *  term_4 = (1 / hat_v_t0^2) * 2 * t0 / cn = ",         format_(term_4), "\n")
+    cat("*  result = ", format_(result), "\n\n")
   }
   
   return (result)
