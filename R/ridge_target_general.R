@@ -49,9 +49,9 @@ estimator_d0_1p_Sigma2 <- function(p, t0, hat_v_t0, cn, Sn, verbose = verbose){
   
   if (verbose > 0){
     cat("Estimator of d0(t0, Sigma^2 / p) : \n")
-    cat("*  first_term = ", first_term, "\n")
-    cat("*  second_term = ", second_term, "\n")
-    cat("*  result = ", result, "\n\n")
+    cat("*  first_term = ", format_(first_term), "\n")
+    cat("*  second_term = ", format_(second_term), "\n")
+    cat("*  result = ", format_(result), "\n\n")
   }
   
   # TODO: investigate potential loss of precision issues.
