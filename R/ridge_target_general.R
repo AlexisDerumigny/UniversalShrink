@@ -113,6 +113,30 @@ estimator_d1_1p_Sigma2 <- function(t0, hat_v_t0, p, cn, Ip, Sn, iS_ridge, verbos
   return (result)
 }
 
+estimator_d1_1p_Sigma2_rec <- function(t0, hat_v_t0, hat_vprime_t0, 
+                                       p, cn, Ip, Sn, verbose){
+  d0_t0_1p_Sigma2 = estimator_d0_1p_Sigma2(p = p, t0 = t0, hat_v_t0 = hat_v_t0,
+                                           cn = cn, Sn = Sn, verbose = verbose - 1)
+  
+  d1_t0_1p_Sigma = estimator_d1_1p_Sigma(hat_v_t0 = hat_v_t0,
+                                         hat_vprime_t0 = hat_vprime_t0, cn = cn)
+  
+  term_1 = d0_t0_1p_Sigma2 / hat_v_t0
+  term_2 = d1_t0_1p_Sigma / hat_v_t0
+  
+  result = term_1 - term_2
+  
+  if (verbose > 0){
+    cat("Estimator of d1(t0, Sigma^2 / p) : \n")
+    # cat("*  first_term = 1 / hat_v_t0^2 = ", first_term, "\n")
+    # cat("*  second_term = ", second_term, "\n")
+    cat("   *  term_1 = d0_t0_1p_Sigma2 / hat_v_t0 = ",          format_(term_1), "\n")
+    cat("   *  term_2 = d1_t0_1p_Sigma / hat_v_t0 = ",         format_(term_2), "\n")
+    cat("*  result = ", format_(result), "\n\n")
+  }
+  
+  return (result)
+}
 
 best_alphabeta_ridge_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, iS_ridge, verbose){
   

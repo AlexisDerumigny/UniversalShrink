@@ -28,6 +28,8 @@ test_that("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result for `Pi0 = 
   
   hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, Sn = S, p = p,
                                        Ip = Ip, cn = cn)
+  hat_vprime_t0 = estimator_vhat_derivative(t = t0, m = 1, Sn = S, p = p,
+                                            Ip = Ip, cn = cn)
   
   precBits = 500
   
@@ -57,6 +59,10 @@ test_that("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result for `Pi0 = 
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
                                         cn = cn, Ip = Ip, Sn = S,
                                         iS_ridge = iS_ridge, verbose = 1)
+  
+  d1_1p_Sigma2_rec = estimator_d1_1p_Sigma2_rec(
+    t0 = t0, hat_v_t0 = hat_v_t0, hat_vprime_t0 = hat_vprime_t0,
+    p = p, cn = cn, Ip = Ip, Sn = S, verbose = 1)
   
   d1_1p_Sigma2Pi0 = estimator_d1_1p_Sigma2Pi0(t0 = t0, hat_v_t0 = hat_v_t0,
                                               cn = cn, p = p, Ip = Ip, Sn = S,
