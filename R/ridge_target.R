@@ -26,7 +26,11 @@
 #' the loss is optimized with respect to \eqn{u = arctan(t)} over the interval
 #' \code{[eps, upp]}, and the optimizer starts at the \code{initialValue}.
 #' 
-#' @param Pi0 shrinkage target
+#' @param Pi0 shrinkage target. By default it is the identity matrix and
+#' optimized computations are run in this case. Note that because of numerical
+#' issues (with rounding), specifying explicitly \code{Pi0 = diag(p)} may give
+#' different results for high values of \code{t}. This can arise as soon as
+#' \code{t = 10^4}.
 #' 
 #' @inheritParams cov_with_centering
 #' 

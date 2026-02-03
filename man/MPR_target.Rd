@@ -27,7 +27,11 @@ random vector may be non-zero).
 If \code{FALSE} the covariance matrix is computed assuming that the mean of
 the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 
-\item{Pi0}{shrinkage target. By default it is the identity matrix.}
+\item{Pi0}{shrinkage target. By default it is the identity matrix and
+optimized computations are run in this case. Note that because of numerical
+issues (with rounding), specifying explicitly \code{Pi0 = diag(p)} may give
+different results for high values of \code{t}. This can arise as soon as
+\code{t = 10^4}.}
 
 \item{t, alpha, beta, eps, upp, initialValue}{\code{t}, \code{alpha} and
 \code{beta} are parameters of the estimation. In the optimized version,
