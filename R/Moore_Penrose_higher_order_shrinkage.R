@@ -134,31 +134,57 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 
 #' Moore-Penrose higher order shrinkage of the precision matrix
 #' 
-#' This function compute an estimator of the precision matrix by using the
+#' This function computes an estimator of the precision matrix by using the
 #' polynomial
-#' \deqn{\alpha_0 I_p + \sum_{k = 1}^m \alpha_k \left(\widehat{\Sigma^{-1}}^{MP}\right)^k}
-#' where \eqn{\alpha_0, \dots, \alpha_p} are carefully chosen coefficients,
-#' \eqn{\widehat{\Sigma^{-1}}^{MP}} is the Moore-Penrose inverse of the sample
-#' covariance matrix
-#' and \eqn{I_p} is the identity matrix of size \eqn{p}.
-#' 
+#' \deqn{
+#' \mathbf{S}_{n;HOS}^+=\hat{\alpha}_0^+\mathbf{I}_p 
+#' +\sum_{j=1}^m\hat{\alpha}^+_j(\mathbf{S}^+_n)^j,
+#' }
+#' where \eqn{\hat{\boldsymbol{\alpha}}^{+}(m)=(\hat{\alpha}_0^+,\hat{\alpha}_1^+,
+#' \ldots,\hat{\alpha}_m^+)^\top} given by
+#'\deqn{
+#'\hat{\boldsymbol{\alpha}}^{+}(m)=\widehat{\mathbf{M}}^+(m)^{-1} \hat{\mathbf{m}}^+(m)
+#'}  with
+#' \deqn{
+#'\hat{\mathbf{m}}^+(m)=
+#'  \begin{pmatrix}
+#'\hat{q}_1\\
+#'\hat{s}_{1,1}\\
+#'\vdots\\
+#'\hat{s}_{m,1}
+#'\end{pmatrix}
+#'\quad \text{and}\quad
+#'\widehat{\mathbf{M}}^+(m)=\begin{pmatrix}
+#'\hat{q}_2 & \hat{s}_{1,2}  & \ldots & \hat{s}_{m,2} \\
+#'\hat{s}_{1,2}& \hat{s}_{2,2}  & \ldots & \hat{s}_{m+1,2} \\
+#'\vdots&\vdots&\ddots&\vdots\\
+#'\hat{s}_{m,2}& \hat{s}_{m+1,2} & \ldots & \hat{s}_{2m,2}
+#'\end{pmatrix},
+#'} where
+#' \eqn{\mathbf{S}^+_n} is the Moore-Penrose inverse of the sample
+#' covariance matrix and \eqn{\mathbf{I}_p} is the identity matrix of size \eqn{p}.
+#' The details on the computation of the terms \eqn{\hat q_1}, \eqn{\hat q_2} and
+#'  \eqn{s_{i,j}} are given in 
+#' Theorem 2.5 of Bodnar and Parolya (2025).
 #' 
 #' @param Y data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
 #' @param m order of the shrinkage. Should be at least 1.
 #' 
+#' @inheritParams cov_with_centering
 #' 
 #' @returns the estimator of the precision matrix
 #' (a `p` by `p` matrix, i.e. the inverse of the covariance matrix).
 #' 
 #' @references
-#' Nestor Parolya & Taras Bodnar (2024).
+#' Nestor Parolya & Taras Bodnar (2025).
 #' Higher-order nonlinear shrinkage estimator of large-dimensional precision matrix.
+#' \doi{10.1090/tpms/1239}
 #' 
 #' @examples
 #' 
-#' n = 50
+#' n = 10
 #' p = 2 * n
 #' mu = rep(0, p)
 #' 
@@ -170,19 +196,15 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
-#' FrobeniusNorm2 <- function(M){sum(diag(M %*% t(M)))}
-#' 
 #' precision_MoorePenrose_Cent = 
-#'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
+#'   Moore_Penrose_target(Y = t(X), centeredCov = TRUE)
 #' precision_MoorePenrose_NoCent = 
-#'   Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
-#'   
-#' FrobeniusLoss2 <- function(M){FrobeniusNorm2(M %*% Sigma - diag(p) ) / p}
+#'   Moore_Penrose_target(Y = t(X), centeredCov = FALSE)
 #'
-#' print(FrobeniusLoss2(precision_MoorePenrose_Cent))
-#' print(FrobeniusLoss2(precision_MoorePenrose_NoCent))
+#' print(FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma))
+#' print(FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma))
 #' 
-#' for (m in 1:5){
+#' for (m in 1:3){
 #'   cat("m = ", m, "\n")
 #'   precision_higher_order_shrinkage_Cent = 
 #'       Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE)
@@ -190,54 +212,30 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #'   precision_higher_order_shrinkage_NoCent = 
 #'       Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE)
 #'       
-#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix, Sigma = Sigma))
+#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma))
 #'   
-#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent$estimated_precision_matrix, Sigma = Sigma))
+#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent, Sigma))
 #' }
 #' 
 #' 
 #' 
 #' @export
 #' 
-Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov)
+Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov = TRUE, verbose = 0)
 {
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    # We remove the last eigenvector because the eigenvalues are sorted
-    # in decreasing order.
-    Hn = eigen(Jn)$vectors[, -n]
-    Ytilde = Y %*% Hn
-    
-    # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
-    
-    # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
-    
-    c_n = p / (n-1)
-    
-  } else {
-    S <- Y %*% t(Y)/n
-    
-    # Inverse companion covariance
-    iY <- solve(t(Y) %*% Y / n)
-    
-    # Moore-Penrose inverse
-    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
-    
-    c_n = p / n
-  }
+  # Moore-Penrose inverse of the sample covariance matrix
+  iS_MP <- as.matrix(Moore_Penrose(Y = Y, centeredCov = centeredCov))
   
   D_MP <- diag(eigen(iS_MP)$values)
   
@@ -272,13 +270,16 @@ Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov)
     result = result + alpha[k + 1] * power_isMP
   }
   
-  
-  return(list(
+  result = list(
     estimated_precision_matrix = result,
     M = estimatedM$M,
     hm = estimatedM$hm,
     alpha = alpha,
     v = estimatedM$v
-  ) )
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
 }
 

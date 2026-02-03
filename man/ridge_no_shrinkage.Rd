@@ -4,13 +4,24 @@
 \alias{ridge_no_shrinkage}
 \title{Ridge with target set to the identity}
 \usage{
-ridge_no_shrinkage(Y, centeredCov, t)
+ridge_no_shrinkage(Y, centeredCov = TRUE, t, verbose = 0)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
 TODO: transpose everything.}
 
+\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
+computed using centering (i.e. in the general case where the mean of the
+random vector may be non-zero).
+If \code{FALSE} the covariance matrix is computed assuming that the mean of
+the random vector of interest is \code{0} (i.e. does not need to be estimated).}
+
 \item{t}{parameter of the estimation.}
+
+\item{verbose}{a number indicating whether to print intermediary values and
+details about the progress of the computations. A value of \code{0} indicates
+no printing at all, while higher values indicate increasingly more detailed
+(more verbose) output.}
 }
 \value{
 the estimator of the precision matrix, of class
@@ -48,5 +59,5 @@ for (t in c(0.2, 0.5, 1)){
 Nestor Parolya & Taras Bodnar (2024).
 Reviving pseudo-inverses: Asymptotic properties of large dimensional
 Moore-Penrose and Ridge-type inverses with applications.
-\link{https://doi.org/10.48550/arXiv.2403.15792}
+\doi{10.48550/arXiv.2403.15792}
 }

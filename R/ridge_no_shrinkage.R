@@ -11,6 +11,8 @@
 #' 
 #' @param t parameter of the estimation.
 #' 
+#' @inheritParams cov_with_centering
+#' 
 #' @returns the estimator of the precision matrix, of class
 #' `EstimatedPrecisionMatrix`.
 #' 
@@ -18,7 +20,7 @@
 #' Nestor Parolya & Taras Bodnar (2024).
 #' Reviving pseudo-inverses: Asymptotic properties of large dimensional
 #' Moore-Penrose and Ridge-type inverses with applications.
-#' \link{https://doi.org/10.48550/arXiv.2403.15792}
+#' \doi{10.48550/arXiv.2403.15792}
 #' 
 #' 
 #' @examples
@@ -44,7 +46,7 @@
 #' 
 #' 
 #' @export
-ridge_no_shrinkage <- function (Y, centeredCov, t){
+ridge_no_shrinkage <- function (Y, centeredCov = TRUE, t, verbose = 0){
   
   # Get sizes of Y
   p = nrow(Y)
@@ -53,15 +55,8 @@ ridge_no_shrinkage <- function (Y, centeredCov, t){
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-  }
-  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   
   iS_ridge <- solve(S + t * Ip)
   

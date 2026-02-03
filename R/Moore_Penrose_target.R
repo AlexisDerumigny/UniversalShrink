@@ -1,13 +1,12 @@
 
-#' First-order shrinkage of the Moore-Penrose inverse towards a general target
+#' First-order shrinkage of the Moore-Penrose inverse towards a fixed target
 #' 
 #' This function computes
 #' \deqn{\alpha \times \widehat{\Sigma^{-1}}^{MP} + (1 - \alpha) \times \Pi_0}
 #' where \eqn{\alpha} is a carefully chosen coefficient,
 #' \eqn{\widehat{\Sigma^{-1}}^{MP}} is the Moore-Penrose inverse of the sample
 #' covariance matrix
-#' and \eqn{\Pi_0} is a given target (for `Moore_Penrose_shrinkage()`) 
-#' or the identity matrix (for `Moore_Penrose_shrinkage_toIP()`).
+#' and \eqn{\Pi_0} is a given target such as the identity matrix.
 #'
 #'
 #' @param Y data matrix (rows are features, columns are observations).
@@ -18,6 +17,7 @@
 #' As an advice, it should be a symmetric positive-definite matrix, but this is
 #' not checked for.
 #' 
+#' @inheritParams cov_with_centering
 #' 
 #' @returns the estimator of the precision matrix
 #' (a `p` by `p` matrix, i.e. the inverse of the covariance matrix).
@@ -29,10 +29,10 @@
 #' Nestor Parolya & Taras Bodnar (2024).
 #' Reviving pseudo-inverses: Asymptotic properties of large dimensional
 #' Moore-Penrose and Ridge-type inverses with applications.
-#' \link{https://doi.org/10.48550/arXiv.2403.15792}
+#' \doi{10.48550/arXiv.2403.15792}
 #' 
 #' @examples
-#' n = 100
+#' n = 50
 #' p = 5 * n
 #' mu = rep(0, p)
 #' 
@@ -45,50 +45,55 @@
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
 #' precision_MoorePenrose_Cent =
-#'    Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
+#'    Moore_Penrose_target(Y = t(X), centeredCov = TRUE)
 #'    
 #' precision_MoorePenrose_NoCent = 
-#'    Moore_Penrose_shrinkage(t(X), centeredCov = FALSE)
-#'    
-#' precision_MoorePenrose_toIPCent = 
-#'    Moore_Penrose_shrinkage_toIP(t(X), centeredCov = TRUE)
-#'    
-#' precision_MoorePenrose_toIPNoCent = 
-#'    Moore_Penrose_shrinkage_toIP(t(X), centeredCov = FALSE)
+#'    Moore_Penrose_target(t(X), centeredCov = FALSE)
 #' 
 #' precisionTrue = solve(Sigma)
 #' 
-#' estimatedCov_NLshrink = analytical_NL_shrinkage(t(X))
-#' estimatedCov_QISshrink = quadratic_inverse_shrinkage(X)
+#' estimatedCov_NLshrink = cov_analytical_NL_shrinkage(t(X))
+#' estimatedCov_QISshrink = cov_quadratic_inverse_shrinkage(X)
 #' 
 #' precision_NLshrink = solve(estimatedCov_NLshrink)
 #' precision_QISshrink = solve(estimatedCov_QISshrink)
 #' 
 #' FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
 #' FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
-#' FrobeniusLoss2(precision_MoorePenrose_toIPCent, Sigma = Sigma)
-#' FrobeniusLoss2(precision_MoorePenrose_toIPNoCent, Sigma = Sigma)
-#' FrobeniusLoss2(precision_NLshrink, Sigma = Sigma)
-#' FrobeniusLoss2(precision_QISshrink, Sigma = Sigma)
+#' FrobeniusLoss2(precision_NLshrink, Sigma = Sigma, type = "precision")
+#' FrobeniusLoss2(precision_QISshrink, Sigma = Sigma, type = "precision")
 #' 
 #' # We now use the true value of the precision matrix as a target for shrinkage
 #' precision_MoorePenrose_Cent_trueSigma = 
-#'   Moore_Penrose_shrinkage(t(X), centeredCov = TRUE, Pi0 = solve(Sigma))
+#'   Moore_Penrose_target(t(X), centeredCov = TRUE, Pi0 = solve(Sigma))
 #' precision_MoorePenrose_NoCent_trueSigma = 
-#'   Moore_Penrose_shrinkage(t(X), centeredCov = FALSE, Pi0 = solve(Sigma))                                                        
+#'   Moore_Penrose_target(t(X), centeredCov = FALSE, Pi0 = solve(Sigma))                                                        
 #'                                                         
 #' FrobeniusLoss2(precision_MoorePenrose_Cent_trueSigma, Sigma = Sigma)
 #' FrobeniusLoss2(precision_MoorePenrose_NoCent_trueSigma, Sigma = Sigma)
 #' # this is indeed much closer than before
 #' 
 #' 
-#' 
 #' @export
-Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
+Moore_Penrose_target <- function(Y, centeredCov = TRUE, Pi0 = NULL, verbose = 0)
+{
+  if (is.null(Pi0)) {
+    result = Moore_Penrose_target_general(Y = Y, centeredCov = centeredCov,
+                                          Pi0 = Pi0, verbose = verbose)
+  } else {
+    result = Moore_Penrose_target_identity(Y = Y, centeredCov = centeredCov,
+                                           verbose = verbose)
+  }
+  
+  return (result)
+}
+
+Moore_Penrose_target_general <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
 {
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
@@ -99,35 +104,12 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
     stop("'Pi0' should be a 'p' by 'p' matrix.")
   }
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    # We remove the last eigenvector because the eigenvalues are sorted
-    # in decreasing order.
-    Hn = eigen(Jn)$vectors[, -n]
-    Ytilde = Y %*% Hn
-    
-    # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1))
-    
-    # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
-    
-    c_n = p / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-    
-    # Inverse companion covariance
-    iY <- solve(t(Y) %*% Y / n)
-    
-    # Moore-Penrose inverse
-    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
-    
-    c_n = p / n
-  }
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  
+  # Moore-Penrose inverse of the sample covariance matrix
+  iS_MP <- as.matrix(Moore_Penrose(Y = Y, centeredCov = centeredCov))
+  
   
   ##### shrinkage MP
   trS1 <- tr(iS_MP) / p
@@ -208,50 +190,31 @@ Moore_Penrose_shrinkage <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
   beta     <- num_beta_MP / den_MP
   iS_ShMP  <- alpha * iS_MP + beta * Pi0
   
-  return (iS_ShMP)
+  result = list(
+    estimated_precision_matrix = iS_ShMP
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
 }
 
 
-#' @rdname Moore_Penrose_shrinkage
-#' @export
-Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov, verbose = 0)
+Moore_Penrose_target_identity <- function (Y, centeredCov = TRUE, verbose = 0)
 {
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    # We remove the last eigenvector because the eigenvalues are sorted
-    # in decreasing order.
-    Hn = eigen(Jn)$vectors[, -n]
-    Ytilde = Y %*% Hn
-    
-    # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
-    
-    # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
-    
-    c_n = p / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-    
-    # Inverse companion covariance
-    iY <- solve(t(Y) %*% Y / n)
-    
-    # Moore-Penrose inverse
-    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
-    
-    c_n = p / n
-  }
+  # Moore-Penrose inverse of the sample covariance matrix
+  iS_MP <- as.matrix(Moore_Penrose(Y = Y, centeredCov = centeredCov))
   
   ##### shrinkage MP
   trS1<-sum(diag(iS_MP))/p
@@ -296,7 +259,13 @@ Moore_Penrose_shrinkage_toIP <- function (Y, centeredCov, verbose = 0)
   hb_MP <- num_beta_MP / den_MP
   iS_ShMP<-ha_MP * iS_MP + hb_MP * Ip
   
-  return(iS_ShMP)
+  result = list(
+    estimated_precision_matrix = iS_ShMP
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return(result)
 }
 
 

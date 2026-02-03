@@ -1,100 +1,13 @@
 
 
-#' First-order shrinkage of the Moore-Penrose portfolio towards a general target portfolio
-#'
-#' This function computes
-#' \deqn{\alpha \times w_{MP} + (1 - \alpha) \times \mathbf{b}}
-#' where \eqn{\alpha} is a carefully chosen coefficient, \eqn{w_{MP}} is the
-#' vector of optimal portfolio weights estimated as the plug-in of the Moore-Penrose
-#' estimate of the precision matrix and \eqn{\mathbf{b}} is the target.
-#'
-#'
-#' @param Y data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
-#' 
-#' @param b target portfolio. This is a vector of size \code{p} which sums to 1.
-#' By default this is the equally weighted portfolio.
-#' 
-#' @return a vector of size \eqn{p} of (estimated) optimal portfolio weights,
-#' where \eqn{p} is the number of assets.
-#' 
-#' @references 
-#' Nestor Parolya & Taras Bodnar (2024).
-#' Reviving pseudo-inverses: Asymptotic properties of large dimensional
-#' Moore-Penrose and Ridge-type inverses with applications.
-#' \link{https://doi.org/10.48550/arXiv.2403.15792}
-#' 
-#' 
-#' @examples
-#' n = 50
-#' p = 2 * n
-#' mu = rep(0, p)
-#' 
-#' # Generate Sigma
-#' X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
-#' H <- eigen(t(X0) %*% X0)$vectors
-#' Sigma = H %*% diag(seq(1, 0.02, length.out = p)) %*% t(H)
-#' 
-#' # Generate example dataset
-#' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
-#' 
-#' GMV_MP_shrinkage_Cent = 
-#'   GMV_Moore_Penrose_target_eq(Y = t(X), centeredCov = TRUE)
-#'   
-#' GMV_MP_shrinkage_Cent_new = 
-#'   GMV_Moore_Penrose_target_general(Y = t(X), centeredCov = TRUE)
-#'   
-#' # This should coincide with GMV_MP_shrinkage_Cent since by default this is
-#' # shrinked to the equally weighted portfolio.
-#' 
-#' outOfSampleVariance = t(GMV_MP_shrinkage_Cent) %*% Sigma %*% GMV_MP_shrinkage_Cent
-#' 
-#' ones = rep(1, length = p)
-#' V_GMV = 1 / ( t(ones) %*% solve(Sigma) %*% ones)
-#' 
-#' Loss_GMV_Moore_Penrose_target_eq = (outOfSampleVariance - V_GMV) / V_GMV
-#' 
-#' GMV_MP_Cent = GMV_Moore_Penrose(Y = t(X), centeredCov = TRUE)
-#' outOfSampleVariance = t(GMV_MP_Cent) %*% Sigma %*% GMV_MP_Cent
-#' 
-#' Loss_GMV_Moore_Penrose = (outOfSampleVariance - V_GMV) / V_GMV
-#' 
-#' # Shrinkage helps to reduce the loss
-#' stopifnot(Loss_GMV_Moore_Penrose_target_eq < Loss_GMV_Moore_Penrose)
-#' 
-#' 
-#' # We now compare with the true target
-#' perfect_GMV_portfolio = GMV_PlugIn(solve(Sigma))
-#' 
-#' GMV_MP_shrinkage_Cent_oracle = 
-#'   GMV_Moore_Penrose_target_general(Y = t(X), centeredCov = TRUE,
-#'                                    b = perfect_GMV_portfolio)
-#'                                    
-#' outOfSampleVariance = 
-#'   t(GMV_MP_shrinkage_Cent_oracle) %*% Sigma %*% GMV_MP_shrinkage_Cent_oracle
-#' 
-#' outOfSampleVarianceGMV = 
-#'   t(perfect_GMV_portfolio) %*% Sigma %*% perfect_GMV_portfolio
-#' 
-#' ones = rep(1, length = p)
-#' V_GMV = 1 / ( t(ones) %*% solve(Sigma) %*% ones)
-#' 
-#' Loss_GMV_MP_shrinkage_Cent_oracle = (outOfSampleVariance - V_GMV) / V_GMV
-#' 
-#' cat("GMV_Moore_Penrose_target_eq:", Loss_GMV_Moore_Penrose_target_eq, "\n")
-#' cat("GMV_Moore_Penrose:", Loss_GMV_Moore_Penrose, "\n")
-#' cat("GMV_Moore_Penrose_target_oracle:", Loss_GMV_MP_shrinkage_Cent_oracle, "\n")
-#' 
-#' 
-#' @export
+
 GMV_Moore_Penrose_target_general <- function(Y, centeredCov = TRUE, b = NULL,
                                              verbose = 2){
   # Get sizes of Y
   p = nrow(Y)
   n = ncol(Y)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
-  # Identity matrix of size p
-  Ip = diag(nrow = p)
   # Vector of ones of size p
   ones = rep(1, length = p)
   
@@ -106,37 +19,13 @@ GMV_Moore_Penrose_target_general <- function(Y, centeredCov = TRUE, b = NULL,
   if (abs(sum(b) - 1) > 0.001){
     stop("The weights (b) should sum up to 1.")
   }
-
   
-  if (centeredCov){
-    Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-    
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
-    # We remove the last eigenvector because the eigenvalues are sorted
-    # in decreasing order.
-    Hn = eigen(Jn)$vectors[, -n]
-    Ytilde = Y %*% Hn
-    
-    # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1))
-    
-    # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
-    
-    c_n = p / (n-1)
-  } else {
-    S <- Y %*% t(Y)/n
-    
-    # Inverse companion covariance
-    iY <- solve(t(Y) %*% Y / n)
-    
-    # Moore-Penrose inverse
-    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
-    
-    c_n = p / n
-  }
+  # Sample covariance matrix
+  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  
+  # Moore-Penrose inverse of the sample covariance matrix
+  iS_MP <- as.matrix(Moore_Penrose(Y = Y, centeredCov = centeredCov))
+  
   
   w_MP = GMV_PlugIn(estimatedPrecisionMatrix = iS_MP)
   
@@ -172,7 +61,7 @@ GMV_Moore_Penrose_target_general <- function(Y, centeredCov = TRUE, b = NULL,
   # Sigma is unknown, so this is not a true function. We must use the expression:
   d1_bSigma <- ((1 - d0) / hv0 - d1_b) / hv0
   
-  d3 <- estimator_GMV_d3(iS = iS_MP,
+  d3 <- estimator_GMV_d3(p = p, iS = iS_MP,
                          Theta = matrix(1/p, nrow = p, ncol = p),
                          c_n = c_n,
                          verbose = verbose - 1)
@@ -211,7 +100,7 @@ GMV_Moore_Penrose_target_general <- function(Y, centeredCov = TRUE, b = NULL,
 #' @param iS the Moore-Penrose inverse of the sample covariance matrix
 #' 
 #' @noRd
-estimator_GMV_d3 <- function(iS, Theta, c_n, verbose){
+estimator_GMV_d3 <- function(p, iS, Theta, c_n, verbose){
   
   iS2 = iS %*% iS
   iS3 = iS2 %*% iS

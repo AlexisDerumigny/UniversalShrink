@@ -6,9 +6,10 @@
 \usage{
 ridge_higher_order_shrinkage(
   Y,
-  m,
-  centeredCov,
-  t,
+  m = 3,
+  centeredCov = TRUE,
+  t = NULL,
+  interval = c(0, 50),
   verbose = 0,
   inversionMethod = "solve"
 )
@@ -19,14 +20,26 @@ TODO: transpose everything.}
 
 \item{m}{order of the shrinkage. Should be at least 1.}
 
-\item{t}{penalization parameter}
+\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
+computed using centering (i.e. in the general case where the mean of the
+random vector may be non-zero).
+If \code{FALSE} the covariance matrix is computed assuming that the mean of
+the random vector of interest is \code{0} (i.e. does not need to be estimated).}
+
+\item{t, interval}{\code{t} is the penalization parameter, and \code{interval}
+is the interval over which the loss is optimized over (with respect to \code{t}).}
+
+\item{verbose}{a number indicating whether to print intermediary values and
+details about the progress of the computations. A value of \code{0} indicates
+no printing at all, while higher values indicate increasingly more detailed
+(more verbose) output.}
 }
 \description{
 Ridge higher order shrinkage
 }
 \examples{
 
-n = 50
+n = 10
 p = 2 * n
 mu = rep(0, p)
 
@@ -38,13 +51,13 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
-precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
+precision_MoorePenrose_Cent = Moore_Penrose_target(Y = t(X), centeredCov = TRUE)
+precision_MoorePenrose_NoCent = Moore_Penrose_target(Y = t(X), centeredCov = FALSE)
 
 FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
 FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
 
-for (m in 1:5){
+for (m in 1:2){
   cat("m = ", m, "\n")
   precision_higher_order_shrinkage_Cent = 
       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE, t = 10)
@@ -61,27 +74,44 @@ for (m in 1:5){
 precision_higher_order_shrinkage_Cent = 
   ridge_higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE, t = 100)
 
-precision_target_identity_semioptimal_Cent = 
-  ridge_target_identity_semioptimal(Y = t(X), centeredCov = TRUE, t = 100)
-      
-precision_target_general_semioptimal_Cent = 
-  ridge_target_general_semioptimal(Y = t(X), centeredCov = TRUE, t = 100, Pi0 = diag(p))
 
 precision_higher_order_shrinkage_Cent$alpha
-precision_target_identity_semioptimal_Cent$beta_optimal
-precision_target_identity_semioptimal_Cent$alpha_optimal
-
-precision_target_general_semioptimal_Cent$beta_optimal
-precision_target_general_semioptimal_Cent$alpha_optimal
-
 precision_higher_order_shrinkage_Cent$M
-precision_target_identity_semioptimal_Cent$M
-
 precision_higher_order_shrinkage_Cent$hm
-precision_target_identity_semioptimal_Cent$hm
 
 FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
-FrobeniusLoss2(precision_target_identity_semioptimal_Cent, Sigma = Sigma)
+
+
+# For comparison TODO: move this as unit test
+
+precision_target = ridge_target(Y = t(X), centeredCov = TRUE, t = 100)
+FrobeniusLoss2(precision_target, Sigma = Sigma)
+
+
+# Examples for ridge_higher_order_shrinkage where the optimization is done 
+# with respect to t
+
+for (m in 1:2){
+  cat("m = ", m, "\n")
+  precision_higher_order_shrinkage_Cent = 
+      ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE)
+      
+  precision_higher_order_shrinkage_NoCent = 
+      ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE)
+      
+  print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
+  
+  print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
+}
+
+precision_higher_order_shrinkage_Cent = 
+      ridge_higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE)
+
+precision_ridge_target_Cent = ridge_target(Y = t(X), centeredCov = TRUE)
+  
+FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
+FrobeniusLoss2(precision_ridge_target_Cent, Sigma = Sigma)
+
 
 
 }

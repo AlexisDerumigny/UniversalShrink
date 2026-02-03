@@ -4,13 +4,24 @@
 \alias{MPR_no_shrinkage}
 \title{Moore-Penrose-Ridge}
 \usage{
-MPR_no_shrinkage(Y, centeredCov, t)
+MPR_no_shrinkage(Y, centeredCov = TRUE, t, verbose = 0)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
 TODO: transpose everything.}
 
+\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
+computed using centering (i.e. in the general case where the mean of the
+random vector may be non-zero).
+If \code{FALSE} the covariance matrix is computed assuming that the mean of
+the random vector of interest is \code{0} (i.e. does not need to be estimated).}
+
 \item{t}{parameter of the estimation.}
+
+\item{verbose}{a number indicating whether to print intermediary values and
+details about the progress of the computations. A value of \code{0} indicates
+no printing at all, while higher values indicate increasingly more detailed
+(more verbose) output.}
 }
 \value{
 the estimator of the precision matrix, of class
@@ -23,7 +34,7 @@ where \eqn{S} is the sample covariance matrix and \eqn{t} is a given parameter.
 }
 \examples{
 
-n = 100
+n = 10
 p = 5 * n
 mu = rep(0, p)
 
@@ -48,13 +59,14 @@ for (t in c(0.01, 0.2, 0.5, 1, 2)){
   precision_MP = Moore_Penrose(Y = t(X), centeredCov = TRUE)
 
   cat("t = ", t,", Moore-Penrose  , loss =", 
-    FrobeniusLoss2(precision_MP, Sigma = Sigma), "\n")
+    FrobeniusLoss2(precision_MP, Sigma = Sigma, type = "precision"), "\n")
   cat("t = ", t,", ridge          , loss =", 
-    FrobeniusLoss2(precision_ridge, Sigma = Sigma), "\n")
+    FrobeniusLoss2(precision_ridge, Sigma = Sigma, type = "precision"), "\n")
   cat("t = ", t,", MPR            , loss =", 
-    FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma), "\n")
+    FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma, type = "precision"), "\n")
   cat("t = ", t,", MPR alternative, loss =", 
-    FrobeniusLoss2(precision_MPR_Cent_alternative_expression, Sigma = Sigma), "\n")
+    FrobeniusLoss2(precision_MPR_Cent_alternative_expression, Sigma = Sigma,
+                   type = "precision"), "\n")
 }
 
 
@@ -63,5 +75,5 @@ for (t in c(0.01, 0.2, 0.5, 1, 2)){
 Nestor Parolya & Taras Bodnar (2024).
 Reviving pseudo-inverses: Asymptotic properties of large dimensional
 Moore-Penrose and Ridge-type inverses with applications.
-\link{https://doi.org/10.48550/arXiv.2403.15792}
+\doi{10.48550/arXiv.2403.15792}
 }

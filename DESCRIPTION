@@ -18,8 +18,13 @@ Imports:
 Suggests: 
     MASS,
     ggplot2,
+    dplyr,
+    stringr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0),
+    Rmpfr
 VignetteBuilder: knitr
 URL: https://github.com/AlexisDerumigny/UniversalShrink/issues
 BugReports: https://github.com/AlexisDerumigny/UniversalShrink
+Config/testthat/edition: 3

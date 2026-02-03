@@ -2,79 +2,55 @@
 
 # Trace function of a matrix
 tr <- function(M){
-  return (sum(diag(M)))
+  if (is.matrix(M)){
+    result = sum(diag(M))
+  } else {
+    n = nrow(M)
+    diagM = M[cbind(1:n, 1:n)]
+    result = sum(diagM)
+  }
+  return (result)
 }
 
 
-#' Squared Frobenius norm of a matrix
+format_ <- function(x, ...){
+  if (is.numeric(x)){
+    return (format(x, ...))
+  }
+  return (Rmpfr::formatMpfr(x, ...))
+}
+
+#' Conversion of estimated matrices to matrix class
+#' 
+#' @param x object to be converted
+#' @param ... other arguments passed from methods, currently ignored.
+#' 
+#' @return the underlying estimated matrix
 #' 
 #' @export
-FrobeniusNorm2 <- function(M){
-  return ( tr( M %*% t(M) ) )
+as.matrix.EstimatedPrecisionMatrix <- function(x, ...){
+  return (x$estimated_precision_matrix)
+}
+
+#' @rdname as.matrix.EstimatedPrecisionMatrix
+#' @export
+as.matrix.EstimatedCovarianceMatrix <- function(x, ...){
+  return (x$estimated_covariance_matrix)
 }
 
 
-#' Frobenius loss of the estimator of a precision matrix
+#' Constructor for warning conditions of the package
 #'
-#' Generic function to calculate the Frobenius loss of the estimator of a
-#' precision matrix
-#'
-#' @param x An (estimated) matrix, either estimated precision matrix or estimated
-#' covariance matrix
-#' @param Sigma the true covariance matrix
-#' @param type target of the estimator. Must be a character vector of length 1
-#' with one of the following:
-#' \itemize{
-#'   \item \code{type = "precision matrix"} corresponds to the normalized
-#'   Frobenius loss for the estimation of the precision matrix, i.e.
-#'   \code{FrobeniusNorm2(x \%*\% Sigma - diag(p) ) / p}.
-#' }
-#' @param ... Additional arguments passed to methods.
-#'
-#' @export
-FrobeniusLoss2 <- function(x, Sigma, type = "precision matrix", ...) {
-  UseMethod("FrobeniusLoss2")
-}
-
-
-#' @export
-#' @rdname FrobeniusLoss2
-FrobeniusLoss2.matrix <- function(x, Sigma, type = "precision matrix", ...) {
-  if (ncol(x) != nrow(x) || ncol(x) != nrow(Sigma) || ncol(x) != ncol(Sigma)){
-    stop("x and Sigma should be square matrices of the same dimension. ",
-         "Here dim(x) = c(", paste(dim(x), collapse = ","),
-         ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")." )
-  }
-  p = ncol(Sigma)
-  
-  switch (
-    type,
-    
-    "precision matrix" = {
-      result = FrobeniusNorm2(x %*% Sigma - diag(p) ) / p
-    },
-    
-    # default
-    {
-      stop("Type " , type, "is not implemented yet.")
-    }
+#' @noRd
+UniversalShrink_warning_condition_base <- function(message, subclass = NULL,
+                                                   call = sys.call(-1), ...) {
+  # warningCondition() automatically adds 'warning' and 'condition' to the class
+  return (
+    warningCondition(
+      message = message,
+      class = c(subclass, "UniversalShrinkWarning"), # We add a base warning class
+      call = call,
+      ... # Allows for additional custom fields
+    )
   )
-  
-  
-  return (result)
 }
-
-
-#' @export
-#' @rdname FrobeniusLoss2
-FrobeniusLoss2.EstimatedPrecisionMatrix <- function(x, Sigma,
-                                                    type = "precision matrix", ...) {
-  if (type != "precision matrix"){
-    stop("Type is chosen to be ", type, "but x is of type", EstimatedPrecisionMatrix)
-  }
-  result = FrobeniusLoss2(x$estimated_precision_matrix, Sigma, type = "precision matrix")
-  
-  return (result)
-}
-
-

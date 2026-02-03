@@ -10,8 +10,20 @@ GMV_Moore_Penrose(Y, centeredCov = TRUE)
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
 TODO: transpose everything.}
+
+\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
+computed using centering (i.e. in the general case where the mean of the
+random vector may be non-zero).
+If \code{FALSE} the covariance matrix is computed assuming that the mean of
+the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 }
 \description{
-Optimal portfolio weights based on a plug-in of the Moore-Penrose inverse
-of the sample covariance matrix
+Having the obervation matrix \eqn{\mathbf{Y}_n} and the corresponding sample
+covariance matrix \eqn{\mathbf{S}_n} this estimator is given
+by
+\deqn{
+\mathbf{w}_{MP}=\frac{\mathbf{S}^+_n\mathbf{1}}{\mathbf{1}^\top\mathbf{S}^+_n\mathbf{1}},
+}
+where \eqn{\mathbf{S}^+_n} is the Moore-Penrose (pseudo) inverse of
+\eqn{\mathbf{S}_n} and and \eqn{\mathbf{1}} is a vector of ones.
 }

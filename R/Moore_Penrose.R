@@ -2,20 +2,34 @@
 
 #' Moore-Penrose inverse of the sample covariance matrix
 #' 
+#' Having a centered (by default) or non-centered observation matrix 
+#' \eqn{\tilde{\mathbf{Y}}_n} with the corresponding sample covariance matrix 
+#' \eqn{\mathbf{S}_n}. The Moore-Penrose inverse of this sample
+#' covariance matrix, denoted by \eqn{\mathbf{S}^+_n} is computed by the following
+#'  formula
+#' \deqn{
+#' \mathbf{S}_n^+=\left(\frac{1}{n}\tilde{\mathbf{Y}}_n\tilde{\mathbf{Y}}_n^\top\right)^+
+#' =\frac{1}{\sqrt{n}}\tilde{\mathbf{Y}}_n\left(\frac{1}{n}
+#' \tilde{\mathbf{Y}}_n^\top\tilde{\mathbf{Y}}_n\right)^{-2}
+#' \frac{1}{\sqrt{n}}\tilde{\mathbf{Y}}_n^\top.
+#' } See, the beginning of the proof of Theorem 2.1 in Bodnar and Parolya (2026)
+#' for the details how the centering was done.
+#' 
+#' 
 #' 
 #' @param Y data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
-#' @param centeredCov Boolean: do we center (\code{TRUE}) or not (\code{FALSE}).
+#' @inheritParams cov_with_centering
 #' 
 #' @returns the estimator of the precision matrix
 #' (a `p` by `p` matrix, i.e. the inverse of the covariance matrix).
 #' 
 #' @references 
-#' Nestor Parolya & Taras Bodnar (2024).
+#' Nestor Parolya & Taras Bodnar (2026).
 #' Reviving pseudo-inverses: Asymptotic properties of large dimensional
 #' Moore-Penrose and Ridge-type inverses with applications.
-#' \link{https://doi.org/10.48550/arXiv.2403.15792}
+#' \doi{10.48550/arXiv.2403.15792}
 #' 
 #' @examples
 #' 
@@ -32,6 +46,8 @@
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
 #' iS_MP = Moore_Penrose(Y = t(X), centeredCov = TRUE)
+#' # Convert to matrix class for computations
+#' iS_MP = as.matrix(iS_MP)
 #' 
 #' # Sample covariance matrix
 #' Y = t(X)
@@ -51,7 +67,7 @@
 #' sum((iS_MP %*% S - t(iS_MP %*% S))^2)
 #' 
 #' @export
-Moore_Penrose <- function(Y, centeredCov)
+Moore_Penrose <- function(Y, centeredCov = TRUE)
 {
   # Get sizes of Y
   p = nrow(Y)
@@ -63,31 +79,44 @@ Moore_Penrose <- function(Y, centeredCov)
   if (centeredCov){
     Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
     
-    # Sample covariance matrix
-    S <- Y %*% Jn %*% t(Y) / (n-1)
-    
     # We remove the last eigenvector because the eigenvalues are sorted
     # in decreasing order.
     Hn = eigen(Jn)$vectors[, -n]
     Ytilde = Y %*% Hn
     
-    # Inverse companion covariance
-    iYtilde <- solve(t(Ytilde) %*% Ytilde / (n-1) )
-    
-    # Moore-Penrose inverse
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
-    
+    n_adjusted = n - 1
   } else {
-    S <- Y %*% t(Y)/n
+    Ytilde <- Y
     
-    # Inverse companion covariance
-    iY <- solve(t(Y) %*% Y / n)
-    
-    # Moore-Penrose inverse
-    iS_MP <- Y %*% iY %*% iY %*% t(Y)/n
+    n_adjusted = n
+  }
+  # Inverse companion covariance
+  iYtilde <- solve(t(Ytilde) %*% Ytilde / n_adjusted)
+  
+  # Moore-Penrose inverse
+  if (n_adjusted < p){
+    if (centeredCov){
+      S <- Y %*% Jn %*% t(Y) / (n-1)
+    } else {
+      S <- S <- Y %*% t(Y) / n
+    }
+    iS_MP <- MASS::ginv(S)
+  } else if (n_adjusted > p){
+    # Explicit expression which could outperform `MASS::ginv`
+    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
+  } else {
+    stop("This estimator is not defined for p = n - 1 in the centered case,",
+         "and for p = n in the non-centered case. Here p = ", p,
+         "and n = ", n, ".")
   }
   
-  return (iS_MP)
+  result = list(
+    estimated_precision_matrix = iS_MP
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
 }
 
 

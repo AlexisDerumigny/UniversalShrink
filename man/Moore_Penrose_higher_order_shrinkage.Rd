@@ -4,30 +4,66 @@
 \alias{Moore_Penrose_higher_order_shrinkage}
 \title{Moore-Penrose higher order shrinkage of the precision matrix}
 \usage{
-Moore_Penrose_higher_order_shrinkage(Y, m, centeredCov)
+Moore_Penrose_higher_order_shrinkage(Y, m, centeredCov = TRUE, verbose = 0)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
 TODO: transpose everything.}
 
 \item{m}{order of the shrinkage. Should be at least 1.}
+
+\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
+computed using centering (i.e. in the general case where the mean of the
+random vector may be non-zero).
+If \code{FALSE} the covariance matrix is computed assuming that the mean of
+the random vector of interest is \code{0} (i.e. does not need to be estimated).}
+
+\item{verbose}{a number indicating whether to print intermediary values and
+details about the progress of the computations. A value of \code{0} indicates
+no printing at all, while higher values indicate increasingly more detailed
+(more verbose) output.}
 }
 \value{
 the estimator of the precision matrix
 (a \code{p} by \code{p} matrix, i.e. the inverse of the covariance matrix).
 }
 \description{
-This function compute an estimator of the precision matrix by using the
+This function computes an estimator of the precision matrix by using the
 polynomial
-\deqn{\alpha_0 I_p + \sum_{k = 1}^m \alpha_k \left(\widehat{\Sigma^{-1}}^{MP}\right)^k}
-where \eqn{\alpha_0, \dots, \alpha_p} are carefully chosen coefficients,
-\eqn{\widehat{\Sigma^{-1}}^{MP}} is the Moore-Penrose inverse of the sample
-covariance matrix
-and \eqn{I_p} is the identity matrix of size \eqn{p}.
+\deqn{
+\mathbf{S}_{n;HOS}^+=\hat{\alpha}_0^+\mathbf{I}_p 
++\sum_{j=1}^m\hat{\alpha}^+_j(\mathbf{S}^+_n)^j,
+}
+where \eqn{\hat{\boldsymbol{\alpha}}^{+}(m)=(\hat{\alpha}_0^+,\hat{\alpha}_1^+,
+\ldots,\hat{\alpha}_m^+)^\top} given by
+\deqn{
+\hat{\boldsymbol{\alpha}}^{+}(m)=\widehat{\mathbf{M}}^+(m)^{-1} \hat{\mathbf{m}}^+(m)
+}  with
+\deqn{
+\hat{\mathbf{m}}^+(m)=
+ \begin{pmatrix}
+\hat{q}_1\\
+\hat{s}_{1,1}\\
+\vdots\\
+\hat{s}_{m,1}
+\end{pmatrix}
+\quad \text{and}\quad
+\widehat{\mathbf{M}}^+(m)=\begin{pmatrix}
+\hat{q}_2 & \hat{s}_{1,2}  & \ldots & \hat{s}_{m,2} \\
+\hat{s}_{1,2}& \hat{s}_{2,2}  & \ldots & \hat{s}_{m+1,2} \\
+\vdots&\vdots&\ddots&\vdots\\
+\hat{s}_{m,2}& \hat{s}_{m+1,2} & \ldots & \hat{s}_{2m,2}
+\end{pmatrix},
+} where
+\eqn{\mathbf{S}^+_n} is the Moore-Penrose inverse of the sample
+covariance matrix and \eqn{\mathbf{I}_p} is the identity matrix of size \eqn{p}.
+The details on the computation of the terms \eqn{\hat q_1}, \eqn{\hat q_2} and
+\eqn{s_{i,j}} are given in
+Theorem 2.5 of Bodnar and Parolya (2025).
 }
 \examples{
 
-n = 50
+n = 10
 p = 2 * n
 mu = rep(0, p)
 
@@ -39,19 +75,15 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-FrobeniusNorm2 <- function(M){sum(diag(M \%*\% t(M)))}
-
 precision_MoorePenrose_Cent = 
-  Moore_Penrose_shrinkage(Y = t(X), centeredCov = TRUE)
+  Moore_Penrose_target(Y = t(X), centeredCov = TRUE)
 precision_MoorePenrose_NoCent = 
-  Moore_Penrose_shrinkage(Y = t(X), centeredCov = FALSE)
-  
-FrobeniusLoss2 <- function(M){FrobeniusNorm2(M \%*\% Sigma - diag(p) ) / p}
+  Moore_Penrose_target(Y = t(X), centeredCov = FALSE)
 
-print(FrobeniusLoss2(precision_MoorePenrose_Cent))
-print(FrobeniusLoss2(precision_MoorePenrose_NoCent))
+print(FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma))
+print(FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma))
 
-for (m in 1:5){
+for (m in 1:3){
   cat("m = ", m, "\n")
   precision_higher_order_shrinkage_Cent = 
       Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE)
@@ -59,15 +91,16 @@ for (m in 1:5){
   precision_higher_order_shrinkage_NoCent = 
       Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE)
       
-  print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent$estimated_precision_matrix, Sigma = Sigma))
+  print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma))
   
-  print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent$estimated_precision_matrix, Sigma = Sigma))
+  print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent, Sigma))
 }
 
 
 
 }
 \references{
-Nestor Parolya & Taras Bodnar (2024).
+Nestor Parolya & Taras Bodnar (2025).
 Higher-order nonlinear shrinkage estimator of large-dimensional precision matrix.
+\doi{10.1090/tpms/1239}
 }

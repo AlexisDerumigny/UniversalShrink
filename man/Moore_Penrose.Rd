@@ -4,20 +4,35 @@
 \alias{Moore_Penrose}
 \title{Moore-Penrose inverse of the sample covariance matrix}
 \usage{
-Moore_Penrose(Y, centeredCov)
+Moore_Penrose(Y, centeredCov = TRUE)
 }
 \arguments{
 \item{Y}{data matrix (rows are features, columns are observations).
 TODO: transpose everything.}
 
-\item{centeredCov}{Boolean: do we center (\code{TRUE}) or not (\code{FALSE}).}
+\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
+computed using centering (i.e. in the general case where the mean of the
+random vector may be non-zero).
+If \code{FALSE} the covariance matrix is computed assuming that the mean of
+the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 }
 \value{
 the estimator of the precision matrix
 (a \code{p} by \code{p} matrix, i.e. the inverse of the covariance matrix).
 }
 \description{
-Moore-Penrose inverse of the sample covariance matrix
+Having a centered (by default) or non-centered observation matrix
+\eqn{\tilde{\mathbf{Y}}_n} with the corresponding sample covariance matrix
+\eqn{\mathbf{S}_n}. The Moore-Penrose inverse of this sample
+covariance matrix, denoted by \eqn{\mathbf{S}^+_n} is computed by the following
+formula
+\deqn{
+\mathbf{S}_n^+=\left(\frac{1}{n}\tilde{\mathbf{Y}}_n\tilde{\mathbf{Y}}_n^\top\right)^+
+=\frac{1}{\sqrt{n}}\tilde{\mathbf{Y}}_n\left(\frac{1}{n}
+\tilde{\mathbf{Y}}_n^\top\tilde{\mathbf{Y}}_n\right)^{-2}
+\frac{1}{\sqrt{n}}\tilde{\mathbf{Y}}_n^\top.
+} See, the beginning of the proof of Theorem 2.1 in Bodnar and Parolya (2026)
+for the details how the centering was done.
 }
 \examples{
 
@@ -34,6 +49,8 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
 iS_MP = Moore_Penrose(Y = t(X), centeredCov = TRUE)
+# Convert to matrix class for computations
+iS_MP = as.matrix(iS_MP)
 
 # Sample covariance matrix
 Y = t(X)
@@ -54,8 +71,8 @@ sum((iS_MP \%*\% S - t(iS_MP \%*\% S))^2)
 
 }
 \references{
-Nestor Parolya & Taras Bodnar (2024).
+Nestor Parolya & Taras Bodnar (2026).
 Reviving pseudo-inverses: Asymptotic properties of large dimensional
 Moore-Penrose and Ridge-type inverses with applications.
-\link{https://doi.org/10.48550/arXiv.2403.15792}
+\doi{10.48550/arXiv.2403.15792}
 }

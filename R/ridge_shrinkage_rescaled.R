@@ -16,19 +16,19 @@
 #' Wang, C., Pan, G., Tong, T., & Zhu, L. (2015).
 #' Shrinkage estimation of large dimensional precision matrix using random matrix theory.
 #' Statistica Sinica, 993-1008.
-#' \link{http://dx.doi.org/10.5705/ss.2012.328}
+#' \doi{10.5705/ss.2012.328}
 #' 
 #' @examples
 #' p = 200
 #' Sigma = diag(seq(1, 0.02, length.out = p))
 #' mu = rep(0, p)
 #' X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
-#' precision_OptimalRidge = ridge_shrinkage_rescaled_optimal(t(X))
+#' precision_OptimalRidge = ridge_shrinkage_rescaled(t(X))
 #' 
 #' precisionTrue = solve(Sigma)
 #' 
-#' estimatedCov_NLshrink = analytical_NL_shrinkage(t(X))
-#' estimatedCov_QISshrink = quadratic_inverse_shrinkage(X)
+#' estimatedCov_NLshrink = cov_analytical_NL_shrinkage(t(X))
+#' estimatedCov_QISshrink = cov_quadratic_inverse_shrinkage(X)
 #' 
 #' precision_NLshrink = solve(estimatedCov_NLshrink)
 #' precision_QISshrink = solve(estimatedCov_QISshrink)
@@ -39,7 +39,7 @@
 #' 
 #' 
 #' @export
-ridge_shrinkage_rescaled_optimal <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
+ridge_shrinkage_rescaled <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
 {
   if (eps <= 0 || eps > pi/2){
     stop("'eps' must be between 0 and pi/2")
@@ -51,7 +51,7 @@ ridge_shrinkage_rescaled_optimal <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
     stop("'eps' must be strictly smaller than 'upp'.")
   }
   
-  S <- cov(t(Y))
+  S <- stats::cov(t(Y))
   
   p = nrow(Y)
   n = ncol(Y)
@@ -79,8 +79,8 @@ ridge_shrinkage_rescaled_optimal <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
     return(hL_WPTZ)
   }
   
-  hL_WPTZ_max <- optim(1.5, hL_WPTZ, lower = eps, upper = upp, method = "L-BFGS-B",
-                       control = list(fnscale = -1))
+  hL_WPTZ_max <- stats::optim(1.5, hL_WPTZ, lower = eps, upper = upp, method = "L-BFGS-B",
+                              control = list(fnscale = -1))
   t_optimal <- tan(hL_WPTZ_max$par)
   
   iS_t<-solve(S / t_optimal + Ip)

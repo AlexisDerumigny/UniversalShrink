@@ -4,23 +4,25 @@
 #' 
 #' This functions return the optimal portfolio weights defined by
 #' \deqn{
-#' w = \dfrac{\Sigma^{-1} \mathbf{1}}{\mathbf{1}^T \Sigma^{-1} \mathbf{1}}
+#' \mathbf{w} = \dfrac{\boldsymbol{\Sigma}^{-1} \mathbf{1}}{\mathbf{1}^T 
+#' \boldsymbol{\Sigma}^{-1} \mathbf{1}}
 #' }
-#' i.e. \eqn{w = (w_1, \dots, w_p)} where for \eqn{j = 1, \dots, p}, we have
+#' i.e. \eqn{\mathbf{w} = (w_1, \dots, w_p)^\top} where for \eqn{j = 1, \dots, p}, we have
 #' \deqn{
-#' w_j = \dfrac{\sum_{k=1}^p [\Sigma^{-1}]_{j,k}}{
-#' \sum_{k,l = 1}^p [\Sigma^{-1}]_{k,l}}.
+#' w_j = \dfrac{\sum_{k=1}^p [\boldsymbol{\Sigma}^{-1}]_{j,k}}{
+#' \sum_{k,l = 1}^p [\boldsymbol{\Sigma}^{-1}]_{k,l}}.
 #' }
 #' Here \eqn{\mathbf{1}} is a vector \eqn{1} of size \eqn{p}, and
-#' \eqn{\Sigma^{-1}} is the precision matrix (or an estimator thereof), of size
+#' \eqn{\boldsymbol{\Sigma}^{-1}} is the true precision matrix (or an estimator thereof), of size
 #' \eqn{p \times p}, where \eqn{p} is the number of assets that are considered
-#' and \eqn{\Sigma} is the covariance matrix of the vector of asset returns.
+#' and \eqn{\boldsymbol{\Sigma}} is the (true or estimated) covariance matrix of the vector of asset returns.
 #' 
 #' 
 #' @param estimatedPrecisionMatrix a matrix of size \eqn{p \times p}, which
 #' is estimating the precision matrix \eqn{\Sigma^{-1}} 
 #' ( = the inverse of the covariance matrix of the vector of asset returns that
 #' are considered).
+#' Or an object that can be converted to the matrix class by \code{as.matrix}.
 #' 
 #' @returns a vector of size \eqn{p} with the computed portfolio weights, with
 #' the minimum variance, i.e. the portfolio that has the lowest variance among
@@ -28,6 +30,8 @@
 #' 
 #' @export
 GMV_PlugIn <- function(estimatedPrecisionMatrix){
+  
+  estimatedPrecisionMatrix = as.matrix(estimatedPrecisionMatrix)
   
   # result = (estimatedPrecisionMatrix %*% ones) / 
   #                 (ones %*% estimatedPrecisionMatrix %*% ones)

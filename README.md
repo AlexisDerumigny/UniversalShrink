@@ -11,7 +11,7 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 # 1. Functions for estimation of the covariance matrix
 
 
-- `analytical_NL_shrinkage()` and `quadratic_inverse_shrinkage()`: perform
+- `cov_analytical_NL_shrinkage()` and `cov_quadratic_inverse_shrinkage()`: perform
   estimation of the covariance matrix using non-linear shrinkage. Both estimators
   are optimal for the Frobenius norm (asymptotically).
 
@@ -25,9 +25,9 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 - `Moore_Penrose()`: Moore-Penrose estimator of the precision matrix, obtained
   by computing the Moore-Penrose inverse of the sample covariance matrix.
 
-- `Moore_Penrose_shrinkage()` and `Moore_Penrose_shrinkage_toIP`: perform a
-  first-order shrinkage of the Moore-Penrose estimator of the precision matrix,
-  respectively towards a general target and towards the identity matrix.
+- `Moore_Penrose_target()`: perform a first-order shrinkage of the Moore-Penrose
+  estimator of the precision matrix, towards an arbitrary (fixed)  target such
+  as the identity matrix.
   
 - `Moore_Penrose_higher_order_shrinkage()`: estimate the precision matrix via
   a polynomial in the Moore-Penrose estimator of the precision matrix.
@@ -35,33 +35,22 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 
 ## 2.2. Ridge-type estimators
 
-- `ridge_target_identity()`, `ridge_target_identity_semioptimal()` and 
-  `ridge_target_identity_optimal` perform first-order shrinkage of the Ridge
-  estimator towards the identity matrix.
-  
-- `ridge_target_general()`, `ridge_target_general_semioptimal()`,
-  `ridge_target_general_optimal()`  perform first-order shrinkage of the Ridge
-  estimator towards a general target.
-  
-TODO: 
-- implement an optimized in $t$ version of `ridge_no_shrinkage`
+- `ridge_no_shrinkage()`: the usual ridge estimator
 
-TODO: clean documentation of the following functions:
-- `ridge_no_shrinkage`
-- `ridge_higher_order_shrinkage`
-- `ridge_higher_order_shrinkage_optimal`
-- `ridge_shrinkage_rescaled_optimal`
+- `ridge_target()`: perform first-order shrinkage of the Ridge estimator towards
+  an arbitrary (fixed) target such as the identity matrix.
+  
+- `ridge_higher_order_shrinkage()`: perform higher-order shrinkage of the Ridge
+  estimator
+  
+- `ridge_shrinkage_rescaled()`
 
 
 ## 2.3. Moore-Penrose-Ridge "hybrid" estimators
 
 - `MPR_no_shrinkage()`
 
-- `MPR_target_identity_optimal()`, `MPR_target_identity_semioptimal()`,
-  `MPR_target_identity()`
-
-- `MPR_target_general()`, `MPR_target_general_semioptimal()`,
-  `MPR_target_general_optimal()`
+- `MPR_target()`
 
 
 # 3. Functions for estimation of optimal portfolio weights
@@ -75,11 +64,9 @@ TODO: clean documentation of the following functions:
 - `GMV_Moore_Penrose()`: using the Moore-Penrose inverse `Moore_Penrose()` of
   the precision matrix as an input for the plug-in estimation.
 
-- `GMV_Moore_Penrose_target_eq()`: performs a first-order shrinkage of the
-  estimator given by `GMV_Moore_Penrose()` towards the equally-weighted portfolio.
-
-- `GMV_Moore_Penrose_target_general()`: performs a first-order shrinkage of the
-  estimator given by `GMV_Moore_Penrose()` towards an arbitrary, fixed, portfolio.
+- `GMV_Moore_Penrose_target()`: performs a first-order shrinkage of the
+  estimator given by `GMV_Moore_Penrose()` towards an arbitrary (fixed) portfolio
+  such as the equally weighted portfolio.
 
 
 
