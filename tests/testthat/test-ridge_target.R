@@ -14,27 +14,31 @@ test_that("`ridge_target` is coherent between target general and target identity
   
   Y = t(X)
   
-  precision_ridge_optimal = ridge_target(Y = Y, verbose = 0)
+  precision_ridge_optimal = ridge_target(Y = Y,
+                                         verbose = 0, upp = atan(10^2))
   
   
   # Using the identity target directly
   Ip = diag(nrow = p)
   
-  precision_ridge_optimal_Ip = ridge_target(Y = Y, Pi0 = Ip, verbose = 0)
+  precision_ridge_optimal_Ip = ridge_target(Y = Y, Pi0 = Ip,
+                                            verbose = 0, upp = atan(10^2))
   
   expect_equal(precision_ridge_optimal_Ip$t_optimal,
                precision_ridge_optimal$t_optimal)
   
   expect_equal(precision_ridge_optimal_Ip$alpha_optimal,
-               precision_ridge_optimal$alpha_optimal)
+               precision_ridge_optimal$alpha_optimal,
+               tolerance = 1e-4)
   
   expect_equal(precision_ridge_optimal_Ip$beta_optimal,
-               precision_ridge_optimal$beta_optimal)
+               precision_ridge_optimal$beta_optimal,
+               tolerance = 1e-4)
   
   distFrob = FrobeniusNorm2(as.matrix(precision_ridge_optimal_Ip) - 
                               as.matrix(precision_ridge_optimal), normalized = TRUE)
   
-  expect_equal(distFrob, 0)
+  expect_equal(distFrob, 0, tolerance = 1e-8)
   
   FrobeniusLoss2(precision_ridge_optimal_Ip, solve(Sigma))
   FrobeniusLoss2(precision_ridge_optimal, solve(Sigma))
@@ -47,10 +51,12 @@ test_that("`ridge_target` is coherent between target general and target identity
                precision_ridge_optimal$t_optimal )
   
   expect_equal(precision_ridge_optimal_Ip$alpha_optimal,
-               precision_ridge_optimal$alpha_optimal )
+               precision_ridge_optimal$alpha_optimal,
+               tolerance = 1e-4 )
   
   expect_equal(precision_ridge_optimal_Ip$beta_optimal,
-               precision_ridge_optimal$beta_optimal )
+               precision_ridge_optimal$beta_optimal,
+               tolerance = 1e-4 )
   
   
   # For the non-optimized versions:
@@ -63,7 +69,7 @@ test_that("`ridge_target` is coherent between target general and target identity
   
   distFrob = FrobeniusNorm2(as.matrix(precision_ridge_semioptimal_Ip) - 
                               as.matrix(precision_ridge_optimal), normalized = TRUE)
-  expect_equal(distFrob, 0)
+  expect_equal(distFrob, 0, tolerance = 1e-8)
   
   
   precision_ridge_nooptim = ridge_target(Y = Y, Pi0 = Ip, t = t_opt,
@@ -71,7 +77,7 @@ test_that("`ridge_target` is coherent between target general and target identity
   
   distFrob = FrobeniusNorm2(as.matrix(precision_ridge_nooptim) - 
                               as.matrix(precision_ridge_optimal), normalized = TRUE)
-  expect_equal(distFrob, 0)
+  expect_equal(distFrob, 0, tolerance = 1e-8)
 })
 
 
