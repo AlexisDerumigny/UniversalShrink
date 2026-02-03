@@ -86,7 +86,7 @@ estimator_d0_1p_Sigma2Pi0 <- function(p, t0, hat_v_t0, cn, Pi0, Ip, Sn, iS_ridge
 
 #' Estimator of d1(t0, Sigma^2 / p)
 #' @noRd
-estimator_d1_1p_Sigma2 <- function(t0, hat_v_t0, p, cn, Pi0, Ip, Sn, iS_ridge, verbose){
+estimator_d1_1p_Sigma2 <- function(t0, hat_v_t0, p, cn, Ip, Sn, iS_ridge, verbose){
   first_term = (1 / hat_v_t0^2)
   
   d1_t0_1p_Ip = estimator_ridge_d1_thetaknown(iS_ridge = iS_ridge, t = t0,
@@ -132,7 +132,7 @@ best_alphabeta_ridge_shrinkage <- function(p, t0, cn, Pi0, Ip, Sn, iS_ridge, ver
                                               iS_ridge = iS_ridge, verbose = verbose - 1)
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
-                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
+                                        cn = cn, Ip = Ip, Sn = Sn,
                                         iS_ridge = iS_ridge, verbose = verbose - 1)
   
   q1 = estimator_q1(Sn = Sn, Theta = Pi0 / p)
@@ -390,7 +390,7 @@ loss_L2_ridge_optimal <- function(t, Sn, p, Ip, cn, Pi0, iS_ridge, verbose)
                                               iS_ridge = iS_ridge, verbose = verbose - 1)
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t, hat_v_t0 = hat_v_t0, p = p,
-                                        cn = cn, Pi0 = Pi0, Ip = Ip, Sn = Sn,
+                                        cn = cn, Ip = Ip, Sn = Sn,
                                         iS_ridge = iS_ridge, verbose = verbose - 1)
   
   numerator = (d0_1p_Sigma * q2 - d0_1p_Sigma2Pi0 * q1)^2
