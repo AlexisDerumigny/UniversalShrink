@@ -14,7 +14,16 @@ FrobeniusNorm2 <- function(M, normalized){
 #' Frobenius norm and Frobenius losses of the estimator of a matrix
 #'
 #' Generic function to calculate the Frobenius norm/loss of (the estimator of) a
-#' matrix.
+#' matrix. For a generic matrix \eqn{M}, the (squared) Frobenius norm is defined in the following way
+#' \deqn{
+#' \code{FrobeniusNorm2}=||\mathbf{M}||^2_F=\text{\rm tr} \left[\mathbf{M}\mathbf{M}^\top\right]\,,
+#' } while (squared) Frobenius loss analogously is defined by
+#' \deqn{
+#' \code{FrobeniusLoss2}= ||\mathbf{M}-g(\mathbf{\boldsymbol{Sigma}})||^2_F\,,
+#' } where \eqn{M} here denotes a suitable estimator and the function 
+#' \eqn{g(x)=x} when \code{type="covariance matrix"} is
+#' chosen, otherwise \eqn{g(x)=1/x} for \code{type="precision matrix"}. 
+#' 
 #'
 #' @param x,M An (estimated) square matrix of size \code{p}
 #' @param M1,M2 two square matrices of the same dimension
