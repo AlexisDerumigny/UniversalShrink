@@ -92,11 +92,13 @@
 #' @export
 #' 
 ridge_higher_order_shrinkage <- function(
-    Y, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50), verbose = 0)
+    Y, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50), verbose = 0,
+	inversionMethod = "solve")
 {
   if (is.null(t)){
     result = ridge_higher_order_shrinkage_optimal(
-      Y = Y, m = m, centeredCov = centeredCov, verbose = verbose, interval = interval)
+      Y = Y, m = m, centeredCov = centeredCov, verbose = verbose, interval = interval,
+	  inversionMethod = inversionMethod)
     
   } else {
     result = ridge_higher_order_shrinkage_non_optimized(
@@ -105,7 +107,8 @@ ridge_higher_order_shrinkage <- function(
 }
 
 
-ridge_higher_order_shrinkage_non_optimized <- function(Y, m, centeredCov, t, verbose = 0)
+ridge_higher_order_shrinkage_non_optimized <- function(Y, m, centeredCov, t, verbose = 0,
+                                                       inversionMethod = "solve")
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_non_optimized` (known t)...\n")
@@ -146,7 +149,12 @@ ridge_higher_order_shrinkage_non_optimized <- function(Y, m, centeredCov, t, ver
   
   # TODO: compute all estimators for smaller m here using submatrices of this matrix
   
-  alpha = solve(estimatedM$M) %*% estimatedM$hm
+  if (inversionMethod == "solve"){
+    alpha = solve(estimatedM$M) %*% estimatedM$hm
+  } else if (inversionMethod == "ginv"){
+    alpha = MASS::ginv(estimatedM$M) %*% estimatedM$hm
+  }
+  
   if (verbose > 0){
     cat("Optimal alpha: \n")
     print(alpha)
@@ -179,7 +187,7 @@ ridge_higher_order_shrinkage_non_optimized <- function(Y, m, centeredCov, t, ver
 
 ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov = TRUE,
                                                  verbose = 0,
-                                                 interval = c(0, 50) )
+                                                 interval = c(0, 50))
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_optimal` (with unknown t)...\n")

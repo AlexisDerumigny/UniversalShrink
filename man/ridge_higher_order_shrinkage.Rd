@@ -10,7 +10,8 @@ ridge_higher_order_shrinkage(
   centeredCov = TRUE,
   t = NULL,
   interval = c(0, 50),
-  verbose = 0
+  verbose = 0,
+  inversionMethod = "solve"
 )
 }
 \arguments{
