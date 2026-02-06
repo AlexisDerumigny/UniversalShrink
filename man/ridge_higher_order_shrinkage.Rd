@@ -33,6 +33,10 @@ is the interval over which the loss is optimized over (with respect to \code{t})
 details about the progress of the computations. A value of \code{0} indicates
 no printing at all, while higher values indicate increasingly more detailed
 (more verbose) output.}
+
+\item{inversionMethod}{method for inverting the matrix \eqn{M}. Current
+possible choices are \code{solve} (usual inverse) and \code{ginv}
+(Moore-Penrose generalize inverse via \code{MASS::\link[MASS]{ginv}}).}
 }
 \description{
 Ridge higher order shrinkage

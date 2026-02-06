@@ -10,6 +10,10 @@
 #' @param t,interval \code{t} is the penalization parameter, and \code{interval}
 #' is the interval over which the loss is optimized over (with respect to \code{t}).
 #' 
+#' @param inversionMethod method for inverting the matrix \eqn{M}. Current
+#' possible choices are \code{solve} (usual inverse) and \code{ginv}
+#' (Moore-Penrose generalize inverse via \code{MASS::\link[MASS]{ginv}}).
+#' 
 #' @inheritParams cov_with_centering
 #' 
 #' @examples
@@ -93,22 +97,22 @@
 #' 
 ridge_higher_order_shrinkage <- function(
     Y, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50), verbose = 0,
-	inversionMethod = "solve")
+    inversionMethod = "solve")
 {
   if (is.null(t)){
     result = ridge_higher_order_shrinkage_optimal(
-      Y = Y, m = m, centeredCov = centeredCov, verbose = verbose, interval = interval,
-	  inversionMethod = inversionMethod)
+      Y = Y, m = m, centeredCov = centeredCov, verbose = verbose, interval = interval)
     
   } else {
     result = ridge_higher_order_shrinkage_non_optimized(
-      Y = Y, m = m, centeredCov = centeredCov, t = t, verbose = verbose)
+      Y = Y, m = m, centeredCov = centeredCov, t = t, verbose = verbose,
+      inversionMethod = inversionMethod)
   }
 }
 
 
-ridge_higher_order_shrinkage_non_optimized <- function(Y, m, centeredCov, t, verbose = 0,
-                                                       inversionMethod = "solve")
+ridge_higher_order_shrinkage_non_optimized <- function(
+    Y, m, centeredCov, t, verbose = 0, inversionMethod = "solve")
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_non_optimized` (known t)...\n")
@@ -152,6 +156,9 @@ ridge_higher_order_shrinkage_non_optimized <- function(Y, m, centeredCov, t, ver
   if (inversionMethod == "solve"){
     alpha = solve(estimatedM$M) %*% estimatedM$hm
   } else if (inversionMethod == "ginv"){
+    if (! requireNamespace("MASS", quietly = TRUE)){
+      stop("MASS needs to be installed to use `inversionMethod == 'ginv'.`")
+    }
     alpha = MASS::ginv(estimatedM$M) %*% estimatedM$hm
   }
   
