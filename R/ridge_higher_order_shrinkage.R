@@ -101,7 +101,8 @@ ridge_higher_order_shrinkage <- function(
 {
   if (is.null(t)){
     result = ridge_higher_order_shrinkage_optimal(
-      Y = Y, m = m, centeredCov = centeredCov, verbose = verbose, interval = interval)
+      Y = Y, m = m, centeredCov = centeredCov, verbose = verbose,
+      interval = interval, inversionMethod = inversionMethod)
     
   } else {
     result = ridge_higher_order_shrinkage_non_optimized(
@@ -192,9 +193,9 @@ ridge_higher_order_shrinkage_non_optimized <- function(
 
 
 
-ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov = TRUE,
-                                                 verbose = 0,
-                                                 interval = c(0, 50))
+ridge_higher_order_shrinkage_optimal <- function(
+    Y, m, centeredCov = TRUE, verbose = 0, interval = c(0, 50),
+    inversionMethod = "solve")
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_optimal` (with unknown t)...\n")
@@ -260,7 +261,14 @@ ridge_higher_order_shrinkage_optimal <- function(Y, m, centeredCov = TRUE,
                            S_t_inverse = S_t_inverse,
                            t = optimal_t, verbose = verbose)
   
-  alpha = solve(estimatedM$M) %*% estimatedM$hm
+  if (inversionMethod == "solve"){
+    alpha = solve(estimatedM$M) %*% estimatedM$hm
+  } else if (inversionMethod == "ginv"){
+    if (! requireNamespace("MASS", quietly = TRUE)){
+      stop("MASS needs to be installed to use `inversionMethod == 'ginv'.`")
+    }
+    alpha = MASS::ginv(estimatedM$M) %*% estimatedM$hm
+  }
   
   estimated_precision_matrix = alpha[1] * Ip
   power_S_t_inverse = Ip
