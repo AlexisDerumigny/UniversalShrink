@@ -25,8 +25,7 @@
 #'     (2020) and is available in the R-package \eqn{\textit{HDShOP}}. 
 #' 
 #' 
-#' @param X data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
+#' @param X data matrix (rows are observations, columns are features).
 #' 
 #' @inheritParams cov_with_centering
 #' 
@@ -50,7 +49,7 @@
 #' mu = rep(0, p)
 #' X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
 #' estimatedCov_sample = cov(X)
-#' estimatedCov_shrink = cov_analytical_NL_shrinkage(t(X))
+#' estimatedCov_shrink = cov_analytical_NL_shrinkage(X)
 #' 
 #' # We now compare the distance between the true and both estimators.
 #' FrobeniusLoss2(estimatedCov_sample, Sigma, type = "covariance")
@@ -60,11 +59,11 @@
 #' LossEuclideanEigenvalues2(estimatedCov_shrink, Sigma)
 #' 
 #' @export
-cov_analytical_NL_shrinkage = function(X, centeredCov = TRUE){
-  # the original version suggested that p is # of columns
-  p = nrow(X)
-  n = ncol(X)
-  sampleC = cov_with_centering(X = t(X), centeredCov = centeredCov)
+cov_analytical_NL_shrinkage = function(X, centeredCov = TRUE)
+{
+  n = nrow(X)
+  p = ncol(X)
+  sampleC = cov_with_centering(X = X, centeredCov = centeredCov)
   
   eig = eigen(sampleC)
   u = eig$vectors[,p:1]
