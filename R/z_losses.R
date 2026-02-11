@@ -11,19 +11,47 @@ FrobeniusNorm2 <- function(M, normalized){
 }
 
 
-#' Frobenius norm and Frobenius losses of the estimator of a matrix
+#' Quadratic losses of the estimator of a matrix or portfolio weights
 #'
 #' Generic function to calculate the Frobenius norm/loss of (the estimator of) a
 #' matrix. For a generic matrix \eqn{M}, the (squared) Frobenius norm is defined in the following way
 #' \deqn{
-#' \code{FrobeniusNorm2}=||\mathbf{M}||^2_F=\text{\rm tr} \left[\mathbf{M}\mathbf{M}^\top\right]\,,
+#' \code{FrobeniusNorm2}(\mathbf{M})=||\mathbf{M}||^2_F=\text{\rm tr} \left[\mathbf{M}\mathbf{M}^\top\right]\,,
 #' } while (squared) Frobenius loss analogously is defined by
 #' \deqn{
-#' \code{FrobeniusLoss2}= ||\mathbf{M}-g(\mathbf{\boldsymbol{Sigma}})||^2_F\,,
+#' \code{FrobeniusLoss2}(\mathbf{M}, g(\boldsymbol{\Sigma}))= ||\mathbf{M}-g(\mathbf{\boldsymbol{\Sigma}})||^2_F\,,
 #' } where \eqn{M} here denotes a suitable estimator and the function 
 #' \eqn{g(x)=x} when \code{type="covariance matrix"} is
-#' chosen, otherwise \eqn{g(x)=1/x} for \code{type="precision matrix"}. 
-#' 
+#' chosen, otherwise \eqn{g(x)=1/x} for \code{type="precision matrix"}. In case 
+#' \code{normalized=TRUE} (default) the above losses are normalized by the matrix
+#'  dimension \eqn{p}. Furthermore we present an alternative loss measures focused directly
+#'  on the spectra of the matrices: \code{DistanceEuclideanEigenvalues2} and 
+#'  \code{LossEuclideanEigenvalues2} defined as follows
+#'  \deqn{
+#'  \code{DistanceEuclideanEigenvalues2}(\mathbf{M}_1, \mathbf{M}_2)=
+#'  \sum\limits_{i=1}^{p} (\lambda_i(\mathbf{M}_1)-\lambda_i(\mathbf{M}_2))^2\,
+#'  } and
+#'  \deqn{
+#'  \code{LossEuclideanEigenvalues2}(\mathbf{M}, g(\boldsymbol{\Sigma}) )= 
+#'  \sum\limits_{i=1}^{p} (\lambda_i(\mathbf{M})-\lambda_i(g(\boldsymbol{\Sigma})))^2
+#'  }
+#' where \eqn{\lambda_i(\mathbf{A})} are the eigenvalues of a generic matrix
+#'  \eqn{\mathbf{A}}. Similarly, \code{normalized=TRUE} (by default) normalizes 
+#'  the losses and the function \eqn{g(x)} is either \eqn{x} or \eqn{1/x}, which 
+#'  can be specified in  \code{type}. 
+#'  The last loss function is specifically designed
+#'  for the portfolios and is measuring the variance of the given portfolio relatively
+#'   to the variance of the Global Minimum Variance (GMV) portfolio. For
+#'  a generic \eqn{p}-dimensional vector of portfolio weights \eqn{\mathbf{w}}
+#'   it is defined as
+#'  \deqn{
+#'  \code{LossRelativeOutOfSampleVariance}(\mathbf{w}, \boldsymbol{\Sigma})= 
+#'  \frac{V_{\mathbf{w}} - V_{GMV}}{V_{GMV}}\,,
+#'  }
+#'  where \eqn{V_{\mathbf{w}}=\mathbf{w}^\top\boldsymbol{\Sigma}\mathbf{w}} and \eqn{V_{GMV}=
+#'  (\mathbf{1}_p^\top\boldsymbol{\Sigma}^{-1}\mathbf{1}_p)^{-1}}
+#'  are the variances of the given portfolio \eqn{\mathbf{w}} and of the GMV portfolio,
+#'  respectively. The vector \eqn{\mathbf{1}_p} is the \eqn{p}-dimensional vector of ones.
 #'
 #' @param x,M An (estimated) square matrix of size \code{p}
 #' @param M1,M2 two square matrices of the same dimension
