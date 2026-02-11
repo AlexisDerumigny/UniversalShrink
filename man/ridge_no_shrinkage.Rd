@@ -2,7 +2,7 @@
 % Please edit documentation in R/ridge_no_shrinkage.R
 \name{ridge_no_shrinkage}
 \alias{ridge_no_shrinkage}
-\title{Ridge with target set to the identity}
+\title{Plain Ridge (Tikhonov) estimator without shrinkage}
 \usage{
 ridge_no_shrinkage(X, centeredCov = TRUE, t, verbose = 0)
 }
@@ -27,9 +27,10 @@ the estimator of the precision matrix, of class
 \code{EstimatedPrecisionMatrix}.
 }
 \description{
-This function computes
-\eqn{\widehat{\Sigma^{-1}}^{ridge}_t = (S + t I_p)^{-1}},
-where \eqn{S} is the sample covariance matrix and \eqn{t} is a given parameter.
+This function computes a 'plain' Ridge (Tikhonov) estimator of the precision matrix
+\eqn{\mathbf{S}_n^-(t)=(\mathbf{S}_n+t\mathbf{I}_p)^{-1}},
+where \eqn{\mathbf{S}_n} is the sample covariance matrix, \eqn{\mathbf{I}_p} is
+\eqn{p}-dimensional identity matrix and \eqn{t>0} is a given penalty parameter.
 }
 \examples{
 
@@ -54,7 +55,7 @@ for (t in c(0.2, 0.5, 1)){
 
 }
 \references{
-Nestor Parolya & Taras Bodnar (2024).
+Nestor Parolya & Taras Bodnar (2026).
 Reviving pseudo-inverses: Asymptotic properties of large dimensional
 Moore-Penrose and Ridge-type inverses with applications.
 \doi{10.48550/arXiv.2403.15792}

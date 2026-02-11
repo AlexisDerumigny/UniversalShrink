@@ -3,7 +3,7 @@
 #' portfolio \eqn{\mathbf{b}}
 #'
 #' This function computes
-#' \deqn{\hat{\alpha}^*\times \mathbf{w}_{MP} + (1 - \hat{\alpha}^*) \times \mathbf{b}}
+#' \deqn{\hat{\alpha}^*\mathbf{w}_{MP} + (1 - \hat{\alpha}^*) \mathbf{b}}
 #' where \eqn{\hat{\alpha}^*} is given by
 #' \deqn{
 #' \hat{\alpha}^*=

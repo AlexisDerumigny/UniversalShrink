@@ -1,6 +1,69 @@
 
 #' Ridge higher order shrinkage
 #' 
+#' The findings of Bodnar and Parolya (2025) yield the ridge higher-order nonlinear
+#' shrinkage estimator of the precision matrix given by
+#' \deqn{
+#' \mathbf{S}_{HOS}^-(t^*)
+#' =
+#' \hat{\alpha}_0^-(t^*)\mathbf{I}_p
+#' +
+#' \sum_{j=1}^m
+#' \hat{\alpha}_j^-(t^*)
+#' (\mathbf{S}_n^-(t))^j
+#' }
+#' where \eqn{\mathbf{S}_n^-(t^*)=(\mathbf{S}_n+t^*\mathbf{I}_p)^{-1}} is the Ridge 
+#' estimator evaluated at optimal point \eqn{t^*>0} and
+#'  \eqn{\mathbf{S}} is the sample covariance matrix and \eqn{\mathbf{I}_p} is 
+#' \eqn{p}-dimensional identity matrix. The vector \eqn{
+#' \hat{\boldsymbol{\alpha}}^{-}(m,t^*)
+#' =
+#' (\hat{\alpha}_0^-(t^*),\hat{\alpha}_1^-(t^*),\ldots,\hat{\alpha}_m^-(t^*))^\top
+#' }
+#' is given by
+#' \deqn{
+#' \hat{\boldsymbol{\alpha}}^{-}(m,t^*)
+#' =
+#' \widehat{\mathbf{M}}^{-}(m,t^*)^{-1}
+#' \hat{\mathbf{m}}^{-}(m,t^*)
+#' .}
+#' The optimal value \eqn{t^*} is obtained by minimizing over \eqn{t>0} the function
+#' \deqn{
+#' \hat{L}_2^{-}(m,t)
+#' =
+#' 1
+#' -
+#' \hat{\mathbf{m}}^{-}(m,t)^\top
+#' \widehat{\mathbf{M}}^{-}(m,t)^{-1}
+#' \hat{\mathbf{m}}^{-}(m,t)
+#' .}
+#' Here,
+#' \eqn{
+#' \hat{\mathbf{m}}^{-}(m,t)
+#' =
+#' \begin{pmatrix}
+#' \hat{q}_1 \\
+#' \hat{\tilde{s}}_{1,1}(t) \\
+#' \vdots \\
+#' \hat{\tilde{s}}_{m,1}(t)
+#' \end{pmatrix}
+#' }
+#' and
+#' \eqn{
+#' \widehat{\mathbf{M}}^{-}(m,t)
+#' =
+#' \begin{pmatrix}
+#' \hat{q}_2 & \hat{\tilde{s}}_{1,2}(t) & \ldots & \hat{\tilde{s}}_{m,2}(t) \\
+#' \hat{\tilde{s}}_{1,2}(t) & \hat{\tilde{s}}_2(t) & \ldots & \hat{\tilde{s}}_{m+1,2}(t) \\
+#' \vdots & \vdots & \ddots & \vdots \\
+#' \hat{\tilde{s}}_{m,2}(t) & \hat{\tilde{s}}_{m+1,2}(t) & \ldots & \hat{\tilde{s}}_{2m,2}(t)
+#' \end{pmatrix}
+#' }, where
+#' the quantities \eqn{\hat{\tilde{s}}_{j,l}(t)} are defined in
+#' Bodnar and Parolya (2025). This procedure ensures that the loss 
+#'\eqn{||\mathbf{S}_{HOS}^-(t^*)\boldsymbol{\Sigma}-\mathbf{I}_p||^2_F}
+#' is asymptotically minimized with probability one.
+
 #' 
 #' @param X data matrix (rows are observations, columns are features).
 #' 

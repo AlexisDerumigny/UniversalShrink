@@ -3,7 +3,7 @@
 #' Optimal portfolio weights based on a plug-in of the Moore-Penrose inverse
 #' of the sample covariance matrix
 #' 
-#' Having the obervation matrix \eqn{\mathbf{Y}_n} and the corresponding sample 
+#' Having the obervation matrix \eqn{\mathbf{X}_n} and the corresponding sample 
 #' covariance matrix \eqn{\mathbf{S}_n} this estimator is given 
 #' by
 #' \deqn{

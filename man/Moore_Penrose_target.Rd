@@ -28,16 +28,80 @@ no printing at all, while higher values indicate increasingly more detailed
 \value{
 the estimator of the precision matrix
 (a \code{p} by \code{p} matrix, i.e. the inverse of the covariance matrix).
-It is (asymptotically) optimal for the loss
-\eqn{Loss(EstimatorPi) := \| EstimatorPi * \Sigma - I \|_F^2}.
 }
 \description{
-This function computes
-\deqn{\alpha \times \widehat{\Sigma^{-1}}^{MP} + (1 - \alpha) \times \Pi_0}
-where \eqn{\alpha} is a carefully chosen coefficient,
-\eqn{\widehat{\Sigma^{-1}}^{MP}} is the Moore-Penrose inverse of the sample
-covariance matrix
-and \eqn{\Pi_0} is a given target such as the identity matrix.
+Following Bodnar and Parolya (2006), the shrinkage estimator
+for the precision matrix using the Moore-Penrose inverse of the sample
+covariance matrix \eqn{\mathbf{S}_n} is computed as
+\deqn{
+\widehat{\boldsymbol{\Pi}}_{MP}=\hat{\alpha}_{MP}^*\mathbf{S}_n^{+}+
+\hat{\beta}_{MP}^*\boldsymbol{\Pi}_0\,,
+} where \eqn{\mathbf{S}^+_n} denotes the Moore-Penrose inverse the sample
+covariance matrix, \eqn{\boldsymbol{\Pi}_0} is the shrinkage target
+(\eqn{\boldsymbol{\Pi}_0=\mathbf{I}_p}, i.e., identity matrix by default) and
+\eqn{\hat{\alpha}_{MP}^*} and \eqn{\hat{\beta}_{MP}^*} are the optimal
+shrinkage intensities (in sense of minimizing asymptotically
+\eqn{||\widehat{\boldsymbol{\Pi}}_{MP}\boldsymbol{\Sigma}-\mathbf{I}_p||^2_F}) given by
+\deqn{
+\hat{\alpha}_{MP}^* =
+ \dfrac{
+   \hat{d}_1\left(\frac{1}{p}\boldsymbol{\Sigma}\right)
+   \hat{q}_2\left(\frac{1}{p}\boldsymbol{\Pi}_0^2\right)
+   -
+     \hat{d}_1\left(0,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)
+   \hat{q}_1\left(\frac{1}{p}\boldsymbol{\Pi}_0\right)
+ }{
+   -\dfrac{1}{\hat{h}_2}
+   \left(
+     \hat{d}_2\left(\frac{1}{p}\boldsymbol{\Sigma}^2\right)
+     -
+       \hat{d}_1\left(\frac{1}{p}\boldsymbol{\Sigma}^2\right)
+     \dfrac{\hat{h}_3}{\hat{h}_2}
+     \right)
+   \hat{q}_2\left(\frac{1}{p}\boldsymbol{\Pi}_0^2\right)
+   -
+     \dfrac{1}{\hat{h}_2}
+   \hat{d}_1^2\left(0,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)
+ }
+} and
+\deqn{
+\hat{\beta}_{MP}^* =
+\dfrac{
+\left(
+\hat{d}_2\left(\frac{1}{p}\boldsymbol{\Sigma}^2\right)
+-
+\hat{d}_1\left(\frac{1}{p}\boldsymbol{\Sigma}^2\right)
+\dfrac{\hat{h}_3}{\hat{h}_2}
+\right)
+\hat{q}_1\left(\frac{1}{p}\boldsymbol{\Pi}_0\right)
++
+\hat{d}_1\left(\frac{1}{p}\boldsymbol{\Sigma}\right)
+\hat{d}_1\left(0,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)
+}{
+\left(
+\hat{d}_2\left(\frac{1}{p}\boldsymbol{\Sigma}^2\right)
+-
+\hat{d}_1\left(\frac{1}{p}\boldsymbol{\Sigma}^2\right)
+\dfrac{\hat{h}_3}{\hat{h}_2}
+\right)
+\hat{q}_2\left(\frac{1}{p}\boldsymbol{\Pi}_0^2\right)
++
+\hat{d}_1^2\left(0,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)
+}\,,
+}
+where \eqn{\hat{d}_1\left(\frac{1}{p}\boldsymbol{\Sigma}\right)},
+\eqn{\hat{d}_1\left(\frac{1}{p}\boldsymbol{\Sigma}^2\right)},
+\eqn{\hat{d}_1\left(0,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)},
+\eqn{\hat{d}_2\left(\frac{1}{p}\boldsymbol{\Sigma}^2\right)} are defined in Theorem 3.2
+in Bodnar and Parolya (2026), while the rest \eqn{\hat{v}(0)}, \eqn{\hat{h}_2}, \eqn{\hat{h}_3},
+\eqn{\hat{d}_1(\frac{1}{p}\mathbf{I}_p)},
+\eqn{\hat{d}_1(\frac{1}{p}\boldsymbol{\Pi}_0)},
+\eqn{\hat{d}_2(\frac{1}{p}\mathbf{I}_p)},
+\eqn{\hat{d}_0(0,\frac{1}{p}\boldsymbol{\Pi}_0)},
+\eqn{\hat{q}_1(\frac{1}{p}\boldsymbol{\Pi}_0)}
+and
+\eqn{\hat{q}_2(\frac{1}{p}\boldsymbol{\Pi}_0^2)}
+are given in the supplement to Bodnar and Parolya (2026).
 }
 \examples{
 n = 50
@@ -82,7 +146,7 @@ FrobeniusLoss2(precision_MoorePenrose_NoCent_trueSigma, Sigma = Sigma)
 
 }
 \references{
-Nestor Parolya & Taras Bodnar (2024).
+Nestor Parolya & Taras Bodnar (2026).
 Reviving pseudo-inverses: Asymptotic properties of large dimensional
 Moore-Penrose and Ridge-type inverses with applications.
 \doi{10.48550/arXiv.2403.15792}

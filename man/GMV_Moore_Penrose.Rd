@@ -17,7 +17,7 @@ If \code{FALSE} the covariance matrix is computed assuming that the mean of
 the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 }
 \description{
-Having the obervation matrix \eqn{\mathbf{Y}_n} and the corresponding sample
+Having the obervation matrix \eqn{\mathbf{X}_n} and the corresponding sample
 covariance matrix \eqn{\mathbf{S}_n} this estimator is given
 by
 \deqn{

@@ -1,14 +1,91 @@
 
 
 
-#' Moore-Penrose-Ridge with general target
+#' Moore-Penrose-Ridge shrinkage with general target
 #' 
-#' This function computes
-#' \deqn{\widehat{\Sigma^{-1}}^{ridge}_t
-#'       = (S + t I_p)^{-1} - t * (S + t I_p)^{-2}},
-#' where \eqn{S} is the sample covariance matrix and \eqn{t} is a given
-#' parameter.
-#' 
+#' Following Bodnar and Parolya (2006), the shrinkage estimator
+#'  for the precision matrix using the Moore-Penrose-Ridge inverse of the sample 
+#'  covariance matrix \eqn{\mathbf{S}_n} is computed as
+#' \deqn{
+#' \widehat{\boldsymbol{\Pi}}_{MPR}=\hat{\alpha}_{MPR}^*(t^*)\mathbf{S}_n^{\pm}(t^*)+
+#' \hat{\beta}_{MP}^*(t^*)\boldsymbol{\Pi}_0\,,
+#'} where \eqn{\mathbf{S}^+_n} denotes the Moore-Penrose inverse the sample
+#' covariance matrix, \eqn{\boldsymbol{\Pi}_0} is the shrinkage target 
+#' (\eqn{\boldsymbol{\Pi}_0=\mathbf{I}_p}, i.e., identity matrix by default) and
+#'   \eqn{\hat{\alpha}_{MPR}^*(t^*)} and \eqn{\hat{\beta}_{MPR}^*(t^*)} are the optimal 
+#'   shrinkage intensities given by 
+#' \deqn{
+#' \hat{\alpha}_{MPR}^*(t^*)
+#' =
+#' \dfrac{
+#' -\hat{v}^{(1)}(t^*)
+#' \hat{d}_1\left(t^*,\frac{1}{p}\boldsymbol{\Sigma}\right)
+#' \hat{q}_2\left(\frac{1}{p}\boldsymbol{\Pi}_0^2\right)
+#' +
+#' \hat{v}^{(1)}(t^*)
+#' \hat{d}_1\left(t^*,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)
+#' \hat{q}_1\left(\frac{1}{p}\boldsymbol{\Pi}_0\right)
+#' }{
+#' \hat{\grave{s}}_2\left(t^*,\frac{1}{p}\boldsymbol{\Sigma}^2\right)
+#' \hat{q}_2\left(\frac{1}{p}\boldsymbol{\Pi}_0^2\right)
+#' -
+#' [\hat{v}^{(1)}(t^*)]^2
+#' \hat{d}_1^2\left(t^*,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)
+#' }
+#' } and
+#' \deqn{
+#' \hat{\beta}_{MPR}^*(t^*)
+#' =
+#' \dfrac{
+#' \hat{\grave{s}}_2\left(t^*,\frac{1}{p}\boldsymbol{\Sigma}^2\right)
+#' \hat{q}_1\left(\frac{1}{p}\boldsymbol{\Pi}_0\right)
+#' -
+#' [\hat{v}^{(1)}(t^*)]^2
+#' \hat{d}_1\left(t^*,\frac{1}{p}\boldsymbol{\Sigma}\right)
+#' \hat{d}_1\left(t^*,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)
+#' }{
+#' \hat{\grave{s}}_2\left(t^*,\frac{1}{p}\boldsymbol{\Sigma}^2\right)
+#' \hat{q}_2\left(\frac{1}{p}\boldsymbol{\Pi}_0^2\right)
+#' -
+#' [\hat{v}^{(1)}(t^*)]^2
+#' \hat{d}_1^2\left(t^*,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)
+#' }.
+#' }
+#' To determine the optimal value of the tuning parameter we 
+#' maximize \eqn{\hat{L}^2_{MPR;2}(t)} over \eqn{(0,\infty)} and obtain \eqn{t^*}. 
+#' The function \eqn{\hat{L}^2_{MPR;2}(t)} is given by
+#' \deqn{
+#' \hat{L}^2_{MPR;2}(t)
+#' =
+#' \frac{1}{\hat{q}_2\left(\dfrac{1}{p}\boldsymbol{\Pi}_0^2\right)}
+#' \frac{
+#' [\hat{v}^{(1)}(t)]^2
+#' \left[
+#' \hat{d}_1\left(t,\dfrac{1}{p}\boldsymbol{\Sigma}\right)
+#' \hat{q}_2\left(\dfrac{1}{p}\boldsymbol{\Pi}_0^2\right)
+#' -
+#' \hat{d}_1\left(t,\dfrac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)
+#' \hat{q}_1\left(\dfrac{1}{p}\boldsymbol{\Pi}_0\right)
+#' \right]^2
+#' }{
+#' \hat{\grave{s}}_2\left(t,\frac{1}{p}\boldsymbol{\Sigma}^2\right)
+#' \hat{q}_2\left(\frac{1}{p}\boldsymbol{\Pi}_0^2\right)
+#' -
+#' [\hat{v}^{(1)}(t)]^2
+#' \hat{d}_1^2\left(t,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)
+#' }
+#' }
+#' where \eqn{\hat{v}^{(1)}(t)},
+#' \eqn{\hat{q}_1\left(\frac{1}{p}\boldsymbol{\Pi}_0\right)},
+#' \eqn{\hat{q}_2\left(\frac{1}{p}\boldsymbol{\Pi}_0^2\right)},
+#' \eqn{\hat{\grave{s}}_2\left(t,\frac{1}{p}\boldsymbol{\Sigma}^2\right)},
+#' \eqn{\hat{d}_1\left(t,\frac{1}{p}\boldsymbol{\Sigma}\right)}
+#' and
+#' \eqn{\hat{d}_1\left(t,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)}
+#' are defined in the supplementary material of Bodnar and Parolya (2026). 
+#' This procedure ensures that the loss 
+#'\eqn{||\widehat{\boldsymbol{\Pi}}_{MPR}\boldsymbol{\Sigma}-\mathbf{I}_p||^2_F}
+#' is asymptotically minimized with probability one.
 #' 
 #' @param X data matrix (rows are observations, columns are features).
 #' 

@@ -1,9 +1,17 @@
 
 #' Moore-Penrose-Ridge
 #' 
-#' This function computes
-#' \deqn{\widehat{\Sigma^{-1}}^{ridge}_t = (S + t I_p)^{-1} - t * (S + t I_p)^{-2}},
-#' where \eqn{S} is the sample covariance matrix and \eqn{t} is a given parameter.
+#' This function computes Moore-Penrose-ridge inverse (see, Bodnar and Parolya (2026))
+#' \deqn{
+#' \mathbf{S}_n^{\pm}(t)
+#' =
+#' (\mathbf{S}_n + t \mathbf{I}_p)^{-1}
+#' -
+#' t (\mathbf{S}_n + t \mathbf{I}_p)^{-2}
+#' }
+#' where \eqn{\mathbf{S}_n} is the sample covariance matrix and \eqn{t>0} 
+#' is a given parameter. By specifying \code{centeredCov=TRUE} (by default) one 
+#' can choose between centered and noncentered versions of the sample covariance matrix.
 #' 
 #' 
 #' @param X data matrix (rows are observations, columns are features).
@@ -16,7 +24,7 @@
 #' `EstimatedPrecisionMatrix`.
 #' 
 #' @references 
-#' Nestor Parolya & Taras Bodnar (2024).
+#' Nestor Parolya & Taras Bodnar (2026).
 #' Reviving pseudo-inverses: Asymptotic properties of large dimensional
 #' Moore-Penrose and Ridge-type inverses with applications.
 #' \doi{10.48550/arXiv.2403.15792}
