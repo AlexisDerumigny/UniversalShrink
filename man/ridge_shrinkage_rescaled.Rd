@@ -2,7 +2,8 @@
 % Please edit documentation in R/ridge_shrinkage_rescaled.R
 \name{ridge_shrinkage_rescaled}
 \alias{ridge_shrinkage_rescaled}
-\title{Optimal ridge shrinkage for estimation of the precision matrix}
+\title{Optimal ridge shrinkage for estimation of the precision matrix by
+Wang et al. (2015)}
 \usage{
 ridge_shrinkage_rescaled(X, eps = 1e-06, upp = pi/2 - 1e-06)
 }
@@ -17,7 +18,91 @@ the estimator of the precision matrix
 (a \code{p} by \code{p} matrix, i.e. the inverse of the covariance matrix).
 }
 \description{
-Optimal ridge shrinkage for estimation of the precision matrix
+The optimal ridge estimator of
+Wang et al. (2015) is given by
+}
+\details{
+\deqn{
+\widehat{\boldsymbol{\Pi}}_{OR}
+=
+\hat{\alpha}_{OR;n}
+\left(
+\mathbf{S}_n
++
+\hat{\beta}_{OR;n}\mathbf{I}_p
+\right)^{-1}
+.}
+Here,
+\deqn{
+\hat{\alpha}_{OR;n}
+=
+\frac{
+\hat{R}_{1,n}(\hat{\beta}_{OR;n})
+}{
+\hat{R}_{2,n}(\hat{\beta}_{OR;n})
+}.
+}
+Moreover, for \eqn{\lambda>0}
+\deqn{
+\hat{R}_{1,n}(\lambda)
+=
+\frac{
+\hat{a}_{1;n}(\lambda)
+}{
+1 - c_n \hat{a}_{1;n}(\lambda)
+},
+\quad
+\hat{R}_{2,n}(\lambda)
+=
+\frac{
+\hat{a}_{1;n}(\lambda)
+}{
+(1 - c_n \hat{a}_{1;n}(\lambda))^3
+}
+-
+\frac{
+\hat{a}_{2;n}(\lambda)
+}{
+(1 - c_n \hat{a}_{1;n}(\lambda))^4
+}
+.}
+with
+\deqn{
+\hat{a}_{1;n}(\lambda)
+=
+1
+-
+\frac{1}{p}
+\text{\rm tr}\!\left[
+\left(
+\mathbf{S}_n/\lambda + \mathbf{I}_p
+\right)^{-1}
+\right]
+}
+and
+\deqn{
+\hat{a}_{2;n}(\lambda)
+=
+\frac{1}{p}
+\text{\rm tr}\!\left[
+\left(
+\mathbf{S}_n/\lambda + \mathbf{I}_p
+\right)^{-2}
+\right]
+.} Here \eqn{c_n=p/n} denotes the concentration ratio and
+the parameter \eqn{\hat{\beta}_{OR;n}} minimizes over \eqn{\lambda>0} the
+function
+\deqn{
+L_{OR;n}
+=
+1
+-
+\frac{
+\hat{R}_{1,n}(\lambda)^2
+}{
+\hat{R}_{2,n}(\lambda)
+}.
+}
 }
 \examples{
 p = 200

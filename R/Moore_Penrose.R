@@ -3,15 +3,15 @@
 #' Moore-Penrose inverse of the sample covariance matrix
 #' 
 #' Having a centered (by default) or non-centered observation matrix 
-#' \eqn{\tilde{\mathbf{Y}}_n} with the corresponding sample covariance matrix 
+#' \eqn{\mathbf{X}_n} with the corresponding sample covariance matrix 
 #' \eqn{\mathbf{S}_n}. The Moore-Penrose inverse of this sample
 #' covariance matrix, denoted by \eqn{\mathbf{S}^+_n} is computed by the following
 #'  formula
 #' \deqn{
-#' \mathbf{S}_n^+=\left(\frac{1}{n}\tilde{\mathbf{Y}}_n\tilde{\mathbf{Y}}_n^\top\right)^+
-#' =\frac{1}{\sqrt{n}}\tilde{\mathbf{Y}}_n\left(\frac{1}{n}
-#' \tilde{\mathbf{Y}}_n^\top\tilde{\mathbf{Y}}_n\right)^{-2}
-#' \frac{1}{\sqrt{n}}\tilde{\mathbf{Y}}_n^\top.
+#' \mathbf{S}_n^+=\left(\frac{1}{n}\mathbf{X}_n^\top\mathbf{X}_n\right)^+
+#' =\frac{1}{\sqrt{n}}\mathbf{X}_n^\top\left(\frac{1}{n}
+#' \mathbf{X}_n\mathbf{X}_n^\top\right)^{-2}
+#' \frac{1}{\sqrt{n}}\mathbf{X}_n.
 #' } See, the beginning of the proof of Theorem 2.1 in Bodnar and Parolya (2026)
 #' for the details how the centering was done.
 #' 
