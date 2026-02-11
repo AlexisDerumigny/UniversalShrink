@@ -24,6 +24,10 @@ MPR_target_identity_optimal <- function (X, centeredCov = TRUE, verbose = 2,
     return(loss)
   }
   
+  # TODO: add the computation of the loss at t = 0 and select it if it is lower
+  # also in the target_general case
+  
+  
   hL2MPR_max <- stats::optim(par = initialValue, hL2MPr,lower = eps, upper = upp,
                              method = "L-BFGS-B", control = list(fnscale = -1))
   u_MPR <- hL2MPR_max$par

@@ -210,9 +210,9 @@ ridge_higher_order_shrinkage_non_optimized <- function(
     cat("*  q2 = ", q2, "\n\n")
   }
   
-  estimatedM = compute_M_t(m = m, c_n = c_n, q1 = q1, q2 = q2,
-                           S_t_inverse = S_t_inverse,
-                           t = t, verbose = verbose)
+  estimatedM = compute_M_t_ridge(m = m, c_n = c_n, q1 = q1, q2 = q2,
+                                 S_t_inverse = S_t_inverse,
+                                 t = t, verbose = verbose)
   
   # TODO: compute all estimators for smaller m here using submatrices of this matrix
   
@@ -287,9 +287,9 @@ ridge_higher_order_shrinkage_optimal <- function(
     S_t_inverse <- solve(S_t)
     
     loss = tryCatch({
-      estimatedM = compute_M_t(m = m, c_n = c_n, q1 = q1, q2 = q2,
-                               S_t_inverse = S_t_inverse,
-                               t = t, verbose = 0)
+      estimatedM = compute_M_t_ridge(m = m, c_n = c_n, q1 = q1, q2 = q2,
+                                     S_t_inverse = S_t_inverse,
+                                     t = t, verbose = 0)
       
       loss = 1 - t(estimatedM$hm) %*% solve(estimatedM$M) %*% estimatedM$hm
     }, error = function(e){e}
@@ -319,9 +319,9 @@ ridge_higher_order_shrinkage_optimal <- function(
   
   S_t_inverse <- solve(S_t)
   
-  estimatedM = compute_M_t(m = m, c_n = c_n, q1 = q1, q2 = q2,
-                           S_t_inverse = S_t_inverse,
-                           t = optimal_t, verbose = verbose)
+  estimatedM = compute_M_t_ridge(m = m, c_n = c_n, q1 = q1, q2 = q2,
+                                 S_t_inverse = S_t_inverse,
+                                 t = optimal_t, verbose = verbose)
   
   if (inversionMethod == "solve"){
     alpha = solve(estimatedM$M) %*% estimatedM$hm
@@ -357,10 +357,19 @@ ridge_higher_order_shrinkage_optimal <- function(
 }
 
 
-# Compute the matrix M for the higher-order shrinkage
-# the output should be of size m+1
-#
-compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
+#' Compute the vector hat s for the higher-order shrinkage of the ridge estimator
+#' and also hat v
+#'
+#' Do we want to make it two separate functions?
+#'
+#' @return a list with the following components
+#' \itemize{
+#'    \item `s`: a matrix with 2m rows and 2 columns
+#'    \item `v`: a vector of size 2m-1
+#' }
+#' 
+#' @noRd
+compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 {
   v_0_t <- v_hat_j_of_t(t = t, j = 0, S_t_inverse_pow_jp1 = S_t_inverse, c_n = c_n)
   
@@ -469,6 +478,24 @@ compute_M_t <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     print(s)
     cat("\n")
   }
+  
+  return (list(s = s, v = v))
+}
+
+
+# Compute the matrix M for the higher-order shrinkage of the ridge estimator.
+# 
+# @return a list with
+# - a square matrix M of size (m + 1)
+# - a vector hm of size (m + 1)
+# - the estimator of v
+compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
+{
+  s_and_v = compute_sv_ridge(m = m, c_n = c_n,
+                             S_t_inverse = S_t_inverse, q1 = q1, q2 = q2, t = t,
+                             verbose = verbose)
+  s = s_and_v$s
+  v = s_and_v$v
   
   # Computation of M  ==========================================================
   s2 = c(q2, s[, 2])
