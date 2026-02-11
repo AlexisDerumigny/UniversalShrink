@@ -4,11 +4,10 @@
 \alias{Moore_Penrose}
 \title{Moore-Penrose inverse of the sample covariance matrix}
 \usage{
-Moore_Penrose(Y, centeredCov = TRUE)
+Moore_Penrose(X, centeredCov = TRUE)
 }
 \arguments{
-\item{Y}{data matrix (rows are features, columns are observations).
-TODO: transpose everything.}
+\item{X}{data matrix (rows are observations, columns are features).}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
 computed using centering (i.e. in the general case where the mean of the
@@ -48,7 +47,7 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-iS_MP = Moore_Penrose(Y = t(X), centeredCov = TRUE)
+iS_MP = Moore_Penrose(X, centeredCov = TRUE)
 # Convert to matrix class for computations
 iS_MP = as.matrix(iS_MP)
 

@@ -4,11 +4,10 @@
 \alias{ridge_no_shrinkage}
 \title{Ridge with target set to the identity}
 \usage{
-ridge_no_shrinkage(Y, centeredCov = TRUE, t, verbose = 0)
+ridge_no_shrinkage(X, centeredCov = TRUE, t, verbose = 0)
 }
 \arguments{
-\item{Y}{data matrix (rows are features, columns are observations).
-TODO: transpose everything.}
+\item{X}{data matrix (rows are observations, columns are features).}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
 computed using centering (i.e. in the general case where the mean of the
@@ -47,10 +46,9 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 
 for (t in c(0.2, 0.5, 1)){
-  precision_ridge_Cent = 
-    ridge_no_shrinkage(Y = t(X), centeredCov = TRUE, t = t)
+  precision_ridge = ridge_no_shrinkage(X, t = t)
 
-  cat("t = t, loss =", FrobeniusLoss2(precision_ridge_Cent, Sigma = Sigma), "\n")
+  cat("t = t, loss =", FrobeniusLoss2(precision_ridge, Sigma = Sigma), "\n")
 }
 
 

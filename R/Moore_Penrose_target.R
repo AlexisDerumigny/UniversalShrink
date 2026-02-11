@@ -9,8 +9,7 @@
 #' and \eqn{\Pi_0} is a given target such as the identity matrix.
 #'
 #'
-#' @param Y data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
+#' @param X data matrix (rows are observations, columns are features).
 #' 
 #' @param Pi0 prior of the precision matrix. This a `p` by `p` matrix, used as
 #' a target for the shrinkage. Default value is the identity matrix of size `p`.
@@ -44,11 +43,9 @@
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
-#' precision_MoorePenrose_Cent =
-#'    Moore_Penrose_target(Y = t(X), centeredCov = TRUE)
+#' precision_MoorePenrose_Cent = Moore_Penrose_target(X, centeredCov = TRUE)
 #'    
-#' precision_MoorePenrose_NoCent = 
-#'    Moore_Penrose_target(t(X), centeredCov = FALSE)
+#' precision_MoorePenrose_NoCent = Moore_Penrose_target(X, centeredCov = FALSE)
 #' 
 #' precisionTrue = solve(Sigma)
 #' 
@@ -65,9 +62,9 @@
 #' 
 #' # We now use the true value of the precision matrix as a target for shrinkage
 #' precision_MoorePenrose_Cent_trueSigma = 
-#'   Moore_Penrose_target(t(X), centeredCov = TRUE, Pi0 = solve(Sigma))
+#'   Moore_Penrose_target(X, centeredCov = TRUE, Pi0 = solve(Sigma))
 #' precision_MoorePenrose_NoCent_trueSigma = 
-#'   Moore_Penrose_target(t(X), centeredCov = FALSE, Pi0 = solve(Sigma))                                                        
+#'   Moore_Penrose_target(X, centeredCov = FALSE, Pi0 = solve(Sigma))                                                        
 #'                                                         
 #' FrobeniusLoss2(precision_MoorePenrose_Cent_trueSigma, Sigma = Sigma)
 #' FrobeniusLoss2(precision_MoorePenrose_NoCent_trueSigma, Sigma = Sigma)
@@ -75,24 +72,24 @@
 #' 
 #' 
 #' @export
-Moore_Penrose_target <- function(Y, centeredCov = TRUE, Pi0 = NULL, verbose = 0)
+Moore_Penrose_target <- function(X, centeredCov = TRUE, Pi0 = NULL, verbose = 0)
 {
   if (is.null(Pi0)) {
-    result = Moore_Penrose_target_general(Y = Y, centeredCov = centeredCov,
+    result = Moore_Penrose_target_general(X = X, centeredCov = centeredCov,
                                           Pi0 = Pi0, verbose = verbose)
   } else {
-    result = Moore_Penrose_target_identity(Y = Y, centeredCov = centeredCov,
+    result = Moore_Penrose_target_identity(X = X, centeredCov = centeredCov,
                                            verbose = verbose)
   }
   
   return (result)
 }
 
-Moore_Penrose_target_general <- function(Y, Pi0 = NULL, centeredCov, verbose = 0)
+Moore_Penrose_target_general <- function(X, Pi0 = NULL, centeredCov, verbose = 0)
 {
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Identity matrix of size p
@@ -105,10 +102,10 @@ Moore_Penrose_target_general <- function(Y, Pi0 = NULL, centeredCov, verbose = 0
   }
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   # Moore-Penrose inverse of the sample covariance matrix
-  iS_MP <- as.matrix(Moore_Penrose(Y = Y, centeredCov = centeredCov))
+  iS_MP <- as.matrix(Moore_Penrose(X = X, centeredCov = centeredCov))
   
   
   ##### shrinkage MP
@@ -200,21 +197,21 @@ Moore_Penrose_target_general <- function(Y, Pi0 = NULL, centeredCov, verbose = 0
 }
 
 
-Moore_Penrose_target_identity <- function (Y, centeredCov = TRUE, verbose = 0)
+Moore_Penrose_target_identity <- function (X, centeredCov = TRUE, verbose = 0)
 {
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
   # Moore-Penrose inverse of the sample covariance matrix
-  iS_MP <- as.matrix(Moore_Penrose(Y = Y, centeredCov = centeredCov))
+  iS_MP <- as.matrix(Moore_Penrose(X = X, centeredCov = centeredCov))
   
   ##### shrinkage MP
   trS1<-sum(diag(iS_MP))/p

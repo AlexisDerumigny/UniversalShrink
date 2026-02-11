@@ -5,7 +5,7 @@
 \title{Ridge higher order shrinkage}
 \usage{
 ridge_higher_order_shrinkage(
-  Y,
+  X,
   m = 3,
   centeredCov = TRUE,
   t = NULL,
@@ -15,8 +15,7 @@ ridge_higher_order_shrinkage(
 )
 }
 \arguments{
-\item{Y}{data matrix (rows are features, columns are observations).
-TODO: transpose everything.}
+\item{X}{data matrix (rows are observations, columns are features).}
 
 \item{m}{order of the shrinkage. Should be at least 1.}
 
@@ -55,8 +54,8 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-precision_MoorePenrose_Cent = Moore_Penrose_target(Y = t(X), centeredCov = TRUE)
-precision_MoorePenrose_NoCent = Moore_Penrose_target(Y = t(X), centeredCov = FALSE)
+precision_MoorePenrose_Cent = Moore_Penrose_target(X, centeredCov = TRUE)
+precision_MoorePenrose_NoCent = Moore_Penrose_target(X, centeredCov = FALSE)
 
 FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
 FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
@@ -64,10 +63,10 @@ FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
 for (m in 1:2){
   cat("m = ", m, "\n")
   precision_higher_order_shrinkage_Cent = 
-      ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE, t = 10)
+      ridge_higher_order_shrinkage(X, m = m, centeredCov = TRUE, t = 10)
       
   precision_higher_order_shrinkage_NoCent = 
-      ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE, t = 10)
+      ridge_higher_order_shrinkage(X, m = m, centeredCov = FALSE, t = 10)
       
   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
   
@@ -76,7 +75,7 @@ for (m in 1:2){
 
 
 precision_higher_order_shrinkage_Cent = 
-  ridge_higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE, t = 100)
+  ridge_higher_order_shrinkage(X, m = 1, centeredCov = TRUE, t = 100)
 
 
 precision_higher_order_shrinkage_Cent$alpha
@@ -88,7 +87,7 @@ FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
 
 # For comparison TODO: move this as unit test
 
-precision_target = ridge_target(Y = t(X), centeredCov = TRUE, t = 100)
+precision_target = ridge_target(X, centeredCov = TRUE, t = 100)
 FrobeniusLoss2(precision_target, Sigma = Sigma)
 
 
@@ -98,10 +97,10 @@ FrobeniusLoss2(precision_target, Sigma = Sigma)
 for (m in 1:2){
   cat("m = ", m, "\n")
   precision_higher_order_shrinkage_Cent = 
-      ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE)
+      ridge_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
       
   precision_higher_order_shrinkage_NoCent = 
-      ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE)
+      ridge_higher_order_shrinkage(X, m = m, centeredCov = FALSE)
       
   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
   
@@ -109,9 +108,9 @@ for (m in 1:2){
 }
 
 precision_higher_order_shrinkage_Cent = 
-      ridge_higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE)
+      ridge_higher_order_shrinkage(X, m = 1, centeredCov = TRUE)
 
-precision_ridge_target_Cent = ridge_target(Y = t(X), centeredCov = TRUE)
+precision_ridge_target_Cent = ridge_target(X, centeredCov = TRUE)
   
 FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
 FrobeniusLoss2(precision_ridge_target_Cent, Sigma = Sigma)

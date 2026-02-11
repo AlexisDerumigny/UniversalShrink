@@ -1,11 +1,11 @@
 
 
 
-GMV_Moore_Penrose_target_general <- function(Y, centeredCov = TRUE, b = NULL,
+GMV_Moore_Penrose_target_general <- function(X, centeredCov = TRUE, b = NULL,
                                              verbose = 2){
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Vector of ones of size p
@@ -21,10 +21,10 @@ GMV_Moore_Penrose_target_general <- function(Y, centeredCov = TRUE, b = NULL,
   }
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   # Moore-Penrose inverse of the sample covariance matrix
-  iS_MP <- as.matrix(Moore_Penrose(Y = Y, centeredCov = centeredCov))
+  iS_MP <- as.matrix(Moore_Penrose(X = X, centeredCov = centeredCov))
   
   
   w_MP = GMV_PlugIn(estimatedPrecisionMatrix = iS_MP)

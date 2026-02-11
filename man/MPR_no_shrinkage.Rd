@@ -4,11 +4,10 @@
 \alias{MPR_no_shrinkage}
 \title{Moore-Penrose-Ridge}
 \usage{
-MPR_no_shrinkage(Y, centeredCov = TRUE, t, verbose = 0)
+MPR_no_shrinkage(X, centeredCov = TRUE, t, verbose = 0)
 }
 \arguments{
-\item{Y}{data matrix (rows are features, columns are observations).
-TODO: transpose everything.}
+\item{X}{data matrix (rows are observations, columns are features).}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
 computed using centering (i.e. in the general case where the mean of the
@@ -46,17 +45,15 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 
-Y = t(X)
 Ip = diag(nrow = p)
 for (t in c(0.01, 0.2, 0.5, 1, 2)){
-  precision_MPR_Cent = 
-    MPR_no_shrinkage(Y = t(X), centeredCov = TRUE, t = t)
+  precision_MPR_Cent = MPR_no_shrinkage(X, centeredCov = TRUE, t = t)
   
   Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-  S = Y \%*\% Jn \%*\% t(Y) / (n-1)
+  S = t(X) \%*\% Jn \%*\% X / (n-1)
   precision_ridge = solve(S + t * Ip)
   precision_MPR_Cent_alternative_expression = precision_ridge \%*\% S \%*\% precision_ridge
-  precision_MP = Moore_Penrose(Y = t(X), centeredCov = TRUE)
+  precision_MP = Moore_Penrose(X, centeredCov = TRUE)
 
   cat("t = ", t,", Moore-Penrose  , loss =", 
     FrobeniusLoss2(precision_MP, Sigma = Sigma, type = "precision"), "\n")

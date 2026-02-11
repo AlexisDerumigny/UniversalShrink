@@ -2,20 +2,20 @@
 
 
 
-ridge_target_identity_optimal <- function (Y, centeredCov = TRUE, verbose = 0,
+ridge_target_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0,
                                            eps = 1/(10^6), upp = pi/2 - eps,
                                            initialValue = 1.5){
   if (verbose > 0){
     cat("Starting `ridge_target_identity_optimal`...\n")
   }
   
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
@@ -99,19 +99,19 @@ ridge_target_identity_optimal <- function (Y, centeredCov = TRUE, verbose = 0,
 
 
 
-ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
+ridge_target_identity_semioptimal <- function (X, centeredCov, t, verbose = 2){
   
   if (verbose > 0){
     cat("Starting `ridge_target_identity_semioptimal`...\n")
   }
   
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   if (verbose > 0){
     cat("*  t = ", t, "\n")
@@ -217,19 +217,19 @@ ridge_target_identity_semioptimal <- function (Y, centeredCov, t, verbose = 2){
 
 
 
-ridge_target_identity <- function (Y, centeredCov = TRUE, t, alpha, beta,
+ridge_target_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
                                    verbose = 0){
   if (verbose > 0){
     cat("Starting `ridge_target_identity`...\n")
   }
   
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   if (verbose > 0){
     cat("*  t = ", t, "\n")

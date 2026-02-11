@@ -4,11 +4,10 @@
 \alias{ridge_shrinkage_rescaled}
 \title{Optimal ridge shrinkage for estimation of the precision matrix}
 \usage{
-ridge_shrinkage_rescaled(Y, eps = 1e-06, upp = pi/2 - 1e-06)
+ridge_shrinkage_rescaled(X, eps = 1e-06, upp = pi/2 - 1e-06)
 }
 \arguments{
-\item{Y}{data matrix (rows are features, columns are observations).
-TODO: transpose everything.}
+\item{X}{data matrix (rows are observations, columns are features).}
 
 \item{eps, upp}{search interval for the best penalization parameter
 (used in the numerical optimization).}
@@ -25,7 +24,7 @@ p = 200
 Sigma = diag(seq(1, 0.02, length.out = p))
 mu = rep(0, p)
 X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
-precision_OptimalRidge = ridge_shrinkage_rescaled(t(X))
+precision_OptimalRidge = ridge_shrinkage_rescaled(X)
 
 precisionTrue = solve(Sigma)
 

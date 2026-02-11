@@ -2,8 +2,7 @@
 #' Ridge higher order shrinkage
 #' 
 #' 
-#' @param Y data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
+#' @param X data matrix (rows are observations, columns are features).
 #' 
 #' @param m order of the shrinkage. Should be at least 1.
 #' 
@@ -30,8 +29,8 @@
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
-#' precision_MoorePenrose_Cent = Moore_Penrose_target(Y = t(X), centeredCov = TRUE)
-#' precision_MoorePenrose_NoCent = Moore_Penrose_target(Y = t(X), centeredCov = FALSE)
+#' precision_MoorePenrose_Cent = Moore_Penrose_target(X, centeredCov = TRUE)
+#' precision_MoorePenrose_NoCent = Moore_Penrose_target(X, centeredCov = FALSE)
 #'
 #' FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
 #' FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
@@ -39,10 +38,10 @@
 #' for (m in 1:2){
 #'   cat("m = ", m, "\n")
 #'   precision_higher_order_shrinkage_Cent = 
-#'       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE, t = 10)
+#'       ridge_higher_order_shrinkage(X, m = m, centeredCov = TRUE, t = 10)
 #'       
 #'   precision_higher_order_shrinkage_NoCent = 
-#'       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE, t = 10)
+#'       ridge_higher_order_shrinkage(X, m = m, centeredCov = FALSE, t = 10)
 #'       
 #'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
 #'   
@@ -51,7 +50,7 @@
 #' 
 #' 
 #' precision_higher_order_shrinkage_Cent = 
-#'   ridge_higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE, t = 100)
+#'   ridge_higher_order_shrinkage(X, m = 1, centeredCov = TRUE, t = 100)
 #' 
 #' 
 #' precision_higher_order_shrinkage_Cent$alpha
@@ -63,7 +62,7 @@
 #' 
 #' # For comparison TODO: move this as unit test
 #' 
-#' precision_target = ridge_target(Y = t(X), centeredCov = TRUE, t = 100)
+#' precision_target = ridge_target(X, centeredCov = TRUE, t = 100)
 #' FrobeniusLoss2(precision_target, Sigma = Sigma)
 #' 
 #' 
@@ -73,10 +72,10 @@
 #' for (m in 1:2){
 #'   cat("m = ", m, "\n")
 #'   precision_higher_order_shrinkage_Cent = 
-#'       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE)
+#'       ridge_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
 #'       
 #'   precision_higher_order_shrinkage_NoCent = 
-#'       ridge_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE)
+#'       ridge_higher_order_shrinkage(X, m = m, centeredCov = FALSE)
 #'       
 #'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
 #'   
@@ -84,9 +83,9 @@
 #' }
 #' 
 #' precision_higher_order_shrinkage_Cent = 
-#'       ridge_higher_order_shrinkage(Y = t(X), m = 1, centeredCov = TRUE)
+#'       ridge_higher_order_shrinkage(X, m = 1, centeredCov = TRUE)
 #' 
-#' precision_ridge_target_Cent = ridge_target(Y = t(X), centeredCov = TRUE)
+#' precision_ridge_target_Cent = ridge_target(X, centeredCov = TRUE)
 #'   
 #' FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
 #' FrobeniusLoss2(precision_ridge_target_Cent, Sigma = Sigma)
@@ -96,36 +95,36 @@
 #' @export
 #' 
 ridge_higher_order_shrinkage <- function(
-    Y, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50), verbose = 0,
+    X, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50), verbose = 0,
     inversionMethod = "solve")
 {
   if (is.null(t)){
     result = ridge_higher_order_shrinkage_optimal(
-      Y = Y, m = m, centeredCov = centeredCov, verbose = verbose,
+      X = X, m = m, centeredCov = centeredCov, verbose = verbose,
       interval = interval, inversionMethod = inversionMethod)
     
   } else {
     result = ridge_higher_order_shrinkage_non_optimized(
-      Y = Y, m = m, centeredCov = centeredCov, t = t, verbose = verbose,
+      X = X, m = m, centeredCov = centeredCov, t = t, verbose = verbose,
       inversionMethod = inversionMethod)
   }
 }
 
 
 ridge_higher_order_shrinkage_non_optimized <- function(
-    Y, m, centeredCov, t, verbose = 0, inversionMethod = "solve")
+    X, m, centeredCov, t, verbose = 0, inversionMethod = "solve")
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_non_optimized` (known t)...\n")
   }
   
   # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  n = nrow(X)
+  p = ncol(X)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
@@ -194,20 +193,20 @@ ridge_higher_order_shrinkage_non_optimized <- function(
 
 
 ridge_higher_order_shrinkage_optimal <- function(
-    Y, m, centeredCov = TRUE, verbose = 0, interval = c(0, 50),
+    X, m, centeredCov = TRUE, verbose = 0, interval = c(0, 50),
     inversionMethod = "solve")
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_optimal` (with unknown t)...\n")
   }
   
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)

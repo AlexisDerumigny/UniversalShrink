@@ -5,11 +5,10 @@
 \title{First-order shrinkage of the Moore-Penrose portfolio towards a general target
 portfolio \eqn{\mathbf{b}}}
 \usage{
-GMV_Moore_Penrose_target(Y, centeredCov = TRUE, b = NULL, verbose = 0)
+GMV_Moore_Penrose_target(X, centeredCov = TRUE, b = NULL, verbose = 0)
 }
 \arguments{
-\item{Y}{data matrix (rows are features, columns are observations).
-TODO: transpose everything.}
+\item{X}{data matrix (rows are observations, columns are features).}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
 computed using centering (i.e. in the general case where the mean of the
@@ -17,7 +16,7 @@ random vector may be non-zero).
 If \code{FALSE} the covariance matrix is computed assuming that the mean of
 the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 
-\item{b}{shrinkage target. By default, the equally-weighted potfolio is used
+\item{b}{shrinkage target. By default, the equally-weighted portfolio is used
 as a target.}
 
 \item{verbose}{a number indicating whether to print intermediary values and
@@ -73,14 +72,14 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
 # Compute GMV portfolio based on the Moore-Penrose inverse (no shrinkage)
-GMV_MP = GMV_Moore_Penrose(Y = t(X))
+GMV_MP = GMV_Moore_Penrose(X)
 
 Loss_GMV_MP = LossRelativeOutOfSampleVariance(
   portfolioWeights = GMV_MP, Sigma = Sigma)
 
 # Compute GMV portfolio based on the Moore-Penrose inverse with shrinkage
 # towards the equally weighted portfolio
-GMV_MP_shrink_eq = GMV_Moore_Penrose_target(Y = t(X))
+GMV_MP_shrink_eq = GMV_Moore_Penrose_target(X)
 
 Loss_GMV_MP_shrink_eq = LossRelativeOutOfSampleVariance(
   portfolioWeights = GMV_MP_shrink_eq, Sigma = Sigma)
@@ -94,7 +93,7 @@ stopifnot(Loss_GMV_MP_shrink_eq < Loss_GMV_MP)
 # towards the true GMV portfolio
 GMV_true = GMV_PlugIn(solve(Sigma))
 
-GMV_MP_shrink_oracle = GMV_Moore_Penrose_target(Y = t(X), b = GMV_true)
+GMV_MP_shrink_oracle = GMV_Moore_Penrose_target(X, b = GMV_true)
 
 Loss_GMV_MP_shrink_oracle = LossRelativeOutOfSampleVariance(
   portfolioWeights = GMV_MP_shrink_oracle, Sigma = Sigma)

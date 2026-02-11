@@ -236,21 +236,21 @@ estimator_vhat_derivative <- function(t, m, iS_ridge, p, Ip, cn){
   return (result)
 }
 
-ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose = 2){
+ridge_target_general <- function (X, centeredCov, t, Pi0, alpha, beta, verbose = 2){
   
   if (verbose > 0){
     cat("Starting `ridge_target_general`...\n")
   }
   
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   if (verbose > 0){
     cat("*  t = ", t, "\n")
@@ -274,19 +274,19 @@ ridge_target_general <- function (Y, centeredCov, t, Pi0, alpha, beta, verbose =
 
 
 
-ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 2){
+ridge_target_general_semioptimal <- function (X, centeredCov, t, Pi0, verbose = 2){
   
   if (verbose > 0){
     cat("Starting `ridge_target_general_semioptimal`...\n")
   }
   
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   if (verbose > 0){
     cat("*  t = ", t, "\n")
@@ -319,7 +319,7 @@ ridge_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 
 
 
 
-ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2,
+ridge_target_general_optimal <- function (X, centeredCov, Pi0, verbose = 2,
                                           eps = 1/(10^6), upp = pi/2 - eps,
                                           initialValue = 1.5){
   
@@ -327,13 +327,13 @@ ridge_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 2,
     cat("Starting `ridge_target_general_optimal`...\n")
   }
   
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)

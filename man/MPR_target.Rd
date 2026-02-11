@@ -5,7 +5,7 @@
 \title{Moore-Penrose-Ridge with general target}
 \usage{
 MPR_target(
-  Y,
+  X,
   centeredCov = TRUE,
   Pi0 = NULL,
   t = NULL,
@@ -18,8 +18,7 @@ MPR_target(
 )
 }
 \arguments{
-\item{Y}{data matrix (rows are features, columns are observations).
-TODO: transpose everything.}
+\item{X}{data matrix (rows are observations, columns are features).}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
 computed using centering (i.e. in the general case where the mean of the
@@ -68,10 +67,8 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 
-Y = t(X)
-
 # Estimation with default parameters (optimization) and identity target
-precision_MPR_optimal = MPR_target(Y = Y)
+precision_MPR_optimal = MPR_target(X)
 
 cat("loss = ", FrobeniusLoss2(precision_MPR_optimal, Sigma = Sigma),
     ", t opt = ", precision_MPR_optimal$t_optimal, 
@@ -79,8 +76,8 @@ cat("loss = ", FrobeniusLoss2(precision_MPR_optimal, Sigma = Sigma),
     ", beta opt = ", precision_MPR_optimal$beta_optimal, "\n", sep = "")
 
 # Estimation with default parameters (optimization) and oracle target
-precision_MPR_optimal_oracle = MPR_target(
-  Y = Y, Pi0 = solve(0.99 * Sigma + 0.01 * diag(nrow = p)) )
+oracle = solve(0.99 * Sigma + 0.01 * diag(nrow = p))
+precision_MPR_optimal_oracle = MPR_target(X, Pi0 = oracle)
   
 cat("loss = ", FrobeniusLoss2(precision_MPR_optimal_oracle, Sigma = Sigma),
     ", t = ", precision_MPR_optimal_oracle$t_optimal, 
@@ -90,16 +87,16 @@ cat("loss = ", FrobeniusLoss2(precision_MPR_optimal_oracle, Sigma = Sigma),
 # Trying suboptimal alpha and beta
 t_opt = precision_MPR_optimal$t_optimal
 
-precision_MPR = MPR_target(Y = Y, t = t_opt, alpha = 1, beta = 0)
+precision_MPR = MPR_target(X, t = t_opt, alpha = 1, beta = 0)
 cat("loss = ", FrobeniusLoss2(precision_MPR, Sigma = Sigma))
 
-# Trying suboptimal tm alpha and beta
-precision_MPR = MPR_target(Y = Y, t = 1, alpha = 1, beta = 0)
+# Trying suboptimal t, alpha and beta
+precision_MPR = MPR_target(X, t = 1, alpha = 1, beta = 0)
    
 cat("loss = ", FrobeniusLoss2(precision_MPR, Sigma = Sigma))
 
 # Comparing with the non-shrinked version
-precision_MPR_no_shrink = MPR_no_shrinkage(Y = Y, t = t_opt)
+precision_MPR_no_shrink = MPR_no_shrinkage(X, t = t_opt)
                                       
 cat("loss = ", FrobeniusLoss2(precision_MPR_no_shrink, Sigma = Sigma))
 

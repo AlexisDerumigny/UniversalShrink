@@ -61,41 +61,41 @@ OutOfSampleVariance <- function(weights){
 
 ```{r}
 list_GMV = list(
-  GMV_MP_shrinkage = GMV_Moore_Penrose_target(Y = t(X), centeredCov = TRUE),
+  GMV_MP_shrinkage = GMV_Moore_Penrose_target(X, centeredCov = TRUE),
   
-  GMV_MP = GMV_Moore_Penrose(Y = t(X), centeredCov = TRUE),
+  GMV_MP = GMV_Moore_Penrose(X, centeredCov = TRUE),
   
   GMV_plugin_MP_shrinked_toIP = GMV_PlugIn(
-    Moore_Penrose_target(Y = t(X), centeredCov = TRUE)),
+    Moore_Penrose_target(X, centeredCov = TRUE)),
   
   GMV_plugin_ridge_target_shrinked_toIP = GMV_PlugIn(
-    ridge_target(Y = t(X), centeredCov = TRUE)),
+    ridge_target(X, centeredCov = TRUE)),
   
   GMV_plugin_optimal_ridge_shrinkage = GMV_PlugIn(
-    ridge_shrinkage_rescaled(Y = t(X))),
+    ridge_shrinkage_rescaled(X)),
   
   GMV_plugin_inv_cov_quadratic_inverse_shrinkage = GMV_PlugIn(
-    solve(cov_quadratic_inverse_shrinkage(X = X, centeredCov = TRUE))),
+    solve(cov_quadratic_inverse_shrinkage(X, centeredCov = TRUE))),
   
   GMV_plugin_higher_order_shrinkage_2 = GMV_PlugIn(
-    ridge_higher_order_shrinkage(Y = t(X), m = 2, centeredCov = TRUE))
+    ridge_higher_order_shrinkage(X, m = 2, centeredCov = TRUE))
   
   # TODO: add other forms of shrinkage
   # FIXME: see why below does not work
   # ,
   
   # GMV_plugin_higher_order_shrinkage_3 = GMV_PlugIn(
-  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 3, centeredCov = TRUE)),
+  #   ridge_higher_order_shrinkage_optimal(X, m = 3, centeredCov = TRUE)),
   
   # GMV_plugin_higher_order_shrinkage_4 = GMV_PlugIn(
-  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 4, centeredCov = TRUE))
+  #   ridge_higher_order_shrinkage_optimal(X, m = 4, centeredCov = TRUE))
   # ,
   
   # GMV_plugin_higher_order_shrinkage_5 = GMV_PlugIn(
-  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 5, centeredCov = TRUE)),
+  #   ridge_higher_order_shrinkage_optimal(X, m = 5, centeredCov = TRUE)),
   
   # GMV_plugin_higher_order_shrinkage_6 = GMV_PlugIn(
-  #   ridge_higher_order_shrinkage_optimal(Y = t(X), m = 6, centeredCov = TRUE))
+  #   ridge_higher_order_shrinkage_optimal(X, m = 6, centeredCov = TRUE))
 )
 ```
 

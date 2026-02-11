@@ -13,16 +13,16 @@ test_that("`Moore_Penrose_target_general` and `Moore_Penrose_target_identity` gi
   X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
   
   precision_MoorePenrose_Cent =
-     Moore_Penrose_target_general(Y = t(X), centeredCov = TRUE)
+     Moore_Penrose_target_general(X = X, centeredCov = TRUE)
      
   precision_MoorePenrose_NoCent = 
-     Moore_Penrose_target_general(t(X), centeredCov = FALSE)
+     Moore_Penrose_target_general(X = X, centeredCov = FALSE)
   
   precision_MoorePenrose_Cent_id =
-    Moore_Penrose_target_identity(Y = t(X), centeredCov = TRUE)
+    Moore_Penrose_target_identity(X = X, centeredCov = TRUE)
   
   precision_MoorePenrose_NoCent_id = 
-    Moore_Penrose_target_identity(t(X), centeredCov = FALSE)
+    Moore_Penrose_target_identity(X = X, centeredCov = FALSE)
   
   expect_equal(precision_MoorePenrose_Cent, precision_MoorePenrose_Cent_id)
   expect_equal(precision_MoorePenrose_NoCent, precision_MoorePenrose_NoCent_id)

@@ -6,8 +6,7 @@
 #' where \eqn{S} is the sample covariance matrix and \eqn{t} is a given parameter.
 #' 
 #' 
-#' @param Y data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
+#' @param X data matrix (rows are observations, columns are features).
 #' 
 #' @param t parameter of the estimation.
 #' 
@@ -38,25 +37,24 @@
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 #' 
 #' for (t in c(0.2, 0.5, 1)){
-#'   precision_ridge_Cent = 
-#'     ridge_no_shrinkage(Y = t(X), centeredCov = TRUE, t = t)
+#'   precision_ridge = ridge_no_shrinkage(X, t = t)
 #' 
-#'   cat("t = t, loss =", FrobeniusLoss2(precision_ridge_Cent, Sigma = Sigma), "\n")
+#'   cat("t = t, loss =", FrobeniusLoss2(precision_ridge, Sigma = Sigma), "\n")
 #' }
 #' 
 #' 
 #' @export
-ridge_no_shrinkage <- function (Y, centeredCov = TRUE, t, verbose = 0){
+ridge_no_shrinkage <- function (X, centeredCov = TRUE, t, verbose = 0){
   
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   iS_ridge <- solve(S + t * Ip)
   

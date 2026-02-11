@@ -62,10 +62,9 @@
 #
 #'
 #'
-#' @param Y data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
+#' @param X data matrix (rows are observations, columns are features).
 #' 
-#' @param b shrinkage target. By default, the equally-weighted potfolio is used
+#' @param b shrinkage target. By default, the equally-weighted portfolio is used
 #' as a target.
 #' 
 #' @inheritParams cov_with_centering
@@ -94,14 +93,14 @@
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
 #' # Compute GMV portfolio based on the Moore-Penrose inverse (no shrinkage)
-#' GMV_MP = GMV_Moore_Penrose(Y = t(X))
+#' GMV_MP = GMV_Moore_Penrose(X)
 #' 
 #' Loss_GMV_MP = LossRelativeOutOfSampleVariance(
 #'   portfolioWeights = GMV_MP, Sigma = Sigma)
 #' 
 #' # Compute GMV portfolio based on the Moore-Penrose inverse with shrinkage
 #' # towards the equally weighted portfolio
-#' GMV_MP_shrink_eq = GMV_Moore_Penrose_target(Y = t(X))
+#' GMV_MP_shrink_eq = GMV_Moore_Penrose_target(X)
 #' 
 #' Loss_GMV_MP_shrink_eq = LossRelativeOutOfSampleVariance(
 #'   portfolioWeights = GMV_MP_shrink_eq, Sigma = Sigma)
@@ -115,7 +114,7 @@
 #' # towards the true GMV portfolio
 #' GMV_true = GMV_PlugIn(solve(Sigma))
 #' 
-#' GMV_MP_shrink_oracle = GMV_Moore_Penrose_target(Y = t(X), b = GMV_true)
+#' GMV_MP_shrink_oracle = GMV_Moore_Penrose_target(X, b = GMV_true)
 #' 
 #' Loss_GMV_MP_shrink_oracle = LossRelativeOutOfSampleVariance(
 #'   portfolioWeights = GMV_MP_shrink_oracle, Sigma = Sigma)
@@ -126,20 +125,20 @@
 #' 
 #' 
 #' @export
-GMV_Moore_Penrose_target <- function(Y, centeredCov = TRUE, b = NULL,
+GMV_Moore_Penrose_target <- function(X, centeredCov = TRUE, b = NULL,
                                      verbose = 0){
   if (is.null(b)){
     if (verbose > 0){
       cat("Default target: equally weighted portfolio\n")
     }
     result = GMV_Moore_Penrose_target_eq(
-      Y = Y, centeredCov = centeredCov, verbose = verbose)
+      X = X, centeredCov = centeredCov, verbose = verbose)
   } else {
     if (verbose > 0){
       cat("User-provided target portfolio\n")
     }
     result = GMV_Moore_Penrose_target_general(
-      Y = Y, centeredCov = centeredCov, b = b, verbose = verbose)
+      X = X, centeredCov = centeredCov, b = b, verbose = verbose)
   }
   
   return (result)
