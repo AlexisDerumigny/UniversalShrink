@@ -13,15 +13,13 @@
 #'\eqn{\mathbf{S}_n} and and \eqn{\mathbf{1}} is a vector of ones.
 #' 
 #'
-#' @param Y data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
-#' 
+#' @param X data matrix (rows are observations, columns are features).
 #' @inheritParams Moore_Penrose
 #' 
 #' @export
-GMV_Moore_Penrose <- function(Y, centeredCov = TRUE)
+GMV_Moore_Penrose <- function(X, centeredCov = TRUE)
 {
-  iS_MP = Moore_Penrose(Y = Y, centeredCov = centeredCov)
+  iS_MP = Moore_Penrose(X = X, centeredCov = centeredCov)
   GMV_MP = GMV_PlugIn(iS_MP)
   
   return (GMV_MP)

@@ -11,13 +11,13 @@ test_that("GMV_Moore_Penrose_target is coherent for eq weighted targets", {
   Sigma = H %*% diag(seq(1, 0.02, length.out = p)) %*% t(H)
   
   # Generate example dataset
-  X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
+  X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
   
   GMV_MP_shrinkage_Cent_eq = 
-    GMV_Moore_Penrose_target_eq(Y = t(X), centeredCov = TRUE, verbose = 0)
+    GMV_Moore_Penrose_target_eq(X = X, centeredCov = TRUE, verbose = 0)
     
   GMV_MP_shrinkage_Cent_gen = 
-    GMV_Moore_Penrose_target_general(Y = t(X), centeredCov = TRUE, verbose = 0)
+    GMV_Moore_Penrose_target_general(X = X, centeredCov = TRUE, verbose = 0)
   
   expect_equal(GMV_MP_shrinkage_Cent_gen, GMV_MP_shrinkage_Cent_eq)
 })

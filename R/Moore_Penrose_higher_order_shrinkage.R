@@ -167,8 +167,7 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #'  \eqn{s_{i,j}} are given in 
 #' Theorem 2.5 of Bodnar and Parolya (2025).
 #' 
-#' @param Y data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
+#' @param X data matrix (rows are observations, columns are features).
 #' 
 #' @param m order of the shrinkage. Should be at least 1.
 #' 
@@ -196,10 +195,8 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
-#' precision_MoorePenrose_Cent = 
-#'   Moore_Penrose_target(Y = t(X), centeredCov = TRUE)
-#' precision_MoorePenrose_NoCent = 
-#'   Moore_Penrose_target(Y = t(X), centeredCov = FALSE)
+#' precision_MoorePenrose_Cent = Moore_Penrose_target(X, centeredCov = TRUE)
+#' precision_MoorePenrose_NoCent = Moore_Penrose_target(X, centeredCov = FALSE)
 #'
 #' print(FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma))
 #' print(FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma))
@@ -207,10 +204,10 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' for (m in 1:3){
 #'   cat("m = ", m, "\n")
 #'   precision_higher_order_shrinkage_Cent = 
-#'       Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE)
+#'       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
 #'       
 #'   precision_higher_order_shrinkage_NoCent = 
-#'       Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE)
+#'       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = FALSE)
 #'       
 #'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma))
 #'   
@@ -221,21 +218,21 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' 
 #' @export
 #' 
-Moore_Penrose_higher_order_shrinkage <- function(Y, m, centeredCov = TRUE, verbose = 0)
+Moore_Penrose_higher_order_shrinkage <- function(X, m, centeredCov = TRUE, verbose = 0)
 {
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
   # Moore-Penrose inverse of the sample covariance matrix
-  iS_MP <- as.matrix(Moore_Penrose(Y = Y, centeredCov = centeredCov))
+  iS_MP <- as.matrix(Moore_Penrose(X = X, centeredCov = centeredCov))
   
   D_MP <- diag(eigen(iS_MP)$values)
   

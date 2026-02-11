@@ -4,11 +4,10 @@
 \alias{Moore_Penrose_target}
 \title{First-order shrinkage of the Moore-Penrose inverse towards a fixed target}
 \usage{
-Moore_Penrose_target(Y, centeredCov = TRUE, Pi0 = NULL, verbose = 0)
+Moore_Penrose_target(X, centeredCov = TRUE, Pi0 = NULL, verbose = 0)
 }
 \arguments{
-\item{Y}{data matrix (rows are features, columns are observations).
-TODO: transpose everything.}
+\item{X}{data matrix (rows are observations, columns are features).}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
 computed using centering (i.e. in the general case where the mean of the
@@ -53,15 +52,13 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-precision_MoorePenrose_Cent =
-   Moore_Penrose_target(Y = t(X), centeredCov = TRUE)
+precision_MoorePenrose_Cent = Moore_Penrose_target(X, centeredCov = TRUE)
    
-precision_MoorePenrose_NoCent = 
-   Moore_Penrose_target(t(X), centeredCov = FALSE)
+precision_MoorePenrose_NoCent = Moore_Penrose_target(X, centeredCov = FALSE)
 
 precisionTrue = solve(Sigma)
 
-estimatedCov_NLshrink = cov_analytical_NL_shrinkage(t(X))
+estimatedCov_NLshrink = cov_analytical_NL_shrinkage(X)
 estimatedCov_QISshrink = cov_quadratic_inverse_shrinkage(X)
 
 precision_NLshrink = solve(estimatedCov_NLshrink)
@@ -74,9 +71,9 @@ FrobeniusLoss2(precision_QISshrink, Sigma = Sigma, type = "precision")
 
 # We now use the true value of the precision matrix as a target for shrinkage
 precision_MoorePenrose_Cent_trueSigma = 
-  Moore_Penrose_target(t(X), centeredCov = TRUE, Pi0 = solve(Sigma))
+  Moore_Penrose_target(X, centeredCov = TRUE, Pi0 = solve(Sigma))
 precision_MoorePenrose_NoCent_trueSigma = 
-  Moore_Penrose_target(t(X), centeredCov = FALSE, Pi0 = solve(Sigma))                                                        
+  Moore_Penrose_target(X, centeredCov = FALSE, Pi0 = solve(Sigma))                                                        
                                                         
 FrobeniusLoss2(precision_MoorePenrose_Cent_trueSigma, Sigma = Sigma)
 FrobeniusLoss2(precision_MoorePenrose_NoCent_trueSigma, Sigma = Sigma)

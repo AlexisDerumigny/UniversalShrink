@@ -6,7 +6,7 @@ test_that("cov_analytical_NL_shrinkage works better than sample cov", {
   mu = rep(0, p)
   X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
   estimatedCov_sample = cov(X)
-  estimatedCov_shrink = cov_analytical_NL_shrinkage(t(X))
+  estimatedCov_shrink = cov_analytical_NL_shrinkage(X)
 
   # We now compare the distance between the true and both estimators.
   loss_sampleF = FrobeniusLoss2(estimatedCov_sample, Sigma, type = "covariance")

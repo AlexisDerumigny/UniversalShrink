@@ -5,7 +5,7 @@
 \title{Ridge with target set to the identity}
 \usage{
 ridge_target(
-  Y,
+  X,
   centeredCov = TRUE,
   Pi0 = NULL,
   t = NULL,
@@ -18,7 +18,7 @@ ridge_target(
 )
 }
 \arguments{
-\item{Y}{data matrix (rows are features, columns are observations).
+\item{X}{data matrix (rows are features, columns are observations).
 TODO: transpose everything.}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
@@ -77,16 +77,16 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
-precision_ridge_target_Cent = ridge_target(Y = t(X), centeredCov = TRUE)
+precision_ridge_target_Cent = ridge_target(X, centeredCov = TRUE)
     
-precision_ridge_target_NoCent = ridge_target(Y = t(X), centeredCov = FALSE)
+precision_ridge_target_NoCent = ridge_target(X, centeredCov = FALSE)
 
 FrobeniusLoss2(precision_ridge_target_Cent, Sigma = Sigma)
 FrobeniusLoss2(precision_ridge_target_NoCent, Sigma = Sigma)
 
 
 precision_ridge_target_Cent_oracle = 
-    ridge_target(Y = t(X), centeredCov = TRUE, Pi0 = solve(Sigma))
+  ridge_target(X, centeredCov = TRUE, Pi0 = solve(Sigma))
 
 FrobeniusLoss2(precision_ridge_target_Cent_oracle, Sigma = Sigma)
 

@@ -7,8 +7,7 @@
 cov_analytical_NL_shrinkage(X, centeredCov = TRUE)
 }
 \arguments{
-\item{X}{data matrix (rows are features, columns are observations).
-TODO: transpose everything.}
+\item{X}{data matrix (rows are observations, columns are features).}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
 computed using centering (i.e. in the general case where the mean of the
@@ -51,7 +50,7 @@ Sigma = diag(seq(1, 0.02, length.out = p))
 mu = rep(0, p)
 X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
 estimatedCov_sample = cov(X)
-estimatedCov_shrink = cov_analytical_NL_shrinkage(t(X))
+estimatedCov_shrink = cov_analytical_NL_shrinkage(X)
 
 # We now compare the distance between the true and both estimators.
 FrobeniusLoss2(estimatedCov_sample, Sigma, type = "covariance")

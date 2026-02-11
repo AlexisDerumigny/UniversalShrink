@@ -4,11 +4,10 @@
 \alias{Moore_Penrose_higher_order_shrinkage}
 \title{Moore-Penrose higher order shrinkage of the precision matrix}
 \usage{
-Moore_Penrose_higher_order_shrinkage(Y, m, centeredCov = TRUE, verbose = 0)
+Moore_Penrose_higher_order_shrinkage(X, m, centeredCov = TRUE, verbose = 0)
 }
 \arguments{
-\item{Y}{data matrix (rows are features, columns are observations).
-TODO: transpose everything.}
+\item{X}{data matrix (rows are observations, columns are features).}
 
 \item{m}{order of the shrinkage. Should be at least 1.}
 
@@ -75,10 +74,8 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-precision_MoorePenrose_Cent = 
-  Moore_Penrose_target(Y = t(X), centeredCov = TRUE)
-precision_MoorePenrose_NoCent = 
-  Moore_Penrose_target(Y = t(X), centeredCov = FALSE)
+precision_MoorePenrose_Cent = Moore_Penrose_target(X, centeredCov = TRUE)
+precision_MoorePenrose_NoCent = Moore_Penrose_target(X, centeredCov = FALSE)
 
 print(FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma))
 print(FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma))
@@ -86,10 +83,10 @@ print(FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma))
 for (m in 1:3){
   cat("m = ", m, "\n")
   precision_higher_order_shrinkage_Cent = 
-      Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = TRUE)
+      Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
       
   precision_higher_order_shrinkage_NoCent = 
-      Moore_Penrose_higher_order_shrinkage(Y = t(X), m = m, centeredCov = FALSE)
+      Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = FALSE)
       
   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma))
   

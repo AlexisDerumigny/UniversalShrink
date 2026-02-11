@@ -14,8 +14,6 @@ test_that("basic identity", {
   # Generate example dataset
   X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
   
-  Y = t(X)
-  
   # Using the identity target directly
   Ip = diag(nrow = p)
   
@@ -24,7 +22,7 @@ test_that("basic identity", {
   cn = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = TRUE)
+  S <- cov_with_centering(X = X, centeredCov = TRUE)
   iS_ridge <- solve(S + t0 * Ip)
   
   precBits = 100
@@ -62,8 +60,6 @@ test_that(paste0("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result ",
   # Generate example dataset
   X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
   
-  Y = t(X)
-  
   # Using the identity target directly
   Ip = diag(nrow = p)
   
@@ -72,7 +68,7 @@ test_that(paste0("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result ",
   cn = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = TRUE)
+  S <- cov_with_centering(X = X, centeredCov = TRUE)
   iS_ridge <- solve(S + t0 * Ip)
   
   precBits = 100
@@ -144,8 +140,6 @@ test_that(paste0("`best_alphabeta_MPR_shrinkage` is coherent ",
   # Generate example dataset
   X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
   
-  Y = t(X)
-  
   # Using the identity target directly
   Ip = diag(nrow = p)
   
@@ -154,7 +148,7 @@ test_that(paste0("`best_alphabeta_MPR_shrinkage` is coherent ",
   cn = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = TRUE)
+  S <- cov_with_centering(X = X, centeredCov = TRUE)
   
   iS_ridge <- solve(S + t0 * Ip)
   
@@ -186,13 +180,13 @@ test_that("`MPR_target` is coherent between target general and target identity",
   
   Y = t(X)
   
-  precision_MPR_optimal = MPR_target(Y = Y, verbose = 0, upp = atan(10^2))
+  precision_MPR_optimal = MPR_target(X = X, verbose = 0, upp = atan(10^2))
   
   
   # Using the identity target directly
   Ip = diag(nrow = p)
   
-  precision_MPR_optimal_Ip = MPR_target(Y = Y, Pi0 = Ip,
+  precision_MPR_optimal_Ip = MPR_target(X = X, Pi0 = Ip,
                                         verbose = 0, upp = atan(10^2))
   
   expect_equal(precision_MPR_optimal_Ip$t_optimal,
@@ -221,14 +215,14 @@ test_that("`MPR_target` is coherent between target general and target identity",
   alpha_opt = precision_MPR_optimal$alpha_optimal
   beta_opt = precision_MPR_optimal$beta_optimal
   
-  precision_MPR_semioptimal_Ip = MPR_target(Y = Y, Pi0 = Ip, t = t_opt)
+  precision_MPR_semioptimal_Ip = MPR_target(X = X, Pi0 = Ip, t = t_opt)
   
   distFrob = FrobeniusNorm2(as.matrix(precision_MPR_semioptimal_Ip) - 
                               as.matrix(precision_MPR_optimal), normalized = TRUE)
   expect_equal(distFrob, 0)
   
   
-  precision_MPR_nooptim = MPR_target(Y = Y, Pi0 = Ip, t = t_opt,
+  precision_MPR_nooptim = MPR_target(X = X, Pi0 = Ip, t = t_opt,
                                      alpha = alpha_opt, beta = beta_opt)
   
   distFrob = FrobeniusNorm2(as.matrix(precision_MPR_nooptim) - 
@@ -253,17 +247,17 @@ test_that("`MPR_target` is coherent between optimized and non-optimized versions
   
   Y = t(X)
   
-  precision_MPR_optimal = MPR_target(Y = Y)
+  precision_MPR_optimal = MPR_target(X = X)
   
   t_opt =  precision_MPR_optimal$t_optimal
   alpha_opt = precision_MPR_optimal$alpha_optimal
   beta_opt = precision_MPR_optimal$beta_optimal
   
-  precision_MPR_semioptimal = MPR_target(Y = Y, t = t_opt)
+  precision_MPR_semioptimal = MPR_target(X = X, t = t_opt)
   expect_equal(as.matrix(precision_MPR_semioptimal), 
                as.matrix(precision_MPR_optimal) )
   
-  precision_MPR_nooptim = MPR_target(Y = Y, t = t_opt,
+  precision_MPR_nooptim = MPR_target(X = X, t = t_opt,
                                      alpha = alpha_opt, beta = beta_opt)
   expect_equal(as.matrix(precision_MPR_nooptim),
                as.matrix(precision_MPR_optimal) )

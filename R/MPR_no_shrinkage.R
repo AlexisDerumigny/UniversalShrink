@@ -6,8 +6,7 @@
 #' where \eqn{S} is the sample covariance matrix and \eqn{t} is a given parameter.
 #' 
 #' 
-#' @param Y data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
+#' @param X data matrix (rows are observations, columns are features).
 #' 
 #' @param t parameter of the estimation.
 #' 
@@ -37,17 +36,15 @@
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 #' 
-#' Y = t(X)
 #' Ip = diag(nrow = p)
 #' for (t in c(0.01, 0.2, 0.5, 1, 2)){
-#'   precision_MPR_Cent = 
-#'     MPR_no_shrinkage(Y = t(X), centeredCov = TRUE, t = t)
+#'   precision_MPR_Cent = MPR_no_shrinkage(X, centeredCov = TRUE, t = t)
 #'   
 #'   Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
-#'   S = Y %*% Jn %*% t(Y) / (n-1)
+#'   S = t(X) %*% Jn %*% X / (n-1)
 #'   precision_ridge = solve(S + t * Ip)
 #'   precision_MPR_Cent_alternative_expression = precision_ridge %*% S %*% precision_ridge
-#'   precision_MP = Moore_Penrose(Y = t(X), centeredCov = TRUE)
+#'   precision_MP = Moore_Penrose(X, centeredCov = TRUE)
 #' 
 #'   cat("t = ", t,", Moore-Penrose  , loss =", 
 #'     FrobeniusLoss2(precision_MP, Sigma = Sigma, type = "precision"), "\n")
@@ -62,15 +59,15 @@
 #' 
 #' 
 #' @export
-MPR_no_shrinkage <- function (Y, centeredCov = TRUE, t, verbose = 0){
+MPR_no_shrinkage <- function(X, centeredCov = TRUE, t, verbose = 0){
   
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)

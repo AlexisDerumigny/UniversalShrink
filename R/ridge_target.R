@@ -18,7 +18,7 @@
 #' optimal choice of \eqn{t, \alpha, \beta}.
 #' 
 #' 
-#' @param Y data matrix (rows are features, columns are observations).
+#' @param X data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
 #' @param t,alpha,beta,eps,upp,initialValue \code{t}, \code{alpha} and
@@ -57,9 +57,9 @@
 #' 
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
-#' precision_ridge_target_Cent = ridge_target(Y = t(X), centeredCov = TRUE)
+#' precision_ridge_target_Cent = ridge_target(X, centeredCov = TRUE)
 #'     
-#' precision_ridge_target_NoCent = ridge_target(Y = t(X), centeredCov = FALSE)
+#' precision_ridge_target_NoCent = ridge_target(X, centeredCov = FALSE)
 #' 
 #' FrobeniusLoss2(precision_ridge_target_Cent, Sigma = Sigma)
 #' FrobeniusLoss2(precision_ridge_target_NoCent, Sigma = Sigma)
@@ -72,13 +72,13 @@
 #
 #'
 #' precision_ridge_target_Cent_oracle = 
-#'     ridge_target(Y = t(X), centeredCov = TRUE, Pi0 = solve(Sigma))
+#'   ridge_target(X, centeredCov = TRUE, Pi0 = solve(Sigma))
 #' 
 #' FrobeniusLoss2(precision_ridge_target_Cent_oracle, Sigma = Sigma)
 #' 
 #' 
 #' @export
-ridge_target <- function(Y, centeredCov = TRUE, Pi0 = NULL,
+ridge_target <- function(X, centeredCov = TRUE, Pi0 = NULL,
                          t = NULL, alpha = NULL, beta = NULL,
                          verbose = 0,
                          eps = 1/(10^6), upp = pi/2 - eps, initialValue = 1.5)
@@ -94,14 +94,14 @@ ridge_target <- function(Y, centeredCov = TRUE, Pi0 = NULL,
     result = switch(
       optimizationType,
       
-      none = ridge_target_identity(Y = Y, centeredCov = centeredCov,
+      none = ridge_target_identity(X = X, centeredCov = centeredCov,
                                    t = t, alpha = alpha, beta = beta,
                                    verbose = verbose),
       
-      alpha_beta = ridge_target_identity_semioptimal(Y = Y, centeredCov = centeredCov,
+      alpha_beta = ridge_target_identity_semioptimal(X = X, centeredCov = centeredCov,
                                                      t = t, verbose = verbose),
       
-      all = ridge_target_identity_optimal(Y = Y, centeredCov = centeredCov,
+      all = ridge_target_identity_optimal(X = X, centeredCov = centeredCov,
                                           verbose = verbose, eps = eps, upp = upp,
                                           initialValue = initialValue)
     )
@@ -110,14 +110,14 @@ ridge_target <- function(Y, centeredCov = TRUE, Pi0 = NULL,
     result = switch(
       optimizationType,
       
-      none = ridge_target_general(Y = Y, centeredCov = centeredCov,
+      none = ridge_target_general(X = X, centeredCov = centeredCov,
                                   t = t, alpha = alpha, beta = beta, Pi0 = Pi0,
                                   verbose = verbose),
       
-      alpha_beta = ridge_target_general_semioptimal(Y = Y, centeredCov = centeredCov,
+      alpha_beta = ridge_target_general_semioptimal(X = X, centeredCov = centeredCov,
                                                     t = t, Pi0 = Pi0, verbose = verbose),
       
-      all = ridge_target_general_optimal(Y = Y, centeredCov = centeredCov,
+      all = ridge_target_general_optimal(X = X, centeredCov = centeredCov,
                                          Pi0 = Pi0,
                                          verbose = verbose, eps = eps, upp = upp,
                                          initialValue = initialValue)

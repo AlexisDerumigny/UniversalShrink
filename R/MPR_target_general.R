@@ -1,23 +1,23 @@
 
 
 
-MPR_target_general_optimal <- function (Y, centeredCov, Pi0, verbose = 3, 
+MPR_target_general_optimal <- function (X, centeredCov, Pi0, verbose = 3, 
                                         eps = 1/(10^6), upp = pi/2 - eps,
                                         initialValue = 1.5){
   if (verbose > 0){
     cat("Starting `MPR_target_general_optimal`...\n")
   }
   
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   cn = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   hL2R <- function(u){
     t = tan(u)
@@ -134,15 +134,15 @@ loss_L2_MPR_optimal_target_general <- function(t, Sn, p, Ip, cn, Pi0, iS_ridge, 
 
 
 
-MPR_target_general_semioptimal <- function (Y, centeredCov, t, Pi0, verbose = 2){
+MPR_target_general_semioptimal <- function (X, centeredCov, t, Pi0, verbose = 2){
   
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   cn = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
@@ -448,15 +448,15 @@ best_alphabeta_MPR_shrinkage_general <- function(p, t0, cn, Pi0, Ip, Sn, iS_ridg
 
 
 
-MPR_target_general <- function (Y, centeredCov, t, alpha, beta, Pi0, verbose){
+MPR_target_general <- function (X, centeredCov, t, alpha, beta, Pi0, verbose){
   
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   cn = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
-  S <- cov_with_centering(X = t(Y), centeredCov = centeredCov)
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)

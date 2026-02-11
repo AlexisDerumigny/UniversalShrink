@@ -17,8 +17,7 @@
 #' 
 #' 
 #' 
-#' @param Y data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
+#' @param X data matrix (rows are observations, columns are features).
 #' 
 #' @inheritParams cov_with_centering
 #' 
@@ -45,7 +44,7 @@
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
-#' iS_MP = Moore_Penrose(Y = t(X), centeredCov = TRUE)
+#' iS_MP = Moore_Penrose(X, centeredCov = TRUE)
 #' # Convert to matrix class for computations
 #' iS_MP = as.matrix(iS_MP)
 #' 
@@ -67,14 +66,17 @@
 #' sum((iS_MP %*% S - t(iS_MP %*% S))^2)
 #' 
 #' @export
-Moore_Penrose <- function(Y, centeredCov = TRUE)
+Moore_Penrose <- function(X, centeredCov = TRUE)
 {
-  # Get sizes of Y
-  p = nrow(Y)
-  n = ncol(Y)
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
+  
+  Y = t(X)
+  # TODO: avoid the transpose and fix all the code below directly?
   
   if (centeredCov){
     Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)

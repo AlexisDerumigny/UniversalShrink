@@ -3,8 +3,7 @@
 #' Optimal ridge shrinkage for estimation of the precision matrix
 #' 
 #' 
-#' @param Y data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
+#' @param X data matrix (rows are observations, columns are features).
 #' 
 #' @param eps,upp search interval for the best penalization parameter
 #' (used in the numerical optimization).
@@ -23,11 +22,11 @@
 #' Sigma = diag(seq(1, 0.02, length.out = p))
 #' mu = rep(0, p)
 #' X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
-#' precision_OptimalRidge = ridge_shrinkage_rescaled(t(X))
+#' precision_OptimalRidge = ridge_shrinkage_rescaled(X)
 #' 
 #' precisionTrue = solve(Sigma)
 #' 
-#' estimatedCov_NLshrink = cov_analytical_NL_shrinkage(t(X))
+#' estimatedCov_NLshrink = cov_analytical_NL_shrinkage(X)
 #' estimatedCov_QISshrink = cov_quadratic_inverse_shrinkage(X)
 #' 
 #' precision_NLshrink = solve(estimatedCov_NLshrink)
@@ -39,7 +38,7 @@
 #' 
 #' 
 #' @export
-ridge_shrinkage_rescaled <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
+ridge_shrinkage_rescaled <- function (X, eps = 1e-6, upp = pi/2 - 1e-6)
 {
   if (eps <= 0 || eps > pi/2){
     stop("'eps' must be between 0 and pi/2")
@@ -51,10 +50,10 @@ ridge_shrinkage_rescaled <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
     stop("'eps' must be strictly smaller than 'upp'.")
   }
   
-  S <- stats::cov(t(Y))
+  S <- stats::cov(X)
   
-  p = nrow(Y)
-  n = ncol(Y)
+  n = nrow(X)
+  p = ncol(X)
   c_n = p / n
   
   # Identity matrix of size p
@@ -79,8 +78,8 @@ ridge_shrinkage_rescaled <- function (Y, eps = 1e-6, upp = pi/2 - 1e-6)
     return(hL_WPTZ)
   }
   
-  hL_WPTZ_max <- stats::optim(1.5, hL_WPTZ, lower = eps, upper = upp, method = "L-BFGS-B",
-                              control = list(fnscale = -1))
+  hL_WPTZ_max <- stats::optim(1.5, hL_WPTZ, lower = eps, upper = upp,
+                              method = "L-BFGS-B", control = list(fnscale = -1))
   t_optimal <- tan(hL_WPTZ_max$par)
   
   iS_t<-solve(S / t_optimal + Ip)
