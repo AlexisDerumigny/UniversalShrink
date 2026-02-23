@@ -18,10 +18,6 @@ the estimator of the precision matrix
 (a \code{p} by \code{p} matrix, i.e. the inverse of the covariance matrix).
 }
 \description{
-The optimal ridge estimator of
-Wang et al. (2015) is given by
-}
-\details{
 \deqn{
 \widehat{\boldsymbol{\Pi}}_{OR}
 =

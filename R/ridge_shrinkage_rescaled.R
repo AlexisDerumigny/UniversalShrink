@@ -2,9 +2,6 @@
 
 #' Optimal ridge shrinkage for estimation of the precision matrix by 
 #' Wang et al. (2015)
-#' 
-#' The optimal ridge estimator of 
-#' Wang et al. (2015) is given by
 #'
 #' \deqn{
 #' \widehat{\boldsymbol{\Pi}}_{OR}
