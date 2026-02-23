@@ -181,8 +181,8 @@ cat("loss = ", FrobeniusLoss2(precision_MPR_no_shrink, Sigma = Sigma))
 
 }
 \references{
-Nestor Parolya & Taras Bodnar (2024).
+Nestor Parolya & Taras Bodnar (2026).
 Reviving pseudo-inverses: Asymptotic properties of large dimensional
 Moore-Penrose and Ridge-type inverses with applications.
-\doi{10.48550/arXiv.2403.15792}
+\doi{10.1214/25-AOS2602}
 }
