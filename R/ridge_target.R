@@ -131,7 +131,7 @@
 #' Nestor Parolya & Taras Bodnar (2026).
 #' Reviving pseudo-inverses: Asymptotic properties of large dimensional
 #' Moore-Penrose and Ridge-type inverses with applications.
-#' \doi{10.1214/25-AOS2602}
+#' \doi{10.1214/25-AOS2602}. ArXiv: \doi{10.48550/arXiv.2403.15792}.
 #' 
 #' 
 #' @examples
