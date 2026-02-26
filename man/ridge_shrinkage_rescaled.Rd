@@ -18,6 +18,7 @@ the estimator of the precision matrix
 (a \code{p} by \code{p} matrix, i.e. the inverse of the covariance matrix).
 }
 \description{
+The estimator is given by
 \deqn{
 \widehat{\boldsymbol{\Pi}}_{OR}
 =

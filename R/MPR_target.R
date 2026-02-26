@@ -9,11 +9,11 @@
 #' \deqn{
 #' \widehat{\boldsymbol{\Pi}}_{MPR}=\hat{\alpha}_{MPR}^*(t^*)\mathbf{S}_n^{\pm}(t^*)+
 #' \hat{\beta}_{MP}^*(t^*)\boldsymbol{\Pi}_0\,,
-#'} where \eqn{\mathbf{S}^+_n} denotes the Moore-Penrose inverse the sample
+#' } where \eqn{\mathbf{S}^+_n} denotes the Moore-Penrose inverse of the sample
 #' covariance matrix, \eqn{\boldsymbol{\Pi}_0} is the shrinkage target 
-#' (\eqn{\boldsymbol{\Pi}_0=\mathbf{I}_p}, i.e., identity matrix by default) and
-#'   \eqn{\hat{\alpha}_{MPR}^*(t^*)} and \eqn{\hat{\beta}_{MPR}^*(t^*)} are the optimal 
-#'   shrinkage intensities given by 
+#' (by default, \eqn{\boldsymbol{\Pi}_0=\mathbf{I}_p}, i.e. shrinkage to the
+#' identity matrix) and \eqn{\hat{\alpha}_{MPR}^*(t^*)} and
+#' \eqn{\hat{\beta}_{MPR}^*(t^*)} are the optimal shrinkage intensities given by 
 #' \deqn{
 #' \hat{\alpha}_{MPR}^*(t^*)
 #' =
@@ -57,15 +57,15 @@
 #' \deqn{
 #' \hat{L}^2_{MPR;2}(t)
 #' =
-#' \frac{1}{\hat{q}_2\left(\dfrac{1}{p}\boldsymbol{\Pi}_0^2\right)}
-#' \frac{
+#' \dfrac{1}{\hat{q}_2\left(\frac{1}{p}\boldsymbol{\Pi}_0^2\right)}
+#' \dfrac{
 #' [\hat{v}^{(1)}(t)]^2
 #' \left[
-#' \hat{d}_1\left(t,\dfrac{1}{p}\boldsymbol{\Sigma}\right)
-#' \hat{q}_2\left(\dfrac{1}{p}\boldsymbol{\Pi}_0^2\right)
+#' \hat{d}_1\left(t,\frac{1}{p}\boldsymbol{\Sigma}\right)
+#' \hat{q}_2\left(\frac{1}{p}\boldsymbol{\Pi}_0^2\right)
 #' -
-#' \hat{d}_1\left(t,\dfrac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)
-#' \hat{q}_1\left(\dfrac{1}{p}\boldsymbol{\Pi}_0\right)
+#' \hat{d}_1\left(t,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)
+#' \hat{q}_1\left(\frac{1}{p}\boldsymbol{\Pi}_0\right)
 #' \right]^2
 #' }{
 #' \hat{\grave{s}}_2\left(t,\frac{1}{p}\boldsymbol{\Sigma}^2\right)

@@ -67,14 +67,14 @@
 #' \deqn{
 #' \hat{L}^2_{R;2}(t)
 #' =
-#' \frac{1}{\hat{q}_2\left(\dfrac{1}{p}\boldsymbol{\Pi}_0^2\right)}
-#' \frac{
+#' \dfrac{1}{\hat{q}_2\left(\frac{1}{p}\boldsymbol{\Pi}_0^2\right)}
+#' \dfrac{
 #' \left[
-#' \hat{d}_0\left(t,\dfrac{1}{p}\boldsymbol{\Sigma}\right)
-#' \hat{q}_2\left(\dfrac{1}{p}\boldsymbol{\Pi}_0^2\right)
+#' \hat{d}_0\left(t,\frac{1}{p}\boldsymbol{\Sigma}\right)
+#' \hat{q}_2\left(\frac{1}{p}\boldsymbol{\Pi}_0^2\right)
 #' -
-#' \hat{d}_0\left(t,\dfrac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)
-#' \hat{q}_1\left(\dfrac{1}{p}\boldsymbol{\Pi}_0\right)
+#' \hat{d}_0\left(t,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)
+#' \hat{q}_1\left(\frac{1}{p}\boldsymbol{\Pi}_0\right)
 #' \right]^2
 #' }{
 #' \left(
@@ -95,17 +95,17 @@
 #' \eqn{\hat{d}_0\left(t,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)}
 #' and \eqn{\hat{d}_1\left(t,\frac{1}{p}\boldsymbol{\Sigma}^2\right)} are defined
 #' in the supplementary material of Bodnar and Parolya (2025). This procedure ensures
-#'  that the loss 
-#'\eqn{||\widehat{\boldsymbol{\Pi}}_{R}\boldsymbol{\Sigma}-\mathbf{I}_p||^2_F}
+#' that the loss 
+#'  \eqn{||\widehat{\boldsymbol{\Pi}}_{R}\boldsymbol{\Sigma}-\mathbf{I}_p||^2_F}
 #' is asymptotically minimized with probability one.
 #' 
-#' Note that the function `ridge_target_identity()` requires the specification of all
-#' \eqn{t, \alpha, \beta}.
-#' The function `ridge_target_identity_semioptimal()` only requires the
-#' specification of \eqn{t} and compute (asymptotically) optimal choices of
-#' \eqn{\alpha} and \eqn{\beta}.
-#' Finally, the function `ridge_target_identity_optimal()` compute the (asymptotically)
-#' optimal choice of \eqn{t, \alpha, \beta}.
+# Note that the function `ridge_target_identity()` requires the specification of all
+# \eqn{t, \alpha, \beta}.
+# The function `ridge_target_identity_semioptimal()` only requires the
+# specification of \eqn{t} and compute (asymptotically) optimal choices of
+# \eqn{\alpha} and \eqn{\beta}.
+# Finally, the function `ridge_target_identity_optimal()` compute the (asymptotically)
+# optimal choice of \eqn{t, \alpha, \beta}.
 #' 
 #' 
 #' @param X data matrix (rows are features, columns are observations).

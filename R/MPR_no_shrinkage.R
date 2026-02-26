@@ -1,7 +1,8 @@
 
 #' Moore-Penrose-Ridge
 #' 
-#' This function computes Moore-Penrose-ridge inverse (see, Bodnar and Parolya (2026))
+#' This function computes the Moore-Penrose-ridge inverse proposed in
+#' Bodnar and Parolya (2026), which is defined by
 #' \deqn{
 #' \mathbf{S}_n^{\pm}(t)
 #' =

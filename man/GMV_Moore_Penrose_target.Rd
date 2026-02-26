@@ -29,12 +29,12 @@ a vector of size \eqn{p} of (estimated) optimal portfolio weights,
 where \eqn{p} is the number of assets.
 }
 \description{
-This function computes
+This function computes shrinked optimal portfolio weights given by
 \deqn{\hat{\alpha}^*\mathbf{w}_{MP} + (1 - \hat{\alpha}^*) \mathbf{b}}
 where \eqn{\hat{\alpha}^*} is given by
 \deqn{
 \hat{\alpha}^*=
-\frac{\mathbf{b}^\top\mathbf{S}_n\mathbf{b}-
+\dfrac{\mathbf{b}^\top\mathbf{S}_n\mathbf{b}-
 \frac{\hat{d}_1\left(\mathbf{1}\mathbf{b}^\top\boldsymbol{\Sigma} \right)}
 {\hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}}
 {\mathbf{b}^\top\mathbf{S}_n\mathbf{b} - 

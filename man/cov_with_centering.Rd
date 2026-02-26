@@ -64,3 +64,33 @@ Similarly, the concentration ratio in the noncentered case is defined by
 can have some significant influence on the performance of the estimators in
 finite sample regime.
 }
+\examples{
+p = 10
+Sigma = diag(1:p)
+n = 5
+
+# True mean is zero
+
+X <- MASS::mvrnorm(n = n, mu = rep(0,p), Sigma = Sigma)
+cov_cent = cov_with_centering(X, centeredCov = TRUE)
+cov_noncent = cov_with_centering(X, centeredCov = FALSE)
+concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 1)
+concentr_ratio(n = n, p = p, centeredCov = FALSE, verbose = 1)
+
+FrobeniusLoss2(cov_cent, Sigma, type = "covariance")
+FrobeniusLoss2(cov_noncent, Sigma, type = "covariance")
+
+
+# True mean is not zero
+
+X <- MASS::mvrnorm(n = n, mu = rep(20,p), Sigma = Sigma)
+cov_cent = cov_with_centering(X, centeredCov = TRUE)
+cov_noncent = cov_with_centering(X, centeredCov = FALSE)
+concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 1)
+concentr_ratio(n = n, p = p, centeredCov = FALSE, verbose = 1)
+
+FrobeniusLoss2(cov_cent, Sigma, type = "covariance")
+FrobeniusLoss2(cov_noncent, Sigma, type = "covariance")
+
+
+}

@@ -2,14 +2,14 @@
 
 #' Moore-Penrose inverse of the sample covariance matrix
 #' 
-#' Having a centered (by default) or non-centered observation matrix 
-#' \eqn{\mathbf{X}_n} with the corresponding sample covariance matrix 
+#' Let \eqn{\mathbf{X}_n} be the \eqn{n \times p} observed data matrix, with the
+#' corresponding (centered (by default) or non-centered) sample covariance matrix 
 #' \eqn{\mathbf{S}_n}. The Moore-Penrose inverse of this sample
 #' covariance matrix, denoted by \eqn{\mathbf{S}^+_n} is computed by the following
-#'  formula
+#' formula
 #' \deqn{
 #' \mathbf{S}_n^+=\left(\frac{1}{n}\mathbf{X}_n^\top\mathbf{X}_n\right)^+
-#' =\frac{1}{\sqrt{n}}\mathbf{X}_n^\top\left(\frac{1}{n}
+#' = \frac{1}{\sqrt{n}}\mathbf{X}_n^\top\left(\frac{1}{n}
 #' \mathbf{X}_n\mathbf{X}_n^\top\right)^{-2}
 #' \frac{1}{\sqrt{n}}\mathbf{X}_n.
 #' } See, the beginning of the proof of Theorem 2.1 in Bodnar and Parolya (2026)

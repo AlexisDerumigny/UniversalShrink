@@ -2,7 +2,7 @@
 
 #' Analytical non-linear shrinkage from Ledoit and Wolf (2020)
 #' 
-#' This function estimates the covariance matrix as a given data set using 
+#' This function estimates the covariance matrix of a given data set using 
 #' classical nonlinear shrinkage from Ledoit and Wolf (2020).
 #' 
 #' For \eqn{i\in\{1,\ldots,p\}}, the nonlinear shrinkage estimator of 
@@ -29,9 +29,8 @@
 #' 
 #' @inheritParams cov_with_centering
 #' 
-#' @returns the estimator of the covariance matrix
-#' (a `p` by `p` matrix).
-#' TODO: update this
+#' @returns an object of class \code{"EstimatedCovarianceMatrix"}, containing
+#' the estimator of the covariance matrix (of size `p` by `p`).
 #' 
 #' @references 
 #' Ledoit, O., & Wolf, M. (2020).

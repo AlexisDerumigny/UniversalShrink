@@ -25,7 +25,7 @@ For an \eqn{n \times p} observation matrix \eqn{\mathbf{X}_n} and the
 corresponding sample covariance matrix \eqn{\mathbf{S}_n} of size
 \eqn{p \times p}, this estimator is given by
 \deqn{
-\mathbf{w}_{MP}=\frac{\mathbf{S}^+_n\mathbf{1}}{\mathbf{1}^\top\mathbf{S}^+_n\mathbf{1}},
+\mathbf{w}_{MP}=\dfrac{\mathbf{S}^+_n\mathbf{1}}{\mathbf{1}^\top\mathbf{S}^+_n\mathbf{1}},
 }
 where \eqn{\mathbf{S}^+_n} is the Moore-Penrose (pseudo) inverse of
 \eqn{\mathbf{S}_n} and \eqn{\mathbf{1}} is a \eqn{p}-dimensional vector of ones.

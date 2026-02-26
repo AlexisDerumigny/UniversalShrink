@@ -16,12 +16,11 @@ If \code{FALSE} the covariance matrix is computed assuming that the mean of
 the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 }
 \value{
-the estimator of the covariance matrix
-(a \code{p} by \code{p} matrix).
-TODO: update this
+an object of class \code{"EstimatedCovarianceMatrix"}, containing
+the estimator of the covariance matrix (of size \code{p} by \code{p}).
 }
 \description{
-This function estimates the covariance matrix as a given data set using
+This function estimates the covariance matrix of a given data set using
 classical nonlinear shrinkage from Ledoit and Wolf (2020).
 }
 \details{

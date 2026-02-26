@@ -21,9 +21,8 @@ no printing at all, while higher values indicate increasingly more detailed
 (more verbose) output.}
 }
 \value{
-the estimator of the covariance matrix
-(a \code{p} by \code{p} matrix).
-TODO: update this
+an object of class \code{"EstimatedCovarianceMatrix"}, containing
+the estimator of the covariance matrix (of size \code{p} by \code{p}).
 }
 \description{
 This function estimates the covariance matrix as a given data set using

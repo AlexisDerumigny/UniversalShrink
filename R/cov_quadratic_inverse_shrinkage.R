@@ -56,9 +56,8 @@
 #' 
 #' @inheritParams cov_with_centering
 #' 
-#' @returns the estimator of the covariance matrix
-#' (a `p` by `p` matrix).
-#' TODO: update this
+#' @returns an object of class \code{"EstimatedCovarianceMatrix"}, containing
+#' the estimator of the covariance matrix (of size `p` by `p`).
 #' 
 #' @references 
 #' Ledoit, O., & Wolf, M. (2022).
