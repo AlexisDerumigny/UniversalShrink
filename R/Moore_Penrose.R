@@ -92,20 +92,24 @@ Moore_Penrose <- function(X, centeredCov = TRUE)
     
     n_adjusted = n
   }
-  # Inverse companion covariance
-  iYtilde <- solve(t(Ytilde) %*% Ytilde / n_adjusted)
+  
   
   # Moore-Penrose inverse
   if (n_adjusted < p){
+    # Inverse companion covariance
+    iYtilde <- solve(t(Ytilde) %*% Ytilde / n_adjusted)
+    # iS_MP <- MASS::ginv(S)
+    # Explicit expression which could outperform `MASS::ginv`
+    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / n_adjusted
+    
+  } else if (n_adjusted > p){
     if (centeredCov){
       S <- Y %*% Jn %*% t(Y) / (n-1)
     } else {
-      S <- S <- Y %*% t(Y) / n
+      S <- Y %*% t(Y) / n
     }
+    
     iS_MP <- MASS::ginv(S)
-  } else if (n_adjusted > p){
-    # Explicit expression which could outperform `MASS::ginv`
-    iS_MP <- Ytilde %*% iYtilde %*% iYtilde %*% t(Ytilde) / (n-1)
   } else {
     stop("This estimator is not defined for p = n - 1 in the centered case,",
          "and for p = n in the non-centered case. Here p = ", p,
