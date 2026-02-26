@@ -1,5 +1,10 @@
+#' Quadratic losses of the estimator of a matrix or portfolio weights
+#' @name quadratic_losses
+NULL
+
+
 #' @export
-#' @rdname FrobeniusLoss2
+#' @rdname quadratic_losses
 FrobeniusNorm2 <- function(M, normalized){
   FrobNorm2 = tr( M %*% t(M) )
   if (normalized){
@@ -11,8 +16,6 @@ FrobeniusNorm2 <- function(M, normalized){
 }
 
 
-#' Quadratic losses of the estimator of a matrix or portfolio weights
-#'
 #' Generic function to calculate the Frobenius norm/loss of (the estimator of) a
 #' matrix. For a generic matrix \eqn{M}, the (squared) Frobenius norm is defined in the following way
 #' \deqn{
@@ -120,13 +123,14 @@ FrobeniusNorm2 <- function(M, normalized){
 #' FrobeniusNorm2(trueWeights - weights3, normalized = FALSE)
 #' 
 #' @export
+#' @rdname quadratic_losses
 FrobeniusLoss2 <- function(x, Sigma, type, normalized = TRUE, ...) {
   UseMethod("FrobeniusLoss2")
 }
 
 
 #' @export
-#' @rdname FrobeniusLoss2
+#' @rdname quadratic_losses
 FrobeniusLoss2.matrix <- function(x,
                                   Sigma,
                                   type = c("precision matrix", "covariance matrix"),
@@ -168,7 +172,7 @@ FrobeniusLoss2.matrix <- function(x,
 
 
 #' @export
-#' @rdname FrobeniusLoss2
+#' @rdname quadratic_losses
 FrobeniusLoss2.EstimatedPrecisionMatrix <- function(
     x, Sigma, type = "precision matrix", normalized = TRUE, ...)
 {
@@ -187,7 +191,7 @@ FrobeniusLoss2.EstimatedPrecisionMatrix <- function(
 
 
 #' @export
-#' @rdname FrobeniusLoss2
+#' @rdname quadratic_losses
 FrobeniusLoss2.EstimatedCovarianceMatrix <- function(
     x, Sigma, type = "covariance matrix", normalized = TRUE, ...)
 {
@@ -205,7 +209,7 @@ FrobeniusLoss2.EstimatedCovarianceMatrix <- function(
 
 
 #' @export
-#' @rdname FrobeniusLoss2
+#' @rdname quadratic_losses
 DistanceEuclideanEigenvalues2 <- function(M1, M2, normalized){
   
   if (normalized){
@@ -218,7 +222,7 @@ DistanceEuclideanEigenvalues2 <- function(M1, M2, normalized){
 }
 
 #' @export
-#' @rdname FrobeniusLoss2
+#' @rdname quadratic_losses
 LossEuclideanEigenvalues2 <- function(x, Sigma, type,
                                       normalized = TRUE, ...) {
   UseMethod("LossEuclideanEigenvalues2")
@@ -226,7 +230,7 @@ LossEuclideanEigenvalues2 <- function(x, Sigma, type,
 
 
 #' @export
-#' @rdname FrobeniusLoss2
+#' @rdname quadratic_losses
 LossEuclideanEigenvalues2.matrix <- function(
     x,
     Sigma,
@@ -272,7 +276,7 @@ LossEuclideanEigenvalues2.matrix <- function(
 
 
 #' @export
-#' @rdname FrobeniusLoss2
+#' @rdname quadratic_losses
 LossEuclideanEigenvalues2.EstimatedPrecisionMatrix <- function(
     x, Sigma, type = "precision matrix", normalized = TRUE, SigmaInv = NULL, ...)
 {
@@ -291,7 +295,7 @@ LossEuclideanEigenvalues2.EstimatedPrecisionMatrix <- function(
 
 
 #' @export
-#' @rdname FrobeniusLoss2
+#' @rdname quadratic_losses
 LossEuclideanEigenvalues2.EstimatedCovarianceMatrix <- function(
     x, Sigma, type = "covariance matrix", normalized = TRUE, ...)
 {
@@ -310,7 +314,7 @@ LossEuclideanEigenvalues2.EstimatedCovarianceMatrix <- function(
 
 
 #' @export
-#' @rdname FrobeniusLoss2
+#' @rdname quadratic_losses
 LossRelativeOutOfSampleVariance <- function(portfolioWeights, Sigma, SigmaInv = NULL){
   if (is.null(SigmaInv)){
     SigmaInv = solve(Sigma)
