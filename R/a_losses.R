@@ -20,13 +20,13 @@ FrobeniusNorm2 <- function(M, normalized){
 #' } while (squared) Frobenius loss analogously is defined by
 #' \deqn{
 #' \code{FrobeniusLoss2}(\mathbf{M}, g(\boldsymbol{\Sigma}))= ||\mathbf{M}-g(\mathbf{\boldsymbol{\Sigma}})||^2_F\,,
-#' } where \eqn{M} here denotes a suitable estimator and the function 
+#' } where \eqn{M} here denotes a suitable estimator and the function \eqn{g} is
 #' \eqn{g(x)=x} when \code{type="covariance matrix"} is
 #' chosen, otherwise \eqn{g(x)=1/x} for \code{type="precision matrix"}. In case 
 #' \code{normalized=TRUE} (default) the above losses are normalized by the matrix
-#'  dimension \eqn{p}. Furthermore we present an alternative loss measures focused directly
-#'  on the spectra of the matrices: \code{DistanceEuclideanEigenvalues2} and 
-#'  \code{LossEuclideanEigenvalues2} defined as follows
+#' dimension \eqn{p}. Furthermore we present alternative loss measures focused directly
+#' on the spectra of the matrices: \code{DistanceEuclideanEigenvalues2} and 
+#' \code{LossEuclideanEigenvalues2} defined as follows
 #'  \deqn{
 #'  \code{DistanceEuclideanEigenvalues2}(\mathbf{M}_1, \mathbf{M}_2)=
 #'  \sum\limits_{i=1}^{p} (\lambda_i(\mathbf{M}_1)-\lambda_i(\mathbf{M}_2))^2\,
@@ -88,6 +88,36 @@ FrobeniusNorm2 <- function(M, normalized){
 #' the (out of sample) variances of the given \code{portfolioWeights} and of the
 #' GMV portfolio.
 #' 
+#' @examples
+#' M = diag(c(1,2,3))
+#' FrobeniusNorm2(M, normalized = TRUE)
+#' FrobeniusNorm2(M, normalized = FALSE)
+#' 
+#' X <- MASS::mvrnorm(n = 100, mu = rep(0,3), Sigma = M)
+#' estimatedCov_sample = cov(X)
+#' 
+#' # Losses for estimation of the covariance
+#' 
+#' FrobeniusLoss2(estimatedCov_sample, M, type = "covariance")
+#' LossEuclideanEigenvalues2(estimatedCov_sample, M, type = "covariance")
+#' 
+#' 
+#' # Losses for portfolios
+#' Sigma = diag(1:5)
+#' 
+#' X <- MASS::mvrnorm(n = 100, mu = rep(0,5), Sigma = Sigma)
+#' weights100 = GMV_Moore_Penrose(X)
+#' 
+#' X <- MASS::mvrnorm(n = 3, mu = rep(0,5), Sigma = Sigma)
+#' weights3 = GMV_Moore_Penrose(X)
+#' 
+#' LossRelativeOutOfSampleVariance(weights100, Sigma)
+#' LossRelativeOutOfSampleVariance(weights3, Sigma)
+#' 
+#' trueWeights = rowSums(solve(Sigma)) / sum(solve(Sigma))
+#' 
+#' FrobeniusNorm2(trueWeights - weights100, normalized = FALSE)
+#' FrobeniusNorm2(trueWeights - weights3, normalized = FALSE)
 #' 
 #' @export
 FrobeniusLoss2 <- function(x, Sigma, type, normalized = TRUE, ...) {
