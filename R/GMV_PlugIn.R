@@ -28,6 +28,15 @@
 #' the minimum variance, i.e. the portfolio that has the lowest variance among
 #' all portfolios.
 #' 
+#' @examples
+#' # This is used in the definition of GMV_Moore_Penrose
+#' Sigma = diag(1:5)
+#' 
+#' X <- MASS::mvrnorm(n = 3, mu = rep(0,5), Sigma = Sigma)
+#' iS_MP = Moore_Penrose(X = X, centeredCov = TRUE)
+#' GMV_MP = GMV_PlugIn(iS_MP)
+#' 
+#' 
 #' @export
 GMV_PlugIn <- function(estimatedPrecisionMatrix){
   

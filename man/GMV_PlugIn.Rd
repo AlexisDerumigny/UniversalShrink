@@ -34,3 +34,13 @@ Here \eqn{\mathbf{1}} is a vector \eqn{1} of size \eqn{p}, and
 \eqn{p \times p}, where \eqn{p} is the number of assets that are considered
 and \eqn{\boldsymbol{\Sigma}} is the (true or estimated) covariance matrix of the vector of asset returns.
 }
+\examples{
+# This is used in the definition of GMV_Moore_Penrose
+Sigma = diag(1:5)
+
+X <- MASS::mvrnorm(n = 3, mu = rep(0,5), Sigma = Sigma)
+iS_MP = Moore_Penrose(X = X, centeredCov = TRUE)
+GMV_MP = GMV_PlugIn(iS_MP)
+
+
+}
