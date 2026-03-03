@@ -198,8 +198,8 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' precision_MoorePenrose_Cent = Moore_Penrose_target(X, centeredCov = TRUE)
 #' precision_MoorePenrose_NoCent = Moore_Penrose_target(X, centeredCov = FALSE)
 #'
-#' print(FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma))
-#' print(FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma))
+#' print(LossFrobenius2(precision_MoorePenrose_Cent, Sigma))
+#' print(LossFrobenius2(precision_MoorePenrose_NoCent, Sigma))
 #' 
 #' for (m in 1:3){
 #'   cat("m = ", m, "\n")
@@ -209,9 +209,9 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #'   precision_higher_order_shrinkage_NoCent = 
 #'       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = FALSE)
 #'       
-#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma))
+#'   print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
 #'   
-#'   print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent, Sigma))
+#'   print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma))
 #' }
 #' 
 #' 

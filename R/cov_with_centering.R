@@ -67,8 +67,8 @@
 #' concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 1)
 #' concentr_ratio(n = n, p = p, centeredCov = FALSE, verbose = 1)
 #' 
-#' FrobeniusLoss2(cov_cent, Sigma, type = "covariance")
-#' FrobeniusLoss2(cov_noncent, Sigma, type = "covariance")
+#' LossFrobenius2(cov_cent, Sigma, type = "covariance")
+#' LossFrobenius2(cov_noncent, Sigma, type = "covariance")
 #' 
 #' 
 #' # True mean is not zero
@@ -79,8 +79,8 @@
 #' concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 1)
 #' concentr_ratio(n = n, p = p, centeredCov = FALSE, verbose = 1)
 #' 
-#' FrobeniusLoss2(cov_cent, Sigma, type = "covariance")
-#' FrobeniusLoss2(cov_noncent, Sigma, type = "covariance")
+#' LossFrobenius2(cov_cent, Sigma, type = "covariance")
+#' LossFrobenius2(cov_noncent, Sigma, type = "covariance")
 #' 
 #' 
 #' @export

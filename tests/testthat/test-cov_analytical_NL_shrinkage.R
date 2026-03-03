@@ -9,8 +9,8 @@ test_that("cov_analytical_NL_shrinkage works better than sample cov", {
   estimatedCov_shrink = cov_analytical_NL_shrinkage(X)
 
   # We now compare the distance between the true and both estimators.
-  loss_sampleF = FrobeniusLoss2(estimatedCov_sample, Sigma, type = "covariance")
-  loss_shrinkF = FrobeniusLoss2(estimatedCov_shrink, Sigma)
+  loss_sampleF = LossFrobenius2(estimatedCov_sample, Sigma, type = "covariance")
+  loss_shrinkF = LossFrobenius2(estimatedCov_shrink, Sigma)
   
   expect_lt(loss_shrinkF, loss_sampleF)
 

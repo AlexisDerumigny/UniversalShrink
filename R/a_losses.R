@@ -5,7 +5,7 @@ NULL
 
 #' @export
 #' @rdname quadratic_losses
-FrobeniusNorm2 <- function(M, normalized){
+NormFrobenius2 <- function(M, normalized){
   FrobNorm2 = tr( M %*% t(M) )
   if (normalized){
     p = ncol(M)
@@ -19,10 +19,10 @@ FrobeniusNorm2 <- function(M, normalized){
 #' Generic function to calculate the Frobenius norm/loss of (the estimator of) a
 #' matrix. For a generic matrix \eqn{M}, the (squared) Frobenius norm is defined in the following way
 #' \deqn{
-#' \code{FrobeniusNorm2}(\mathbf{M})=||\mathbf{M}||^2_F=\text{\rm tr} \left[\mathbf{M}\mathbf{M}^\top\right]\,,
+#' \code{NormFrobenius2}(\mathbf{M})=||\mathbf{M}||^2_F=\text{\rm tr} \left[\mathbf{M}\mathbf{M}^\top\right]\,,
 #' } while (squared) Frobenius loss analogously is defined by
 #' \deqn{
-#' \code{FrobeniusLoss2}(\mathbf{M}, g(\boldsymbol{\Sigma}))= ||\mathbf{M}-g(\mathbf{\boldsymbol{\Sigma}})||^2_F\,,
+#' \code{LossFrobenius2}(\mathbf{M}, g(\boldsymbol{\Sigma}))= ||\mathbf{M}-g(\mathbf{\boldsymbol{\Sigma}})||^2_F\,,
 #' } where \eqn{M} here denotes a suitable estimator and the function \eqn{g} is
 #' \eqn{g(x)=x} when \code{type="covariance matrix"} is
 #' chosen, otherwise \eqn{g(x)=1/x} for \code{type="precision matrix"}. In case 
@@ -66,11 +66,11 @@ FrobeniusNorm2 <- function(M, normalized){
 #' \itemize{
 #'   \item \code{type = "precision matrix"} corresponds to the normalized
 #'   Frobenius loss for the estimation of the precision matrix, i.e.
-#'   \code{FrobeniusNorm2(x \%*\% Sigma - diag(p) ) / p}.
+#'   \code{NormFrobenius2(x \%*\% Sigma - diag(p) ) / p}.
 #'   
 #'   \item \code{type = "covariance matrix"} corresponds to the normalized
 #'   Frobenius loss for the estimation of the precision matrix, i.e.
-#'   \code{FrobeniusNorm2(x - Sigma ) / p}.
+#'   \code{NormFrobenius2(x - Sigma ) / p}.
 #' }
 #' 
 #' @param portfolioWeights the vector of weights of a given portfolio, of which
@@ -83,8 +83,8 @@ FrobeniusNorm2 <- function(M, normalized){
 #' 
 #' 
 #' @returns All these functions return a positive numeric value.
-#' \code{FrobeniusNorm2} returns the squared Frobenius norm of a matrix.
-#' \code{FrobeniusLoss2} returns the (normalized) Frobenius loss.
+#' \code{NormFrobenius2} returns the squared Frobenius norm of a matrix.
+#' \code{LossFrobenius2} returns the (normalized) Frobenius loss.
 #'
 #' \code{LossRelativeOutOfSampleVariance} returns a positive numeric value,
 #' with attributes \code{"V_portfolio"} and \code{"V_GMV"}, which are respectively
@@ -93,15 +93,15 @@ FrobeniusNorm2 <- function(M, normalized){
 #' 
 #' @examples
 #' M = diag(c(1,2,3))
-#' FrobeniusNorm2(M, normalized = TRUE)
-#' FrobeniusNorm2(M, normalized = FALSE)
+#' NormFrobenius2(M, normalized = TRUE)
+#' NormFrobenius2(M, normalized = FALSE)
 #' 
 #' X <- MASS::mvrnorm(n = 100, mu = rep(0,3), Sigma = M)
 #' estimatedCov_sample = cov(X)
 #' 
 #' # Losses for estimation of the covariance
 #' 
-#' FrobeniusLoss2(estimatedCov_sample, M, type = "covariance")
+#' LossFrobenius2(estimatedCov_sample, M, type = "covariance")
 #' LossEuclideanEigenvalues2(estimatedCov_sample, M, type = "covariance")
 #' 
 #' 
@@ -119,19 +119,19 @@ FrobeniusNorm2 <- function(M, normalized){
 #' 
 #' trueWeights = rowSums(solve(Sigma)) / sum(solve(Sigma))
 #' 
-#' FrobeniusNorm2(trueWeights - weights100, normalized = FALSE)
-#' FrobeniusNorm2(trueWeights - weights3, normalized = FALSE)
+#' NormFrobenius2(trueWeights - weights100, normalized = FALSE)
+#' NormFrobenius2(trueWeights - weights3, normalized = FALSE)
 #' 
 #' @export
 #' @rdname quadratic_losses
-FrobeniusLoss2 <- function(x, Sigma, type, normalized = TRUE, ...) {
-  UseMethod("FrobeniusLoss2")
+LossFrobenius2 <- function(x, Sigma, type, normalized = TRUE, ...) {
+  UseMethod("LossFrobenius2")
 }
 
 
 #' @export
 #' @rdname quadratic_losses
-FrobeniusLoss2.matrix <- function(x,
+LossFrobenius2.matrix <- function(x,
                                   Sigma,
                                   type = c("precision matrix", "covariance matrix"),
                                   normalized = TRUE, ...)
@@ -153,11 +153,11 @@ FrobeniusLoss2.matrix <- function(x,
     type,
     
     "precision matrix" = {
-      result = FrobeniusNorm2(x %*% Sigma - diag(p), normalized = normalized)
+      result = NormFrobenius2(x %*% Sigma - diag(p), normalized = normalized)
     },
     
     "covariance matrix" = {
-      result = FrobeniusNorm2(x - Sigma, normalized = normalized)
+      result = NormFrobenius2(x - Sigma, normalized = normalized)
     },
     
     # default
@@ -173,7 +173,7 @@ FrobeniusLoss2.matrix <- function(x,
 
 #' @export
 #' @rdname quadratic_losses
-FrobeniusLoss2.EstimatedPrecisionMatrix <- function(
+LossFrobenius2.EstimatedPrecisionMatrix <- function(
     x, Sigma, type = "precision matrix", normalized = TRUE, ...)
 {
   type = match.arg(type)
@@ -182,7 +182,7 @@ FrobeniusLoss2.EstimatedPrecisionMatrix <- function(
     stop("Type is chosen to be ", type,
          " but x is of class 'EstimatedPrecisionMatrix'.")
   }
-  result = FrobeniusLoss2(as.matrix(x), Sigma,
+  result = LossFrobenius2(as.matrix(x), Sigma,
                           type = "precision matrix", normalized = normalized)
   
   return (result)
@@ -192,7 +192,7 @@ FrobeniusLoss2.EstimatedPrecisionMatrix <- function(
 
 #' @export
 #' @rdname quadratic_losses
-FrobeniusLoss2.EstimatedCovarianceMatrix <- function(
+LossFrobenius2.EstimatedCovarianceMatrix <- function(
     x, Sigma, type = "covariance matrix", normalized = TRUE, ...)
 {
   type = match.arg(type)
@@ -201,7 +201,7 @@ FrobeniusLoss2.EstimatedCovarianceMatrix <- function(
     stop("Type is chosen to be ", type,
          " but x is of class 'EstimatedCovarianceMatrix'.")
   }
-  result = FrobeniusLoss2(as.matrix(x), Sigma,
+  result = LossFrobenius2(as.matrix(x), Sigma,
                           type = "covariance matrix", normalized = normalized)
   
   return (result)

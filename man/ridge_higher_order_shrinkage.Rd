@@ -118,8 +118,8 @@ X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 precision_MoorePenrose_Cent = Moore_Penrose_target(X, centeredCov = TRUE)
 precision_MoorePenrose_NoCent = Moore_Penrose_target(X, centeredCov = FALSE)
 
-FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
-FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
+LossFrobenius2(precision_MoorePenrose_Cent, Sigma = Sigma)
+LossFrobenius2(precision_MoorePenrose_NoCent, Sigma = Sigma)
 
 for (m in 1:2){
   cat("m = ", m, "\n")
@@ -129,9 +129,9 @@ for (m in 1:2){
   precision_higher_order_shrinkage_NoCent = 
       ridge_higher_order_shrinkage(X, m = m, centeredCov = FALSE, t = 10)
       
-  print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
+  print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
   
-  print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
+  print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
 }
 
 
@@ -143,13 +143,13 @@ precision_higher_order_shrinkage_Cent$alpha
 precision_higher_order_shrinkage_Cent$M
 precision_higher_order_shrinkage_Cent$hm
 
-FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
+LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
 
 
 # For comparison TODO: move this as unit test
 
 precision_target = ridge_target(X, centeredCov = TRUE, t = 100)
-FrobeniusLoss2(precision_target, Sigma = Sigma)
+LossFrobenius2(precision_target, Sigma = Sigma)
 
 
 # Examples for ridge_higher_order_shrinkage where the optimization is done 
@@ -163,9 +163,9 @@ for (m in 1:2){
   precision_higher_order_shrinkage_NoCent = 
       ridge_higher_order_shrinkage(X, m = m, centeredCov = FALSE)
       
-  print(FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
+  print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
   
-  print(FrobeniusLoss2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
+  print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
 }
 
 precision_higher_order_shrinkage_Cent = 
@@ -173,8 +173,8 @@ precision_higher_order_shrinkage_Cent =
 
 precision_ridge_target_Cent = ridge_target(X, centeredCov = TRUE)
   
-FrobeniusLoss2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
-FrobeniusLoss2(precision_ridge_target_Cent, Sigma = Sigma)
+LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
+LossFrobenius2(precision_ridge_target_Cent, Sigma = Sigma)
 
 
 

@@ -200,13 +200,13 @@ test_that("`MPR_target` is coherent between target general and target identity",
                precision_MPR_optimal$beta_optimal,
                tolerance = 1e-4)
   
-  distFrob = FrobeniusNorm2(as.matrix(precision_MPR_optimal_Ip) - 
+  distFrob = NormFrobenius2(as.matrix(precision_MPR_optimal_Ip) - 
                               as.matrix(precision_MPR_optimal), normalized = TRUE)
   
   expect_equal(distFrob, 0, tolerance = 1e-8)
   
-  FrobeniusLoss2(precision_MPR_optimal_Ip, solve(Sigma))
-  FrobeniusLoss2(precision_MPR_optimal, solve(Sigma))
+  LossFrobenius2(precision_MPR_optimal_Ip, solve(Sigma))
+  LossFrobenius2(precision_MPR_optimal, solve(Sigma))
   
   
   # For the non-optimized versions:
@@ -217,7 +217,7 @@ test_that("`MPR_target` is coherent between target general and target identity",
   
   precision_MPR_semioptimal_Ip = MPR_target(X = X, Pi0 = Ip, t = t_opt)
   
-  distFrob = FrobeniusNorm2(as.matrix(precision_MPR_semioptimal_Ip) - 
+  distFrob = NormFrobenius2(as.matrix(precision_MPR_semioptimal_Ip) - 
                               as.matrix(precision_MPR_optimal), normalized = TRUE)
   expect_equal(distFrob, 0)
   
@@ -225,7 +225,7 @@ test_that("`MPR_target` is coherent between target general and target identity",
   precision_MPR_nooptim = MPR_target(X = X, Pi0 = Ip, t = t_opt,
                                      alpha = alpha_opt, beta = beta_opt)
   
-  distFrob = FrobeniusNorm2(as.matrix(precision_MPR_nooptim) - 
+  distFrob = NormFrobenius2(as.matrix(precision_MPR_nooptim) - 
                               as.matrix(precision_MPR_optimal), normalized = TRUE)
   expect_equal(distFrob, 0)
 })

@@ -129,7 +129,7 @@
 #' # Estimation with default parameters (optimization) and identity target
 #' precision_MPR_optimal = MPR_target(X)
 #' 
-#' cat("loss = ", FrobeniusLoss2(precision_MPR_optimal, Sigma = Sigma),
+#' cat("loss = ", LossFrobenius2(precision_MPR_optimal, Sigma = Sigma),
 #'     ", t opt = ", precision_MPR_optimal$t_optimal, 
 #'     ", alpha opt = ", precision_MPR_optimal$alpha_optimal,
 #'     ", beta opt = ", precision_MPR_optimal$beta_optimal, "\n", sep = "")
@@ -138,7 +138,7 @@
 #' oracle = solve(0.99 * Sigma + 0.01 * diag(nrow = p))
 #' precision_MPR_optimal_oracle = MPR_target(X, Pi0 = oracle)
 #'   
-#' cat("loss = ", FrobeniusLoss2(precision_MPR_optimal_oracle, Sigma = Sigma),
+#' cat("loss = ", LossFrobenius2(precision_MPR_optimal_oracle, Sigma = Sigma),
 #'     ", t = ", precision_MPR_optimal_oracle$t_optimal, 
 #'     ", alpha opt = ", precision_MPR_optimal_oracle$alpha_optimal,
 #'     ", beta opt = ", precision_MPR_optimal_oracle$beta_optimal, "\n", sep = "")
@@ -147,17 +147,17 @@
 #' t_opt = precision_MPR_optimal$t_optimal
 #' 
 #' precision_MPR = MPR_target(X, t = t_opt, alpha = 1, beta = 0)
-#' cat("loss = ", FrobeniusLoss2(precision_MPR, Sigma = Sigma))
+#' cat("loss = ", LossFrobenius2(precision_MPR, Sigma = Sigma))
 #' 
 #' # Trying suboptimal t, alpha and beta
 #' precision_MPR = MPR_target(X, t = 1, alpha = 1, beta = 0)
 #'    
-#' cat("loss = ", FrobeniusLoss2(precision_MPR, Sigma = Sigma))
+#' cat("loss = ", LossFrobenius2(precision_MPR, Sigma = Sigma))
 #' 
 #' # Comparing with the non-shrinked version
 #' precision_MPR_no_shrink = MPR_no_shrinkage(X, t = t_opt)
 #'                                       
-#' cat("loss = ", FrobeniusLoss2(precision_MPR_no_shrink, Sigma = Sigma))
+#' cat("loss = ", LossFrobenius2(precision_MPR_no_shrink, Sigma = Sigma))
 #' 
 #' 
 #' @export

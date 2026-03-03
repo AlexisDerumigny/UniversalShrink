@@ -33,13 +33,13 @@ test_that("`ridge_target` is coherent between target general and target identity
                precision_ridge_optimal$beta_optimal,
                tolerance = 1e-4)
   
-  distFrob = FrobeniusNorm2(as.matrix(precision_ridge_optimal_Ip) - 
+  distFrob = NormFrobenius2(as.matrix(precision_ridge_optimal_Ip) - 
                               as.matrix(precision_ridge_optimal), normalized = TRUE)
   
   expect_equal(distFrob, 0, tolerance = 1e-8)
   
-  FrobeniusLoss2(precision_ridge_optimal_Ip, solve(Sigma))
-  FrobeniusLoss2(precision_ridge_optimal, solve(Sigma))
+  LossFrobenius2(precision_ridge_optimal_Ip, solve(Sigma))
+  LossFrobenius2(precision_ridge_optimal, solve(Sigma))
   
   
   ## For small sample sizes, the optimization is unreliable and differences can
@@ -65,7 +65,7 @@ test_that("`ridge_target` is coherent between target general and target identity
   
   precision_ridge_semioptimal_Ip = ridge_target(X = X, Pi0 = Ip, t = t_opt)
   
-  distFrob = FrobeniusNorm2(as.matrix(precision_ridge_semioptimal_Ip) - 
+  distFrob = NormFrobenius2(as.matrix(precision_ridge_semioptimal_Ip) - 
                               as.matrix(precision_ridge_optimal), normalized = TRUE)
   expect_equal(distFrob, 0, tolerance = 1e-8)
   
@@ -73,7 +73,7 @@ test_that("`ridge_target` is coherent between target general and target identity
   precision_ridge_nooptim = ridge_target(X = X, Pi0 = Ip, t = t_opt,
                                      alpha = alpha_opt, beta = beta_opt)
   
-  distFrob = FrobeniusNorm2(as.matrix(precision_ridge_nooptim) - 
+  distFrob = NormFrobenius2(as.matrix(precision_ridge_nooptim) - 
                               as.matrix(precision_ridge_optimal), normalized = TRUE)
   expect_equal(distFrob, 0, tolerance = 1e-8)
 })

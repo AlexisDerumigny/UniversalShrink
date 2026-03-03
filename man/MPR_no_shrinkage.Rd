@@ -65,13 +65,13 @@ for (t in c(0.01, 0.2, 0.5, 1, 2)){
   precision_MP = Moore_Penrose(X, centeredCov = TRUE)
 
   cat("t = ", t,", Moore-Penrose  , loss =", 
-    FrobeniusLoss2(precision_MP, Sigma = Sigma, type = "precision"), "\n")
+    LossFrobenius2(precision_MP, Sigma = Sigma, type = "precision"), "\n")
   cat("t = ", t,", ridge          , loss =", 
-    FrobeniusLoss2(precision_ridge, Sigma = Sigma, type = "precision"), "\n")
+    LossFrobenius2(precision_ridge, Sigma = Sigma, type = "precision"), "\n")
   cat("t = ", t,", MPR            , loss =", 
-    FrobeniusLoss2(precision_MPR_Cent, Sigma = Sigma, type = "precision"), "\n")
+    LossFrobenius2(precision_MPR_Cent, Sigma = Sigma, type = "precision"), "\n")
   cat("t = ", t,", MPR alternative, loss =", 
-    FrobeniusLoss2(precision_MPR_Cent_alternative_expression, Sigma = Sigma,
+    LossFrobenius2(precision_MPR_Cent_alternative_expression, Sigma = Sigma,
                    type = "precision"), "\n")
 }
 

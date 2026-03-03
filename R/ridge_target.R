@@ -151,8 +151,8 @@
 #'     
 #' precision_ridge_target_NoCent = ridge_target(X, centeredCov = FALSE)
 #' 
-#' FrobeniusLoss2(precision_ridge_target_Cent, Sigma = Sigma)
-#' FrobeniusLoss2(precision_ridge_target_NoCent, Sigma = Sigma)
+#' LossFrobenius2(precision_ridge_target_Cent, Sigma = Sigma)
+#' LossFrobenius2(precision_ridge_target_NoCent, Sigma = Sigma)
 #' 
 # # TODO: explore the convergence issues with good and bad target.
 # # This works not as good as the MPR. The MPR takes a lot of time for the
@@ -164,7 +164,7 @@
 #' precision_ridge_target_Cent_oracle = 
 #'   ridge_target(X, centeredCov = TRUE, Pi0 = solve(Sigma))
 #' 
-#' FrobeniusLoss2(precision_ridge_target_Cent_oracle, Sigma = Sigma)
+#' LossFrobenius2(precision_ridge_target_Cent_oracle, Sigma = Sigma)
 #' 
 #' 
 #' @export

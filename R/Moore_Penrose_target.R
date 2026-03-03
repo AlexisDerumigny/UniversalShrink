@@ -118,10 +118,10 @@
 #' precision_NLshrink = solve(estimatedCov_NLshrink)
 #' precision_QISshrink = solve(estimatedCov_QISshrink)
 #' 
-#' FrobeniusLoss2(precision_MoorePenrose_Cent, Sigma = Sigma)
-#' FrobeniusLoss2(precision_MoorePenrose_NoCent, Sigma = Sigma)
-#' FrobeniusLoss2(precision_NLshrink, Sigma = Sigma, type = "precision")
-#' FrobeniusLoss2(precision_QISshrink, Sigma = Sigma, type = "precision")
+#' LossFrobenius2(precision_MoorePenrose_Cent, Sigma = Sigma)
+#' LossFrobenius2(precision_MoorePenrose_NoCent, Sigma = Sigma)
+#' LossFrobenius2(precision_NLshrink, Sigma = Sigma, type = "precision")
+#' LossFrobenius2(precision_QISshrink, Sigma = Sigma, type = "precision")
 #' 
 #' # We now use the true value of the precision matrix as a target for shrinkage
 #' precision_MoorePenrose_Cent_trueSigma = 
@@ -129,8 +129,8 @@
 #' precision_MoorePenrose_NoCent_trueSigma = 
 #'   Moore_Penrose_target(X, centeredCov = FALSE, Pi0 = solve(Sigma))                                                        
 #'                                                         
-#' FrobeniusLoss2(precision_MoorePenrose_Cent_trueSigma, Sigma = Sigma)
-#' FrobeniusLoss2(precision_MoorePenrose_NoCent_trueSigma, Sigma = Sigma)
+#' LossFrobenius2(precision_MoorePenrose_Cent_trueSigma, Sigma = Sigma)
+#' LossFrobenius2(precision_MoorePenrose_NoCent_trueSigma, Sigma = Sigma)
 #' # this is indeed much closer than before
 #' 
 #' 
