@@ -3,6 +3,7 @@
 \name{quadratic_losses}
 \alias{quadratic_losses}
 \alias{NormFrobenius2}
+\alias{DistanceFrobenius2}
 \alias{LossFrobenius2}
 \alias{LossFrobenius2.matrix}
 \alias{LossFrobenius2.EstimatedPrecisionMatrix}
@@ -16,6 +17,8 @@
 \title{Quadratic losses of the estimator of a matrix or portfolio weights}
 \usage{
 NormFrobenius2(M, normalized)
+
+DistanceFrobenius2(M1, M2, normalized)
 
 LossFrobenius2(x, Sigma, type, normalized = TRUE, ...)
 
@@ -67,6 +70,8 @@ LossRelativeOutOfSampleVariance(portfolioWeights, Sigma, SigmaInv = NULL)
 \item{normalized}{if \code{TRUE}, the Frobenius norm is divided by the matrix
 size \code{p}.}
 
+\item{M1, M2}{two square matrices of the same dimension}
+
 \item{x, M}{An (estimated) square matrix of size \code{p}}
 
 \item{Sigma, SigmaInv}{the true covariance matrix and its inverse}
@@ -84,8 +89,6 @@ Frobenius loss for the estimation of the precision matrix, i.e.
 }}
 
 \item{...}{Additional arguments passed to methods.}
-
-\item{M1, M2}{two square matrices of the same dimension}
 
 \item{portfolioWeights}{the vector of weights of a given portfolio, of which
 we want to determine the loss}

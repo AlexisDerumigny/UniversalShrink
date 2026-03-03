@@ -16,6 +16,14 @@ NormFrobenius2 <- function(M, normalized){
 }
 
 
+#' @export
+#' @rdname quadratic_losses
+DistanceFrobenius2 <- function(M1, M2, normalized){
+  FrobNorm2 = NormFrobenius2(M1 - M2, normalized = normalized)
+  return (FrobNorm2)
+}
+
+
 #' Generic function to calculate the Frobenius norm/loss of (the estimator of) a
 #' matrix. For a generic matrix \eqn{M}, the (squared) Frobenius norm is defined in the following way
 #' \deqn{
