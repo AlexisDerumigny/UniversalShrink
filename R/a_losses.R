@@ -218,6 +218,44 @@ LossFrobenius2.EstimatedCovarianceMatrix <- function(
 
 #' @export
 #' @rdname quadratic_losses
+LossInverseFrobenius2 <- function(x, Sigma, normalized = TRUE, ...) {
+  UseMethod("LossInverseFrobenius2")
+}
+
+
+#' @export
+#' @rdname quadratic_losses
+LossInverseFrobenius2.matrix <- function(x,
+                                         Sigma,
+                                         normalized = TRUE, ...)
+{
+  if (ncol(x) != nrow(x) || ncol(x) != nrow(Sigma) || ncol(x) != ncol(Sigma)){
+    stop("x and Sigma should be square matrices of the same dimension. ",
+         "Here dim(x) = c(", paste(dim(x), collapse = ","),
+         ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")." )
+  }
+  p = ncol(Sigma)
+  Ip = diag(p)
+  
+  result = NormFrobenius2(x %*% Sigma - Ip, normalized = normalized)
+  
+  return (result)
+}
+
+
+#' @export
+#' @rdname quadratic_losses
+LossInverseFrobenius2.EstimatedPrecisionMatrix <- function(
+    x, Sigma, normalized = TRUE, ...)
+{
+  result = LossInverseFrobenius2(as.matrix(x), Sigma, normalized = normalized)
+  
+  return (result)
+}
+
+
+#' @export
+#' @rdname quadratic_losses
 DistanceEuclideanEigenvalues2 <- function(M1, M2, normalized){
   
   if (normalized){
