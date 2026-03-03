@@ -20,19 +20,25 @@ format_ <- function(x, ...){
   return (Rmpfr::formatMpfr(x, ...))
 }
 
+
 #' Conversion of estimated matrices to matrix class
-#' 
+#' @name as.matrix.Estimator
+NULL
+
+
 #' @param x object to be converted
 #' @param ... other arguments passed from methods, currently ignored.
 #' 
 #' @return the underlying estimated matrix
 #' 
+#' @rdname as.matrix.Estimator
 #' @export
 as.matrix.EstimatedPrecisionMatrix <- function(x, ...){
   return (x$estimated_precision_matrix)
 }
 
-#' @rdname as.matrix.EstimatedPrecisionMatrix
+
+#' @rdname as.matrix.Estimator
 #' @export
 as.matrix.EstimatedCovarianceMatrix <- function(x, ...){
   return (x$estimated_covariance_matrix)
