@@ -8,6 +8,9 @@
 \alias{LossFrobenius2.matrix}
 \alias{LossFrobenius2.EstimatedPrecisionMatrix}
 \alias{LossFrobenius2.EstimatedCovarianceMatrix}
+\alias{LossInverseFrobenius2}
+\alias{LossInverseFrobenius2.matrix}
+\alias{LossInverseFrobenius2.EstimatedPrecisionMatrix}
 \alias{DistanceEuclideanEigenvalues2}
 \alias{LossEuclideanEigenvalues2}
 \alias{LossEuclideanEigenvalues2.matrix}
@@ -25,14 +28,28 @@ LossFrobenius2(x, Sigma, type, normalized = TRUE, ...)
 \method{LossFrobenius2}{matrix}(
   x,
   Sigma,
+  SigmaInv = NULL,
   type = c("precision matrix", "covariance matrix"),
   normalized = TRUE,
   ...
 )
 
-\method{LossFrobenius2}{EstimatedPrecisionMatrix}(x, Sigma, type = "precision matrix", normalized = TRUE, ...)
+\method{LossFrobenius2}{EstimatedPrecisionMatrix}(
+  x,
+  Sigma,
+  SigmaInv = NULL,
+  type = "precision matrix",
+  normalized = TRUE,
+  ...
+)
 
 \method{LossFrobenius2}{EstimatedCovarianceMatrix}(x, Sigma, type = "covariance matrix", normalized = TRUE, ...)
+
+LossInverseFrobenius2(x, Sigma, normalized = TRUE, ...)
+
+\method{LossInverseFrobenius2}{matrix}(x, Sigma, normalized = TRUE, ...)
+
+\method{LossInverseFrobenius2}{EstimatedPrecisionMatrix}(x, Sigma, normalized = TRUE, ...)
 
 DistanceEuclideanEigenvalues2(M1, M2, normalized)
 
@@ -67,7 +84,7 @@ LossEuclideanEigenvalues2(x, Sigma, type, normalized = TRUE, ...)
 LossRelativeOutOfSampleVariance(portfolioWeights, Sigma, SigmaInv = NULL)
 }
 \arguments{
-\item{normalized}{if \code{TRUE}, the Frobenius norm is divided by the matrix
+\item{normalized}{if \code{TRUE}, the norm (or loss) is divided by the matrix
 size \code{p}.}
 
 \item{M1, M2}{two square matrices of the same dimension}
@@ -79,13 +96,13 @@ size \code{p}.}
 \item{type}{target of the estimator. Must be a character vector of length 1
 with one of the following:
 \itemize{
-\item \code{type = "precision matrix"} corresponds to the normalized
+\item \code{type = "precision matrix"} corresponds to the
 Frobenius loss for the estimation of the precision matrix, i.e.
-\code{NormFrobenius2(x \%*\% Sigma - diag(p) ) / p}.
+\code{NormFrobenius2(x - SigmaInv)}, potentially normalized.
 
-\item \code{type = "covariance matrix"} corresponds to the normalized
+\item \code{type = "covariance matrix"} corresponds to the
 Frobenius loss for the estimation of the precision matrix, i.e.
-\code{NormFrobenius2(x - Sigma ) / p}.
+\code{NormFrobenius2(x - Sigma )}, potentially normalized.
 }}
 
 \item{...}{Additional arguments passed to methods.}

@@ -72,19 +72,19 @@ DistanceFrobenius2 <- function(M1, M2, normalized){
 #' @param type target of the estimator. Must be a character vector of length 1
 #' with one of the following:
 #' \itemize{
-#'   \item \code{type = "precision matrix"} corresponds to the normalized
+#'   \item \code{type = "precision matrix"} corresponds to the
 #'   Frobenius loss for the estimation of the precision matrix, i.e.
-#'   \code{NormFrobenius2(x \%*\% Sigma - diag(p) ) / p}.
+#'   \code{NormFrobenius2(x - SigmaInv)}, potentially normalized.
 #'   
-#'   \item \code{type = "covariance matrix"} corresponds to the normalized
+#'   \item \code{type = "covariance matrix"} corresponds to the
 #'   Frobenius loss for the estimation of the precision matrix, i.e.
-#'   \code{NormFrobenius2(x - Sigma ) / p}.
+#'   \code{NormFrobenius2(x - Sigma )}, potentially normalized.
 #' }
 #' 
 #' @param portfolioWeights the vector of weights of a given portfolio, of which
 #' we want to determine the loss
 #' 
-#' @param normalized if \code{TRUE}, the Frobenius norm is divided by the matrix
+#' @param normalized if \code{TRUE}, the norm (or loss) is divided by the matrix
 #' size \code{p}.
 #' 
 #' @param ... Additional arguments passed to methods.
@@ -141,6 +141,7 @@ LossFrobenius2 <- function(x, Sigma, type, normalized = TRUE, ...) {
 #' @rdname quadratic_losses
 LossFrobenius2.matrix <- function(x,
                                   Sigma,
+                                  SigmaInv = NULL,
                                   type = c("precision matrix", "covariance matrix"),
                                   normalized = TRUE, ...)
 {
@@ -149,8 +150,6 @@ LossFrobenius2.matrix <- function(x,
          "Here dim(x) = c(", paste(dim(x), collapse = ","),
          ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")." )
   }
-  p = ncol(Sigma)
-  
   if (missing(type)){
     stop("'type' must be specified. Either 'precision' or 'covariance'.")
   }
@@ -161,7 +160,11 @@ LossFrobenius2.matrix <- function(x,
     type,
     
     "precision matrix" = {
-      result = NormFrobenius2(x %*% Sigma - diag(p), normalized = normalized)
+      if (is.null(SigmaInv)) {
+        SigmaInv = solve(Sigma)
+      }
+      
+      result = NormFrobenius2(x - SigmaInv, normalized = normalized)
     },
     
     "covariance matrix" = {
@@ -182,7 +185,7 @@ LossFrobenius2.matrix <- function(x,
 #' @export
 #' @rdname quadratic_losses
 LossFrobenius2.EstimatedPrecisionMatrix <- function(
-    x, Sigma, type = "precision matrix", normalized = TRUE, ...)
+    x, Sigma, SigmaInv = NULL, type = "precision matrix", normalized = TRUE, ...)
 {
   type = match.arg(type)
   
@@ -190,7 +193,7 @@ LossFrobenius2.EstimatedPrecisionMatrix <- function(
     stop("Type is chosen to be ", type,
          " but x is of class 'EstimatedPrecisionMatrix'.")
   }
-  result = LossFrobenius2(as.matrix(x), Sigma,
+  result = LossFrobenius2(x = as.matrix(x), Sigma = Sigma, SigmaInv = SigmaInv,
                           type = "precision matrix", normalized = normalized)
   
   return (result)
@@ -209,8 +212,46 @@ LossFrobenius2.EstimatedCovarianceMatrix <- function(
     stop("Type is chosen to be ", type,
          " but x is of class 'EstimatedCovarianceMatrix'.")
   }
-  result = LossFrobenius2(as.matrix(x), Sigma,
+  result = LossFrobenius2(as.matrix(x), Sigma = Sigma,
                           type = "covariance matrix", normalized = normalized)
+  
+  return (result)
+}
+
+
+#' @export
+#' @rdname quadratic_losses
+LossInverseFrobenius2 <- function(x, Sigma, normalized = TRUE, ...) {
+  UseMethod("LossInverseFrobenius2")
+}
+
+
+#' @export
+#' @rdname quadratic_losses
+LossInverseFrobenius2.matrix <- function(x,
+                                         Sigma,
+                                         normalized = TRUE, ...)
+{
+  if (ncol(x) != nrow(x) || ncol(x) != nrow(Sigma) || ncol(x) != ncol(Sigma)){
+    stop("x and Sigma should be square matrices of the same dimension. ",
+         "Here dim(x) = c(", paste(dim(x), collapse = ","),
+         ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")." )
+  }
+  p = ncol(Sigma)
+  Ip = diag(p)
+  
+  result = NormFrobenius2(x %*% Sigma - Ip, normalized = normalized)
+  
+  return (result)
+}
+
+
+#' @export
+#' @rdname quadratic_losses
+LossInverseFrobenius2.EstimatedPrecisionMatrix <- function(
+    x, Sigma, normalized = TRUE, ...)
+{
+  result = LossInverseFrobenius2(as.matrix(x), Sigma, normalized = normalized)
   
   return (result)
 }
@@ -251,8 +292,6 @@ LossEuclideanEigenvalues2.matrix <- function(
          "Here dim(x) = c(", paste(dim(x), collapse = ","),
          ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")." )
   }
-  p = ncol(Sigma)
-  
   if (missing(type)){
     stop("'type' must be specified. Either 'precision' or 'covariance'.")
   }
