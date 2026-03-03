@@ -124,17 +124,28 @@ GMV portfolio.
 Quadratic losses of the estimator of a matrix or portfolio weights
 
 Generic function to calculate the Frobenius norm/loss of (the estimator of) a
-matrix. For a generic matrix \eqn{M}, the (squared) Frobenius norm is defined in the following way
+matrix. For a generic matrix \eqn{M}, the (squared) Frobenius norm is defined
+in the following way
 \deqn{
-\code{NormFrobenius2}(\mathbf{M})=||\mathbf{M}||^2_F=\text{\rm tr} \left[\mathbf{M}\mathbf{M}^\top\right]\,,
+\code{NormFrobenius2}(\mathbf{M})=||\mathbf{M}||^2_F
+= \text{\rm tr} \left[\mathbf{M}\mathbf{M}^\top\right]\,,
 } while (squared) Frobenius loss analogously is defined by
 \deqn{
-\code{LossFrobenius2}(\mathbf{M}, g(\boldsymbol{\Sigma}))= ||\mathbf{M}-g(\mathbf{\boldsymbol{\Sigma}})||^2_F\,,
+\code{LossFrobenius2}(\mathbf{M}, g(\boldsymbol{\Sigma}))
+= ||\mathbf{M}-g(\mathbf{\boldsymbol{\Sigma}})||^2_F\,,
 } where \eqn{M} here denotes a suitable estimator and the function \eqn{g} is
 \eqn{g(x)=x} when \code{type="covariance matrix"} is
 chosen, otherwise \eqn{g(x)=1/x} for \code{type="precision matrix"}. In case
 \code{normalized=TRUE} (default) the above losses are normalized by the matrix
-dimension \eqn{p}. Furthermore we present alternative loss measures focused directly
+dimension \eqn{p}.
+A related function for the case of precision matrices is
+\code{LossInverseFrobenius2} which returns
+\deqn{
+\code{LossInverseFrobenius2}(\mathbf{M}, \Sigma)
+= ||\mathbf{M} \boldsymbol{\Sigma} - I_p||^2_F\,,
+}
+where \eqn{I_p} is the identity matrix.
+Furthermore we present alternative loss measures focused directly
 on the spectra of the matrices: \code{DistanceEuclideanEigenvalues2} and
 \code{LossEuclideanEigenvalues2} defined as follows
 \deqn{
