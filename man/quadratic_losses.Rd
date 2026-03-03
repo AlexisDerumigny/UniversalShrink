@@ -28,12 +28,20 @@ LossFrobenius2(x, Sigma, type, normalized = TRUE, ...)
 \method{LossFrobenius2}{matrix}(
   x,
   Sigma,
+  SigmaInv = NULL,
   type = c("precision matrix", "covariance matrix"),
   normalized = TRUE,
   ...
 )
 
-\method{LossFrobenius2}{EstimatedPrecisionMatrix}(x, Sigma, type = "precision matrix", normalized = TRUE, ...)
+\method{LossFrobenius2}{EstimatedPrecisionMatrix}(
+  x,
+  Sigma,
+  SigmaInv = NULL,
+  type = "precision matrix",
+  normalized = TRUE,
+  ...
+)
 
 \method{LossFrobenius2}{EstimatedCovarianceMatrix}(x, Sigma, type = "covariance matrix", normalized = TRUE, ...)
 
@@ -76,7 +84,7 @@ LossEuclideanEigenvalues2(x, Sigma, type, normalized = TRUE, ...)
 LossRelativeOutOfSampleVariance(portfolioWeights, Sigma, SigmaInv = NULL)
 }
 \arguments{
-\item{normalized}{if \code{TRUE}, the Frobenius norm is divided by the matrix
+\item{normalized}{if \code{TRUE}, the norm (or loss) is divided by the matrix
 size \code{p}.}
 
 \item{M1, M2}{two square matrices of the same dimension}
@@ -88,13 +96,13 @@ size \code{p}.}
 \item{type}{target of the estimator. Must be a character vector of length 1
 with one of the following:
 \itemize{
-\item \code{type = "precision matrix"} corresponds to the normalized
+\item \code{type = "precision matrix"} corresponds to the
 Frobenius loss for the estimation of the precision matrix, i.e.
-\code{NormFrobenius2(x \%*\% Sigma - diag(p) ) / p}.
+\code{NormFrobenius2(x - SigmaInv)}, potentially normalized.
 
-\item \code{type = "covariance matrix"} corresponds to the normalized
+\item \code{type = "covariance matrix"} corresponds to the
 Frobenius loss for the estimation of the precision matrix, i.e.
-\code{NormFrobenius2(x - Sigma ) / p}.
+\code{NormFrobenius2(x - Sigma )}, potentially normalized.
 }}
 
 \item{...}{Additional arguments passed to methods.}
