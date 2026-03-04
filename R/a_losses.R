@@ -152,9 +152,9 @@ LossFrobenius2 <- function(x, Sigma, type, normalized = TRUE, ...) {
 #' @rdname quadratic_losses
 LossFrobenius2.matrix <- function(x,
                                   Sigma,
-                                  SigmaInv = NULL,
                                   type = c("precision matrix", "covariance matrix"),
-                                  normalized = TRUE, ...)
+                                  normalized = TRUE,
+                                  SigmaInv = NULL, ...)
 {
   if (ncol(x) != nrow(x) || ncol(x) != nrow(Sigma) || ncol(x) != ncol(Sigma)){
     stop("x and Sigma should be square matrices of the same dimension. ",
@@ -196,7 +196,7 @@ LossFrobenius2.matrix <- function(x,
 #' @export
 #' @rdname quadratic_losses
 LossFrobenius2.EstimatedPrecisionMatrix <- function(
-    x, Sigma, SigmaInv = NULL, type = "precision matrix", normalized = TRUE, ...)
+    x, Sigma, type = "precision matrix", normalized = TRUE, SigmaInv = NULL, ...)
 {
   type = match.arg(type)
   
