@@ -167,6 +167,7 @@ MPR_target <- function(X, centeredCov = TRUE, Pi0 = NULL,
                        verbose = 0,
                        eps = 1/(10^6), upp = pi/2 - eps, initialValue = 1.5)
 {
+  call_ = match.call()
   optimizationType = selectOptimizationType(t = t, alpha = alpha, beta = beta)
   
   if (verbose > 1){
@@ -180,14 +181,15 @@ MPR_target <- function(X, centeredCov = TRUE, Pi0 = NULL,
       
       none = MPR_target_identity(X = X, centeredCov = centeredCov,
                                  t = t, alpha = alpha, beta = beta,
-                                 verbose = verbose),
+                                 verbose = verbose, call_ = call_),
       
       alpha_beta = MPR_target_identity_semioptimal(X = X, centeredCov = centeredCov,
-                                                   t = t, verbose = verbose),
+                                                   t = t, verbose = verbose,
+                                                   call_ = call_),
       
       all = MPR_target_identity_optimal(X = X, centeredCov = centeredCov,
                                         verbose = verbose, eps = eps, upp = upp,
-                                        initialValue = initialValue)
+                                        initialValue = initialValue, call_ = call_)
     )
   } else {
     
@@ -196,15 +198,16 @@ MPR_target <- function(X, centeredCov = TRUE, Pi0 = NULL,
       
       none = MPR_target_general(X = X, centeredCov = centeredCov,
                                 t = t, alpha = alpha, beta = beta, Pi0 = Pi0,
-                                verbose = verbose),
+                                verbose = verbose, call_ = call_),
       
-      alpha_beta = MPR_target_general_semioptimal(X = X, centeredCov = centeredCov,
-                                                  t = t, Pi0 = Pi0, verbose = verbose),
+      alpha_beta = MPR_target_general_semioptimal(
+        X = X, centeredCov = centeredCov, t = t, Pi0 = Pi0,
+        verbose = verbose, call_ = call_),
       
       all = MPR_target_general_optimal(X = X, centeredCov = centeredCov,
                                        Pi0 = Pi0,
                                        verbose = verbose, eps = eps, upp = upp,
-                                       initialValue = initialValue)
+                                       initialValue = initialValue, call_ = call_)
     )
   }
   

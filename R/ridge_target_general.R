@@ -236,7 +236,9 @@ estimator_vhat_derivative <- function(t, m, iS_ridge, p, Ip, cn){
   return (result)
 }
 
-ridge_target_general <- function (X, centeredCov, t, Pi0, alpha, beta, verbose = 2){
+
+ridge_target_general <- function (X, centeredCov, t, Pi0, alpha, beta,
+                                  verbose = 2, call_ = NULL){
   
   if (verbose > 0){
     cat("Starting `ridge_target_general`...\n")
@@ -264,7 +266,12 @@ ridge_target_general <- function (X, centeredCov, t, Pi0, alpha, beta, verbose =
     estimated_precision_matrix = iS_ShRt1,
     alpha = alpha,
     beta = beta,
-    t = t
+    t = t,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Ridge shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
@@ -274,7 +281,8 @@ ridge_target_general <- function (X, centeredCov, t, Pi0, alpha, beta, verbose =
 
 
 
-ridge_target_general_semioptimal <- function (X, centeredCov, t, Pi0, verbose = 2){
+ridge_target_general_semioptimal <- function (X, centeredCov, t, Pi0,
+                                              verbose = 2, call_ = NULL){
   
   if (verbose > 0){
     cat("Starting `ridge_target_general_semioptimal`...\n")
@@ -309,7 +317,12 @@ ridge_target_general_semioptimal <- function (X, centeredCov, t, Pi0, verbose = 
   result = list(
     estimated_precision_matrix = iS_ShRt1,
     alpha_optimal = alpha,
-    beta_optimal = beta
+    beta_optimal = beta,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Ridge shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
@@ -321,7 +334,7 @@ ridge_target_general_semioptimal <- function (X, centeredCov, t, Pi0, verbose = 
 
 ridge_target_general_optimal <- function (X, centeredCov, Pi0, verbose = 2,
                                           eps = 1/(10^6), upp = pi/2 - eps,
-                                          initialValue = 1.5){
+                                          initialValue = 1.5, call_ = NULL){
   
   if (verbose > 0){
     cat("Starting `ridge_target_general_optimal`...\n")
@@ -371,7 +384,12 @@ ridge_target_general_optimal <- function (X, centeredCov, Pi0, verbose = 2,
     estimated_precision_matrix = iS_ShRt1,
     alpha_optimal = alpha,
     beta_optimal = beta,
-    t_optimal = t
+    t_optimal = t,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Ridge shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")

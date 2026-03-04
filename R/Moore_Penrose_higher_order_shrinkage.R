@@ -220,6 +220,7 @@ compute_M <- function(m, n, p, ihv0, D_MP, q1, q2, h2, h3, hv0, centeredCov)
 #' 
 Moore_Penrose_higher_order_shrinkage <- function(X, m, centeredCov = TRUE, verbose = 0)
 {
+  call_ = match.call()
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
@@ -272,7 +273,12 @@ Moore_Penrose_higher_order_shrinkage <- function(X, m, centeredCov = TRUE, verbo
     M = estimatedM$M,
     hm = estimatedM$hm,
     alpha = alpha,
-    v = estimatedM$v
+    v = estimatedM$v,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Moore-Penrose higher-order shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")

@@ -137,18 +137,21 @@
 #' @export
 Moore_Penrose_target <- function(X, centeredCov = TRUE, Pi0 = NULL, verbose = 0)
 {
+  call_ = match.call()
   if (is.null(Pi0)) {
     result = Moore_Penrose_target_general(X = X, centeredCov = centeredCov,
-                                          Pi0 = Pi0, verbose = verbose)
+                                          Pi0 = Pi0, verbose = verbose,
+                                          call_ = call_)
   } else {
     result = Moore_Penrose_target_identity(X = X, centeredCov = centeredCov,
-                                           verbose = verbose)
+                                           verbose = verbose, call_ = call_)
   }
   
   return (result)
 }
 
-Moore_Penrose_target_general <- function(X, Pi0 = NULL, centeredCov, verbose = 0)
+Moore_Penrose_target_general <- function(X, Pi0 = NULL, centeredCov, verbose = 0,
+                                         call_ = NULL)
 {
   # Get sizes of X
   n = nrow(X)
@@ -251,7 +254,12 @@ Moore_Penrose_target_general <- function(X, Pi0 = NULL, centeredCov, verbose = 0
   iS_ShMP  <- alpha * iS_MP + beta * Pi0
   
   result = list(
-    estimated_precision_matrix = iS_ShMP
+    estimated_precision_matrix = iS_ShMP,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Moore-Penrose shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
@@ -260,7 +268,8 @@ Moore_Penrose_target_general <- function(X, Pi0 = NULL, centeredCov, verbose = 0
 }
 
 
-Moore_Penrose_target_identity <- function (X, centeredCov = TRUE, verbose = 0)
+Moore_Penrose_target_identity <- function (X, centeredCov = TRUE, verbose = 0,
+                                           call_ = NULL)
 {
   # Get sizes of X
   n = nrow(X)
@@ -320,7 +329,12 @@ Moore_Penrose_target_identity <- function (X, centeredCov = TRUE, verbose = 0)
   iS_ShMP<-ha_MP * iS_MP + hb_MP * Ip
   
   result = list(
-    estimated_precision_matrix = iS_ShMP
+    estimated_precision_matrix = iS_ShMP,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Moore-Penrose shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")

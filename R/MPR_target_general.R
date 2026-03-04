@@ -3,7 +3,7 @@
 
 MPR_target_general_optimal <- function (X, centeredCov, Pi0, verbose = 3, 
                                         eps = 1/(10^6), upp = pi/2 - eps,
-                                        initialValue = 1.5){
+                                        initialValue = 1.5, call_ = NULL){
   if (verbose > 0){
     cat("Starting `MPR_target_general_optimal`...\n")
   }
@@ -72,7 +72,13 @@ MPR_target_general_optimal <- function (X, centeredCov, Pi0, verbose = 3,
     estimated_precision_matrix = MPR_target_general,
     t_optimal = t,
     alpha_optimal = alpha,
-    beta_optimal = beta
+    beta_optimal = beta,
+    t = t,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Moore-Penrose-ridge (MPR) with shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
@@ -134,7 +140,8 @@ loss_L2_MPR_optimal_target_general <- function(t, Sn, p, Ip, cn, Pi0, iS_ridge, 
 
 
 
-MPR_target_general_semioptimal <- function (X, centeredCov, t, Pi0, verbose = 2){
+MPR_target_general_semioptimal <- function (X, centeredCov, t, Pi0, verbose = 2,
+                                            call_ = NULL){
   
   # Get sizes of X
   n = nrow(X)
@@ -167,7 +174,13 @@ MPR_target_general_semioptimal <- function (X, centeredCov, t, Pi0, verbose = 2)
     estimated_precision_matrix = MPR_target_general,
     t = t,
     alpha_optimal = alpha,
-    beta_optimal = beta
+    beta_optimal = beta,
+    t = t,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Moore-Penrose-ridge (MPR) with shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
@@ -448,7 +461,8 @@ best_alphabeta_MPR_shrinkage_general <- function(p, t0, cn, Pi0, Ip, Sn, iS_ridg
 
 
 
-MPR_target_general <- function (X, centeredCov, t, alpha, beta, Pi0, verbose){
+MPR_target_general <- function (X, centeredCov, t, alpha, beta, Pi0, verbose,
+                                call_ = NULL){
   
   # Get sizes of X
   n = nrow(X)
@@ -474,7 +488,13 @@ MPR_target_general <- function (X, centeredCov, t, alpha, beta, Pi0, verbose){
     estimated_precision_matrix = MPR_target_general,
     t = t,
     alpha = alpha,
-    beta = beta
+    beta = beta,
+    t = t,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Moore-Penrose-ridge (MPR) with shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")

@@ -68,8 +68,9 @@
 #' 
 #' 
 #' @export
-MPR_no_shrinkage <- function(X, centeredCov = TRUE, t, verbose = 0){
-  
+MPR_no_shrinkage <- function(X, centeredCov = TRUE, t, verbose = 0)
+{
+  call_ = match.call()
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
@@ -90,7 +91,12 @@ MPR_no_shrinkage <- function(X, centeredCov = TRUE, t, verbose = 0){
   
   result = list(
     estimated_precision_matrix = MPR_estimator,
-    t = t
+    t = t,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Moore-Penrose-ridge (MPR)",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")

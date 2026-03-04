@@ -2,7 +2,7 @@
 
 MPR_target_identity_optimal <- function (X, centeredCov = TRUE, verbose = 2,
                                          eps = 1/(10^6), upp = pi/2 - eps, 
-                                         initialValue = 1.5){
+                                         initialValue = 1.5, call_ = NULL){
   if (verbose > 0){
     cat("Starting `MPR_target_identity_optimal`...\n")
   }
@@ -56,7 +56,13 @@ MPR_target_identity_optimal <- function (X, centeredCov = TRUE, verbose = 2,
     estimated_precision_matrix = MPR_target_identity,
     t_optimal = t,
     alpha_optimal = alpha,
-    beta_optimal = beta
+    beta_optimal = beta,
+    t = t,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Moore-Penrose-ridge (MPR) with shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
@@ -109,7 +115,8 @@ loss_L2_MPR_optimal <- function(t, S, cn, p, Ip){
 
 
 
-MPR_target_identity_semioptimal <- function (X, centeredCov = TRUE, t, verbose = 2){
+MPR_target_identity_semioptimal <- function (X, centeredCov = TRUE, t,
+                                             verbose = 2, call_ = NULL){
   
   # Get sizes of X
   n = nrow(X)
@@ -141,7 +148,13 @@ MPR_target_identity_semioptimal <- function (X, centeredCov = TRUE, t, verbose =
     estimated_precision_matrix = MPR_target_identity,
     t = t,
     alpha_optimal = alpha,
-    beta_optimal = beta
+    beta_optimal = beta,
+    t = t,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Moore-Penrose-ridge (MPR) with shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
@@ -269,7 +282,8 @@ best_alphabeta_MPR_shrinkage_identity <- function(p, t, cn, S, iS_ridge, verbose
 }
 
 
-MPR_target_identity <- function (X, centeredCov = TRUE, t, alpha, beta, verbose = 0){
+MPR_target_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
+                                 verbose = 0, call_ = NULL){
   
   # Get sizes of X
   n = nrow(X)
@@ -294,7 +308,13 @@ MPR_target_identity <- function (X, centeredCov = TRUE, t, alpha, beta, verbose 
     estimated_precision_matrix = MPR_target_identity,
     t = t,
     alpha = alpha,
-    beta = beta
+    beta = beta,
+    t = t,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Moore-Penrose-ridge (MPR) with shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")

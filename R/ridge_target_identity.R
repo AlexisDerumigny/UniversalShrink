@@ -4,7 +4,7 @@
 
 ridge_target_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0,
                                            eps = 1/(10^6), upp = pi/2 - eps,
-                                           initialValue = 1.5){
+                                           initialValue = 1.5, call_ = NULL){
   if (verbose > 0){
     cat("Starting `ridge_target_identity_optimal`...\n")
   }
@@ -57,7 +57,7 @@ ridge_target_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0,
   
   hL2R_max <- stats::optim(par = initialValue, fn = hL2R,
                            lower = eps, upper = upp,
-                           method= "L-BFGS-B", control = list(fnscale = -1))
+                           method = "L-BFGS-B", control = list(fnscale = -1))
   
   u_R <- hL2R_max$par
   
@@ -89,7 +89,12 @@ ridge_target_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0,
     estimated_precision_matrix = iS_ShRt1,
     alpha_optimal = ha_ShRt1,
     beta_optimal = hb_ShRt1,
-    t_optimal = t_R
+    t_optimal = t_R,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Ridge shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
@@ -99,7 +104,8 @@ ridge_target_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0,
 
 
 
-ridge_target_identity_semioptimal <- function (X, centeredCov, t, verbose = 2){
+ridge_target_identity_semioptimal <- function (X, centeredCov, t, verbose = 2,
+                                               call_ = NULL){
   
   if (verbose > 0){
     cat("Starting `ridge_target_identity_semioptimal`...\n")
@@ -207,7 +213,12 @@ ridge_target_identity_semioptimal <- function (X, centeredCov, t, verbose = 2){
     alpha_optimal = alpha,
     beta_optimal = beta,
     M = M,
-    hm = hm
+    hm = hm,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Ridge shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
@@ -218,7 +229,7 @@ ridge_target_identity_semioptimal <- function (X, centeredCov, t, verbose = 2){
 
 
 ridge_target_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
-                                   verbose = 0){
+                                   verbose = 0, call_ = NULL){
   if (verbose > 0){
     cat("Starting `ridge_target_identity`...\n")
   }
@@ -243,7 +254,13 @@ ridge_target_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
   iS_ShRt1 <- alpha * iS_ridge + beta * Ip
   
   result = list(
-    estimated_precision_matrix = iS_ShRt1
+    estimated_precision_matrix = iS_ShRt1,
+    t = t,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Ridge shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")

@@ -45,8 +45,9 @@
 #' 
 #' 
 #' @export
-ridge_no_shrinkage <- function (X, centeredCov = TRUE, t, verbose = 0){
-  
+ridge_no_shrinkage <- function (X, centeredCov = TRUE, t, verbose = 0)
+{
+  call_ = match.call()
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
@@ -61,7 +62,12 @@ ridge_no_shrinkage <- function (X, centeredCov = TRUE, t, verbose = 0){
   
   result = list(
     estimated_precision_matrix = iS_ridge,
-    t = t
+    t = t,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Ridge",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")

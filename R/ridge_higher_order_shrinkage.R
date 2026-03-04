@@ -161,21 +161,22 @@ ridge_higher_order_shrinkage <- function(
     X, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50), verbose = 0,
     inversionMethod = "solve")
 {
+  call_ = match.call()
   if (is.null(t)){
     result = ridge_higher_order_shrinkage_optimal(
       X = X, m = m, centeredCov = centeredCov, verbose = verbose,
-      interval = interval, inversionMethod = inversionMethod)
+      interval = interval, inversionMethod = inversionMethod, call_ = call_)
     
   } else {
     result = ridge_higher_order_shrinkage_non_optimized(
       X = X, m = m, centeredCov = centeredCov, t = t, verbose = verbose,
-      inversionMethod = inversionMethod)
+      inversionMethod = inversionMethod, call_ = call_)
   }
 }
 
 
 ridge_higher_order_shrinkage_non_optimized <- function(
-    X, m, centeredCov, t, verbose = 0, inversionMethod = "solve")
+    X, m, centeredCov, t, verbose = 0, inversionMethod = "solve", call_ = NULL)
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_non_optimized` (known t)...\n")
@@ -244,7 +245,13 @@ ridge_higher_order_shrinkage_non_optimized <- function(
     M = estimatedM$M,
     hm = estimatedM$hm,
     alpha = alpha,
-    v = estimatedM$v
+    v = estimatedM$v,
+    t = t,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Ridge higher-order shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
@@ -257,7 +264,7 @@ ridge_higher_order_shrinkage_non_optimized <- function(
 
 ridge_higher_order_shrinkage_optimal <- function(
     X, m, centeredCov = TRUE, verbose = 0, interval = c(0, 50),
-    inversionMethod = "solve")
+    inversionMethod = "solve", call_ = NULL)
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_optimal` (with unknown t)...\n")
@@ -348,7 +355,12 @@ ridge_higher_order_shrinkage_optimal <- function(
     alpha = alpha,
     v = estimatedM$v,
     t = optimal_t,
-    estimated_loss = result_optim$objective
+    estimated_loss = result_optim$objective,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Ridge higher-order shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")

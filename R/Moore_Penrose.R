@@ -68,6 +68,7 @@
 #' @export
 Moore_Penrose <- function(X, centeredCov = TRUE)
 {
+  call_ = match.call()
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
@@ -117,7 +118,12 @@ Moore_Penrose <- function(X, centeredCov = TRUE)
   }
   
   result = list(
-    estimated_precision_matrix = iS_MP
+    estimated_precision_matrix = iS_MP,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Moore-Penrose",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")

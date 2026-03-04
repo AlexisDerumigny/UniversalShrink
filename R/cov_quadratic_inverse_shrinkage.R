@@ -82,8 +82,9 @@
 #' LossEuclideanEigenvalues2(estimatedCov_shrink, Sigma)
 #' 
 #' @export
-cov_quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE, verbose = 0) {
-  
+cov_quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE, verbose = 0)
+{
+  call_ = match.call()
   n <- nrow(X) # Sample size
   p <- ncol(X) # Matrix dimension
   
@@ -126,7 +127,12 @@ cov_quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE, verbose = 0) 
   sigmahat <- u %*% diag(deltaQIS) %*% t(u) # Reconstruct covariance matrix
   
   result = list(
-    estimated_covariance_matrix = sigmahat
+    estimated_covariance_matrix = sigmahat,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Quadratic Inverse Shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedCovarianceMatrix")

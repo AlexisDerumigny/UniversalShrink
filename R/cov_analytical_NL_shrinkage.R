@@ -60,6 +60,7 @@
 #' @export
 cov_analytical_NL_shrinkage = function(X, centeredCov = TRUE)
 {
+  call_ = match.call()
   n = nrow(X)
   p = ncol(X)
   sampleC = cov_with_centering(X = X, centeredCov = centeredCov)
@@ -99,7 +100,12 @@ cov_analytical_NL_shrinkage = function(X, centeredCov = TRUE)
   estimatedSigma = u %*% diag(dtilde) %*% t(u)
   
   result = list(
-    estimated_covariance_matrix = estimatedSigma
+    estimated_covariance_matrix = estimatedSigma,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "Analytical NL shrinkage",
+    call = call_
   )
   
   class(result) <- c("EstimatedCovarianceMatrix")

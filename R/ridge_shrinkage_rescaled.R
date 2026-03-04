@@ -127,6 +127,7 @@
 ridge_shrinkage_rescaled <- function (X, eps = 1e-6, upp = pi/2 - 1e-6,
                                       centeredCov = TRUE)
 {
+  call_ = match.call()
   if (eps <= 0 || eps > pi/2){
     stop("'eps' must be between 0 and pi/2")
   }
@@ -187,7 +188,12 @@ ridge_shrinkage_rescaled <- function (X, eps = 1e-6, upp = pi/2 - 1e-6,
   iS_WPTZ <- alpha_optimal * solve(S + t_optimal * Ip)
   
   result = list(
-    estimated_precision_matrix = iS_WPTZ
+    estimated_precision_matrix = iS_WPTZ,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "ridge_shrinkage_rescaled",
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
