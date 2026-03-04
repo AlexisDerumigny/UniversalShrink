@@ -92,6 +92,8 @@
 #' @param eps,upp search interval for the best penalization parameter
 #' (used in the numerical optimization).
 #' 
+#' @inheritParams cov_with_centering
+#' 
 #' @returns the estimator of the precision matrix
 #' (a `p` by `p` matrix, i.e. the inverse of the covariance matrix).
 #' 
@@ -122,7 +124,8 @@
 #' 
 #' 
 #' @export
-ridge_shrinkage_rescaled <- function (X, eps = 1e-6, upp = pi/2 - 1e-6)
+ridge_shrinkage_rescaled <- function (X, eps = 1e-6, upp = pi/2 - 1e-6,
+                                      centeredCov = TRUE)
 {
   if (eps <= 0 || eps > pi/2){
     stop("'eps' must be between 0 and pi/2")
@@ -134,11 +137,13 @@ ridge_shrinkage_rescaled <- function (X, eps = 1e-6, upp = pi/2 - 1e-6)
     stop("'eps' must be strictly smaller than 'upp'.")
   }
   
-  S <- stats::cov(X)
-  
   n = nrow(X)
   p = ncol(X)
-  c_n = p / n
+  
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = 0)
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)

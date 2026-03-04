@@ -5,13 +5,24 @@
 \title{Optimal ridge shrinkage for estimation of the precision matrix by
 Wang et al. (2015)}
 \usage{
-ridge_shrinkage_rescaled(X, eps = 1e-06, upp = pi/2 - 1e-06)
+ridge_shrinkage_rescaled(
+  X,
+  eps = 1e-06,
+  upp = pi/2 - 1e-06,
+  centeredCov = TRUE
+)
 }
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
 
 \item{eps, upp}{search interval for the best penalization parameter
 (used in the numerical optimization).}
+
+\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
+computed using centering (i.e. in the general case where the mean of the
+random vector may be non-zero).
+If \code{FALSE} the covariance matrix is computed assuming that the mean of
+the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 }
 \value{
 the estimator of the precision matrix
