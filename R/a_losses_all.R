@@ -10,7 +10,7 @@
 #' (true precision matrix). If \code{SigmaInv} is needed and missing, it is
 #' computed by numerical inversion of the provided \code{Sigma}.
 #' @param ... other arguments, ignored except for the \code{print} method, for
-#' which they are passed to \code{\link{base::print.data.frame}}.
+#' which they are passed to \code{\link[base]{print.data.frame}}.
 #' 
 #' @returns \code{Losses} returns an object of class \code{AllLosses}.
 #' \code{print} returns \code{NULL} and is only called for its side-effects.

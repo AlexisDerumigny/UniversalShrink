@@ -24,7 +24,7 @@ Losses(x, Sigma, ...)
 computed by numerical inversion of the provided \code{Sigma}.}
 
 \item{...}{other arguments, ignored except for the \code{print} method, for
-which they are passed to \code{\link{base::print.data.frame}}.}
+which they are passed to \code{\link[base]{print.data.frame}}.}
 }
 \value{
 \code{Losses} returns an object of class \code{AllLosses}.
