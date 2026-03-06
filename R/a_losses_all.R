@@ -41,17 +41,19 @@ Losses.EstimatedPrecisionMatrix <- function(x, Sigma, SigmaInv = NULL, ...)
     LossEuclideanEigenvalues2(x = x, Sigma = Sigma, SigmaInv = SigmaInv,
                               normalized = FALSE))
   
-  allLosses = rbind(
-    Frobenius2 = Frob2,
-    InverseFrobenius2 = InvFrob2,
-    EuclideanEigenvalues = EuclideanEigenvalues )
+  allLosses = rbind(Frobenius2 = Frob2,
+                    InverseFrobenius2 = InvFrob2,
+                    EuclideanEigenvalues = EuclEig)
   
   allLosses = as.data.frame(allLosses)
-  colnames(allLosses) <- c("TRUE", "FALSE")
+  colnames(allLosses) <- c("Normalized", "Unnormalized")
   
   result = list(
-    allLosses = allLosses
+    allLosses = allLosses,
+    estimated = x,
+    problemType = "Estimation of the precision matrix"
   )
+  class(result) <- "AllLosses"
   
   return (result)
 }
