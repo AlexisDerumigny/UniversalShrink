@@ -3,6 +3,7 @@
 \name{Losses}
 \alias{Losses}
 \alias{Losses.EstimatedPrecisionMatrix}
+\alias{Losses.EstimatedCovarianceMatrix}
 \alias{print.AllLosses}
 \title{All quadratic losses}
 \usage{
@@ -10,10 +11,27 @@ Losses(x, Sigma, ...)
 
 \method{Losses}{EstimatedPrecisionMatrix}(x, Sigma, SigmaInv = NULL, ...)
 
+\method{Losses}{EstimatedCovarianceMatrix}(x, Sigma, ...)
+
 \method{print}{AllLosses}(x, ...)
 }
+\arguments{
+\item{x}{an object, of class \code{EstimatedPrecisionMatrix},
+\code{EstimatedCovarianceMatrix} or \code{AllLosses}.}
+
+\item{Sigma, SigmaInv}{true covariance matrix and its inverse
+(true precision matrix). If \code{SigmaInv} is needed and missing, it is
+computed by numerical inversion of the provided \code{Sigma}.}
+
+\item{...}{other arguments, ignored except for the \code{print} method, for
+which they are passed to \code{\link{base::print.data.frame}}.}
+}
+\value{
+\code{Losses} returns an object of class \code{AllLosses}.
+\code{print} returns \code{NULL} and is only called for its side-effects.
+}
 \description{
-All quadratic losses
+Returns and print all (currently implemented) quadratic losses.
 }
 \examples{
 
@@ -26,4 +44,14 @@ X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 precision_MP = Moore_Penrose(X)
 Losses(precision_MP, Sigma = Sigma)
 
+precision_MP_shrink = Moore_Penrose_target(X)
+Losses(precision_MP_shrink, Sigma = Sigma)
+
+estimatedCov_shrink = cov_analytical_NL_shrinkage(X)
+Losses(estimatedCov_shrink, Sigma = Sigma)
+
+}
+\seealso{
+The quadratic losses \code{\link{LossFrobenius2}},
+\code{\link{LossInverseFrobenius2}} and \code{\link{LossEuclideanEigenvalues2}}.
 }

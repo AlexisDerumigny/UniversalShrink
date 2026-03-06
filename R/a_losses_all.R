@@ -1,6 +1,24 @@
 
 #' All quadratic losses
 #' 
+#' Returns and print all (currently implemented) quadratic losses.
+#' 
+#' @param x an object, of class \code{EstimatedPrecisionMatrix},
+#' \code{EstimatedCovarianceMatrix} or \code{AllLosses}.
+#' 
+#' @param Sigma,SigmaInv true covariance matrix and its inverse
+#' (true precision matrix). If \code{SigmaInv} is needed and missing, it is
+#' computed by numerical inversion of the provided \code{Sigma}.
+#' @param ... other arguments, ignored except for the \code{print} method, for
+#' which they are passed to \code{\link{base::print.data.frame}}.
+#' 
+#' @returns \code{Losses} returns an object of class \code{AllLosses}.
+#' \code{print} returns \code{NULL} and is only called for its side-effects.
+#' 
+#' @seealso The quadratic losses \code{\link{LossFrobenius2}},
+#' \code{\link{LossInverseFrobenius2}} and \code{\link{LossEuclideanEigenvalues2}}.
+#' 
+#' 
 #' @examples
 #' 
 #' n = 100
@@ -11,6 +29,12 @@
 #' 
 #' precision_MP = Moore_Penrose(X)
 #' Losses(precision_MP, Sigma = Sigma)
+#' 
+#' precision_MP_shrink = Moore_Penrose_target(X)
+#' Losses(precision_MP_shrink, Sigma = Sigma)
+#' 
+#' estimatedCov_shrink = cov_analytical_NL_shrinkage(X)
+#' Losses(estimatedCov_shrink, Sigma = Sigma)
 #' 
 #' @export
 Losses <- function(x, Sigma, ...) {
@@ -61,6 +85,34 @@ Losses.EstimatedPrecisionMatrix <- function(x, Sigma, SigmaInv = NULL, ...)
 
 #' @rdname Losses
 #' @export
+Losses.EstimatedCovarianceMatrix <- function(x, Sigma, ...)
+{
+  Frob2 = c(LossFrobenius2(x = x, Sigma = Sigma, normalized = TRUE),
+            LossFrobenius2(x = x, Sigma = Sigma, normalized = FALSE))
+  
+  EuclEig = c(
+    LossEuclideanEigenvalues2(x = x, Sigma = Sigma, normalized = TRUE),
+    LossEuclideanEigenvalues2(x = x, Sigma = Sigma, normalized = FALSE))
+  
+  allLosses = rbind(Frobenius2 = Frob2,
+                    EuclideanEigenvalues = EuclEig)
+  
+  allLosses = as.data.frame(allLosses)
+  colnames(allLosses) <- c("Normalized", "Unnormalized")
+  
+  result = list(
+    allLosses = allLosses,
+    estimated = x,
+    problemType = "Estimation of the covariance matrix"
+  )
+  class(result) <- "AllLosses"
+  
+  return (result)
+}
+
+
+#' @rdname Losses
+#' @export
 print.AllLosses <- function(x, ...){
   cat(x$problemType)
   cat(", method =", x$estimated$method)
@@ -79,5 +131,6 @@ print.AllLosses <- function(x, ...){
   cat("\n\n")
   cat("Losses:\n")
   print(x$allLosses, ...)
+  return (invisible(NULL))
 }
 
