@@ -3,11 +3,14 @@
 \name{Losses}
 \alias{Losses}
 \alias{Losses.EstimatedPrecisionMatrix}
+\alias{print.AllLosses}
 \title{All quadratic losses}
 \usage{
 Losses(x, Sigma, ...)
 
 \method{Losses}{EstimatedPrecisionMatrix}(x, Sigma, SigmaInv = NULL, ...)
+
+\method{print}{AllLosses}(x, ...)
 }
 \description{
 All quadratic losses

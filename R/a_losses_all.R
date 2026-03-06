@@ -58,3 +58,26 @@ Losses.EstimatedPrecisionMatrix <- function(x, Sigma, SigmaInv = NULL, ...)
   return (result)
 }
 
+
+#' @rdname Losses
+#' @export
+print.AllLosses <- function(x, ...){
+  cat(x$problemType)
+  cat(", method =", x$estimated$method)
+  if (x$estimated$centeredCov){
+    cat(" (centered)")
+  } else {
+    cat(" (non centered)")
+  }
+  cat("\n")
+  cat("n =", x$estimated$n)
+  cat(", p =", x$estimated$p)
+  c_n = concentr_ratio(n = x$estimated$n,
+                       p = x$estimated$p,
+                       centeredCov = x$estimated$centeredCov, verbose = 0)
+  cat(", c_n =", c_n)
+  cat("\n\n")
+  cat("Losses:\n")
+  print(x$allLosses, ...)
+}
+
