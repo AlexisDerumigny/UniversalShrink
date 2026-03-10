@@ -37,7 +37,7 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 
 - `ridge()`: the usual ridge estimator
 
-- `ridge_target()`: perform first-order shrinkage of the Ridge estimator towards
+- `ridge_shrinkage()`: perform first-order shrinkage of the Ridge estimator towards
   an arbitrary (fixed) target such as the identity matrix.
   
 - `ridge_higher_order_shrinkage()`: perform higher-order shrinkage of the Ridge
@@ -50,7 +50,7 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 
 - `MPR()`
 
-- `MPR()`
+- `MPR_shrinkage()`
 
 
 # 3. Functions for estimation of optimal portfolio weights
