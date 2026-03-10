@@ -47,7 +47,7 @@
 #' 
 #' Ip = diag(nrow = p)
 #' for (t in c(0.01, 0.2, 0.5, 1, 2)){
-#'   precision_MPR_Cent = MPR_no_shrinkage(X, centeredCov = TRUE, t = t)
+#'   precision_MPR_Cent = MPR(X, centeredCov = TRUE, t = t)
 #'   
 #'   Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
 #'   S = t(X) %*% Jn %*% X / (n-1)
@@ -68,7 +68,7 @@
 #' 
 #' 
 #' @export
-MPR_no_shrinkage <- function(X, centeredCov = TRUE, t, verbose = 0)
+MPR <- function(X, centeredCov = TRUE, t, verbose = 0)
 {
   call_ = match.call()
   # Get sizes of X

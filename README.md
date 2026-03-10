@@ -48,7 +48,7 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 
 ## 2.3. Moore-Penrose-Ridge "hybrid" estimators
 
-- `MPR_no_shrinkage()`
+- `MPR()`
 
 - `MPR_target()`
 
