@@ -164,7 +164,7 @@ test_that(paste0("`best_alphabeta_MPR_shrinkage` is coherent ",
 })
 
 
-test_that("`MPR_target` is coherent between target general and target identity", {
+test_that("`MPR_shrinkage` is coherent between target general and target identity", {
   set.seed(1)
   n = 10
   p = 5 * n
@@ -180,13 +180,13 @@ test_that("`MPR_target` is coherent between target general and target identity",
   
   Y = t(X)
   
-  precision_MPR_optimal = MPR_target(X = X, verbose = 0, upp = atan(10^2))
+  precision_MPR_optimal = MPR_shrinkage(X = X, verbose = 0, upp = atan(10^2))
   
   
   # Using the identity target directly
   Ip = diag(nrow = p)
   
-  precision_MPR_optimal_Ip = MPR_target(X = X, Pi0 = Ip,
+  precision_MPR_optimal_Ip = MPR_shrinkage(X = X, Pi0 = Ip,
                                         verbose = 0, upp = atan(10^2))
   
   expect_equal(precision_MPR_optimal_Ip$t_optimal,
@@ -215,14 +215,14 @@ test_that("`MPR_target` is coherent between target general and target identity",
   alpha_opt = precision_MPR_optimal$alpha_optimal
   beta_opt = precision_MPR_optimal$beta_optimal
   
-  precision_MPR_semioptimal_Ip = MPR_target(X = X, Pi0 = Ip, t = t_opt)
+  precision_MPR_semioptimal_Ip = MPR_shrinkage(X = X, Pi0 = Ip, t = t_opt)
   
   distFrob = NormFrobenius2(as.matrix(precision_MPR_semioptimal_Ip) - 
                               as.matrix(precision_MPR_optimal), normalized = TRUE)
   expect_equal(distFrob, 0)
   
   
-  precision_MPR_nooptim = MPR_target(X = X, Pi0 = Ip, t = t_opt,
+  precision_MPR_nooptim = MPR_shrinkage(X = X, Pi0 = Ip, t = t_opt,
                                      alpha = alpha_opt, beta = beta_opt)
   
   distFrob = NormFrobenius2(as.matrix(precision_MPR_nooptim) - 
@@ -231,7 +231,7 @@ test_that("`MPR_target` is coherent between target general and target identity",
 })
 
 
-test_that("`MPR_target` is coherent between optimized and non-optimized versions", {
+test_that("`MPR_shrinkage` is coherent between optimized and non-optimized versions", {
   set.seed(1)
   n = 10
   p = 5 * n
@@ -247,17 +247,17 @@ test_that("`MPR_target` is coherent between optimized and non-optimized versions
   
   Y = t(X)
   
-  precision_MPR_optimal = MPR_target(X = X)
+  precision_MPR_optimal = MPR_shrinkage(X = X)
   
   t_opt =  precision_MPR_optimal$t_optimal
   alpha_opt = precision_MPR_optimal$alpha_optimal
   beta_opt = precision_MPR_optimal$beta_optimal
   
-  precision_MPR_semioptimal = MPR_target(X = X, t = t_opt)
+  precision_MPR_semioptimal = MPR_shrinkage(X = X, t = t_opt)
   expect_equal(as.matrix(precision_MPR_semioptimal), 
                as.matrix(precision_MPR_optimal) )
   
-  precision_MPR_nooptim = MPR_target(X = X, t = t_opt,
+  precision_MPR_nooptim = MPR_shrinkage(X = X, t = t_opt,
                                      alpha = alpha_opt, beta = beta_opt)
   expect_equal(as.matrix(precision_MPR_nooptim),
                as.matrix(precision_MPR_optimal) )

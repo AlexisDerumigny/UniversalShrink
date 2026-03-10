@@ -1,5 +1,5 @@
 
-test_that("GMV_Moore_Penrose_target is coherent for eq weighted targets", {
+test_that("GMV_Moore_Penrose_shrinkage is coherent for eq weighted targets", {
   set.seed(1)
   n = 50
   p = 2 * n
@@ -14,10 +14,10 @@ test_that("GMV_Moore_Penrose_target is coherent for eq weighted targets", {
   X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
   
   GMV_MP_shrinkage_Cent_eq = 
-    GMV_Moore_Penrose_target_eq(X = X, centeredCov = TRUE, verbose = 0)
+    GMV_Moore_Penrose_shrinkage_eq(X = X, centeredCov = TRUE, verbose = 0)
     
   GMV_MP_shrinkage_Cent_gen = 
-    GMV_Moore_Penrose_target_general(X = X, centeredCov = TRUE, verbose = 0)
+    GMV_Moore_Penrose_shrinkage_general(X = X, centeredCov = TRUE, verbose = 0)
   
   expect_equal(GMV_MP_shrinkage_Cent_gen, GMV_MP_shrinkage_Cent_eq)
 })
