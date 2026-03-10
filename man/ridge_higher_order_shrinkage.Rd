@@ -115,8 +115,8 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-precision_MoorePenrose_Cent = Moore_Penrose_target(X, centeredCov = TRUE)
-precision_MoorePenrose_NoCent = Moore_Penrose_target(X, centeredCov = FALSE)
+precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
+precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
 
 LossFrobenius2(precision_MoorePenrose_Cent, Sigma = Sigma)
 LossFrobenius2(precision_MoorePenrose_NoCent, Sigma = Sigma)
@@ -148,7 +148,7 @@ LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
 
 # For comparison TODO: move this as unit test
 
-precision_target = ridge_target(X, centeredCov = TRUE, t = 100)
+precision_target = ridge_shrinkage(X, centeredCov = TRUE, t = 100)
 LossFrobenius2(precision_target, Sigma = Sigma)
 
 
@@ -171,10 +171,10 @@ for (m in 1:2){
 precision_higher_order_shrinkage_Cent = 
       ridge_higher_order_shrinkage(X, m = 1, centeredCov = TRUE)
 
-precision_ridge_target_Cent = ridge_target(X, centeredCov = TRUE)
+precision_ridge_shrinkage_Cent = ridge_shrinkage(X, centeredCov = TRUE)
   
 LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
-LossFrobenius2(precision_ridge_target_Cent, Sigma = Sigma)
+LossFrobenius2(precision_ridge_shrinkage_Cent, Sigma = Sigma)
 
 
 

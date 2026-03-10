@@ -5,12 +5,7 @@
 \title{Optimal ridge shrinkage for estimation of the precision matrix by
 Wang et al. (2015)}
 \usage{
-ridge_shrinkage_Wang(
-  X,
-  eps = 1e-06,
-  upp = pi/2 - 1e-06,
-  centeredCov = TRUE
-)
+ridge_shrinkage_Wang(X, eps = 1e-06, upp = pi/2 - 1e-06, centeredCov = TRUE)
 }
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}

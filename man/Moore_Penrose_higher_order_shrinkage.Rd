@@ -74,8 +74,8 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-precision_MoorePenrose_Cent = Moore_Penrose_target(X, centeredCov = TRUE)
-precision_MoorePenrose_NoCent = Moore_Penrose_target(X, centeredCov = FALSE)
+precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
+precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
 
 print(LossFrobenius2(precision_MoorePenrose_Cent, Sigma))
 print(LossFrobenius2(precision_MoorePenrose_NoCent, Sigma))
