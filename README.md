@@ -50,7 +50,7 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 
 - `MPR()`
 
-- `MPR_target()`
+- `MPR()`
 
 
 # 3. Functions for estimation of optimal portfolio weights

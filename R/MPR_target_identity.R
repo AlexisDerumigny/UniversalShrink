@@ -1,10 +1,10 @@
 
 
-MPR_target_identity_optimal <- function (X, centeredCov = TRUE, verbose = 2,
+MPR_identity_optimal <- function (X, centeredCov = TRUE, verbose = 2,
                                          eps = 1/(10^6), upp = pi/2 - eps, 
                                          initialValue = 1.5, call_ = NULL){
   if (verbose > 0){
-    cat("Starting `MPR_target_identity_optimal`...\n")
+    cat("Starting `MPR_identity_optimal`...\n")
   }
   
   # Get sizes of X
@@ -50,10 +50,10 @@ MPR_target_identity_optimal <- function (X, centeredCov = TRUE, verbose = 2,
   # This can also be written as:
   # iS_ridge %*% S %*% iS_ridge
   
-  MPR_target_identity = alpha * MPR_estimator + beta * Ip
+  MPR_identity = alpha * MPR_estimator + beta * Ip
   
   result = list(
-    estimated_precision_matrix = MPR_target_identity,
+    estimated_precision_matrix = MPR_identity,
     t_optimal = t,
     alpha_optimal = alpha,
     beta_optimal = beta,
@@ -115,7 +115,7 @@ loss_L2_MPR_optimal <- function(t, S, cn, p, Ip){
 
 
 
-MPR_target_identity_semioptimal <- function (X, centeredCov = TRUE, t,
+MPR_identity_semioptimal <- function (X, centeredCov = TRUE, t,
                                              verbose = 2, call_ = NULL){
   
   # Get sizes of X
@@ -142,10 +142,10 @@ MPR_target_identity_semioptimal <- function (X, centeredCov = TRUE, t,
   # This can also be written as:
   # iS_ridge %*% S %*% iS_ridge
   
-  MPR_target_identity = alpha * MPR_estimator + beta * Ip
+  MPR_identity = alpha * MPR_estimator + beta * Ip
   
   result = list(
-    estimated_precision_matrix = MPR_target_identity,
+    estimated_precision_matrix = MPR_identity,
     t = t,
     alpha_optimal = alpha,
     beta_optimal = beta,
@@ -282,7 +282,7 @@ best_alphabeta_MPR_shrinkage_identity <- function(p, t, cn, S, iS_ridge, verbose
 }
 
 
-MPR_target_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
+MPR_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
                                  verbose = 0, call_ = NULL){
   
   # Get sizes of X
@@ -302,10 +302,10 @@ MPR_target_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
   # This can also be written as:
   # iS_ridge %*% S %*% iS_ridge
   
-  MPR_target_identity = alpha * MPR_estimator + beta * Ip
+  MPR_identity = alpha * MPR_estimator + beta * Ip
   
   result = list(
-    estimated_precision_matrix = MPR_target_identity,
+    estimated_precision_matrix = MPR_identity,
     t = t,
     alpha = alpha,
     beta = beta,
