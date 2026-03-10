@@ -25,7 +25,7 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 - `Moore_Penrose()`: Moore-Penrose estimator of the precision matrix, obtained
   by computing the Moore-Penrose inverse of the sample covariance matrix.
 
-- `Moore_Penrose_target()`: perform a first-order shrinkage of the Moore-Penrose
+- `Moore_Penrose_shrinkage()`: perform a first-order shrinkage of the Moore-Penrose
   estimator of the precision matrix, towards an arbitrary (fixed)  target such
   as the identity matrix.
   
@@ -64,7 +64,7 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 - `GMV_Moore_Penrose()`: using the Moore-Penrose inverse `Moore_Penrose()` of
   the precision matrix as an input for the plug-in estimation.
 
-- `GMV_Moore_Penrose_target()`: performs a first-order shrinkage of the
+- `GMV_Moore_Penrose_shrinkage()`: performs a first-order shrinkage of the
   estimator given by `GMV_Moore_Penrose()` towards an arbitrary (fixed) portfolio
   such as the equally weighted portfolio.
 

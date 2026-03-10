@@ -1,7 +1,7 @@
 
 
 
-GMV_Moore_Penrose_target_general <- function(X, centeredCov = TRUE, b = NULL,
+GMV_Moore_Penrose_shrinkage_general <- function(X, centeredCov = TRUE, b = NULL,
                                              verbose = 2){
   # Get sizes of X
   n = nrow(X)

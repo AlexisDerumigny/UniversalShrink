@@ -30,7 +30,7 @@
 #' precision_MP = Moore_Penrose(X)
 #' Losses(precision_MP, Sigma = Sigma)
 #' 
-#' precision_MP_shrink = Moore_Penrose_target(X)
+#' precision_MP_shrink = Moore_Penrose_shrinkage(X)
 #' Losses(precision_MP_shrink, Sigma = Sigma)
 #' 
 #' estimatedCov_shrink = cov_analytical_NL_shrinkage(X)

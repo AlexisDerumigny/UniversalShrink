@@ -106,9 +106,9 @@
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
-#' precision_MoorePenrose_Cent = Moore_Penrose_target(X, centeredCov = TRUE)
+#' precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
 #'    
-#' precision_MoorePenrose_NoCent = Moore_Penrose_target(X, centeredCov = FALSE)
+#' precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
 #' 
 #' precisionTrue = solve(Sigma)
 #' 
@@ -125,9 +125,9 @@
 #' 
 #' # We now use the true value of the precision matrix as a target for shrinkage
 #' precision_MoorePenrose_Cent_trueSigma = 
-#'   Moore_Penrose_target(X, centeredCov = TRUE, Pi0 = solve(Sigma))
+#'   Moore_Penrose_shrinkage(X, centeredCov = TRUE, Pi0 = solve(Sigma))
 #' precision_MoorePenrose_NoCent_trueSigma = 
-#'   Moore_Penrose_target(X, centeredCov = FALSE, Pi0 = solve(Sigma))                                                        
+#'   Moore_Penrose_shrinkage(X, centeredCov = FALSE, Pi0 = solve(Sigma))                                                        
 #'                                                         
 #' LossFrobenius2(precision_MoorePenrose_Cent_trueSigma, Sigma = Sigma)
 #' LossFrobenius2(precision_MoorePenrose_NoCent_trueSigma, Sigma = Sigma)
@@ -135,22 +135,22 @@
 #' 
 #' 
 #' @export
-Moore_Penrose_target <- function(X, centeredCov = TRUE, Pi0 = NULL, verbose = 0)
+Moore_Penrose_shrinkage <- function(X, centeredCov = TRUE, Pi0 = NULL, verbose = 0)
 {
   call_ = match.call()
   if (is.null(Pi0)) {
-    result = Moore_Penrose_target_general(X = X, centeredCov = centeredCov,
+    result = Moore_Penrose_shrinkage_general(X = X, centeredCov = centeredCov,
                                           Pi0 = Pi0, verbose = verbose,
                                           call_ = call_)
   } else {
-    result = Moore_Penrose_target_identity(X = X, centeredCov = centeredCov,
+    result = Moore_Penrose_shrinkage_identity(X = X, centeredCov = centeredCov,
                                            verbose = verbose, call_ = call_)
   }
   
   return (result)
 }
 
-Moore_Penrose_target_general <- function(X, Pi0 = NULL, centeredCov, verbose = 0,
+Moore_Penrose_shrinkage_general <- function(X, Pi0 = NULL, centeredCov, verbose = 0,
                                          call_ = NULL)
 {
   # Get sizes of X
@@ -268,7 +268,7 @@ Moore_Penrose_target_general <- function(X, Pi0 = NULL, centeredCov, verbose = 0
 }
 
 
-Moore_Penrose_target_identity <- function (X, centeredCov = TRUE, verbose = 0,
+Moore_Penrose_shrinkage_identity <- function (X, centeredCov = TRUE, verbose = 0,
                                            call_ = NULL)
 {
   # Get sizes of X

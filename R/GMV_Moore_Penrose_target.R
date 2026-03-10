@@ -100,7 +100,7 @@
 #' 
 #' # Compute GMV portfolio based on the Moore-Penrose inverse with shrinkage
 #' # towards the equally weighted portfolio
-#' GMV_MP_shrink_eq = GMV_Moore_Penrose_target(X)
+#' GMV_MP_shrink_eq = GMV_Moore_Penrose_shrinkage(X)
 #' 
 #' Loss_GMV_MP_shrink_eq = LossRelativeOutOfSampleVariance(
 #'   portfolioWeights = GMV_MP_shrink_eq, Sigma = Sigma)
@@ -114,7 +114,7 @@
 #' # towards the true GMV portfolio
 #' GMV_true = GMV_PlugIn(solve(Sigma))
 #' 
-#' GMV_MP_shrink_oracle = GMV_Moore_Penrose_target(X, b = GMV_true)
+#' GMV_MP_shrink_oracle = GMV_Moore_Penrose_shrinkage(X, b = GMV_true)
 #' 
 #' Loss_GMV_MP_shrink_oracle = LossRelativeOutOfSampleVariance(
 #'   portfolioWeights = GMV_MP_shrink_oracle, Sigma = Sigma)
@@ -125,19 +125,19 @@
 #' 
 #' 
 #' @export
-GMV_Moore_Penrose_target <- function(X, centeredCov = TRUE, b = NULL,
+GMV_Moore_Penrose_shrinkage <- function(X, centeredCov = TRUE, b = NULL,
                                      verbose = 0){
   if (is.null(b)){
     if (verbose > 0){
       cat("Default target: equally weighted portfolio\n")
     }
-    result = GMV_Moore_Penrose_target_eq(
+    result = GMV_Moore_Penrose_shrinkage_eq(
       X = X, centeredCov = centeredCov, verbose = verbose)
   } else {
     if (verbose > 0){
       cat("User-provided target portfolio\n")
     }
-    result = GMV_Moore_Penrose_target_general(
+    result = GMV_Moore_Penrose_shrinkage_general(
       X = X, centeredCov = centeredCov, b = b, verbose = verbose)
   }
   
