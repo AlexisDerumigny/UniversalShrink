@@ -35,7 +35,7 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 
 ## 2.2. Ridge-type estimators
 
-- `ridge_no_shrinkage()`: the usual ridge estimator
+- `ridge()`: the usual ridge estimator
 
 - `ridge_target()`: perform first-order shrinkage of the Ridge estimator towards
   an arbitrary (fixed) target such as the identity matrix.

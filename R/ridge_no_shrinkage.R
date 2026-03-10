@@ -38,14 +38,14 @@
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 #' 
 #' for (t in c(0.2, 0.5, 1)){
-#'   precision_ridge = ridge_no_shrinkage(X, t = t)
+#'   precision_ridge = ridge(X, t = t)
 #' 
 #'   cat("t = t, loss =", LossFrobenius2(precision_ridge, Sigma = Sigma), "\n")
 #' }
 #' 
 #' 
 #' @export
-ridge_no_shrinkage <- function (X, centeredCov = TRUE, t, verbose = 0)
+ridge <- function (X, centeredCov = TRUE, t, verbose = 0)
 {
   call_ = match.call()
   # Get sizes of X
