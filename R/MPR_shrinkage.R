@@ -127,7 +127,7 @@
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 #' 
 #' # Estimation with default parameters (optimization) and identity target
-#' precision_MPR_optimal = MPR(X)
+#' precision_MPR_optimal = MPR_shrinkage(X)
 #' 
 #' cat("loss = ", LossFrobenius2(precision_MPR_optimal, Sigma = Sigma),
 #'     ", t opt = ", precision_MPR_optimal$t_optimal, 
@@ -136,7 +136,7 @@
 #' 
 #' # Estimation with default parameters (optimization) and oracle target
 #' oracle = solve(0.99 * Sigma + 0.01 * diag(nrow = p))
-#' precision_MPR_optimal_oracle = MPR(X, Pi0 = oracle)
+#' precision_MPR_optimal_oracle = MPR_shrinkage(X, Pi0 = oracle)
 #'   
 #' cat("loss = ", LossFrobenius2(precision_MPR_optimal_oracle, Sigma = Sigma),
 #'     ", t = ", precision_MPR_optimal_oracle$t_optimal, 
@@ -146,23 +146,23 @@
 #' # Trying suboptimal alpha and beta
 #' t_opt = precision_MPR_optimal$t_optimal
 #' 
-#' precision_MPR = MPR(X, t = t_opt, alpha = 1, beta = 0)
+#' precision_MPR = MPR_shrinkage(X, t = t_opt, alpha = 1, beta = 0)
 #' cat("loss = ", LossFrobenius2(precision_MPR, Sigma = Sigma))
 #' 
 #' # Trying suboptimal t, alpha and beta
-#' precision_MPR = MPR(X, t = 1, alpha = 1, beta = 0)
+#' precision_MPR = MPR_shrinkage(X, t = 1, alpha = 1, beta = 0)
 #'    
 #' cat("loss = ", LossFrobenius2(precision_MPR, Sigma = Sigma))
 #' 
 #' # Comparing with the non-shrinked version
-#' precision_MPR_no_shrink = MPR(X, t = t_opt)
+#' precision_MPR_no_shrink = MPR_no_shrinkage(X, t = t_opt)
 #'                                       
 #' cat("loss = ", LossFrobenius2(precision_MPR_no_shrink, Sigma = Sigma))
 #' 
 #' 
 #' @export
 #' 
-MPR <- function(X, centeredCov = TRUE, Pi0 = NULL,
+MPR_shrinkage <- function(X, centeredCov = TRUE, Pi0 = NULL,
                        t = NULL, alpha = NULL, beta = NULL,
                        verbose = 0,
                        eps = 1/(10^6), upp = pi/2 - eps, initialValue = 1.5)
@@ -179,15 +179,15 @@ MPR <- function(X, centeredCov = TRUE, Pi0 = NULL,
     result = switch(
       optimizationType,
       
-      none = MPR_identity(X = X, centeredCov = centeredCov,
+      none = MPR_shrinkage_identity(X = X, centeredCov = centeredCov,
                                  t = t, alpha = alpha, beta = beta,
                                  verbose = verbose, call_ = call_),
       
-      alpha_beta = MPR_identity_semioptimal(X = X, centeredCov = centeredCov,
+      alpha_beta = MPR_shrinkage_identity_semioptimal(X = X, centeredCov = centeredCov,
                                                    t = t, verbose = verbose,
                                                    call_ = call_),
       
-      all = MPR_identity_optimal(X = X, centeredCov = centeredCov,
+      all = MPR_shrinkage_identity_optimal(X = X, centeredCov = centeredCov,
                                         verbose = verbose, eps = eps, upp = upp,
                                         initialValue = initialValue, call_ = call_)
     )
@@ -196,15 +196,15 @@ MPR <- function(X, centeredCov = TRUE, Pi0 = NULL,
     result = switch(
       optimizationType,
       
-      none = MPR_general(X = X, centeredCov = centeredCov,
+      none = MPR_shrinkage_general(X = X, centeredCov = centeredCov,
                                 t = t, alpha = alpha, beta = beta, Pi0 = Pi0,
                                 verbose = verbose, call_ = call_),
       
-      alpha_beta = MPR_general_semioptimal(
+      alpha_beta = MPR_shrinkage_general_semioptimal(
         X = X, centeredCov = centeredCov, t = t, Pi0 = Pi0,
         verbose = verbose, call_ = call_),
       
-      all = MPR_general_optimal(X = X, centeredCov = centeredCov,
+      all = MPR_shrinkage_general_optimal(X = X, centeredCov = centeredCov,
                                        Pi0 = Pi0,
                                        verbose = verbose, eps = eps, upp = upp,
                                        initialValue = initialValue, call_ = call_)
