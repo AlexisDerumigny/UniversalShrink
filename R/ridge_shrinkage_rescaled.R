@@ -108,7 +108,7 @@
 #' Sigma = diag(seq(1, 0.02, length.out = p))
 #' mu = rep(0, p)
 #' X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
-#' precision_OptimalRidge = ridge_shrinkage_rescaled(X)
+#' precision_OptimalRidge = ridge_shrinkage_Wang(X)
 #' 
 #' precisionTrue = solve(Sigma)
 #' 
@@ -124,7 +124,7 @@
 #' 
 #' 
 #' @export
-ridge_shrinkage_rescaled <- function (X, eps = 1e-6, upp = pi/2 - 1e-6,
+ridge_shrinkage_Wang <- function (X, eps = 1e-6, upp = pi/2 - 1e-6,
                                       centeredCov = TRUE)
 {
   call_ = match.call()
@@ -192,7 +192,7 @@ ridge_shrinkage_rescaled <- function (X, eps = 1e-6, upp = pi/2 - 1e-6,
     n = n,
     p = p,
     centeredCov = centeredCov,
-    method = "ridge_shrinkage_rescaled",
+    method = "ridge_shrinkage_Wang",
     call = call_
   )
   

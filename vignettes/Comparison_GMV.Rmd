@@ -72,7 +72,7 @@ list_GMV = list(
     ridge_target(X, centeredCov = TRUE)),
   
   GMV_plugin_optimal_ridge_shrinkage = GMV_PlugIn(
-    ridge_shrinkage_rescaled(X)),
+    ridge_shrinkage_Wang(X)),
   
   GMV_plugin_inv_cov_quadratic_inverse_shrinkage = GMV_PlugIn(
     solve(cov_quadratic_inverse_shrinkage(X, centeredCov = TRUE))),

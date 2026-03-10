@@ -43,7 +43,7 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 - `ridge_higher_order_shrinkage()`: perform higher-order shrinkage of the Ridge
   estimator
   
-- `ridge_shrinkage_rescaled()`
+- `ridge_shrinkage_Wang()`
 
 
 ## 2.3. Moore-Penrose-Ridge "hybrid" estimators
