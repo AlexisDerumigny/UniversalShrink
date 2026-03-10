@@ -237,11 +237,11 @@ estimator_vhat_derivative <- function(t, m, iS_ridge, p, Ip, cn){
 }
 
 
-ridge_target_general <- function (X, centeredCov, t, Pi0, alpha, beta,
+ridge_shrinkage_general <- function (X, centeredCov, t, Pi0, alpha, beta,
                                   verbose = 2, call_ = NULL){
   
   if (verbose > 0){
-    cat("Starting `ridge_target_general`...\n")
+    cat("Starting `ridge_shrinkage_general`...\n")
   }
   
   # Get sizes of X
@@ -281,11 +281,11 @@ ridge_target_general <- function (X, centeredCov, t, Pi0, alpha, beta,
 
 
 
-ridge_target_general_semioptimal <- function (X, centeredCov, t, Pi0,
+ridge_shrinkage_general_semioptimal <- function (X, centeredCov, t, Pi0,
                                               verbose = 2, call_ = NULL){
   
   if (verbose > 0){
-    cat("Starting `ridge_target_general_semioptimal`...\n")
+    cat("Starting `ridge_shrinkage_general_semioptimal`...\n")
   }
   
   # Get sizes of X
@@ -332,12 +332,12 @@ ridge_target_general_semioptimal <- function (X, centeredCov, t, Pi0,
 
 
 
-ridge_target_general_optimal <- function (X, centeredCov, Pi0, verbose = 2,
+ridge_shrinkage_general_optimal <- function (X, centeredCov, Pi0, verbose = 2,
                                           eps = 1/(10^6), upp = pi/2 - eps,
                                           initialValue = 1.5, call_ = NULL){
   
   if (verbose > 0){
-    cat("Starting `ridge_target_general_optimal`...\n")
+    cat("Starting `ridge_shrinkage_general_optimal`...\n")
   }
   
   # Get sizes of X

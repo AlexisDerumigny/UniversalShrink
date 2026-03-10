@@ -2,11 +2,11 @@
 
 
 
-ridge_target_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0,
+ridge_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0,
                                            eps = 1/(10^6), upp = pi/2 - eps,
                                            initialValue = 1.5, call_ = NULL){
   if (verbose > 0){
-    cat("Starting `ridge_target_identity_optimal`...\n")
+    cat("Starting `ridge_shrinkage_identity_optimal`...\n")
   }
   
   # Get sizes of X
@@ -104,11 +104,11 @@ ridge_target_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0,
 
 
 
-ridge_target_identity_semioptimal <- function (X, centeredCov, t, verbose = 2,
+ridge_shrinkage_identity_semioptimal <- function (X, centeredCov, t, verbose = 2,
                                                call_ = NULL){
   
   if (verbose > 0){
-    cat("Starting `ridge_target_identity_semioptimal`...\n")
+    cat("Starting `ridge_shrinkage_identity_semioptimal`...\n")
   }
   
   # Get sizes of X
@@ -228,10 +228,10 @@ ridge_target_identity_semioptimal <- function (X, centeredCov, t, verbose = 2,
 
 
 
-ridge_target_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
+ridge_shrinkage_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
                                    verbose = 0, call_ = NULL){
   if (verbose > 0){
-    cat("Starting `ridge_target_identity`...\n")
+    cat("Starting `ridge_shrinkage_identity`...\n")
   }
   
   # Get sizes of X

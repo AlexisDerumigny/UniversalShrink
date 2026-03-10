@@ -99,12 +99,12 @@
 #'  \eqn{||\widehat{\boldsymbol{\Pi}}_{R}\boldsymbol{\Sigma}-\mathbf{I}_p||^2_F}
 #' is asymptotically minimized with probability one.
 #' 
-# Note that the function `ridge_target_identity()` requires the specification of all
+# Note that the function `ridge_shrinkage_identity()` requires the specification of all
 # \eqn{t, \alpha, \beta}.
-# The function `ridge_target_identity_semioptimal()` only requires the
+# The function `ridge_shrinkage_identity_semioptimal()` only requires the
 # specification of \eqn{t} and compute (asymptotically) optimal choices of
 # \eqn{\alpha} and \eqn{\beta}.
-# Finally, the function `ridge_target_identity_optimal()` compute the (asymptotically)
+# Finally, the function `ridge_shrinkage_identity_optimal()` compute the (asymptotically)
 # optimal choice of \eqn{t, \alpha, \beta}.
 #' 
 #' 
@@ -147,12 +147,12 @@
 #' 
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
-#' precision_ridge_target_Cent = ridge_target(X, centeredCov = TRUE)
+#' precision_ridge_shrinkage_Cent = ridge_shrinkage(X, centeredCov = TRUE)
 #'     
-#' precision_ridge_target_NoCent = ridge_target(X, centeredCov = FALSE)
+#' precision_ridge_shrinkage_NoCent = ridge_shrinkage(X, centeredCov = FALSE)
 #' 
-#' LossFrobenius2(precision_ridge_target_Cent, Sigma = Sigma)
-#' LossFrobenius2(precision_ridge_target_NoCent, Sigma = Sigma)
+#' LossFrobenius2(precision_ridge_shrinkage_Cent, Sigma = Sigma)
+#' LossFrobenius2(precision_ridge_shrinkage_NoCent, Sigma = Sigma)
 #' 
 # # TODO: explore the convergence issues with good and bad target.
 # # This works not as good as the MPR. The MPR takes a lot of time for the
@@ -161,14 +161,14 @@
 # # target.
 #
 #'
-#' precision_ridge_target_Cent_oracle = 
-#'   ridge_target(X, centeredCov = TRUE, Pi0 = solve(Sigma))
+#' precision_ridge_shrinkage_Cent_oracle = 
+#'   ridge_shrinkage(X, centeredCov = TRUE, Pi0 = solve(Sigma))
 #' 
-#' LossFrobenius2(precision_ridge_target_Cent_oracle, Sigma = Sigma)
+#' LossFrobenius2(precision_ridge_shrinkage_Cent_oracle, Sigma = Sigma)
 #' 
 #' 
 #' @export
-ridge_target <- function(X, centeredCov = TRUE, Pi0 = NULL,
+ridge_shrinkage <- function(X, centeredCov = TRUE, Pi0 = NULL,
                          t = NULL, alpha = NULL, beta = NULL,
                          verbose = 0,
                          eps = 1/(10^6), upp = pi/2 - eps, initialValue = 1.5)
@@ -185,15 +185,15 @@ ridge_target <- function(X, centeredCov = TRUE, Pi0 = NULL,
     result = switch(
       optimizationType,
       
-      none = ridge_target_identity(X = X, centeredCov = centeredCov,
+      none = ridge_shrinkage_identity(X = X, centeredCov = centeredCov,
                                    t = t, alpha = alpha, beta = beta,
                                    verbose = verbose, call_ = call_),
       
-      alpha_beta = ridge_target_identity_semioptimal(
+      alpha_beta = ridge_shrinkage_identity_semioptimal(
         X = X, centeredCov = centeredCov, t = t,
         verbose = verbose, call_ = call_),
       
-      all = ridge_target_identity_optimal(
+      all = ridge_shrinkage_identity_optimal(
         X = X, centeredCov = centeredCov, verbose = verbose,
         eps = eps, upp = upp, initialValue = initialValue, call_ = call_)
     )
@@ -202,15 +202,15 @@ ridge_target <- function(X, centeredCov = TRUE, Pi0 = NULL,
     result = switch(
       optimizationType,
       
-      none = ridge_target_general(X = X, centeredCov = centeredCov,
+      none = ridge_shrinkage_general(X = X, centeredCov = centeredCov,
                                   t = t, alpha = alpha, beta = beta, Pi0 = Pi0,
                                   verbose = verbose, call_ = call_),
       
-      alpha_beta = ridge_target_general_semioptimal(
+      alpha_beta = ridge_shrinkage_general_semioptimal(
         X = X, centeredCov = centeredCov, t = t, Pi0 = Pi0,
         verbose = verbose, call_ = call_),
       
-      all = ridge_target_general_optimal(
+      all = ridge_shrinkage_general_optimal(
         X = X, centeredCov = centeredCov, Pi0 = Pi0, verbose = verbose,
         eps = eps, upp = upp, initialValue = initialValue, call_ = call_)
     )

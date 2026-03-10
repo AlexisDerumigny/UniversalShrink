@@ -125,7 +125,7 @@
 #' 
 #' # For comparison TODO: move this as unit test
 #' 
-#' precision_target = ridge_target(X, centeredCov = TRUE, t = 100)
+#' precision_target = ridge_shrinkage(X, centeredCov = TRUE, t = 100)
 #' LossFrobenius2(precision_target, Sigma = Sigma)
 #' 
 #' 
@@ -148,10 +148,10 @@
 #' precision_higher_order_shrinkage_Cent = 
 #'       ridge_higher_order_shrinkage(X, m = 1, centeredCov = TRUE)
 #' 
-#' precision_ridge_target_Cent = ridge_target(X, centeredCov = TRUE)
+#' precision_ridge_shrinkage_Cent = ridge_shrinkage(X, centeredCov = TRUE)
 #'   
 #' LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
-#' LossFrobenius2(precision_ridge_target_Cent, Sigma = Sigma)
+#' LossFrobenius2(precision_ridge_shrinkage_Cent, Sigma = Sigma)
 #' 
 #' 
 #' 
