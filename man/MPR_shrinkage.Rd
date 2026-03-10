@@ -174,7 +174,7 @@ precision_MPR = MPR_shrinkage(X, t = 1, alpha = 1, beta = 0)
 cat("loss = ", LossFrobenius2(precision_MPR, Sigma = Sigma))
 
 # Comparing with the non-shrinked version
-precision_MPR_no_shrink = MPR_no_shrinkage(X, t = t_opt)
+precision_MPR_no_shrink = MPR(X, t = t_opt)
                                       
 cat("loss = ", LossFrobenius2(precision_MPR_no_shrink, Sigma = Sigma))
 
