@@ -66,9 +66,6 @@ ridge <- function (X, centeredCov = TRUE, t, verbose = 0,
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  # Sample covariance matrix
-  S <- cov_with_centering(X = X, centeredCov = centeredCov)
-  
   if (method_inversion == "auto"){
     if (c_n < 1){
       method_ = "solve"
@@ -80,6 +77,9 @@ ridge <- function (X, centeredCov = TRUE, t, verbose = 0,
   }
   
   if (method_ == "solve"){
+    # Sample covariance matrix
+    S <- cov_with_centering(X = X, centeredCov = centeredCov)
+    
     iS_ridge <- solve(S + t * Ip)
   } else if (method_ == "Woodbury"){
     if (centeredCov){
@@ -109,7 +109,7 @@ ridge <- function (X, centeredCov = TRUE, t, verbose = 0,
     p = p,
     centeredCov = centeredCov,
     method = "Ridge",
-    method_inversion = method_,
+    method_ridge_inversion = method_,
     call = call_
   )
   
