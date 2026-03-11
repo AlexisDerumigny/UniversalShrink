@@ -1,10 +1,12 @@
 
 #' Plain Ridge (Tikhonov) estimator without shrinkage
 #' 
-#' This function computes a 'plain' Ridge (Tikhonov) estimator of the precision matrix
+#' This function computes a 'plain' Ridge (Tikhonov) estimator of the precision
+#' matrix
 #' \eqn{\mathbf{S}_n^-(t)=(\mathbf{S}_n+t\mathbf{I}_p)^{-1}},
-#' where \eqn{\mathbf{S}_n} is the sample covariance matrix, \eqn{\mathbf{I}_p} is 
-#' \eqn{p}-dimensional identity matrix and \eqn{t>0} is a given penalty parameter.
+#' where \eqn{\mathbf{S}_n} is the sample covariance matrix, \eqn{\mathbf{I}_p}
+#' is the \eqn{p}-dimensional identity matrix and \eqn{t>0} is a given penalty
+#' parameter.
 #' 
 #' 
 #' @param X data matrix (rows are observations, columns are features).
@@ -67,6 +69,8 @@ ridge <- function (X, centeredCov = TRUE, t, verbose = 0,
   Ip = diag(nrow = p)
   
   if (method_inversion == "auto"){
+    c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
+                         verbose = verbose - 1)
     if (c_n < 1){
       method_ = "solve"
     } else {
@@ -98,7 +102,11 @@ ridge <- function (X, centeredCov = TRUE, t, verbose = 0,
     In_adj = diag(n_adjusted)
     
     XtX_over_n = X_adjusted %*% t(X_adjusted) / n_adjusted
-    centralTerm = t(X_adjusted) %*% solve(XtX_over_n + t * In_adj) %*% X_adjusted / n_adjusted
+    
+    centralTerm = 
+      t(X_adjusted) %*% solve(XtX_over_n + t * In_adj) %*% X_adjusted
+    centralTerm = centralTerm / n_adjusted
+    
     iS_ridge = (Ip / t) - centralTerm / t
   }
   

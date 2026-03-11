@@ -37,10 +37,12 @@ the estimator of the precision matrix, of class
 \code{EstimatedPrecisionMatrix}.
 }
 \description{
-This function computes a 'plain' Ridge (Tikhonov) estimator of the precision matrix
+This function computes a 'plain' Ridge (Tikhonov) estimator of the precision
+matrix
 \eqn{\mathbf{S}_n^-(t)=(\mathbf{S}_n+t\mathbf{I}_p)^{-1}},
-where \eqn{\mathbf{S}_n} is the sample covariance matrix, \eqn{\mathbf{I}_p} is
-\eqn{p}-dimensional identity matrix and \eqn{t>0} is a given penalty parameter.
+where \eqn{\mathbf{S}_n} is the sample covariance matrix, \eqn{\mathbf{I}_p}
+is the \eqn{p}-dimensional identity matrix and \eqn{t>0} is a given penalty
+parameter.
 }
 \examples{
 
