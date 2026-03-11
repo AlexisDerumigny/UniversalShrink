@@ -16,8 +16,7 @@
 \alias{LossEuclideanEigenvalues2.matrix}
 \alias{LossEuclideanEigenvalues2.EstimatedPrecisionMatrix}
 \alias{LossEuclideanEigenvalues2.EstimatedCovarianceMatrix}
-\alias{LossRelativeOutOfSampleVariance}
-\title{Quadratic losses of the estimator of a matrix or portfolio weights}
+\title{Quadratic losses of the estimator of a matrix}
 \usage{
 NormFrobenius2(M, normalized)
 
@@ -80,12 +79,10 @@ LossEuclideanEigenvalues2(x, Sigma, type, normalized = TRUE, ...)
   normalized = TRUE,
   ...
 )
-
-LossRelativeOutOfSampleVariance(portfolioWeights, Sigma, SigmaInv = NULL)
 }
 \arguments{
-\item{normalized}{if \code{TRUE}, the norm (or loss) is divided by the matrix
-size \code{p}.}
+\item{normalized}{if \code{TRUE}, the norm (or loss) is divided by the
+matrix size \code{p}.}
 
 \item{M1, M2}{two square matrices of the same dimension}
 
@@ -106,38 +103,31 @@ Frobenius loss for the estimation of the precision matrix, i.e.
 }}
 
 \item{...}{Additional arguments passed to methods.}
-
-\item{portfolioWeights}{the vector of weights of a given portfolio, of which
-we want to determine the loss}
 }
 \value{
 All these functions return a positive numeric value.
-\code{NormFrobenius2} returns the squared Frobenius norm of a matrix.
-\code{LossFrobenius2} returns the (normalized) Frobenius loss.
-
-\code{LossRelativeOutOfSampleVariance} returns a positive numeric value,
-with attributes \code{"V_portfolio"} and \code{"V_GMV"}, which are respectively
-the (out of sample) variances of the given \code{portfolioWeights} and of the
-GMV portfolio.
 }
 \description{
-Quadratic losses of the estimator of a matrix or portfolio weights
+Quadratic losses of the estimator of a matrix
 
-Generic function to calculate the Frobenius norm/loss of (the estimator of) a
-matrix. For a generic matrix \eqn{M}, the (squared) Frobenius norm is defined
+This is a generic function to compute the Frobenius norm/loss of
+(the estimator of) a matrix.
+For a generic matrix \eqn{M}, the (squared) Frobenius norm is defined
 in the following way
 \deqn{
 \code{NormFrobenius2}(\mathbf{M})=||\mathbf{M}||^2_F
 = \text{\rm tr} \left[\mathbf{M}\mathbf{M}^\top\right]\,,
-} while (squared) Frobenius loss analogously is defined by
+}
+while (squared) Frobenius loss analogously is defined by
 \deqn{
 \code{LossFrobenius2}(\mathbf{M}, g(\boldsymbol{\Sigma}))
 = ||\mathbf{M}-g(\mathbf{\boldsymbol{\Sigma}})||^2_F\,,
-} where \eqn{M} here denotes a suitable estimator and the function \eqn{g} is
-\eqn{g(x)=x} when \code{type="covariance matrix"} is
-chosen, otherwise \eqn{g(x)=1/x} for \code{type="precision matrix"}. In case
-\code{normalized=TRUE} (default) the above losses are normalized by the matrix
-dimension \eqn{p}.
+}
+where \eqn{M} here denotes a suitable estimator and the function \eqn{g}
+is \eqn{g(x)=x} when \code{type="covariance matrix"} is
+chosen, otherwise \eqn{g(x)=1/x} for \code{type="precision matrix"}.
+In the case \code{normalized=TRUE} (default), the above losses are
+normalized by the matrix dimension \eqn{p}.
 A related function for the case of precision matrices is
 \code{LossInverseFrobenius2} which returns
 \deqn{
@@ -154,25 +144,13 @@ on the spectra of the matrices: \code{DistanceEuclideanEigenvalues2} and
  } and
 \deqn{
  \code{LossEuclideanEigenvalues2}(\mathbf{M}, g(\boldsymbol{\Sigma}) )= 
- \sum\limits_{i=1}^{p} (\lambda_i(\mathbf{M})-\lambda_i(g(\boldsymbol{\Sigma})))^2
- }
+ \sum\limits_{i=1}^{p} 
+ ( \lambda_i(\mathbf{M})-\lambda_i(g(\boldsymbol{\Sigma})) )^2
+}
 where \eqn{\lambda_i(\mathbf{A})} are the eigenvalues of a generic matrix
 \eqn{\mathbf{A}}. Similarly, \code{normalized=TRUE} (by default) normalizes
-the losses and the function \eqn{g(x)} is either \eqn{x} or \eqn{1/x}, which
-can be specified in  \code{type}.
-The last loss function is specifically designed
-for the portfolios and is measuring the variance of the given portfolio relatively
-to the variance of the Global Minimum Variance (GMV) portfolio. For
-a generic \eqn{p}-dimensional vector of portfolio weights \eqn{\mathbf{w}}
-it is defined as
-\deqn{
- \code{LossRelativeOutOfSampleVariance}(\mathbf{w}, \boldsymbol{\Sigma})= 
- \frac{V_{\mathbf{w}} - V_{GMV}}{V_{GMV}}\,,
- }
-where \eqn{V_{\mathbf{w}}=\mathbf{w}^\top\boldsymbol{\Sigma}\mathbf{w}} and \eqn{V_{GMV}=
- (\mathbf{1}_p^\top\boldsymbol{\Sigma}^{-1}\mathbf{1}_p)^{-1}}
-are the variances of the given portfolio \eqn{\mathbf{w}} and of the GMV portfolio,
-respectively. The vector \eqn{\mathbf{1}_p} is the \eqn{p}-dimensional vector of ones.
+the losses, and the function \eqn{g(x)} is either \eqn{x} or \eqn{1/x},
+which can be specified in  \code{type}.
 }
 \examples{
 M = diag(c(1,2,3))
@@ -183,26 +161,9 @@ X <- MASS::mvrnorm(n = 100, mu = rep(0,3), Sigma = M)
 estimatedCov_sample = cov(X)
 
 # Losses for estimation of the covariance
-
 LossFrobenius2(estimatedCov_sample, M, type = "covariance")
 LossEuclideanEigenvalues2(estimatedCov_sample, M, type = "covariance")
 
 
-# Losses for portfolios
-Sigma = diag(1:5)
-
-X <- MASS::mvrnorm(n = 100, mu = rep(0,5), Sigma = Sigma)
-weights100 = GMV_Moore_Penrose(X)
-
-X <- MASS::mvrnorm(n = 3, mu = rep(0,5), Sigma = Sigma)
-weights3 = GMV_Moore_Penrose(X)
-
-LossRelativeOutOfSampleVariance(weights100, Sigma)
-LossRelativeOutOfSampleVariance(weights3, Sigma)
-
-trueWeights = rowSums(solve(Sigma)) / sum(solve(Sigma))
-
-NormFrobenius2(trueWeights - weights100, normalized = FALSE)
-NormFrobenius2(trueWeights - weights3, normalized = FALSE)
 
 }
