@@ -258,7 +258,10 @@ ridge_shrinkage_general <- function (X, centeredCov, t, Pi0, alpha, beta,
     cat("*  t = ", t, "\n")
   }
   
-  iS_ridge <- solve(S + t * Ip)
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = verbose - 1,
+                 method_inversion = "auto")
+  
+  iS_ridge <- as.matrix(ridge_)
   
   iS_ShRt1 <- alpha * iS_ridge + beta * Ip
   
@@ -271,6 +274,7 @@ ridge_shrinkage_general <- function (X, centeredCov, t, Pi0, alpha, beta,
     p = p,
     centeredCov = centeredCov,
     method = "Ridge shrinkage",
+    method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
   
@@ -303,7 +307,10 @@ ridge_shrinkage_general_semioptimal <- function (X, centeredCov, t, Pi0,
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  iS_ridge <- solve(S + t * Ip)
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = verbose - 1,
+                 method_inversion = "auto")
+  
+  iS_ridge <- as.matrix(ridge_)
   
   best_alphabeta = 
     best_alphabeta_ridge_shrinkage(p = p, t0 = t, cn = c_n, Pi0 = Pi0, Ip = Ip,
@@ -322,6 +329,7 @@ ridge_shrinkage_general_semioptimal <- function (X, centeredCov, t, Pi0,
     p = p,
     centeredCov = centeredCov,
     method = "Ridge shrinkage",
+    method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
   
@@ -369,7 +377,10 @@ ridge_shrinkage_general_optimal <- function (X, centeredCov, Pi0, verbose = 2,
     cat("*  optimal t =", t ,"\n")
   }
   
-  iS_ridge <- solve(S + t * Ip)
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = verbose - 1,
+                 method_inversion = "auto")
+  
+  iS_ridge <- as.matrix(ridge_)
   
   best_alphabeta = best_alphabeta_ridge_shrinkage(p = p, t0 = t, cn = c_n,
                                                   Pi0 = Pi0, Ip = Ip, Sn = S,
@@ -389,6 +400,7 @@ ridge_shrinkage_general_optimal <- function (X, centeredCov, Pi0, verbose = 2,
     p = p,
     centeredCov = centeredCov,
     method = "Ridge shrinkage",
+    method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
   

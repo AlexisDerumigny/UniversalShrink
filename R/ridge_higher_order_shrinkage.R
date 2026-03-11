@@ -199,9 +199,10 @@ ridge_higher_order_shrinkage_non_optimized <- function(
   }
   
   # Regularized sample covariance matrix (Tikhonov regularization)
-  S_t <- S + t * diag(nrow = p)
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = verbose - 1,
+                 method_inversion = "auto")
   
-  S_t_inverse <- solve(S_t)
+  S_t_inverse <- as.matrix(ridge_)
   
   q1 <- tr(S) / p
   q2 <- tr(S %*% S) / p - c_n * q1^2
@@ -251,6 +252,7 @@ ridge_higher_order_shrinkage_non_optimized <- function(
     p = p,
     centeredCov = centeredCov,
     method = "Ridge higher-order shrinkage",
+    method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
   
@@ -289,9 +291,10 @@ ridge_higher_order_shrinkage_optimal <- function(
   estimatedLoss <- function (t){
     
     # Regularized sample covariance matrix (Tikhonov regularization)
-    S_t <- S + t * diag(nrow = p)
+    ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = verbose,
+                   method_inversion = "auto")
     
-    S_t_inverse <- solve(S_t)
+    S_t_inverse <- as.matrix(ridge_)
     
     loss = tryCatch({
       estimatedM = compute_M_t_ridge(m = m, c_n = c_n, q1 = q1, q2 = q2,
@@ -322,9 +325,10 @@ ridge_higher_order_shrinkage_optimal <- function(
   # We now compute the estimator using this optimal_t that was found.
   
   # Regularized sample covariance matrix (Tikhonov regularization)
-  S_t <- S + optimal_t * diag(nrow = p)
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = optimal_t,
+                 verbose = verbose - 1, method_inversion = "auto")
   
-  S_t_inverse <- solve(S_t)
+  S_t_inverse <- as.matrix(ridge_)
   
   estimatedM = compute_M_t_ridge(m = m, c_n = c_n, q1 = q1, q2 = q2,
                                  S_t_inverse = S_t_inverse,
@@ -360,6 +364,7 @@ ridge_higher_order_shrinkage_optimal <- function(
     p = p,
     centeredCov = centeredCov,
     method = "Ridge higher-order shrinkage",
+    method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
   

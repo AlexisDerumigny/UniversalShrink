@@ -74,15 +74,11 @@ MPR <- function(X, centeredCov = TRUE, t, verbose = 0)
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
-  # Sample covariance matrix
-  S <- cov_with_centering(X = X, centeredCov = centeredCov)
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = verbose,
+                 method_inversion = "auto")
   
-  # Identity matrix of size p
-  Ip = diag(nrow = p)
-  
-  iS_ridge <- solve(S + t * Ip)
+  iS_ridge <- as.matrix(ridge_)
   
   MPR_estimator <- iS_ridge - t * iS_ridge %*% iS_ridge
   
@@ -96,6 +92,7 @@ MPR <- function(X, centeredCov = TRUE, t, verbose = 0)
     p = p,
     centeredCov = centeredCov,
     method = "Moore-Penrose-ridge (MPR)",
+    method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
   
