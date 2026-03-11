@@ -11,6 +11,16 @@
 #' 
 #' @param t parameter of the estimation.
 #' 
+#' @param method_inversion a character string of length 1 describing the
+#' numerical inversion method to be used. Possible choices are \itemize{
+#'   \item \code{"solve"}: use the \code{solve} function;
+#'   
+#'   \item \code{"Woodbury"}: TODO
+#'   
+#'   \item \code{"auto"}: this is the default. It chooses \code{"solve"} when
+#'   the concentration ratio is smaller than 1 and else \code{"Woodbury"}.
+#' }
+#' 
 #' @inheritParams cov_with_centering
 #' 
 #' @returns the estimator of the precision matrix, of class
@@ -39,13 +49,14 @@
 #' 
 #' for (t in c(0.2, 0.5, 1)){
 #'   precision_ridge = ridge(X, t = t)
-#' 
+#'   
 #'   cat("t = t, loss =", LossFrobenius2(precision_ridge, Sigma = Sigma), "\n")
 #' }
 #' 
 #' 
 #' @export
-ridge <- function (X, centeredCov = TRUE, t, verbose = 0)
+ridge <- function (X, centeredCov = TRUE, t, verbose = 0,
+                   method_inversion = "auto")
 {
   call_ = match.call()
   # Get sizes of X
@@ -58,7 +69,38 @@ ridge <- function (X, centeredCov = TRUE, t, verbose = 0)
   # Sample covariance matrix
   S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
-  iS_ridge <- solve(S + t * Ip)
+  if (method_inversion == "auto"){
+    if (c_n < 1){
+      method_ = "solve"
+    } else {
+      method_ = "Woodbury"
+    }
+  } else {
+    method_ = method_inversion
+  }
+  
+  if (method_ == "solve"){
+    iS_ridge <- solve(S + t * Ip)
+  } else if (method_ == "Woodbury"){
+    if (centeredCov){
+      n_adjusted = n - 1
+      
+      Jn = diag(n) - matrix(1/n, nrow = n, ncol = n)
+      eig_decomp = eigen(Jn)
+      U = eig_decomp$vectors
+      # we delete the last column
+      Hn = U[, -n]
+      X_adjusted = t(Hn) %*% X
+    } else {
+      n_adjusted = n
+      X_adjusted = X
+    }
+    In_adj = diag(n_adjusted)
+    
+    XtX_over_n = X_adjusted %*% t(X_adjusted) / n_adjusted
+    centralTerm = t(X_adjusted) %*% solve(XtX_over_n + t * In_adj) %*% X_adjusted / n_adjusted
+    iS_ridge = (Ip / t) - centralTerm / t
+  }
   
   result = list(
     estimated_precision_matrix = iS_ridge,
@@ -67,6 +109,7 @@ ridge <- function (X, centeredCov = TRUE, t, verbose = 0)
     p = p,
     centeredCov = centeredCov,
     method = "Ridge",
+    method_inversion = method_,
     call = call_
   )
   
@@ -74,4 +117,6 @@ ridge <- function (X, centeredCov = TRUE, t, verbose = 0)
   
   return (result)
 }
+
+
 

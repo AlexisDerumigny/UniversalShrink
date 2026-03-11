@@ -4,7 +4,7 @@
 \alias{ridge}
 \title{Plain Ridge (Tikhonov) estimator without shrinkage}
 \usage{
-ridge(X, centeredCov = TRUE, t, verbose = 0)
+ridge(X, centeredCov = TRUE, t, verbose = 0, method_inversion = "auto")
 }
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
@@ -21,6 +21,16 @@ the random vector of interest is \code{0} (i.e. does not need to be estimated).}
 details about the progress of the computations. A value of \code{0} indicates
 no printing at all, while higher values indicate increasingly more detailed
 (more verbose) output.}
+
+\item{method_inversion}{a character string of length 1 describing the
+numerical inversion method to be used. Possible choices are \itemize{
+\item \code{"solve"}: use the \code{solve} function;
+
+\item \code{"Woodbury"}: TODO
+
+\item \code{"auto"}: this is the default. It chooses \code{"solve"} when
+the concentration ratio is smaller than 1 and else \code{"Woodbury"}.
+}}
 }
 \value{
 the estimator of the precision matrix, of class
@@ -48,7 +58,7 @@ X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 
 for (t in c(0.2, 0.5, 1)){
   precision_ridge = ridge(X, t = t)
-
+  
   cat("t = t, loss =", LossFrobenius2(precision_ridge, Sigma = Sigma), "\n")
 }
 
