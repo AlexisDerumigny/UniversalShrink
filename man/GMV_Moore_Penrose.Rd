@@ -46,8 +46,8 @@ LossRelativeOutOfSampleVariance(weights3, Sigma)
 
 trueWeights = rowSums(solve(Sigma)) / sum(solve(Sigma))
 
-NormFrobenius2(trueWeights - weights100, normalized = FALSE)
-NormFrobenius2(trueWeights - weights3, normalized = FALSE)
+NormFrobenius2(trueWeights - as.numeric(weights100), normalized = FALSE)
+NormFrobenius2(trueWeights - as.numeric(weights3), normalized = FALSE)
 
 }
 \seealso{
