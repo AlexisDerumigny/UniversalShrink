@@ -31,6 +31,10 @@ as a target.}
 details about the progress of the computations. A value of \code{0} indicates
 no printing at all, while higher values indicate increasingly more detailed
 (more verbose) output.}
+
+\item{eps, upp, initialValue}{The loss is optimized with respect to
+\eqn{u = tan(eta)} over the interval \code{[eps, upp]},
+and the optimizer starts at the \code{initialValue}.}
 }
 \value{
 a vector of size \eqn{p} of (estimated) optimal portfolio weights,

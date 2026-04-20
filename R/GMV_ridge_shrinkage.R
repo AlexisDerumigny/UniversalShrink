@@ -8,6 +8,10 @@
 #' @param b shrinkage target. By default, the equally-weighted portfolio is used
 #' as a target.
 #' 
+#' @param eps,upp,initialValue The loss is optimized with respect to
+#' \eqn{u = tan(eta)} over the interval \code{[eps, upp]},
+#' and the optimizer starts at the \code{initialValue}.
+#' 
 #' @inheritParams cov_with_centering
 #' 
 #' @return a vector of size \eqn{p} of (estimated) optimal portfolio weights,
