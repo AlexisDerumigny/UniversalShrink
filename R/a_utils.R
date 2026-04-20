@@ -47,7 +47,7 @@ as.matrix.EstimatedCovarianceMatrix <- function(x, ...){
 
 #' @rdname as.matrix.Estimator
 #' @export
-as.numeric.EstimatedPortfolioWeights <- function(x, ...){
+as.double.EstimatedPortfolioWeights <- function(x, ...){
   return (x$estimated_portfolio_weights)
 }
 

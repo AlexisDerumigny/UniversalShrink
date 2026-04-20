@@ -15,7 +15,7 @@ GMV_Moore_Penrose_shrinkage_eq <- function(X, centeredCov = TRUE, verbose = 2,
   iS_MP <- as.matrix(Moore_Penrose(X = X, centeredCov = centeredCov))
   
   MP_portfolio = GMV_PlugIn(estimatedPrecisionMatrix = iS_MP)
-  w_MP = as.numeric.EstimatedPortfolioWeights(MP_portfolio)
+  w_MP = as.numeric(MP_portfolio)
   
   trS1 <- sum(diag(iS_MP)) / p
   trS2 <- sum(diag(iS_MP %*% iS_MP))/p

@@ -4,14 +4,14 @@
 \alias{as.matrix.Estimator}
 \alias{as.matrix.EstimatedPrecisionMatrix}
 \alias{as.matrix.EstimatedCovarianceMatrix}
-\alias{as.numeric.EstimatedPortfolioWeights}
+\alias{as.double.EstimatedPortfolioWeights}
 \title{Conversion of estimated matrices to matrix class}
 \usage{
 \method{as.matrix}{EstimatedPrecisionMatrix}(x, ...)
 
 \method{as.matrix}{EstimatedCovarianceMatrix}(x, ...)
 
-\method{as.numeric}{EstimatedPortfolioWeights}(x, ...)
+\method{as.double}{EstimatedPortfolioWeights}(x, ...)
 }
 \arguments{
 \item{x}{object to be converted}

@@ -49,7 +49,7 @@ GMV_Moore_Penrose <- function(X, centeredCov = TRUE)
   GMV_MP = GMV_PlugIn(iS_MP)
   
   result = list(
-    estimated_portfolio_weights = as.numeric.EstimatedPortfolioWeights(GMV_MP),
+    estimated_portfolio_weights = as.numeric(GMV_MP),
     n = nrow(X),
     p = ncol(X),
     centeredCov = centeredCov,
