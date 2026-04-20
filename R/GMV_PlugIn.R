@@ -7,15 +7,18 @@
 #' \mathbf{w} = \dfrac{\boldsymbol{\Sigma}^{-1} \mathbf{1}}{\mathbf{1}^T 
 #' \boldsymbol{\Sigma}^{-1} \mathbf{1}}
 #' }
-#' i.e. \eqn{\mathbf{w} = (w_1, \dots, w_p)^\top} where for \eqn{j = 1, \dots, p}, we have
+#' i.e. \eqn{\mathbf{w} = (w_1, \dots, w_p)^\top} where for \eqn{j = 1, \dots, p},
+#' we have
 #' \deqn{
 #' w_j = \dfrac{\sum_{k=1}^p [\boldsymbol{\Sigma}^{-1}]_{j,k}}{
 #' \sum_{k,l = 1}^p [\boldsymbol{\Sigma}^{-1}]_{k,l}}.
 #' }
 #' Here \eqn{\mathbf{1}} is a vector \eqn{1} of size \eqn{p}, and
-#' \eqn{\boldsymbol{\Sigma}^{-1}} is the true precision matrix (or an estimator thereof), of size
+#' \eqn{\boldsymbol{\Sigma}^{-1}} is the true precision matrix
+#' (or an estimator thereof), of size
 #' \eqn{p \times p}, where \eqn{p} is the number of assets that are considered
-#' and \eqn{\boldsymbol{\Sigma}} is the (true or estimated) covariance matrix of the vector of asset returns.
+#' and \eqn{\boldsymbol{\Sigma}} is the (true or estimated) covariance matrix of
+#' the vector of asset returns.
 #' 
 #' 
 #' @param estimatedPrecisionMatrix a matrix of size \eqn{p \times p}, which

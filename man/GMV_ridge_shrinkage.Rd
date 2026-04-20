@@ -5,7 +5,15 @@
 \title{First-order shrinkage of the Ridge portfolio towards a general target
 portfolio \eqn{\mathbf{b}}}
 \usage{
-GMV_ridge_shrinkage(X, centeredCov = TRUE, b = NULL, verbose = 2)
+GMV_ridge_shrinkage(
+  X,
+  centeredCov = TRUE,
+  b = NULL,
+  verbose = 0,
+  eps = 1/(10^6),
+  upp = pi/2 - eps,
+  initialValue = 1.5
+)
 }
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
@@ -35,7 +43,7 @@ portfolio \eqn{\mathbf{b}}
 \examples{
 set.seed(1)
 n = 50
-p = 2 * n
+p = 5 * n
 mu = rep(0, p)
 
 # Generate Sigma
@@ -66,7 +74,11 @@ GMV_ridge_shrink_eq = GMV_ridge_shrinkage(X)
 
 Loss_GMV_ridge_shrink_eq = LossRelativeOutOfSampleVariance(
   portfolioWeights = GMV_ridge_shrink_eq, Sigma = Sigma)
-  
+
+cat("Loss of GMV_MP = ", Loss_GMV_MP, "\n")
+cat("Loss of GMV_MP_shrink = ", Loss_GMV_MP_shrink_eq, "\n")
+cat("Loss of GMV_ridge_shrink = ", Loss_GMV_ridge_shrink_eq, "\n")
+
 }
 \references{
 Bodnar, T., Parolya, N., & Thorsén, E. (2024).
