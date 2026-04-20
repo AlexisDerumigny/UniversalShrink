@@ -44,10 +44,22 @@
 #' @export
 GMV_Moore_Penrose <- function(X, centeredCov = TRUE)
 {
+  call_ = match.call()
   iS_MP = Moore_Penrose(X = X, centeredCov = centeredCov)
   GMV_MP = GMV_PlugIn(iS_MP)
   
-  return (GMV_MP)
+  result = list(
+    estimated_portfolio_weights = as.numeric.EstimatedPortfolioWeights(GMV_MP),
+    n = nrow(X),
+    p = ncol(X),
+    centeredCov = centeredCov,
+    method = "Plug-in of Moore-Penrose",
+    call = call_
+  )
+  
+  class(result) <- c("EstimatedPortfolioWeights")
+  
+  return (result)
 }
 
 

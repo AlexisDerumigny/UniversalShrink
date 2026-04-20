@@ -42,13 +42,24 @@
 #' 
 #' @export
 GMV_PlugIn <- function(estimatedPrecisionMatrix){
+  call_ = match.call()
   
   estimatedPrecisionMatrix = as.matrix(estimatedPrecisionMatrix)
   
   # result = (estimatedPrecisionMatrix %*% ones) / 
   #                 (ones %*% estimatedPrecisionMatrix %*% ones)
   # Faster and equivalent expression:
-  result = rowSums(estimatedPrecisionMatrix) / sum(estimatedPrecisionMatrix)
+  optimal_weights = 
+    rowSums(estimatedPrecisionMatrix) / sum(estimatedPrecisionMatrix)
+  
+  result = list(
+    estimated_portfolio_weights = optimal_weights,
+    p = nrow(estimatedPrecisionMatrix),
+    method = "Plug-in of given precision matrix",
+    call = call_
+  )
+  
+  class(result) <- c("EstimatedPortfolioWeights")
   
   return(result)
 }
