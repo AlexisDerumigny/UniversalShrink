@@ -77,14 +77,7 @@ GMV_ridge_shrinkage <- function(X, centeredCov = TRUE, b = NULL,
   # Vector of ones of size p
   ones = rep(1, length = p)
   
-  if (is.null(b)){
-    b = rep(1/p, length = p)
-  } else if (length(b) != p){
-    stop("'b' should be a vector of length 'p'.")
-  }
-  if (abs(sum(b) - 1) > 0.001){
-    stop("The weights (b) should sum up to 1.")
-  }
+  b = prepare_and_check_b(b = b, p = p)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = X, centeredCov = centeredCov)
