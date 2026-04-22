@@ -48,7 +48,10 @@ trueWeights = rowSums(solve(Sigma)) / sum(solve(Sigma))
 
 LossFrobenius2(weights100, trueWeights, normalized = FALSE)
 LossFrobenius2(weights3, trueWeights, normalized = FALSE)
-LossFrobenius2(weights100, weights3, normalized = FALSE)
+
+# In short:
+Losses(weights3, Sigma)
+Losses(weights100, Sigma)
 
 }
 \seealso{

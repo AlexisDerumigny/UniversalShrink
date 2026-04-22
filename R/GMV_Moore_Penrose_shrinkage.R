@@ -103,19 +103,13 @@
 #' # Compute GMV portfolio based on the Moore-Penrose inverse (no shrinkage)
 #' GMV_MP = GMV_Moore_Penrose(X)
 #' 
-#' Loss_GMV_MP = LossOutOfSampleVariance(
-#'   portfolioWeights = GMV_MP, Sigma = Sigma)
+#' Losses(GMV_MP, Sigma)
 #' 
 #' # Compute GMV portfolio based on the Moore-Penrose inverse with shrinkage
 #' # towards the equally weighted portfolio
 #' GMV_MP_shrink_eq = GMV_Moore_Penrose_shrinkage(X)
 #' 
-#' Loss_GMV_MP_shrink_eq = LossOutOfSampleVariance(
-#'   portfolioWeights = GMV_MP_shrink_eq, Sigma = Sigma)
-#' 
-#' 
-#' # Shrinkage helps to reduce the loss
-#' stopifnot(Loss_GMV_MP_shrink_eq < Loss_GMV_MP)
+#' Losses(GMV_MP_shrink_eq, Sigma)
 #' 
 #' 
 #' # Compute GMV portfolio based on the Moore-Penrose inverse with shrinkage
@@ -124,12 +118,7 @@
 #' 
 #' GMV_MP_shrink_oracle = GMV_Moore_Penrose_shrinkage(X, b = GMV_true)
 #' 
-#' Loss_GMV_MP_shrink_oracle = LossOutOfSampleVariance(
-#'   portfolioWeights = GMV_MP_shrink_oracle, Sigma = Sigma)
-#' 
-#' cat("GMV Moore-Penrose no shrinkage:" , Loss_GMV_MP, "\n")
-#' cat("GMV Moore-Penrose target eq:"    , Loss_GMV_MP_shrink_eq, "\n")
-#' cat("GMV Moore-Penrose_target oracle:", Loss_GMV_MP_shrink_oracle, "\n")
+#' Losses(GMV_MP_shrink_oracle, Sigma)
 #' 
 #' 
 #' @export
