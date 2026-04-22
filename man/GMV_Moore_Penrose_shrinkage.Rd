@@ -75,14 +75,14 @@ X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 # Compute GMV portfolio based on the Moore-Penrose inverse (no shrinkage)
 GMV_MP = GMV_Moore_Penrose(X)
 
-Loss_GMV_MP = LossRelativeOutOfSampleVariance(
+Loss_GMV_MP = LossOutOfSampleVariance(
   portfolioWeights = GMV_MP, Sigma = Sigma)
 
 # Compute GMV portfolio based on the Moore-Penrose inverse with shrinkage
 # towards the equally weighted portfolio
 GMV_MP_shrink_eq = GMV_Moore_Penrose_shrinkage(X)
 
-Loss_GMV_MP_shrink_eq = LossRelativeOutOfSampleVariance(
+Loss_GMV_MP_shrink_eq = LossOutOfSampleVariance(
   portfolioWeights = GMV_MP_shrink_eq, Sigma = Sigma)
 
 
@@ -96,7 +96,7 @@ GMV_true = GMV_PlugIn(solve(Sigma))
 
 GMV_MP_shrink_oracle = GMV_Moore_Penrose_shrinkage(X, b = GMV_true)
 
-Loss_GMV_MP_shrink_oracle = LossRelativeOutOfSampleVariance(
+Loss_GMV_MP_shrink_oracle = LossOutOfSampleVariance(
   portfolioWeights = GMV_MP_shrink_oracle, Sigma = Sigma)
 
 cat("GMV Moore-Penrose no shrinkage:" , Loss_GMV_MP, "\n")

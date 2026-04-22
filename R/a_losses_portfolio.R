@@ -2,14 +2,19 @@
 
 #' Relative out-of-sample loss of a portfolio and Frobenius loss
 #' 
-#' The function \code{LossRelativeOutOfSampleVariance} returns the Variance of
+#' The function \code{LossOutOfSampleVariance} returns the Variance of
 #' the given portfolio relatively to the variance of the Global Minimum Variance
 #' (GMV) portfolio.
 #' For a generic \eqn{p}-dimensional vector of portfolio weights
 #' \eqn{\mathbf{w}}, it is defined as
 #' \deqn{
-#'  \code{LossRelativeOutOfSampleVariance}(\mathbf{w}, \boldsymbol{\Sigma})= 
-#'  \frac{V_{\mathbf{w}} - V_{GMV}}{V_{GMV}}\,,
+#'  \code{LossOutOfSampleVariance}(\mathbf{w}, \boldsymbol{\Sigma})
+#'  = V_{\mathbf{w}} - V_{GMV} \,,
+#' }
+#' and, if \code{normalized = TRUE}, it is defined as
+#' \deqn{
+#'  \code{LossOutOfSampleVariance}(\mathbf{w}, \boldsymbol{\Sigma})
+#'  = \frac{V_{\mathbf{w}} - V_{GMV}}{V_{GMV}}\,,
 #' }
 #' where
 #' \eqn{V_{\mathbf{w}} = \mathbf{w}^\top\boldsymbol{\Sigma}\mathbf{w}}
@@ -26,11 +31,12 @@
 #' \code{EstimatedPortfolioWeights}).
 #' 
 #' @param normalized if \code{TRUE}, the Frobenius norm is divided by the number
-#' of assets \code{p}.
+#' of assets \code{p} and the \code{LossOutOfSampleVariance} is divided by the 
+#' variance of the GMV portfolio, as explained above.
 #' 
 #' @param ... Additional arguments passed to methods, currently ignored.
 #' 
-#' @returns \code{LossRelativeOutOfSampleVariance} returns a positive numeric
+#' @returns \code{LossOutOfSampleVariance} returns a positive numeric
 #' value, with attributes \code{"V_portfolio"} and \code{"V_GMV"}, which are
 #' respectively the (out of sample) variances of the given
 #' \code{portfolioWeights} and of the GMV portfolio.
@@ -47,8 +53,8 @@
 #' X <- MASS::mvrnorm(n = 3, mu = rep(0,5), Sigma = Sigma)
 #' weights3 = GMV_Moore_Penrose(X)
 #' 
-#' LossRelativeOutOfSampleVariance(weights100, Sigma)
-#' LossRelativeOutOfSampleVariance(weights3, Sigma)
+#' LossOutOfSampleVariance(weights100, Sigma)
+#' LossOutOfSampleVariance(weights3, Sigma)
 #' 
 #' trueWeights = rowSums(solve(Sigma)) / sum(solve(Sigma))
 #' 
@@ -61,7 +67,8 @@
 #' Losses(weights100, Sigma)
 #' 
 #' @export
-LossRelativeOutOfSampleVariance <- function(portfolioWeights, Sigma, SigmaInv = NULL){
+LossOutOfSampleVariance <- function(portfolioWeights, Sigma, SigmaInv = NULL,
+                                    normalized = TRUE){
   if (is.null(SigmaInv)){
     SigmaInv = solve(Sigma)
   }
@@ -75,7 +82,11 @@ LossRelativeOutOfSampleVariance <- function(portfolioWeights, Sigma, SigmaInv = 
   ones = rep(1, length = p)
   V_GMV = 1 / ( t(ones) %*% SigmaInv %*% ones)
   
-  Loss = as.numeric( (outOfSampleVariance - V_GMV) / V_GMV )
+  if (normalized){
+    Loss = as.numeric( (outOfSampleVariance - V_GMV) / V_GMV )
+  } else {
+    Loss = as.numeric( outOfSampleVariance - V_GMV )
+  }
   
   attr(Loss, "V_portfolio") <- outOfSampleVariance
   attr(Loss, "V_GMV") <- V_GMV
@@ -85,7 +96,7 @@ LossRelativeOutOfSampleVariance <- function(portfolioWeights, Sigma, SigmaInv = 
 
 
 #' @export
-#' @rdname LossRelativeOutOfSampleVariance
+#' @rdname LossOutOfSampleVariance
 LossFrobenius2.EstimatedPortfolioWeights <- function(
     x,
     otherPortfolioWeights,
@@ -101,7 +112,7 @@ LossFrobenius2.EstimatedPortfolioWeights <- function(
 
 
 #' @export
-#' @rdname LossRelativeOutOfSampleVariance
+#' @rdname LossOutOfSampleVariance
 LossFrobenius2.numeric <- function(
     x,
     otherPortfolioWeights,

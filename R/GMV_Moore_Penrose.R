@@ -21,7 +21,7 @@
 #' @returns a vector of size \eqn{p} giving the optimal portfolio weights, with
 #' the elements summing up to \eqn{1}.
 #' 
-#' @seealso \code{\link{LossRelativeOutOfSampleVariance}} for computing the loss
+#' @seealso \code{\link{LossOutOfSampleVariance}} for computing the loss
 #' of the portfolio.
 #' 
 #' @examples
@@ -33,8 +33,8 @@
 #' X <- MASS::mvrnorm(n = 3, mu = rep(0,5), Sigma = Sigma)
 #' weights3 = GMV_Moore_Penrose(X)
 #' 
-#' LossRelativeOutOfSampleVariance(weights100, Sigma)
-#' LossRelativeOutOfSampleVariance(weights3, Sigma)
+#' LossOutOfSampleVariance(weights100, Sigma)
+#' LossOutOfSampleVariance(weights3, Sigma)
 #' 
 #' trueWeights = rowSums(solve(Sigma)) / sum(solve(Sigma))
 #' 

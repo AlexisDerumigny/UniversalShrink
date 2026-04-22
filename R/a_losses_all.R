@@ -130,16 +130,14 @@ Losses.EstimatedPortfolioWeights <- function(x, Sigma, SigmaInv = NULL, ...)
     SigmaInv = solve(Sigma)
   }
   
-  LossRelativeOutOfSampleVariance = LossRelativeOutOfSampleVariance(
-    portfolioWeights = x, Sigma = Sigma, SigmaInv = SigmaInv)
-  
-  LossUnnormalized = LossRelativeOutOfSampleVariance * 
-    attr(LossRelativeOutOfSampleVariance, "V_GMV")
+  LossOutOfSampleVariance = c( 
+    LossOutOfSampleVariance(portfolioWeights = x, Sigma = Sigma, 
+                            SigmaInv = SigmaInv, normalized = TRUE),
+    LossOutOfSampleVariance(portfolioWeights = x, Sigma = Sigma,
+                            SigmaInv = SigmaInv, normalized = FALSE))
   
   GMV_portfolio = GMV_PlugIn(SigmaInv)
   
-  LossOutOfSampleVariance = c(LossRelativeOutOfSampleVariance,
-                              LossUnnormalized)
   
   Frob2 = c(LossFrobenius2(x = x, GMV_portfolio, normalized = TRUE),
             LossFrobenius2(x = x, GMV_portfolio, normalized = FALSE))
