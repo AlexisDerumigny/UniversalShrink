@@ -5,6 +5,9 @@
 \alias{Losses.EstimatedPrecisionMatrix}
 \alias{Losses.EstimatedCovarianceMatrix}
 \alias{print.AllLosses}
+\alias{as.double.AllLosses}
+\alias{as.data.frame.AllLosses}
+\alias{as.matrix.AllLosses}
 \title{All quadratic losses}
 \usage{
 Losses(x, Sigma, ...)
@@ -14,6 +17,12 @@ Losses(x, Sigma, ...)
 \method{Losses}{EstimatedCovarianceMatrix}(x, Sigma, ...)
 
 \method{print}{AllLosses}(x, ...)
+
+\method{as.double}{AllLosses}(x, ...)
+
+\method{as.data.frame}{AllLosses}(x, ...)
+
+\method{as.matrix}{AllLosses}(x, ...)
 }
 \arguments{
 \item{x}{an object, of class \code{EstimatedPrecisionMatrix},
@@ -29,6 +38,11 @@ which they are passed to \code{\link[base]{print.data.frame}}.}
 \value{
 \code{Losses} returns an object of class \code{AllLosses}.
 \code{print} returns \code{NULL} and is only called for its side-effects.
+
+\code{as.matrix}, \code{as.data.frame} and
+\code{as.numeric} (or \code{as.double}) respectively
+return a matrix, a data.frame or a numeric vector containing the losses.
+They are all named.
 }
 \description{
 Returns and print all (currently implemented) quadratic losses.
@@ -49,6 +63,12 @@ Losses(precision_MP_shrink, Sigma = Sigma)
 
 estimatedCov_shrink = cov_analytical_NL_shrinkage(X)
 Losses(estimatedCov_shrink, Sigma = Sigma)
+
+L = Losses(estimatedCov_shrink, Sigma = Sigma)
+as.matrix(L)
+as.data.frame(L)
+as.numeric(L)
+as.double(L)
 
 }
 \seealso{

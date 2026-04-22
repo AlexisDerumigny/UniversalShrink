@@ -15,6 +15,11 @@
 #' @returns \code{Losses} returns an object of class \code{AllLosses}.
 #' \code{print} returns \code{NULL} and is only called for its side-effects.
 #' 
+#' \code{as.matrix}, \code{as.data.frame} and
+#' \code{as.numeric} (or \code{as.double}) respectively
+#' return a matrix, a data.frame or a numeric vector containing the losses.
+#' They are all named.
+#' 
 #' @seealso The quadratic losses \code{\link{LossFrobenius2}},
 #' \code{\link{LossInverseFrobenius2}} and \code{\link{LossEuclideanEigenvalues2}}.
 #' 
@@ -35,6 +40,12 @@
 #' 
 #' estimatedCov_shrink = cov_analytical_NL_shrinkage(X)
 #' Losses(estimatedCov_shrink, Sigma = Sigma)
+#' 
+#' L = Losses(estimatedCov_shrink, Sigma = Sigma)
+#' as.matrix(L)
+#' as.data.frame(L)
+#' as.numeric(L)
+#' as.double(L)
 #' 
 #' @export
 Losses <- function(x, Sigma, ...) {
@@ -132,5 +143,31 @@ print.AllLosses <- function(x, ...){
   cat("Losses:\n")
   print(x$allLosses, ...)
   return (invisible(NULL))
+}
+
+
+#' @rdname Losses
+#' @export
+as.double.AllLosses <- function(x, ...){
+  result = c(x$allLosses[,1], x$allLosses[,2])
+  names(result) <- paste0(rep(rownames(x$allLosses), 2), "_",
+                          rep(colnames(x$allLosses), each = nrow(x$allLosses)))
+  return (result)
+}
+
+
+#' @rdname Losses
+#' @export
+as.data.frame.AllLosses <- function(x, ...){
+  
+  return (x$allLosses)
+}
+
+
+#' @rdname Losses
+#' @export
+as.matrix.AllLosses <- function(x, ...){
+  result = as.matrix(x$allLosses)
+  return (result)
 }
 
