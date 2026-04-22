@@ -134,19 +134,20 @@
 #' 
 #' @export
 GMV_Moore_Penrose_shrinkage <- function(X, centeredCov = TRUE, b = NULL,
-                                     verbose = 0){
+                                        verbose = 0){
+  call_ = match.call()
   if (is.null(b)){
     if (verbose > 0){
       cat("Default target: equally weighted portfolio\n")
     }
     result = GMV_Moore_Penrose_shrinkage_eq(
-      X = X, centeredCov = centeredCov, verbose = verbose)
+      X = X, centeredCov = centeredCov, verbose = verbose, call_ = call_)
   } else {
     if (verbose > 0){
       cat("User-provided target portfolio\n")
     }
     result = GMV_Moore_Penrose_shrinkage_general(
-      X = X, centeredCov = centeredCov, b = b, verbose = verbose)
+      X = X, centeredCov = centeredCov, b = b, verbose = verbose, call_ = call_)
   }
   
   return (result)

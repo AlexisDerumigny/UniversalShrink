@@ -38,16 +38,29 @@
 #' 
 #' trueWeights = rowSums(solve(Sigma)) / sum(solve(Sigma))
 #' 
-#' NormFrobenius2(trueWeights - weights100, normalized = FALSE)
-#' NormFrobenius2(trueWeights - weights3, normalized = FALSE)
+#' LossFrobenius2(weights100, trueWeights, normalized = FALSE)
+#' LossFrobenius2(weights3, trueWeights, normalized = FALSE)
+#' LossFrobenius2(weights100, weights3, normalized = FALSE)
 #' 
 #' @export
 GMV_Moore_Penrose <- function(X, centeredCov = TRUE)
 {
+  call_ = match.call()
   iS_MP = Moore_Penrose(X = X, centeredCov = centeredCov)
   GMV_MP = GMV_PlugIn(iS_MP)
   
-  return (GMV_MP)
+  result = list(
+    estimated_portfolio_weights = as.numeric(GMV_MP),
+    n = nrow(X),
+    p = ncol(X),
+    centeredCov = centeredCov,
+    method = "Plug-in of Moore-Penrose",
+    call = call_
+  )
+  
+  class(result) <- c("EstimatedPortfolioWeights")
+  
+  return (result)
 }
 
 

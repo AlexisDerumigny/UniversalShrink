@@ -19,5 +19,6 @@ test_that("GMV_Moore_Penrose_shrinkage is coherent for eq weighted targets", {
   GMV_MP_shrinkage_Cent_gen = 
     GMV_Moore_Penrose_shrinkage_general(X = X, centeredCov = TRUE, verbose = 0)
   
-  expect_equal(GMV_MP_shrinkage_Cent_gen, GMV_MP_shrinkage_Cent_eq)
+  expect_equal(as.numeric(GMV_MP_shrinkage_Cent_gen),
+               as.numeric(GMV_MP_shrinkage_Cent_eq))
 })
