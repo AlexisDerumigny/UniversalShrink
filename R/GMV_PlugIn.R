@@ -54,6 +54,7 @@ GMV_PlugIn <- function(estimatedPrecisionMatrix){
   
   result = list(
     estimated_portfolio_weights = optimal_weights,
+    n = NA,
     p = nrow(estimatedPrecisionMatrix),
     method = "Plug-in of given precision matrix",
     call = call_

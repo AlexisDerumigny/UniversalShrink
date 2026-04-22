@@ -124,6 +124,45 @@ Losses.EstimatedCovarianceMatrix <- function(x, Sigma, ...)
 
 #' @rdname Losses
 #' @export
+Losses.EstimatedPortfolioWeights <- function(x, Sigma, SigmaInv = NULL, ...)
+{
+  if (is.null(SigmaInv)){
+    SigmaInv = solve(Sigma)
+  }
+  
+  LossRelativeOutOfSampleVariance = LossRelativeOutOfSampleVariance(
+    portfolioWeights = x, Sigma = Sigma, SigmaInv = SigmaInv)
+  
+  LossUnnormalized = LossRelativeOutOfSampleVariance * 
+    attr(LossRelativeOutOfSampleVariance, "V_GMV")
+  
+  GMV_portfolio = GMV_PlugIn(SigmaInv)
+  
+  LossOutOfSampleVariance = c(LossRelativeOutOfSampleVariance,
+                              LossUnnormalized)
+  
+  Frob2 = c(LossFrobenius2(x = x, GMV_portfolio, normalized = TRUE),
+            LossFrobenius2(x = x, GMV_portfolio, normalized = FALSE))
+  
+  allLosses = rbind(LossOutOfSampleVariance = LossOutOfSampleVariance,
+                    Frobenius2 = Frob2)
+  
+  allLosses = as.data.frame(allLosses)
+  colnames(allLosses) <- c("Normalized", "Unnormalized")
+  
+  result = list(
+    allLosses = allLosses,
+    estimated = x,
+    problemType = "Estimation of portfolio weights"
+  )
+  class(result) <- "AllLosses"
+  
+  return (result)
+}
+
+
+#' @rdname Losses
+#' @export
 print.AllLosses <- function(x, ...){
   cat(x$problemType)
   cat(", method =", x$estimated$method)

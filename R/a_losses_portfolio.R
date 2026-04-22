@@ -56,6 +56,10 @@
 #' LossFrobenius2(weights3, trueWeights, normalized = FALSE)
 #' LossFrobenius2(weights100, weights3, normalized = FALSE)
 #' 
+#' 
+#' Losses(weights3, Sigma)
+#' Losses(weights100, Sigma)
+#' 
 #' @export
 LossRelativeOutOfSampleVariance <- function(portfolioWeights, Sigma, SigmaInv = NULL){
   if (is.null(SigmaInv)){

@@ -4,6 +4,7 @@
 \alias{Losses}
 \alias{Losses.EstimatedPrecisionMatrix}
 \alias{Losses.EstimatedCovarianceMatrix}
+\alias{Losses.EstimatedPortfolioWeights}
 \alias{print.AllLosses}
 \alias{as.double.AllLosses}
 \alias{as.data.frame.AllLosses}
@@ -15,6 +16,8 @@ Losses(x, Sigma, ...)
 \method{Losses}{EstimatedPrecisionMatrix}(x, Sigma, SigmaInv = NULL, ...)
 
 \method{Losses}{EstimatedCovarianceMatrix}(x, Sigma, ...)
+
+\method{Losses}{EstimatedPortfolioWeights}(x, Sigma, SigmaInv = NULL, ...)
 
 \method{print}{AllLosses}(x, ...)
 
