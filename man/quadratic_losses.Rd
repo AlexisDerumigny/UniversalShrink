@@ -22,7 +22,7 @@ NormFrobenius2(M, normalized)
 
 DistanceFrobenius2(M1, M2, normalized)
 
-LossFrobenius2(x, Sigma, type, normalized = TRUE, ...)
+LossFrobenius2(x, ...)
 
 \method{LossFrobenius2}{matrix}(
   x,
@@ -88,6 +88,8 @@ matrix size \code{p}.}
 
 \item{x, M}{An (estimated) square matrix of size \code{p}}
 
+\item{...}{Additional arguments passed to methods.}
+
 \item{Sigma, SigmaInv}{the true covariance matrix and its inverse}
 
 \item{type}{target of the estimator. Must be a character vector of length 1
@@ -101,8 +103,6 @@ Frobenius loss for the estimation of the precision matrix, i.e.
 Frobenius loss for the estimation of the precision matrix, i.e.
 \code{NormFrobenius2(x - Sigma )}, potentially normalized.
 }}
-
-\item{...}{Additional arguments passed to methods.}
 }
 \value{
 All these functions return a positive numeric value.

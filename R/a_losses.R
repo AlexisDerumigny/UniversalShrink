@@ -108,7 +108,7 @@ DistanceFrobenius2 <- function(M1, M2, normalized){
 #' 
 #' @export
 #' @rdname quadratic_losses
-LossFrobenius2 <- function(x, Sigma, type, normalized = TRUE, ...) {
+LossFrobenius2 <- function(x, ...) {
   UseMethod("LossFrobenius2")
 }
 
