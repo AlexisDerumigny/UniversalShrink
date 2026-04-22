@@ -2,25 +2,41 @@
 % Please edit documentation in R/a_losses_portfolio.R
 \name{LossRelativeOutOfSampleVariance}
 \alias{LossRelativeOutOfSampleVariance}
-\title{Relative out-of-sample loss of a portfolio}
+\alias{LossFrobenius2.EstimatedPortfolioWeights}
+\alias{LossFrobenius2.numeric}
+\title{Relative out-of-sample loss of a portfolio and Frobenius loss}
 \usage{
 LossRelativeOutOfSampleVariance(portfolioWeights, Sigma, SigmaInv = NULL)
+
+\method{LossFrobenius2}{EstimatedPortfolioWeights}(x, otherPortfolioWeights, normalized = TRUE, ...)
+
+\method{LossFrobenius2}{numeric}(x, otherPortfolioWeights, normalized = TRUE, ...)
 }
 \arguments{
-\item{portfolioWeights}{the vector of weights of a given portfolio, of which
-we want to determine the loss}
-
 \item{Sigma, SigmaInv}{the true covariance matrix and its inverse}
+
+\item{x, portfolioWeights, otherPortfolioWeights}{vector of weights of a given
+portfolio, of which we want to determine the loss (or an object of class
+\code{EstimatedPortfolioWeights}).}
+
+\item{normalized}{if \code{TRUE}, the Frobenius norm is divided by the number
+of assets \code{p}.}
+
+\item{...}{Additional arguments passed to methods, currently ignored.}
 }
 \value{
 \code{LossRelativeOutOfSampleVariance} returns a positive numeric
 value, with attributes \code{"V_portfolio"} and \code{"V_GMV"}, which are
 respectively the (out of sample) variances of the given
 \code{portfolioWeights} and of the GMV portfolio.
+
+\code{LossFrobenius2} returns a numeric value which is the Frobenius squared
+norm between the two vectors of weights, see \code{\link{NormFrobenius2}}.
 }
 \description{
-This function returns the Variance of the given portfolio relatively to the
-variance of the Global Minimum Variance (GMV) portfolio.
+The function \code{LossRelativeOutOfSampleVariance} returns the Variance of
+the given portfolio relatively to the variance of the Global Minimum Variance
+(GMV) portfolio.
 For a generic \eqn{p}-dimensional vector of portfolio weights
 \eqn{\mathbf{w}}, it is defined as
 \deqn{
@@ -49,7 +65,8 @@ LossRelativeOutOfSampleVariance(weights3, Sigma)
 
 trueWeights = rowSums(solve(Sigma)) / sum(solve(Sigma))
 
-NormFrobenius2(trueWeights - weights100, normalized = FALSE)
-NormFrobenius2(trueWeights - weights3, normalized = FALSE)
+LossFrobenius2(weights100, trueWeights, normalized = FALSE)
+LossFrobenius2(weights3, trueWeights, normalized = FALSE)
+LossFrobenius2(weights100, weights3, normalized = FALSE)
 
 }
