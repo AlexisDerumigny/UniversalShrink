@@ -31,7 +31,7 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
   
 - `Moore_Penrose_higher_order_shrinkage()`: estimate the precision matrix via
   a polynomial in the Moore-Penrose estimator of the precision matrix.
-
+TODO: include p < n
 
 ## 2.2. Ridge-type estimators
 
@@ -42,6 +42,8 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
   
 - `ridge_higher_order_shrinkage()`: perform higher-order shrinkage of the Ridge
   estimator
+
+TODO: add the faster computation of the $\hat s$ coefficients
   
 - `ridge_shrinkage_Wang()`
 
@@ -51,6 +53,8 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
 - `MPR()`
 
 - `MPR_shrinkage()`
+
+- `MPR_higher_order_shrinkage()`
 
 
 # 3. Functions for estimation of optimal portfolio weights
