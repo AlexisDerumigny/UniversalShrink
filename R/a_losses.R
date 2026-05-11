@@ -34,8 +34,8 @@ DistanceFrobenius2 <- function(M1, M2, normalized){
 #' \deqn{
 #' \code{LossFrobenius2}(\mathbf{M}, g(\boldsymbol{\Sigma}))
 #' = ||\mathbf{M}-g(\mathbf{\boldsymbol{\Sigma}})||^2_F\,,
-#' } where \eqn{M} here denotes a suitable estimator and the function \eqn{g} is
-#' \eqn{g(x)=x} when \code{type="covariance matrix"} is
+#' } where \eqn{M} denotes a suitable estimator of g(\Sigma) and the function 
+#' \eqn{g} is \eqn{g(x)=x} when \code{type="covariance matrix"} is
 #' chosen, otherwise \eqn{g(x)=1/x} for \code{type="precision matrix"}. In case 
 #' \code{normalized=TRUE} (default) the above losses are normalized by the matrix
 #' dimension \eqn{p}.
@@ -62,7 +62,7 @@ DistanceFrobenius2 <- function(M1, M2, normalized){
 #'  the losses and the function \eqn{g(x)} is either \eqn{x} or \eqn{1/x}, which 
 #'  can be specified in  \code{type}. 
 #'  The last loss function is specifically designed
-#'  for the portfolios and is measuring the variance of the given portfolio relatively
+#'  for the portfolios and is measures the out-of-sample variance of the given portfolio relatively
 #'   to the variance of the Global Minimum Variance (GMV) portfolio. For
 #'  a generic \eqn{p}-dimensional vector of portfolio weights \eqn{\mathbf{w}}
 #'   it is defined as
@@ -106,9 +106,9 @@ DistanceFrobenius2 <- function(M1, M2, normalized){
 #' \code{LossFrobenius2} returns the (normalized) Frobenius loss.
 #'
 #' \code{LossRelativeOutOfSampleVariance} returns a positive numeric value,
-#' with attributes \code{"V_portfolio"} and \code{"V_GMV"}, which are respectively
-#' the (out of sample) variances of the given \code{portfolioWeights} and of the
-#' GMV portfolio.
+#' with attributes \code{"V_portfolio"} and \code{"V_GMV"}, which are the 
+#' out-of-sample variances of the given \code{portfolioWeights} 
+#' and of the true GMV portfolio, respectively.
 #' 
 #' @examples
 #' M = diag(c(1,2,3))

@@ -10,11 +10,11 @@ GMV_Moore_Penrose(X, centeredCov = TRUE)
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
 
-\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
-computed using centering (i.e. in the general case where the mean of the
-random vector may be non-zero).
-If \code{FALSE} the covariance matrix is computed assuming that the mean of
-the random vector of interest is \code{0} (i.e. does not need to be estimated).}
+\item{centeredCov}{Boolean variable. If \code{TRUE}, then the sample covariance
+matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector
+is replaced by its sample counterpart. If \code{FALSE}, then the sample
+covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
+zero.}
 }
 \value{
 a vector of size \eqn{p} giving the optimal portfolio weights, with
@@ -28,7 +28,7 @@ corresponding sample covariance matrix \eqn{\mathbf{S}_n} of size
 \mathbf{w}_{MP}=\dfrac{\mathbf{S}^+_n\mathbf{1}}{\mathbf{1}^\top\mathbf{S}^+_n\mathbf{1}},
 }
 where \eqn{\mathbf{S}^+_n} is the Moore-Penrose (pseudo) inverse of
-\eqn{\mathbf{S}_n} and \eqn{\mathbf{1}} is a \eqn{p}-dimensional vector of ones.
+\eqn{\mathbf{S}_n} and \eqn{\mathbf{1}} is the \eqn{p}-dimensional vector of ones.
 }
 \examples{
 Sigma = diag(1:5)

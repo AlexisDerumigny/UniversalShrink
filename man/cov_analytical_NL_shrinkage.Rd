@@ -9,19 +9,19 @@ cov_analytical_NL_shrinkage(X, centeredCov = TRUE)
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
 
-\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
-computed using centering (i.e. in the general case where the mean of the
-random vector may be non-zero).
-If \code{FALSE} the covariance matrix is computed assuming that the mean of
-the random vector of interest is \code{0} (i.e. does not need to be estimated).}
+\item{centeredCov}{Boolean variable. If \code{TRUE}, then the sample covariance
+matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector
+is replaced by its sample counterpart. If \code{FALSE}, then the sample
+covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
+zero.}
 }
 \value{
 an object of class \code{"EstimatedCovarianceMatrix"}, containing
 the estimator of the covariance matrix (of size \code{p} by \code{p}).
 }
 \description{
-This function estimates the covariance matrix of a given data set using
-classical nonlinear shrinkage from Ledoit and Wolf (2020).
+This function estimates a covariance matrix from a given data set using the
+analytical nonlinear shrinkage estimator of Ledoit and Wolf (2020)
 }
 \details{
 For \eqn{i\in\{1,\ldots,p\}}, the nonlinear shrinkage estimator of
@@ -36,12 +36,15 @@ Ledoit and Wolf is given by
  \right.
  }
 where \eqn{\mathbf{U}=(\mathbf{u}_1,...\mathbf{u}_p)} is the matrix with the
-sample eigenvectors of \eqn{\mathbf{S}_n}, \eqn{d_i}, \eqn{i=1,\ldots,} are
-the sample eigenvalues of \eqn{\mathbf{S}_n} and
-\eqn{\breve{m}_{F}(x)=\lim\limits_{z\to x}m_{F}(z)} with \eqn{m_{F}(z)} the
-limiting Stieltjes transform of the sample covariance matrix. A numerical
-approach to estimate \eqn{\breve{m}_{F}(x)} is provided in Ledoit and Wolf
-(2020) and is available in the R-package \eqn{\textit{HDShOP}}.
+eigenvectors of the sample covariance matrix \eqn{\mathbf{S}_n} and \eqn{d_i}
+, \eqn{i=1,\ldots,} are the eigenvalues of \eqn{\mathbf{S}_n}. The term
+\eqn{\breve{m}_{F}(x)=\lim\limits_{z\to x}m_{F}(z)} with \eqn{m_{F}(z)}
+denotes the limiting Stieltjes transform of \eqn{\mathbf{S}_n}.
+Similarly, the term  \eqn{\breve{m}_{\underline{F}}(0)} is defined as the limit
+\eqn{\breve{m}_{\underline{F}}(0)=\lim\limits_{z\to 0} \frac{c-1}{z}+cm_F(z)}.
+A numerical approach to estimate \eqn{\breve{m}_{F}(x)} and
+\eqn{\breve{m}_{\underline{F}}(0)} is  provided in Ledoit and Wolf (2020)
+and is implemented in the R-package \eqn{\textit{HDShOP}}.
 }
 \examples{
 p = 200
@@ -51,7 +54,7 @@ X <- MASS::mvrnorm(n = 100, mu = mu, Sigma=Sigma)
 estimatedCov_sample = cov(X)
 estimatedCov_shrink = cov_analytical_NL_shrinkage(X)
 
-# We now compare the distance between the true and both estimators.
+# We now compare the distance between the true covariance matrix and both estimators
 LossFrobenius2(estimatedCov_sample, Sigma, type = "covariance")
 LossFrobenius2(estimatedCov_shrink, Sigma)
 

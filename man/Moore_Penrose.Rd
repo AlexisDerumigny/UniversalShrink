@@ -9,11 +9,11 @@ Moore_Penrose(X, centeredCov = TRUE)
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
 
-\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
-computed using centering (i.e. in the general case where the mean of the
-random vector may be non-zero).
-If \code{FALSE} the covariance matrix is computed assuming that the mean of
-the random vector of interest is \code{0} (i.e. does not need to be estimated).}
+\item{centeredCov}{Boolean variable. If \code{TRUE}, then the sample covariance
+matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector
+is replaced by its sample counterpart. If \code{FALSE}, then the sample
+covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
+zero.}
 }
 \value{
 the estimator of the precision matrix
@@ -24,14 +24,16 @@ Let \eqn{\mathbf{X}_n} be the \eqn{n \times p} observed data matrix, with the
 corresponding (centered (by default) or non-centered) sample covariance matrix
 \eqn{\mathbf{S}_n}. The Moore-Penrose inverse of this sample
 covariance matrix, denoted by \eqn{\mathbf{S}^+_n} is computed by the following
-formula
+formula for \eqn{p>n}
 \deqn{
 \mathbf{S}_n^+=\left(\frac{1}{n}\mathbf{X}_n^\top\mathbf{X}_n\right)^+
 = \frac{1}{\sqrt{n}}\mathbf{X}_n^\top\left(\frac{1}{n}
 \mathbf{X}_n\mathbf{X}_n^\top\right)^{-2}
 \frac{1}{\sqrt{n}}\mathbf{X}_n.
-} See, the beginning of the proof of Theorem 2.1 in Bodnar and Parolya (2026)
-for the details how the centering was done.
+} If \eqn{p<n} then \eqn{\mathbf{S}_n^+} becomes the traditional inverse of
+\eqn{\mathbf{S}_n}. See, the beginning of the proof of Theorem 2.1
+in Bodnar and Parolya (2026) and \code{\link{cov_with_centering}} for the
+details how the centering was done.
 }
 \examples{
 

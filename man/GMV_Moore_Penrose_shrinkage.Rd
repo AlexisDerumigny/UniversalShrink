@@ -2,7 +2,7 @@
 % Please edit documentation in R/GMV_Moore_Penrose_shrinkage.R
 \name{GMV_Moore_Penrose_shrinkage}
 \alias{GMV_Moore_Penrose_shrinkage}
-\title{First-order shrinkage of the Moore-Penrose portfolio towards a general target
+\title{First-order shrinkage of the Moore-Penrose GMV portfolio towards a general target
 portfolio \eqn{\mathbf{b}}}
 \usage{
 GMV_Moore_Penrose_shrinkage(X, centeredCov = TRUE, b = NULL, verbose = 0)
@@ -10,11 +10,11 @@ GMV_Moore_Penrose_shrinkage(X, centeredCov = TRUE, b = NULL, verbose = 0)
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
 
-\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
-computed using centering (i.e. in the general case where the mean of the
-random vector may be non-zero).
-If \code{FALSE} the covariance matrix is computed assuming that the mean of
-the random vector of interest is \code{0} (i.e. does not need to be estimated).}
+\item{centeredCov}{Boolean variable. If \code{TRUE}, then the sample covariance
+matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector
+is replaced by its sample counterpart. If \code{FALSE}, then the sample
+covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
+zero.}
 
 \item{b}{shrinkage target. By default, the equally-weighted portfolio is used
 as a target.}
