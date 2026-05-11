@@ -149,8 +149,8 @@ on the spectra of the matrices: \code{DistanceEuclideanEigenvalues2} and
 }
 where \eqn{\lambda_i(\mathbf{A})} are the eigenvalues of a generic matrix
 \eqn{\mathbf{A}}. Similarly, \code{normalized=TRUE} (by default) normalizes
-the losses, and the function \eqn{g(x)} is either \eqn{x} or \eqn{1/x},
-which can be specified in  \code{type}.
+the losses and the function \eqn{g(x)} is either \eqn{x} or \eqn{1/x}, which
+can be specified in  \code{type}.
 }
 \examples{
 M = diag(c(1,2,3))

@@ -6,14 +6,16 @@
 #' corresponding (centered (by default) or non-centered) sample covariance matrix 
 #' \eqn{\mathbf{S}_n}. The Moore-Penrose inverse of this sample
 #' covariance matrix, denoted by \eqn{\mathbf{S}^+_n} is computed by the following
-#' formula
+#' formula for \eqn{p>n}
 #' \deqn{
 #' \mathbf{S}_n^+=\left(\frac{1}{n}\mathbf{X}_n^\top\mathbf{X}_n\right)^+
 #' = \frac{1}{\sqrt{n}}\mathbf{X}_n^\top\left(\frac{1}{n}
 #' \mathbf{X}_n\mathbf{X}_n^\top\right)^{-2}
 #' \frac{1}{\sqrt{n}}\mathbf{X}_n.
-#' } See, the beginning of the proof of Theorem 2.1 in Bodnar and Parolya (2026)
-#' for the details how the centering was done.
+#' } If \eqn{p<n} then \eqn{\mathbf{S}_n^+} becomes the traditional inverse of 
+#' \eqn{\mathbf{S}_n}. See, the beginning of the proof of Theorem 2.1 
+#' in Bodnar and Parolya (2026) and \code{\link{cov_with_centering}} for the 
+#' details how the centering was done.
 #' 
 #' 
 #' 

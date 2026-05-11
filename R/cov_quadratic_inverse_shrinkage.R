@@ -3,11 +3,11 @@
 #' Quadratic inverse shrinkage (QIS)
 #' 
 #' 
-#' This function estimates the covariance matrix as a given data set using
+#' This function estimates the covariance matrix from a given data set using
 #' quadratic inverse shrinkage.
 #' 
-#' The quadratic inverse shrinkage estimator (QIS) of 
-#' Ledoit and Wolf is given by 
+#' Quadratic inverse shrinkage estimator (QIS) of 
+#' Ledoit and Wolf (2022) is given by 
 #' \eqn{\mathbf{S}_{QIS}= 
 #' \mathbf{U} \text{diag}(\hat\delta_{n,1},\ldots,\hat\delta_{n,p})\mathbf{U}^\top}
 #'  with 
@@ -47,7 +47,7 @@
 #'    {(\lambda^{-1}_{n,j}-x)^2 + h_n^2 \lambda^{-2}_{n,j}}
 #'    \right]^2.
 #'    }
-#'  The smoothing parameter \eqn{h_n} satisfies the conditions 
+#'  The smoothing parameter \eqn{h_n} satisfies 
 #'  \eqn{h_n\sim Kn^{-\alpha}} for some \eqn{K>0} and \eqn{\alpha\in(0, 2/5)}.
 #'  See, Theorem 4.1 of Ledoit and Wolf (2022) for more details.
 #' 
@@ -74,7 +74,7 @@
 #' estimatedCov_sample = cov(X)
 #' estimatedCov_shrink = cov_quadratic_inverse_shrinkage(X)
 #' 
-#' # We now compare the distance between the true and both estimators.
+#' # We now compare the distance between the true covariance matrix and both estimators
 #' LossFrobenius2(estimatedCov_sample, Sigma, type = "covariance")
 #' LossFrobenius2(estimatedCov_shrink, Sigma)
 #' 

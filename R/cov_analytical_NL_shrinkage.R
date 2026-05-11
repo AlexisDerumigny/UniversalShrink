@@ -2,8 +2,8 @@
 
 #' Analytical non-linear shrinkage from Ledoit and Wolf (2020)
 #' 
-#' This function estimates the covariance matrix of a given data set using 
-#' classical nonlinear shrinkage from Ledoit and Wolf (2020).
+#' This function estimates a covariance matrix from a given data set using the 
+#' analytical nonlinear shrinkage estimator of Ledoit and Wolf (2020)
 #' 
 #' For \eqn{i\in\{1,\ldots,p\}}, the nonlinear shrinkage estimator of 
 #' Ledoit and Wolf is given by
@@ -17,12 +17,15 @@
 #'  \right.
 #'  }
 #'  where \eqn{\mathbf{U}=(\mathbf{u}_1,...\mathbf{u}_p)} is the matrix with the
-#'   sample eigenvectors of \eqn{\mathbf{S}_n}, \eqn{d_i}, \eqn{i=1,\ldots,} are
-#'   the sample eigenvalues of \eqn{\mathbf{S}_n} and 
-#'   \eqn{\breve{m}_{F}(x)=\lim\limits_{z\to x}m_{F}(z)} with \eqn{m_{F}(z)} the
-#'    limiting Stieltjes transform of the sample covariance matrix. A numerical 
-#'    approach to estimate \eqn{\breve{m}_{F}(x)} is provided in Ledoit and Wolf
-#'     (2020) and is available in the R-package \eqn{\textit{HDShOP}}. 
+#'   eigenvectors of the sample covariance matrix \eqn{\mathbf{S}_n} and \eqn{d_i}
+#'   , \eqn{i=1,\ldots,} are the eigenvalues of \eqn{\mathbf{S}_n}. The term 
+#'   \eqn{\breve{m}_{F}(x)=\lim\limits_{z\to x}m_{F}(z)} with \eqn{m_{F}(z)} 
+#'   denotes the limiting Stieltjes transform of \eqn{\mathbf{S}_n}.
+#'   Similarly, the term  \eqn{\breve{m}_{\underline{F}}(0)} is defined as the limit
+#'    \eqn{\breve{m}_{\underline{F}}(0)=\lim\limits_{z\to 0} \frac{c-1}{z}+cm_F(z)}. 
+#'    A numerical approach to estimate \eqn{\breve{m}_{F}(x)} and 
+#'    \eqn{\breve{m}_{\underline{F}}(0)} is  provided in Ledoit and Wolf (2020) 
+#'    and is implemented in the R-package \eqn{\textit{HDShOP}}. 
 #' 
 #' 
 #' @param X data matrix (rows are observations, columns are features).
@@ -50,7 +53,7 @@
 #' estimatedCov_sample = cov(X)
 #' estimatedCov_shrink = cov_analytical_NL_shrinkage(X)
 #' 
-#' # We now compare the distance between the true and both estimators.
+#' # We now compare the distance between the true covariance matrix and both estimators
 #' LossFrobenius2(estimatedCov_sample, Sigma, type = "covariance")
 #' LossFrobenius2(estimatedCov_shrink, Sigma)
 #' 

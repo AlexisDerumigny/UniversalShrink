@@ -1,5 +1,5 @@
 
-#' First-order shrinkage of the Moore-Penrose portfolio towards a general target 
+#' First-order shrinkage of the Moore-Penrose GMV portfolio towards a general target 
 #' portfolio \eqn{\mathbf{b}}
 #'
 #' This function computes shrinked optimal portfolio weights given by

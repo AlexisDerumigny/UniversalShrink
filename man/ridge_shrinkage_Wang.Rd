@@ -13,11 +13,11 @@ ridge_shrinkage_Wang(X, eps = 1e-06, upp = pi/2 - 1e-06, centeredCov = TRUE)
 \item{eps, upp}{search interval for the best penalization parameter
 (used in the numerical optimization).}
 
-\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
-computed using centering (i.e. in the general case where the mean of the
-random vector may be non-zero).
-If \code{FALSE} the covariance matrix is computed assuming that the mean of
-the random vector of interest is \code{0} (i.e. does not need to be estimated).}
+\item{centeredCov}{Boolean variable. If \code{TRUE}, then the sample covariance
+matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector
+is replaced by its sample counterpart. If \code{FALSE}, then the sample
+covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
+zero.}
 }
 \value{
 the estimator of the precision matrix

@@ -63,9 +63,8 @@ DistanceFrobenius2 <- function(M1, M2, normalized){
 #' }
 #' where \eqn{\lambda_i(\mathbf{A})} are the eigenvalues of a generic matrix
 #' \eqn{\mathbf{A}}. Similarly, \code{normalized=TRUE} (by default) normalizes 
-#' the losses, and the function \eqn{g(x)} is either \eqn{x} or \eqn{1/x},
-#' which can be specified in  \code{type}. 
-#'
+#' the losses and the function \eqn{g(x)} is either \eqn{x} or \eqn{1/x}, which 
+#' can be specified in  \code{type}.
 #'
 #' @param x,M An (estimated) square matrix of size \code{p}
 #' @param M1,M2 two square matrices of the same dimension

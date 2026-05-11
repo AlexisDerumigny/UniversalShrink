@@ -1,6 +1,6 @@
 
 
-#' Compute the covariance matrix with possible centering and the corresponding 
+#' Computes the centered/noncentered sample covariance matrix and the corresponding 
 #' concentration ratio
 #' 
 #' Having the number of dimensions \eqn{p}, the sample size \eqn{n} and the 
@@ -30,21 +30,20 @@
 #'  \quad \text{with} \quad
 #'  \tilde{\mathbf{X}}_n = \mathbf{H}^\top_n\mathbf{X}_n.
 #'  }
-#'Similarly, the concentration ratio in the noncentered case is defined by 
-#'\eqn{c_n=\frac{p}{n}}, while in the centered one it is given by 
-#'\eqn{c_n=\frac{p}{n-1}}. Even though this difference looks somewhat subtle, it 
-#'can have some significant influence on the performance of the estimators in 
-#'finite sample regime.
+#' The concentration ratio in the noncentered case is defined by
+#'\eqn{c_n=\frac{p}{n}}, while \eqn{c_n=\frac{p}{n-1}} in the centered one. 
+#'Even though this difference looks somewhat subtle, it can have some significant
+#' influence on the performance of the estimators in finite sample regime.
 #' 
 #' @param X,n,p data matrix (rows are observations, columns are features).
 #' \code{n} is the number of observations of the data matrix, and \code{p}
 #' is the number of features
 #' 
-#' @param centeredCov Boolean variable. If \code{TRUE}, the covariance matrix is
-#' computed using centering (i.e. in the general case where the mean of the
-#' random vector may be non-zero).
-#' If \code{FALSE} the covariance matrix is computed assuming that the mean of
-#' the random vector of interest is \code{0} (i.e. does not need to be estimated).
+#' @param centeredCov Boolean variable. If \code{TRUE}, then the sample covariance
+#'  matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector 
+#'  is replaced by its sample counterpart. If \code{FALSE}, then the sample 
+#'  covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is 
+#'  zero.
 #' 
 #' @param verbose a number indicating whether to print intermediary values and
 #' details about the progress of the computations. A value of \code{0} indicates

@@ -19,11 +19,11 @@ ridge_higher_order_shrinkage(
 
 \item{m}{order of the shrinkage. Should be at least 1.}
 
-\item{centeredCov}{Boolean variable. If \code{TRUE}, the covariance matrix is
-computed using centering (i.e. in the general case where the mean of the
-random vector may be non-zero).
-If \code{FALSE} the covariance matrix is computed assuming that the mean of
-the random vector of interest is \code{0} (i.e. does not need to be estimated).}
+\item{centeredCov}{Boolean variable. If \code{TRUE}, then the sample covariance
+matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector
+is replaced by its sample counterpart. If \code{FALSE}, then the sample
+covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
+zero.}
 
 \item{t, interval}{\code{t} is the penalization parameter, and \code{interval}
 is the interval over which the loss is optimized over (with respect to \code{t}).}
