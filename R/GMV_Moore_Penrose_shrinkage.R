@@ -17,48 +17,56 @@
 #' {\hat{d}_1^2\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}},
 #' } where
 #' \deqn{
-#' \hat{d}_1\left(\mathbf{1}\mathbf{b}^\top\boldsymbol{\Sigma}\right)   = \frac{1}{\hat{v}(0)}
+#' \hat{d}_1\left(\mathbf{1}\mathbf{b}^\top\boldsymbol{\Sigma}\right) 
+#' = \frac{1}{\hat{v}(0)}
 #' \left[\frac{1}{\hat{v}(0)}\left(1-\hat{d}_0(0,\mathbf{1}\mathbf{b}^\top) \right) 
 #' - \hat{d}_1(\mathbf{1}\mathbf{b}^\top) \right],
 #'}
 #' with \eqn{\hat{v}(0)}, \eqn{\hat{d}_1\left( \mathbf{1}\mathbf{b}^\top\right)}, 
 #' \eqn{\hat{d}_1\left( \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}, 
 #' \eqn{d_3(\frac{\mathbf{1}\mathbf{1}^\top}{p})}, and
-#'  \eqn{\hat{d}_0\left(0, \mathbf{1}\mathbf{b}^\top\right)} given in (8) and 
-#'  in (S.41), (S.44), and (S.45)  from the supplement of Bodnar and Parolya (2026).
-#'  The vector \eqn{\mathbf{w}_{MP}} are the optimal portfolio weights 
-#'  estimated as the plug-in of the Moore-Penrose estimate of the precision matrix
-#'   and \eqn{\mathbf{1}} is a vector of ones of size \eqn{p}.
+#' \eqn{\hat{d}_0\left(0, \mathbf{1}\mathbf{b}^\top\right)} given in (8) and 
+#' in (S.41), (S.44), and (S.45)  from the supplement of Bodnar and Parolya (2026).
+#' The vector \eqn{\mathbf{w}_{MP}} are the optimal portfolio weights 
+#' estimated as the plug-in of the Moore-Penrose estimate of the precision
+#' matrix and \eqn{\mathbf{1}} is a vector of ones of size \eqn{p}.
 #'
 #'
 # In the particular case of the shrinkage to the equally weighted portfolio,
 # this function computes
-# \deqn{\hat{\alpha}^*\times \mathbf{w}_{MP} + (1 - \hat{\alpha}^*) \times \mathbf{1}/p}
+# \deqn{\hat{\alpha}^*\times \mathbf{w}_{MP} + (1 - \hat{\alpha}^*)\
+# \times \mathbf{1}/p}
 # where \eqn{\hat{\alpha}^*} is given by
 # \deqn{
 # \hat{\alpha}^*=
 # \frac{\frac{1}{p}\mathbf{1}^\top\mathbf{S}_n\mathbf{1}-
-# \frac{\hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\boldsymbol{\Sigma} \right)}
+# \frac{\hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}
+# \boldsymbol{\Sigma} \right)}
 # {\hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}}
 # {\frac{1}{p}\mathbf{1}^\top\mathbf{S}_n\mathbf{1} - 
-# 2\frac{\hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\boldsymbol{\Sigma} \right)}
+# 2\frac{\hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}
+# \boldsymbol{\Sigma} \right)}
 # {\hat{d}_1\left( \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}
 # +\frac{\hat{d}_3\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}
 # {\hat{d}_1^2\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}},
 # } where
 # \deqn{
-# \hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\boldsymbol{\Sigma}\right)   = \frac{1}{\hat{v}(0)}
-# \left[\frac{1}{\hat{v}(0)}\left(1-\hat{d}_0(0,\frac{\mathbf{1}\mathbf{1}^\top}{p}) \right) 
+# \hat{d}_1\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\boldsymbol{\Sigma}\right)
+# = \frac{1}{\hat{v}(0)}
+# \left[\frac{1}{\hat{v}(0)}\left(1-\hat{d}_0(0,
+# \frac{\mathbf{1}\mathbf{1}^\top}{p}) \right) 
 # - \hat{d}_1(\frac{\mathbf{1}\mathbf{1}^\top}{p}) \right],
 #}
-# with \eqn{\hat{v}(0)}, \eqn{\hat{d}_1\left( \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}, 
+# with \eqn{\hat{v}(0)}, \eqn{\hat{d}_1\left(
+# \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}, 
 # \eqn{\hat{d}_1\left( \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}, 
 # \eqn{d_3(\frac{\mathbf{1}\mathbf{1}^\top}{p})}, and
-#  \eqn{\hat{d}_0\left(0, \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)} given in (8) and 
-#  in (S.41), (S.44), and (S.45)  from the supplement of Bodnar and Parolya (2026).
-#  The vector \eqn{w_{MP}} are the optimal portfolio weights 
-#  estimated as the plug-in of the Moore-Penrose estimate of the precision matrix
-#   and \eqn{\mathbf{1}} is a vector of ones of size \eqn{p}.
+# \eqn{\hat{d}_0\left(0, \frac{\mathbf{1}\mathbf{1}^\top}{p}\right)} given
+# in (8) and in (S.41), (S.44), and (S.45)  from the supplement of
+# Bodnar and Parolya (2026).
+# The vector \eqn{w_{MP}} are the optimal portfolio weights estimated as the
+# plug-in of the Moore-Penrose estimate of the precision matrix and
+# \eqn{\mathbf{1}} is a vector of ones of size \eqn{p}.
 #
 #'
 #'
@@ -95,19 +103,13 @@
 #' # Compute GMV portfolio based on the Moore-Penrose inverse (no shrinkage)
 #' GMV_MP = GMV_Moore_Penrose(X)
 #' 
-#' Loss_GMV_MP = LossRelativeOutOfSampleVariance(
-#'   portfolioWeights = GMV_MP, Sigma = Sigma)
+#' Losses(GMV_MP, Sigma)
 #' 
 #' # Compute GMV portfolio based on the Moore-Penrose inverse with shrinkage
 #' # towards the equally weighted portfolio
 #' GMV_MP_shrink_eq = GMV_Moore_Penrose_shrinkage(X)
 #' 
-#' Loss_GMV_MP_shrink_eq = LossRelativeOutOfSampleVariance(
-#'   portfolioWeights = GMV_MP_shrink_eq, Sigma = Sigma)
-#' 
-#' 
-#' # Shrinkage helps to reduce the loss
-#' stopifnot(Loss_GMV_MP_shrink_eq < Loss_GMV_MP)
+#' Losses(GMV_MP_shrink_eq, Sigma)
 #' 
 #' 
 #' # Compute GMV portfolio based on the Moore-Penrose inverse with shrinkage
@@ -116,29 +118,25 @@
 #' 
 #' GMV_MP_shrink_oracle = GMV_Moore_Penrose_shrinkage(X, b = GMV_true)
 #' 
-#' Loss_GMV_MP_shrink_oracle = LossRelativeOutOfSampleVariance(
-#'   portfolioWeights = GMV_MP_shrink_oracle, Sigma = Sigma)
-#' 
-#' cat("GMV Moore-Penrose no shrinkage:" , Loss_GMV_MP, "\n")
-#' cat("GMV Moore-Penrose target eq:"    , Loss_GMV_MP_shrink_eq, "\n")
-#' cat("GMV Moore-Penrose_target oracle:", Loss_GMV_MP_shrink_oracle, "\n")
+#' Losses(GMV_MP_shrink_oracle, Sigma)
 #' 
 #' 
 #' @export
 GMV_Moore_Penrose_shrinkage <- function(X, centeredCov = TRUE, b = NULL,
-                                     verbose = 0){
+                                        verbose = 0){
+  call_ = match.call()
   if (is.null(b)){
     if (verbose > 0){
       cat("Default target: equally weighted portfolio\n")
     }
     result = GMV_Moore_Penrose_shrinkage_eq(
-      X = X, centeredCov = centeredCov, verbose = verbose)
+      X = X, centeredCov = centeredCov, verbose = verbose, call_ = call_)
   } else {
     if (verbose > 0){
       cat("User-provided target portfolio\n")
     }
     result = GMV_Moore_Penrose_shrinkage_general(
-      X = X, centeredCov = centeredCov, b = b, verbose = verbose)
+      X = X, centeredCov = centeredCov, b = b, verbose = verbose, call_ = call_)
   }
   
   return (result)

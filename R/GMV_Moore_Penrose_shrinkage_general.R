@@ -2,7 +2,7 @@
 
 
 GMV_Moore_Penrose_shrinkage_general <- function(X, centeredCov = TRUE, b = NULL,
-                                             verbose = 2){
+                                                verbose = 2, call_ = NULL){
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
@@ -11,14 +11,7 @@ GMV_Moore_Penrose_shrinkage_general <- function(X, centeredCov = TRUE, b = NULL,
   # Vector of ones of size p
   ones = rep(1, length = p)
   
-  if (is.null(b)){
-    b = rep(1/p, length = p)
-  } else if (length(b) != p){
-    stop("'b' should be a vector of length 'p'.")
-  }
-  if (abs(sum(b) - 1) > 0.001){
-    stop("The weights (b) should sum up to 1.")
-  }
+  b = prepare_and_check_b(b = b, p = p)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = X, centeredCov = centeredCov)
@@ -26,8 +19,8 @@ GMV_Moore_Penrose_shrinkage_general <- function(X, centeredCov = TRUE, b = NULL,
   # Moore-Penrose inverse of the sample covariance matrix
   iS_MP <- as.matrix(Moore_Penrose(X = X, centeredCov = centeredCov))
   
-  
-  w_MP = GMV_PlugIn(estimatedPrecisionMatrix = iS_MP)
+  MP_portfolio = GMV_PlugIn(estimatedPrecisionMatrix = iS_MP)
+  w_MP = as.numeric(MP_portfolio)
   
   trS1 <- sum(diag(iS_MP)) / p
   trS2 <- sum(diag(iS_MP %*% iS_MP))/p
@@ -93,7 +86,21 @@ GMV_Moore_Penrose_shrinkage_general <- function(X, centeredCov = TRUE, b = NULL,
   
   w_ShMP <- alp_ShMP * w_MP + (1 - alp_ShMP) * b
   
-  return (w_ShMP)
+  
+  result = list(
+    estimated_portfolio_weights = w_ShMP,
+    n = n,
+    p = p,
+    alpha_optimal = alp_ShMP,
+    target = b,
+    centeredCov = centeredCov,
+    method = "Moore-Penrose shrinkage",
+    call = call_
+  )
+  
+  class(result) <- c("EstimatedPortfolioWeights")
+  
+  return (result)
 }
 
 

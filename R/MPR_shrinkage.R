@@ -91,7 +91,7 @@
 #' 
 #' @param t,alpha,beta,eps,upp,initialValue \code{t}, \code{alpha} and
 #' \code{beta} are parameters of the estimation. In the optimized version,
-#' the loss is optimized with respect to \eqn{u = arctan(t)} over the interval
+#' the loss is optimized with respect to \eqn{u = tan(t)} over the interval
 #' \code{[eps, upp]}, and the optimizer starts at the \code{initialValue}.
 #' 
 #' @param Pi0 shrinkage target. By default it is the identity matrix and

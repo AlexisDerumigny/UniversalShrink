@@ -43,6 +43,10 @@ V_GMV = 1 / ( t(ones) %*% solve(Sigma) %*% ones)
 
 
 LossFunction_GMV <- function(weights){
+  if (inherits(weights, "EstimatedPortfolioWeights")){
+    weights = as.numeric(weights)
+  }
+  
   outOfSampleVariance = t(weights) %*% Sigma %*% weights
   
   Loss_GMV = (outOfSampleVariance - V_GMV) / V_GMV
@@ -51,6 +55,10 @@ LossFunction_GMV <- function(weights){
 }
 
 OutOfSampleVariance <- function(weights){
+  if (inherits(weights, "EstimatedPortfolioWeights")){
+    weights = as.numeric(weights)
+  }
+  
   outOfSampleVariance = t(weights) %*% Sigma %*% weights
   
   return (outOfSampleVariance)

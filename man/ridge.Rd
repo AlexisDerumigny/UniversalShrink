@@ -4,7 +4,7 @@
 \alias{ridge}
 \title{Plain Ridge (Tikhonov) estimator without shrinkage}
 \usage{
-ridge(X, centeredCov = TRUE, t, verbose = 0)
+ridge(X, centeredCov = TRUE, t, verbose = 0, method_inversion = "auto")
 }
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
@@ -21,16 +21,28 @@ zero.}
 details about the progress of the computations. A value of \code{0} indicates
 no printing at all, while higher values indicate increasingly more detailed
 (more verbose) output.}
+
+\item{method_inversion}{a character string of length 1 describing the
+numerical inversion method to be used. Possible choices are \itemize{
+\item \code{"solve"}: use the \code{solve} function;
+
+\item \code{"Woodbury"}: TODO
+
+\item \code{"auto"}: this is the default. It chooses \code{"solve"} when
+the concentration ratio is smaller than 1 and else \code{"Woodbury"}.
+}}
 }
 \value{
 the estimator of the precision matrix, of class
 \code{EstimatedPrecisionMatrix}.
 }
 \description{
-This function computes a 'plain' Ridge (Tikhonov) estimator of the precision matrix
+This function computes a 'plain' Ridge (Tikhonov) estimator of the precision
+matrix
 \eqn{\mathbf{S}_n^-(t)=(\mathbf{S}_n+t\mathbf{I}_p)^{-1}},
-where \eqn{\mathbf{S}_n} is the sample covariance matrix, \eqn{\mathbf{I}_p} is
-\eqn{p}-dimensional identity matrix and \eqn{t>0} is a given penalty parameter.
+where \eqn{\mathbf{S}_n} is the sample covariance matrix, \eqn{\mathbf{I}_p}
+is the \eqn{p}-dimensional identity matrix and \eqn{t>0} is a given penalty
+parameter.
 }
 \examples{
 
@@ -48,7 +60,7 @@ X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 
 for (t in c(0.2, 0.5, 1)){
   precision_ridge = ridge(X, t = t)
-
+  
   cat("t = t, loss =", LossFrobenius2(precision_ridge, Sigma = Sigma), "\n")
 }
 

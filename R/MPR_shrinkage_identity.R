@@ -20,7 +20,9 @@ MPR_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 2,
   
   
   hL2MPr <- function(u){
-    loss = loss_L2_MPR_optimal(t = tan(u), S = S, cn = cn, p = p, Ip = Ip)
+    loss = loss_L2_MPR_optimal(
+      t = tan(u), X = X, S = S, cn = cn, p = p, Ip = Ip, verbose = verbose - 2,
+      centeredCov = centeredCov)
     return(loss)
   }
   
@@ -37,7 +39,10 @@ MPR_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 2,
     cat("*  optimal t =", t ,"\n\n")
   }
   
-  iS_ridge <- solve(S + t * Ip)
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = verbose,
+                 method_inversion = "auto")
+  
+  iS_ridge <- as.matrix(ridge_)
   
   best_alphabeta = best_alphabeta_MPR_shrinkage_identity(
     p = p, t = t, cn = cn, S = S, iS_ridge = iS_ridge, verbose = verbose)
@@ -62,6 +67,7 @@ MPR_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 2,
     p = p,
     centeredCov = centeredCov,
     method = "Moore-Penrose-ridge (MPR) with shrinkage",
+    method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
   
@@ -72,11 +78,14 @@ MPR_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 2,
 
 
 
-loss_L2_MPR_optimal <- function(t, S, cn, p, Ip){
+loss_L2_MPR_optimal <- function(t, X, S, cn, p, Ip, centeredCov, verbose){
   
   r = (cn - 1) / cn
   
-  iS_Rt<-solve(S+t*Ip)
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = verbose,
+                 method_inversion = "auto")
+  
+  iS_Rt <- as.matrix(ridge_)
   
   trS1_t<-sum(diag(iS_Rt))/p
   trS2_t<-sum(diag(iS_Rt%*%iS_Rt))/p
@@ -129,7 +138,10 @@ MPR_shrinkage_identity_semioptimal <- function (X, centeredCov = TRUE, t,
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  iS_ridge <- solve(S + t * Ip)
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = verbose,
+                 method_inversion = "auto")
+  
+  iS_ridge <- as.matrix(ridge_)
   
   best_alphabeta = best_alphabeta_MPR_shrinkage_identity(
     p = p, t = t, cn = cn, S = S, iS_ridge = iS_ridge, verbose = verbose)
@@ -154,6 +166,7 @@ MPR_shrinkage_identity_semioptimal <- function (X, centeredCov = TRUE, t,
     p = p,
     centeredCov = centeredCov,
     method = "Moore-Penrose-ridge (MPR) with shrinkage",
+    method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
   
@@ -289,13 +302,13 @@ MPR_shrinkage_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
   n = nrow(X)
   p = ncol(X)
   
-  # Sample covariance matrix
-  S <- cov_with_centering(X = X, centeredCov = centeredCov)
-  
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  iS_ridge <- solve(S + t * Ip)
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = verbose,
+                 method_inversion = "auto")
+  
+  iS_ridge <- as.matrix(ridge_)
   
   MPR_estimator <- iS_ridge - t * iS_ridge %*% iS_ridge
   
@@ -314,6 +327,7 @@ MPR_shrinkage_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
     p = p,
     centeredCov = centeredCov,
     method = "Moore-Penrose-ridge (MPR) with shrinkage",
+    method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
   

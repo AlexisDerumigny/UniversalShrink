@@ -31,7 +31,12 @@ ridge_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0
   hL2R <- function(u)
   {
     t <- tan(u)
-    iS_Rt <- solve(S + t * Ip)
+    
+    ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = 0,
+                   method_inversion = "auto")
+    
+    iS_Rt <- as.matrix(ridge_)
+    
     trS1_t <- sum(diag(iS_Rt)) / p
     trS2_t <- sum(diag(iS_Rt %*% iS_Rt)) / p
     
@@ -62,7 +67,12 @@ ridge_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0
   u_R <- hL2R_max$par
   
   t_R <- tan(u_R)
-  iS_Rt1 <- solve(S+t_R*Ip)
+  
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = t_R, verbose = verbose - 1,
+                 method_inversion = "auto")
+  
+  iS_Rt1 <- as.matrix(ridge_)
+  
   trS1_t1 <- tr(iS_Rt1) / p
   trS2_t1 <- tr(iS_Rt1 %*% iS_Rt1) / p
   
@@ -94,6 +104,7 @@ ridge_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0
     p = p,
     centeredCov = centeredCov,
     method = "Ridge shrinkage",
+    method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
   
@@ -133,7 +144,11 @@ ridge_shrinkage_identity_semioptimal <- function (X, centeredCov, t, verbose = 2
   q2 <- tr(S %*% S) / p - c_n * q1^2
   
   
-  iS_ridge <- solve(S + t * Ip)
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = verbose - 1,
+                 method_inversion = "auto")
+  
+  iS_ridge <- as.matrix(ridge_)
+  
   trS1_t <- tr(iS_ridge) / p
   trS2_t <- tr(iS_ridge %*% iS_ridge) / p
   
@@ -218,6 +233,7 @@ ridge_shrinkage_identity_semioptimal <- function (X, centeredCov, t, verbose = 2
     p = p,
     centeredCov = centeredCov,
     method = "Ridge shrinkage",
+    method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
   
@@ -237,11 +253,6 @@ ridge_shrinkage_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
-  
-  # Sample covariance matrix
-  S <- cov_with_centering(X = X, centeredCov = centeredCov)
-  
   if (verbose > 0){
     cat("*  t = ", t, "\n")
   }
@@ -249,7 +260,10 @@ ridge_shrinkage_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  iS_ridge <- solve(S + t * Ip)
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = verbose - 1,
+                 method_inversion = "auto")
+  
+  iS_ridge <- as.matrix(ridge_)
   
   iS_ShRt1 <- alpha * iS_ridge + beta * Ip
   
@@ -260,6 +274,7 @@ ridge_shrinkage_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
     p = p,
     centeredCov = centeredCov,
     method = "Ridge shrinkage",
+    method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
   

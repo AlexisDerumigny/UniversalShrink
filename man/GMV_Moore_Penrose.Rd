@@ -25,10 +25,12 @@ For an \eqn{n \times p} observation matrix \eqn{\mathbf{X}_n} and the
 corresponding sample covariance matrix \eqn{\mathbf{S}_n} of size
 \eqn{p \times p}, this estimator is given by
 \deqn{
-\mathbf{w}_{MP}=\dfrac{\mathbf{S}^+_n\mathbf{1}}{\mathbf{1}^\top\mathbf{S}^+_n\mathbf{1}},
+\mathbf{w}_{MP}=\dfrac{\mathbf{S}^+_n\mathbf{1}}{\mathbf{1}^\top
+\mathbf{S}^+_n\mathbf{1}},
 }
 where \eqn{\mathbf{S}^+_n} is the Moore-Penrose (pseudo) inverse of
-\eqn{\mathbf{S}_n} and \eqn{\mathbf{1}} is the \eqn{p}-dimensional vector of ones.
+\eqn{\mathbf{S}_n} and \eqn{\mathbf{1}} is a \eqn{p}-dimensional vector of
+ones.
 }
 \examples{
 Sigma = diag(1:5)
@@ -39,16 +41,20 @@ weights100 = GMV_Moore_Penrose(X)
 X <- MASS::mvrnorm(n = 3, mu = rep(0,5), Sigma = Sigma)
 weights3 = GMV_Moore_Penrose(X)
 
-LossRelativeOutOfSampleVariance(weights100, Sigma)
-LossRelativeOutOfSampleVariance(weights3, Sigma)
+LossOutOfSampleVariance(weights100, Sigma)
+LossOutOfSampleVariance(weights3, Sigma)
 
 trueWeights = rowSums(solve(Sigma)) / sum(solve(Sigma))
 
-NormFrobenius2(trueWeights - weights100, normalized = FALSE)
-NormFrobenius2(trueWeights - weights3, normalized = FALSE)
+LossFrobenius2(weights100, trueWeights, normalized = FALSE)
+LossFrobenius2(weights3, trueWeights, normalized = FALSE)
+
+# In short:
+Losses(weights3, Sigma)
+Losses(weights100, Sigma)
 
 }
 \seealso{
-\code{\link{LossRelativeOutOfSampleVariance}} for computing the loss
+\code{\link{LossOutOfSampleVariance}} for computing the loss
 of the portfolio.
 }

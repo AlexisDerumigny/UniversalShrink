@@ -44,7 +44,8 @@ where \eqn{\hat{\alpha}^*} is given by
 {\hat{d}_1^2\left(\frac{\mathbf{1}\mathbf{1}^\top}{p}\right)}},
 } where
 \deqn{
-\hat{d}_1\left(\mathbf{1}\mathbf{b}^\top\boldsymbol{\Sigma}\right)   = \frac{1}{\hat{v}(0)}
+\hat{d}_1\left(\mathbf{1}\mathbf{b}^\top\boldsymbol{\Sigma}\right) 
+= \frac{1}{\hat{v}(0)}
 \left[\frac{1}{\hat{v}(0)}\left(1-\hat{d}_0(0,\mathbf{1}\mathbf{b}^\top) \right) 
 - \hat{d}_1(\mathbf{1}\mathbf{b}^\top) \right],
 }
@@ -54,8 +55,8 @@ with \eqn{\hat{v}(0)}, \eqn{\hat{d}_1\left( \mathbf{1}\mathbf{b}^\top\right)},
 \eqn{\hat{d}_0\left(0, \mathbf{1}\mathbf{b}^\top\right)} given in (8) and
 in (S.41), (S.44), and (S.45)  from the supplement of Bodnar and Parolya (2026).
 The vector \eqn{\mathbf{w}_{MP}} are the optimal portfolio weights
-estimated as the plug-in of the Moore-Penrose estimate of the precision matrix
-and \eqn{\mathbf{1}} is a vector of ones of size \eqn{p}.
+estimated as the plug-in of the Moore-Penrose estimate of the precision
+matrix and \eqn{\mathbf{1}} is a vector of ones of size \eqn{p}.
 }
 \examples{
 set.seed(1)
@@ -74,19 +75,13 @@ X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 # Compute GMV portfolio based on the Moore-Penrose inverse (no shrinkage)
 GMV_MP = GMV_Moore_Penrose(X)
 
-Loss_GMV_MP = LossRelativeOutOfSampleVariance(
-  portfolioWeights = GMV_MP, Sigma = Sigma)
+Losses(GMV_MP, Sigma)
 
 # Compute GMV portfolio based on the Moore-Penrose inverse with shrinkage
 # towards the equally weighted portfolio
 GMV_MP_shrink_eq = GMV_Moore_Penrose_shrinkage(X)
 
-Loss_GMV_MP_shrink_eq = LossRelativeOutOfSampleVariance(
-  portfolioWeights = GMV_MP_shrink_eq, Sigma = Sigma)
-
-
-# Shrinkage helps to reduce the loss
-stopifnot(Loss_GMV_MP_shrink_eq < Loss_GMV_MP)
+Losses(GMV_MP_shrink_eq, Sigma)
 
 
 # Compute GMV portfolio based on the Moore-Penrose inverse with shrinkage
@@ -95,12 +90,7 @@ GMV_true = GMV_PlugIn(solve(Sigma))
 
 GMV_MP_shrink_oracle = GMV_Moore_Penrose_shrinkage(X, b = GMV_true)
 
-Loss_GMV_MP_shrink_oracle = LossRelativeOutOfSampleVariance(
-  portfolioWeights = GMV_MP_shrink_oracle, Sigma = Sigma)
-
-cat("GMV Moore-Penrose no shrinkage:" , Loss_GMV_MP, "\n")
-cat("GMV Moore-Penrose target eq:"    , Loss_GMV_MP_shrink_eq, "\n")
-cat("GMV Moore-Penrose_target oracle:", Loss_GMV_MP_shrink_oracle, "\n")
+Losses(GMV_MP_shrink_oracle, Sigma)
 
 
 }
