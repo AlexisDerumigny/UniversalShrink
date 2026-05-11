@@ -4,6 +4,7 @@
 \alias{Losses}
 \alias{Losses.EstimatedPrecisionMatrix}
 \alias{Losses.EstimatedCovarianceMatrix}
+\alias{Losses.matrix}
 \alias{Losses.EstimatedPortfolioWeights}
 \alias{print.AllLosses}
 \alias{as.double.AllLosses}
@@ -16,6 +17,14 @@ Losses(x, Sigma, ...)
 \method{Losses}{EstimatedPrecisionMatrix}(x, Sigma, SigmaInv = NULL, ...)
 
 \method{Losses}{EstimatedCovarianceMatrix}(x, Sigma, ...)
+
+\method{Losses}{matrix}(
+  x,
+  Sigma,
+  type = c("precision matrix", "covariance matrix"),
+  SigmaInv = NULL,
+  ...
+)
 
 \method{Losses}{EstimatedPortfolioWeights}(x, Sigma, SigmaInv = NULL, ...)
 
@@ -37,6 +46,18 @@ computed by numerical inversion of the provided \code{Sigma}.}
 
 \item{...}{other arguments, ignored except for the \code{print} method, for
 which they are passed to \code{\link[base]{print.data.frame}}.}
+
+\item{type}{target of the estimator. Must be a character vector of length 1
+with one of the following:
+\itemize{
+\item \code{type = "precision matrix"} corresponds to the
+Frobenius loss for the estimation of the precision matrix, i.e.
+\code{NormFrobenius2(x - SigmaInv)}, potentially normalized.
+
+\item \code{type = "covariance matrix"} corresponds to the
+Frobenius loss for the estimation of the precision matrix, i.e.
+\code{NormFrobenius2(x - Sigma )}, potentially normalized.
+}}
 }
 \value{
 \code{Losses} returns an object of class \code{AllLosses}.

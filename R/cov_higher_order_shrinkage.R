@@ -27,13 +27,9 @@
 #' estimatedCov_QIS = cov_quadratic_inverse_shrinkage(X)
 #' 
 #' # We now compare the distances between the truth and the estimators.
-#' LossEuclideanEigenvalues2(estimatedCov_sample, Sigma, type = "covariance")
-#' LossEuclideanEigenvalues2(estimatedCov_analytical, Sigma)
-#' LossEuclideanEigenvalues2(estimatedCov_QIS, Sigma)
-#'
-#' LossFrobenius2(estimatedCov_sample, Sigma, type = "covariance")
-#' LossFrobenius2(estimatedCov_analytical, Sigma)
-#' LossFrobenius2(estimatedCov_QIS, Sigma)
+#' Losses(estimatedCov_sample, Sigma, type = "covariance")
+#' Losses(estimatedCov_analytical, Sigma)
+#' Losses(estimatedCov_QIS, Sigma)
 #' 
 #' for (m in 1:4){
 #'   estimatedCov_shrink_higher = cov_higher_order_shrinkage(X, m = m)
@@ -46,10 +42,10 @@
 #' }
 #' 
 #' estimator = sum(diag(estimatedCov_sample)) / p * diag(nrow = p)
-#' LossFrobenius2(estimator, Sigma, type = "covariance")
+#' Losses(estimator, Sigma, type = "covariance")
 #' 
 #' oracle_Estimator = cov_NL_oracle(X, Sigma = Sigma)
-#' LossFrobenius2(oracle_Estimator, Sigma)
+#' Losses(oracle_Estimator, Sigma)
 #' 
 #' 
 #' \donttest{

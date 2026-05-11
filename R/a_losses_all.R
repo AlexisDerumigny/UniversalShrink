@@ -9,6 +9,19 @@
 #' @param Sigma,SigmaInv true covariance matrix and its inverse
 #' (true precision matrix). If \code{SigmaInv} is needed and missing, it is
 #' computed by numerical inversion of the provided \code{Sigma}.
+#' 
+#' @param type target of the estimator. Must be a character vector of length 1
+#' with one of the following:
+#' \itemize{
+#'   \item \code{type = "precision matrix"} corresponds to the
+#'   Frobenius loss for the estimation of the precision matrix, i.e.
+#'   \code{NormFrobenius2(x - SigmaInv)}, potentially normalized.
+#'   
+#'   \item \code{type = "covariance matrix"} corresponds to the
+#'   Frobenius loss for the estimation of the precision matrix, i.e.
+#'   \code{NormFrobenius2(x - Sigma )}, potentially normalized.
+#' }
+#' 
 #' @param ... other arguments, ignored except for the \code{print} method, for
 #' which they are passed to \code{\link[base]{print.data.frame}}.
 #' 
@@ -124,6 +137,53 @@ Losses.EstimatedCovarianceMatrix <- function(x, Sigma, ...)
 
 #' @rdname Losses
 #' @export
+Losses.matrix <- function(
+    x,
+    Sigma,
+    type = c("precision matrix", "covariance matrix"),
+    SigmaInv = NULL, ...)
+{
+  if (ncol(x) != nrow(x) || ncol(x) != nrow(Sigma) || ncol(x) != ncol(Sigma)){
+    stop("x and Sigma should be square matrices of the same dimension. ",
+         "Here dim(x) = c(", paste(dim(x), collapse = ","),
+         ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")." )
+  }
+  if (missing(type)){
+    stop("'type' must be specified. Either 'precision' or 'covariance'.")
+  }
+  
+  type = match.arg(type)
+  
+  switch (
+    type,
+    
+    "precision matrix" = {
+      obj = list(estimated_precision_matrix = x)
+      class(obj) <- "EstimatedPrecisionMatrix"
+      
+      result = Losses(obj, Sigma = Sigma, SigmaInv = SigmaInv, ...)
+    },
+    
+    "covariance matrix" = {
+      obj = list(estimated_covariance_matrix = x)
+      class(obj) <- "EstimatedCovarianceMatrix"
+      
+      result = Losses(obj, Sigma = Sigma, ...)
+    },
+    
+    # default
+    {
+      stop("Type " , type, "is not implemented yet.")
+    }
+  )
+  
+  
+  return (result)
+}
+
+
+#' @rdname Losses
+#' @export
 Losses.EstimatedPortfolioWeights <- function(x, Sigma, SigmaInv = NULL, ...)
 {
   if (is.null(SigmaInv)){
@@ -163,20 +223,33 @@ Losses.EstimatedPortfolioWeights <- function(x, Sigma, SigmaInv = NULL, ...)
 #' @export
 print.AllLosses <- function(x, ...){
   cat(x$problemType)
-  cat(", method =", x$estimated$method)
-  if (x$estimated$centeredCov){
-    cat(" (centered)")
-  } else {
-    cat(" (non centered)")
+  if (!is.null(x$estimated$method)){
+    cat(", method =", x$estimated$method)
   }
+  
+  if (!is.null(x$estimated$centeredCov)){
+    if (x$estimated$centeredCov){
+      cat(" (centered)")
+    } else {
+      cat(" (non centered)")
+    }
+  }
+  
   cat("\n")
-  cat("n =", x$estimated$n)
-  cat(", p =", x$estimated$p)
-  c_n = concentr_ratio(n = x$estimated$n,
-                       p = x$estimated$p,
-                       centeredCov = x$estimated$centeredCov, verbose = 0)
-  cat(", c_n =", c_n)
-  cat("\n\n")
+  
+  if (!is.null(x$estimated$n) && !is.null(x$estimated$p) && 
+      !is.null(x$estimated$centeredCov)){
+    cat("n =", x$estimated$n)
+    cat(", p =", x$estimated$p)
+    c_n = concentr_ratio(n = x$estimated$n,
+                         p = x$estimated$p,
+                         centeredCov = x$estimated$centeredCov, verbose = 0)
+    cat(", c_n =", c_n)
+    cat("\n")
+  }
+  
+  cat("\n")
+  
   cat("Losses:\n")
   print(x$allLosses, ...)
   return (invisible(NULL))
