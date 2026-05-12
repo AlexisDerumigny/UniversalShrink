@@ -478,7 +478,7 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
             # Remember that d[k + 1, l] corresponds in the paper to d_{k,l}
             additional_term = multiplicative_factor * d[k + 1, l]
             
-            if (verbose && (l == 2)){
+            if ( (verbose > 0) && (l == 2)){
               cat("l = ", l, ", d_{k,l} = ", d[k + 1, l], "\n")
               cat("l = ", l, ", additional_term = ", additional_term, "\n")
             }
