@@ -162,6 +162,9 @@ MPR_higher_order_shrinkage <- function(X, m, centeredCov = TRUE, t, verbose = 0)
   
   # TODO: compute all estimators for smaller m here using submatrices of this matrix
   
+  # TODO: loss = 1 - t(estimatedM$hm) %*% solve(estimatedM$M) %*% estimatedM$hm
+  # as in ridge_higher_order_shrinkage_optimal
+  
   alpha = solve(estimatedM$M) %*% estimatedM$hm
   if (verbose > 0){
     cat("Optimal alpha: \n")
