@@ -4,7 +4,14 @@
 \alias{MPR_higher_order_shrinkage}
 \title{Moore-Penrose-Ridge higher order shrinkage}
 \usage{
-MPR_higher_order_shrinkage(X, m, centeredCov = TRUE, t, verbose = 0)
+MPR_higher_order_shrinkage(
+  X,
+  m = 3,
+  centeredCov = TRUE,
+  t = NULL,
+  interval = c(0, 50),
+  verbose = 0
+)
 }
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
@@ -62,6 +69,7 @@ for (m in 1:3){
   print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
 }
 
+precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(X, m = 2)
 
 precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(X, m = 1, t = 100)
 

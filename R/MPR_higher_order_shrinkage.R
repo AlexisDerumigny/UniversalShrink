@@ -56,7 +56,8 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 #' 
 #' @param m order of the shrinkage. Should be at least 1.
 #' 
-#' @param t penalization parameter
+#' @param t,interval \code{t} is the penalization parameter, and \code{interval}
+#' is the interval over which the loss is optimized over (with respect to \code{t}).
 #' 
 #' @inheritParams cov_with_centering
 #' 
@@ -95,6 +96,7 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 #'   print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
 #' }
 #' 
+#' precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(X, m = 2, verbose = 1)
 #' 
 #' precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(X, m = 1, t = 100)
 #' 
@@ -121,7 +123,25 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 #' 
 #' @export
 #' 
-MPR_higher_order_shrinkage <- function(X, m, centeredCov = TRUE, t, verbose = 0)
+MPR_higher_order_shrinkage <- function(
+    X, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50), verbose = 0)
+{
+  call_ = match.call()
+  if (is.null(t)){
+    result = MPR_higher_order_shrinkage_optimal(
+      X = X, m = m, centeredCov = centeredCov, verbose = verbose,
+      interval = interval, call_ = call_)
+    
+  } else {
+    result = MPR_higher_order_shrinkage_non_optimized(
+      X = X, m = m, centeredCov = centeredCov, t = t, verbose = verbose, 
+      call_ = call_)
+  }
+}
+
+
+MPR_higher_order_shrinkage_non_optimized <- function(
+    X, m, centeredCov = TRUE, t, verbose = 0, call_ = NULL)
 {
   if (verbose > 0){
     cat("Starting `MPR_higher_order_shrinkage`...\n")
@@ -185,11 +205,140 @@ MPR_higher_order_shrinkage <- function(X, m, centeredCov = TRUE, t, verbose = 0)
     M = estimatedM$M,
     hm = estimatedM$hm,
     alpha = alpha,
-    v = estimatedM$v
+    v = estimatedM$v,
+    t = t,
+    m = m,
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
+}
+
+
+
+MPR_higher_order_shrinkage_optimal <- function(
+    X, m, centeredCov = TRUE, t, verbose = 0, interval = c(0, 50), call_ = NULL)
+{
+  if (verbose > 0){
+    cat("Starting `MPR_higher_order_shrinkage_optimal` (with unknown t)...\n")
+  }
+  
+  # Get sizes of X
+  n = nrow(X)
+  p = ncol(X)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  
+  if (verbose > 0){
+    cat("*  m = ", m, "\n")
+  }
+  
+  # Sample covariance matrix
+  S <- cov_with_centering(X = X, centeredCov = centeredCov)
+  
+  # Identity matrix of size p
+  Ip = diag(nrow = p)
+  
+  
+  q1 <- tr(S) / p
+  q2 <- tr(S %*% S) / p - c_n * q1^2
+  
+  
+  estimatedLoss <- function(t){
+    loss = loss_L2_MPR_higher_order_optimal(
+      X = X, m = m, t = t, c_n = c_n, q1 = q1, q2 = q2, S = S, Ip = Ip,
+      verbose = verbose - 1)
+    
+    return (loss)
+  }
+  
+  result_optim <- stats::optimize(f = estimatedLoss, interval = interval)
+  
+  optimal_t = result_optim$minimum
+  
+  if (verbose > 0){
+    cat("*  optimal_t = ", optimal_t, "\n")
+  }
+  
+  # ============================================================================
+  # We now compute the estimator using this optimal_t that was found.
+  
+  
+  # Regularized sample covariance matrix (Tikhonov regularization)
+  iS_ridge <- solve(S + optimal_t * Ip)
+  
+  MPR_estimator <- iS_ridge - optimal_t * iS_ridge %*% iS_ridge
+  
+  estimatedM = compute_M_t_MPR(m = m, c_n = c_n, q1 = q1, q2 = q2,
+                               S_t_inverse = iS_ridge,
+                               t = optimal_t, verbose = verbose - 2)
+  
+  # TODO: compute all estimators for smaller m here using submatrices of this matrix
+  
+  alpha = solve(estimatedM$M) %*% estimatedM$hm
+  if (verbose > 0){
+    cat("Optimal alpha: \n")
+    print(alpha)
+  }
+  
+  estimated_precision_matrix = alpha[1] * Ip
+  power_MPR = Ip
+  
+  for (k in 1:m){
+    power_MPR = power_MPR %*% MPR_estimator
+    estimated_precision_matrix = estimated_precision_matrix + 
+      alpha[k + 1] * power_MPR
+  }
+  
+  result = list(
+    estimated_precision_matrix = estimated_precision_matrix,
+    M = estimatedM$M,
+    hm = estimatedM$hm,
+    alpha = alpha,
+    v = estimatedM$v,
+    m = m,
+    optimal_t = optimal_t,
+    call = call_
+  )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
+  
+  return (result)
+}
+
+
+loss_L2_MPR_higher_order_optimal <- function (
+    X, m, t, c_n, q1, q2, S, Ip, verbose)
+{
+  if (verbose > 0){
+    cat("t = ", t)
+    if (verbose > 1){
+      cat("\n")
+    } else {
+      cat(", ")
+    }
+  }
+  
+  S_t_inverse = solve(S + t * Ip)
+    
+  loss = tryCatch({
+    estimatedM = compute_M_t_MPR(m = m, c_n = c_n, q1 = q1, q2 = q2,
+                                 S_t_inverse = S_t_inverse,
+                                 t = t, verbose = verbose - 2)
+    
+    loss = 1 - t(estimatedM$hm) %*% solve(estimatedM$M) %*% estimatedM$hm
+  }, error = function(e){e}
+  )
+  
+  if (inherits(loss, "simpleError") || !is.finite(loss)){
+    loss <- .Machine$double.xmax
+  }
+  
+  if (verbose > 0){
+    cat("loss = ", loss, "\n")
+  }
+  
+  return (loss)
 }
 
