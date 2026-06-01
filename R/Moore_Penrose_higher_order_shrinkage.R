@@ -91,7 +91,8 @@ estimator_d_hat_tilde_p_small <- function(m, c_n, w_hat_tilde){
   
   
 # Compute the matrix M for the higher-order shrinkage
-compute_M <- function(m, n, p, ihv0, q1, q2, h2, h3, hv0, centeredCov, D_MP)
+compute_M_MoorePenrose_direct <- function(
+    m, n, p, ihv0, q1, q2, h2, h3, hv0, centeredCov, D_MP)
 {
   if (centeredCov){
     c_n = p / (n-1)
@@ -226,6 +227,9 @@ compute_M <- function(m, n, p, ihv0, q1, q2, h2, h3, hv0, centeredCov, D_MP)
 #' 
 #' @param m order of the shrinkage. Should be at least 1.
 #' 
+#' @param method_M method for computing the matrix M. It can be \code{"direct"}
+#' or \code{"recursive"}.
+#' 
 #' @inheritParams cov_with_centering
 #' 
 #' @returns the estimator of the precision matrix
@@ -273,7 +277,8 @@ compute_M <- function(m, n, p, ihv0, q1, q2, h2, h3, hv0, centeredCov, D_MP)
 #' 
 #' @export
 #' 
-Moore_Penrose_higher_order_shrinkage <- function(X, m, centeredCov = TRUE, verbose = 0)
+Moore_Penrose_higher_order_shrinkage <- function(
+    X, m, centeredCov = TRUE, method_M = "direct", verbose = 0)
 {
   call_ = match.call()
   # Get sizes of X
@@ -307,13 +312,17 @@ Moore_Penrose_higher_order_shrinkage <- function(X, m, centeredCov = TRUE, verbo
   q1 <- tr(S) / p
   q2 <- tr(S %*% S) / p - c_n * q1^2
   
-  estimatedM = compute_M(m = m, n = n, p = p, ihv0 = ihv0,
-                         q1 = q1, q2 = q2, h2 = h2, h3 = h3, hv0 = hv0,
-                         centeredCov = centeredCov, D_MP = D_MP)
+  if (method_M == "direct") {
+    estimatedM = compute_M_MoorePenrose_direct(
+      m = m, n = n, p = p, ihv0 = ihv0,
+      q1 = q1, q2 = q2, h2 = h2, h3 = h3, hv0 = hv0,
+      centeredCov = centeredCov, D_MP = D_MP)
+    
+    # TODO: compute all estimators for smaller m here using submatrices of this matrix
+    
+    alpha = solve(estimatedM$M) %*% estimatedM$hm
+  }
   
-  # TODO: compute all estimators for smaller m here using submatrices of this matrix
-  
-  alpha = solve(estimatedM$M) %*% estimatedM$hm
   
   result = alpha[1] * Ip
   power_isMP = Ip
@@ -333,7 +342,8 @@ Moore_Penrose_higher_order_shrinkage <- function(X, m, centeredCov = TRUE, verbo
     p = p,
     centeredCov = centeredCov,
     method = "Moore-Penrose higher-order shrinkage",
-    call = call_
+    call = call_,
+    method_M = method_M
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")

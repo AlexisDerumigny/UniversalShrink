@@ -4,7 +4,13 @@
 \alias{Moore_Penrose_higher_order_shrinkage}
 \title{Moore-Penrose higher order shrinkage of the precision matrix}
 \usage{
-Moore_Penrose_higher_order_shrinkage(X, m, centeredCov = TRUE, verbose = 0)
+Moore_Penrose_higher_order_shrinkage(
+  X,
+  m,
+  centeredCov = TRUE,
+  method_M = "direct",
+  verbose = 0
+)
 }
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
@@ -16,6 +22,9 @@ matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector
 is replaced by its sample counterpart. If \code{FALSE}, then the sample
 covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
 zero.}
+
+\item{method_M}{method for computing the matrix M. It can be \code{"direct"}
+or \code{"recursive"}.}
 
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates
