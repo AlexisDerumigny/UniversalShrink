@@ -144,6 +144,7 @@ Moore_Penrose <- function(X, centeredCov = TRUE)
   result = list(
     estimated_precision_matrix = iS_MP,
     n = n,
+    n_adjusted = n_adjusted,
     p = p,
     centeredCov = centeredCov,
     method = "Moore-Penrose",
