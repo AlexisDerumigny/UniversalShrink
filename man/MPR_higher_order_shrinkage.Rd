@@ -24,7 +24,8 @@ is replaced by its sample counterpart. If \code{FALSE}, then the sample
 covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
 zero.}
 
-\item{t}{penalization parameter}
+\item{t, interval}{\code{t} is the penalization parameter, and \code{interval}
+is the interval over which the loss is optimized over (with respect to \code{t}).}
 
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates
@@ -69,7 +70,7 @@ for (m in 1:3){
   print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
 }
 
-precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(X, m = 2)
+precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(X, m = 2, verbose = 1)
 
 precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(X, m = 1, t = 100)
 
