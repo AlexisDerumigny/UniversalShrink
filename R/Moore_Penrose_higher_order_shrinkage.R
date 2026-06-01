@@ -25,7 +25,8 @@ estimator_vhat_derivative_t0 <- function(m, c_n, p, D_MP){
   }
   
   return (v)
-} 
+}
+
 estimator_w_hat_derivative_t0 <- function(m, c_n, p, D_MP){
   w <- rep(NA, m)
   
@@ -45,7 +46,7 @@ estimator_vhat_t0 <- function(c_n, p, D_MP){
   return (v)
 }
 
-estimator_w_hat_tilde_derivative_t0 <- function(m, c_n, w){
+estimator_w_hat_tilde_derivative_t0 <- function(m, c_n, w_hat){
   wtilde <- rep(NA, m)
   wtilde[1] <- 1 / (1 - c_n)
   
@@ -54,7 +55,7 @@ estimator_w_hat_tilde_derivative_t0 <- function(m, c_n, w){
     wtilde[j] <- 0
     for (k in 1:(j-1)) {
       Bell_polynomial = 
-        kStatistics::e_eBellPol(j - 1, k, c(w[1:(j - k)], rep(0, k - 1)))
+        kStatistics::e_eBellPol(j - 1, k, c(w_hat[1:(j - k)], rep(0, k - 1)))
       
       additional_term = 
         ((-1)^k * factorial(k) / (1 - c_n)^(k + 1)) * Bell_polynomial
@@ -63,7 +64,7 @@ estimator_w_hat_tilde_derivative_t0 <- function(m, c_n, w){
     }
     wtilde[j] <- j * wtilde[j]
   }
-  return (w)
+  return (wtilde)
 } 
 
 
