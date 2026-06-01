@@ -19,7 +19,6 @@ Description: Develops methods for regularized linear and nonlinear shrinkage
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Imports:
     kStatistics
 Suggests: 
@@ -35,3 +34,4 @@ VignetteBuilder: knitr
 URL: https://github.com/AlexisDerumigny/UniversalShrink/issues
 BugReports: https://github.com/AlexisDerumigny/UniversalShrink
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0
