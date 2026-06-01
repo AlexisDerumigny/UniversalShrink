@@ -153,7 +153,10 @@ compute_M_covariance <- function(m, c_n, p, S, verbose, list_power_S){
   
   hm = c(q1, f)
   
-  invM = compute_M_inverse(m = m, all_tr = all_tr, p = p, verbose = verbose)
+  invM = compute_M_inverse(
+    m = m,
+    all_tr0 = 1, # For covariance matrices, the initialization is at 1.
+    all_tr = all_tr / p, verbose = verbose)
   
   return (list(invM = invM, hm = hm))
 }

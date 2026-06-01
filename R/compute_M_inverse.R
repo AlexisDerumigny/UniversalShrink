@@ -8,13 +8,13 @@
 #' It is a vector of size at least 2m
 #' 
 #' @noRd
-compute_M_inverse <- function(m, all_tr, p, verbose = 0){
+compute_M_inverse <- function(m, all_tr0, all_tr, verbose = 0){
   
-  old_invM = matrix(1, ncol = 1, nrow = 1)
+  old_invM = matrix(all_tr0, ncol = 1, nrow = 1)
   for (m in 1:m){
     invM = matrix(ncol = m + 1, nrow = m + 1)
     
-    m_tilde = matrix(all_tr[m:(2 * m - 1)] / p, ncol = 1)
+    m_tilde = matrix(all_tr[m:(2 * m - 1)], ncol = 1)
     
     # Transposed version:
     m_tilde_t = t(m_tilde)
