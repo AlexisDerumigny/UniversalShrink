@@ -37,6 +37,8 @@ details how the centering was done.
 }
 \examples{
 
+## n < p case
+
 n = 50
 p = 2 * n
 mu = rep(0, p)
@@ -69,6 +71,26 @@ sum((S \%*\% iS_MP - t(S \%*\% iS_MP))^2)
 
 # We test iS_MP \%*\% S == t(iS_MP \%*\% S)
 sum((iS_MP \%*\% S - t(iS_MP \%*\% S))^2)
+
+
+## n > p case
+
+n = 50
+p = n / 2
+mu = rep(0, p)
+
+# Generate Sigma
+X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
+H <- eigen(t(X0) \%*\% X0)$vectors
+Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
+
+# Generate example dataset
+X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
+
+iS_MP = Moore_Penrose(X, centeredCov = TRUE)
+
+# Here this is the same thing as inverting the sample covariance matrix:
+as.matrix(iS_MP) - solve(cov(X))
 
 }
 \references{
