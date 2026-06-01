@@ -8,7 +8,7 @@ Moore_Penrose_higher_order_shrinkage(
   X,
   m,
   centeredCov = TRUE,
-  method_M = "direct",
+  method_invM = "recursive",
   verbose = 0
 )
 }
@@ -23,8 +23,9 @@ is replaced by its sample counterpart. If \code{FALSE}, then the sample
 covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
 zero.}
 
-\item{method_M}{method for computing the matrix M. It can be \code{"direct"}
-or \code{"recursive"}.}
+\item{method_invM}{method for computing the inverse of the matrix M.
+It can be \code{"direct"} (computing M and then inverting it) or
+\code{"recursive"}.}
 
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates

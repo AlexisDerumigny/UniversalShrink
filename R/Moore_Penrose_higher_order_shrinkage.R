@@ -91,8 +91,8 @@ estimator_d_hat_tilde_p_small <- function(m, c_n, w_hat_tilde){
   
   
 # Compute the matrix M for the higher-order shrinkage
-compute_M_MoorePenrose_direct <- function(
-    m, n, p, ihv0, q1, q2, h2, h3, hv0, centeredCov, D_MP)
+compute_M_MoorePenrose <- function(
+    m, n, p, ihv0, q1, q2, h2, h3, hv0, centeredCov, D_MP, method_invM, verbose)
 {
   if (centeredCov){
     c_n = p / (n-1)
@@ -156,13 +156,27 @@ compute_M_MoorePenrose_direct <- function(
     }
   }
   
-  M <- s2[1:(m+1)]
-  for (j in 2:(m+1))
-  {
-    M <- cbind(M, s2[j:(m+j)])
+  if (method_invM == "solve"){
+    M <- s2[1:(m+1)]
+    for (j in 2:(m+1))
+    {
+      M <- cbind(M, s2[j:(m+j)])
+    }
+    
+    M <- apply(M, c(1,2), Re)
+    
+    invM = solve(M)
+    print(M)
+    print(invM)
+  } else if (method_invM == "recursive"){
+    # We avoid computing M and inverting it numerically. Here we compute the
+    # inverse of the matrix M by using the recursive formula.
+    invM = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
+                             all_tr = s2[-1], verbose = 2)
+  } else {
+    stop("method_invM '", method_invM, "' unavailable. Possible choices are: ",
+         "'solve' and 'recursive'.")
   }
-  
-  M <- apply(M, c(1,2), Re)
   
   
   # Computation of hm
@@ -183,7 +197,9 @@ compute_M_MoorePenrose_direct <- function(
   }
   hm <- Re(hm)
   
-  return(list(M = M, hm = hm, v = v))
+  alpha = invM %*% hm
+  
+  return(list(M = M, invM = invM, hm = hm, v = v, alpha = alpha))
 }
 
 
@@ -227,8 +243,9 @@ compute_M_MoorePenrose_direct <- function(
 #' 
 #' @param m order of the shrinkage. Should be at least 1.
 #' 
-#' @param method_M method for computing the matrix M. It can be \code{"direct"}
-#' or \code{"recursive"}.
+#' @param method_invM method for computing the inverse of the matrix M.
+#' It can be \code{"direct"} (computing M and then inverting it) or
+#' \code{"recursive"}.
 #' 
 #' @inheritParams cov_with_centering
 #' 
@@ -278,7 +295,7 @@ compute_M_MoorePenrose_direct <- function(
 #' @export
 #' 
 Moore_Penrose_higher_order_shrinkage <- function(
-    X, m, centeredCov = TRUE, method_M = "direct", verbose = 0)
+    X, m, centeredCov = TRUE, method_invM = "recursive", verbose = 0)
 {
   call_ = match.call()
   # Get sizes of X
@@ -312,17 +329,13 @@ Moore_Penrose_higher_order_shrinkage <- function(
   q1 <- tr(S) / p
   q2 <- tr(S %*% S) / p - c_n * q1^2
   
-  if (method_M == "direct") {
-    estimatedM = compute_M_MoorePenrose_direct(
-      m = m, n = n, p = p, ihv0 = ihv0,
-      q1 = q1, q2 = q2, h2 = h2, h3 = h3, hv0 = hv0,
-      centeredCov = centeredCov, D_MP = D_MP)
-    
-    # TODO: compute all estimators for smaller m here using submatrices of this matrix
-    
-    alpha = solve(estimatedM$M) %*% estimatedM$hm
-  }
+  estimatedM = compute_M_MoorePenrose(
+    m = m, n = n, p = p, ihv0 = ihv0,
+    q1 = q1, q2 = q2, h2 = h2, h3 = h3, hv0 = hv0,
+    centeredCov = centeredCov, D_MP = D_MP, method_invM = method_invM,
+    verbose = verbose)
   
+  alpha = estimatedM$alpha
   
   result = alpha[1] * Ip
   power_isMP = Ip
@@ -335,15 +348,16 @@ Moore_Penrose_higher_order_shrinkage <- function(
   result = list(
     estimated_precision_matrix = result,
     M = estimatedM$M,
+    invM = estimatedM$invM,
     hm = estimatedM$hm,
     alpha = alpha,
     v = estimatedM$v,
     n = n,
     p = p,
     centeredCov = centeredCov,
+    method_invM = method_invM,
     method = "Moore-Penrose higher-order shrinkage",
-    call = call_,
-    method_M = method_M
+    call = call_
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")
