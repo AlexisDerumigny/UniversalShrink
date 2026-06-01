@@ -89,10 +89,9 @@ estimator_d_hat_tilde_p_small <- function(m, c_n, w_hat_tilde){
   return (d)
 }
 
-  
-  
-# Compute the matrix M for the higher-order shrinkage
-compute_M_MoorePenrose <- function(
+
+# Compute the matrix M for the higher-order shrinkage in the p > n regime.
+compute_M_MoorePenrose_plarge <- function(
     m, n, p, ihv0, q1, q2, h2, h3, hv0, centeredCov, D_MP, method_invM, verbose)
 {
   if (centeredCov){
@@ -167,8 +166,6 @@ compute_M_MoorePenrose <- function(
     M <- apply(M, c(1,2), Re)
     
     invM = solve(M)
-    print(M)
-    print(invM)
   } else if (method_invM == "recursive"){
     # We avoid computing M and inverting it numerically. Here we compute the
     # inverse of the matrix M by using the recursive formula.
@@ -201,6 +198,107 @@ compute_M_MoorePenrose <- function(
   alpha = invM %*% hm
   
   return(list(M = M, invM = invM, hm = hm, v = v, alpha = alpha))
+}
+
+
+
+# Compute the matrix M for the higher-order shrinkage in the p < n regime.
+compute_M_MoorePenrose_psmall <- function(
+    m, n, p, c_n, q1, centeredCov, D_MP, method_invM, verbose)
+{
+  w_hat <- estimator_w_hat_derivative_t0(
+    m = 2 * m, c_n = c_n, p = p, D_MP = D_MP)
+  
+  w_hat_tilde <- estimator_w_hat_tilde_derivative_t0(
+    m = 2 * m, c_n = c_n, w_hat = w_hat)
+  
+  d_hat_tilde_positive <- estimator_d_hat_tilde_p_small(
+    m = 2 * m, c_n = c_n, w_hat_tilde = w_hat_tilde)
+  
+  d_hat_tilde_0 = 1
+  d_hat_tilde_minus1 = q1
+  
+  # Function that represents an array from -1 to 2 * m
+  d_hat_tilde = function(k){
+    if (k == -1){
+      return (d_hat_tilde_minus1)
+    } else if (k == 0){
+      return (d_hat_tilde_0)
+    } else {
+      return (d_hat_tilde_positive[k])
+    }
+  }
+  
+  Bell_polynomials = matrix(nrow = 2 * m, ncol = 2 * m)
+  for (j in 1:(2*m))
+  {
+    for (k in 1:j)
+    {
+      Bell_polynomials[j, k] = kStatistics::e_eBellPol(
+      j, k, c(w_hat_tilde[1:(j - k + 1)], rep(0, k - 1) ) )
+    }
+  }
+  
+  s2 <- rep(NA , 2 * m + 1)
+  
+  s2[1] <- q1 / (1 - c_n)
+  
+  for (j in 1:(2*m))
+  {
+    s2[j+1] <- 0
+    for (k in 1:j)
+    {
+      s2[j+1] <- s2[j+1] +
+        (-1)^(j + k) * factorial(k) / factorial(j) * d_hat_tilde(k - 2) * 
+        Bell_polynomials[j, k]
+    }
+  }
+  
+  if (method_invM == "solve"){
+    M <- s2[1:(m+1)]
+    for (j in 2:(m+1))
+    {
+      M <- cbind(M, s2[j:(m+j)])
+    }
+    
+    M <- apply(M, c(1,2), Re)
+    
+    invM = solve(M)
+    print(M)
+    print(invM)
+  } else if (method_invM == "recursive"){
+    # We avoid computing M and inverting it numerically. Here we compute the
+    # inverse of the matrix M by using the recursive formula.
+    invM = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
+                             all_tr = s2[-1], verbose = 2)
+  } else {
+    stop("method_invM '", method_invM, "' unavailable. Possible choices are: ",
+         "'solve' and 'recursive'.")
+  }
+  
+  
+  # Computation of hm. This is s_{j,1}.
+  
+  hm <- rep(NA, m + 1)
+  
+  hm[1] <- q1
+  hm[2] <- 1 / (1 - c_n)
+  
+  for (j in 2:m)
+  {
+    hm[j+1]<-0
+    for (k in 1:j)
+    {
+      hm[j+1] <- hm[j+1] +
+        (-1)^(j + k) * factorial(k) / factorial(j) * d_hat_tilde(k - 1) *
+        Bell_polynomials[j, k]
+    }
+  }
+  hm <- Re(hm)
+  
+  alpha = invM %*% hm
+  
+  return(list(M = M, invM = invM, hm = hm, alpha = alpha))
 }
 
 
@@ -311,30 +409,45 @@ Moore_Penrose_higher_order_shrinkage <- function(
   Ip = diag(nrow = p)
   
   # Moore-Penrose inverse of the sample covariance matrix
-  iS_MP <- as.matrix(Moore_Penrose(X = X, centeredCov = centeredCov))
+  iS_MP <- Moore_Penrose(X = X, centeredCov = centeredCov)
   
   D_MP <- diag(eigen(iS_MP)$values)
-  
-  trS1 <- tr(iS_MP) / p
-  trS2 <- tr(iS_MP %*% iS_MP) / p
-  trS3 <- tr(iS_MP %*% iS_MP %*% iS_MP) / p
-  
-  hv0 <- estimator_vhat_t0(c_n = c_n, p = p, D_MP = D_MP)
-  ihv0 <- 1 / hv0
-  ihv0_2 <- ihv0^2
-  ihv0_3 <- ihv0^3
-  
-  h2 <- 1 / (trS2 * c_n)
-  h3 <- trS3 / (trS2^3 * c_n^2)
-  
   q1 <- tr(S) / p
-  q2 <- tr(S %*% S) / p - c_n * q1^2
   
-  estimatedM = compute_M_MoorePenrose(
-    m = m, n = n, p = p, ihv0 = ihv0,
-    q1 = q1, q2 = q2, h2 = h2, h3 = h3, hv0 = hv0,
-    centeredCov = centeredCov, D_MP = D_MP, method_invM = method_invM,
-    verbose = verbose)
+  if (p < iS_MP$n_adjusted){
+    estimatedM = compute_M_MoorePenrose_psmall(
+      m = m, n = n, p = p, c_n = c_n, q1 = q1,
+      centeredCov = centeredCov, D_MP = D_MP, method_invM = method_invM,
+      verbose = verbose)
+    
+  } else if (p > iS_MP$n_adjusted){
+    iS_MP_ <- as.matrix(iS_MP)
+    
+    # trS1 <- tr(iS_MP_) / p
+    trS2 <- tr(iS_MP_ %*% iS_MP_) / p
+    trS3 <- tr(iS_MP_ %*% iS_MP_ %*% iS_MP_) / p
+    
+    hv0 <- estimator_vhat_t0(c_n = c_n, p = p, D_MP = D_MP)
+    ihv0 <- 1 / hv0
+    ihv0_2 <- ihv0^2
+    ihv0_3 <- ihv0^3
+    
+    h2 <- 1 / (trS2 * c_n)
+    h3 <- trS3 / (trS2^3 * c_n^2)
+    q2 <- tr(S %*% S) / p - c_n * q1^2
+    
+    
+    estimatedM = compute_M_MoorePenrose_plarge(
+      m = m, n = n, p = p, ihv0 = ihv0,
+      q1 = q1, q2 = q2, h2 = h2, h3 = h3, hv0 = hv0,
+      centeredCov = centeredCov, D_MP = D_MP, method_invM = method_invM,
+      verbose = verbose)
+  } else {
+    stop("This estimator is not defined for p = n - 1 in the centered case,",
+         "and for p = n in the non-centered case. Here p = ", p,
+         "and n = ", n, ".")
+  }
+  
   
   alpha = estimatedM$alpha
   
