@@ -424,6 +424,37 @@ compute_M_MoorePenrose_psmall <- function(
 #' }
 #' 
 #' 
+#' # Example for the case p < n
+#' n = 10
+#' p = n / 2
+#' mu = rep(0, p)
+#' 
+#' # Generate Sigma
+#' X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
+#' H <- eigen(t(X0) %*% X0)$vectors
+#' Sigma = H %*% diag(seq(1, 0.02, length.out = p)) %*% t(H)
+#' 
+#' # Generate example dataset
+#' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
+#' 
+#' precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
+#' precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
+#'
+#' print(LossFrobenius2(precision_MoorePenrose_Cent, Sigma))
+#' print(LossFrobenius2(precision_MoorePenrose_NoCent, Sigma))
+#' 
+#' for (m in 1:3){
+#'   cat("m = ", m, "\n")
+#'   precision_higher_order_shrinkage_Cent = 
+#'       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
+#'       
+#'   precision_higher_order_shrinkage_NoCent = 
+#'       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = FALSE)
+#'       
+#'   print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
+#'   
+#'   print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma))
+#' }
 #' 
 #' @export
 #' 
