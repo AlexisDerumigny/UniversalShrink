@@ -94,6 +94,9 @@ estimator_d_hat_tilde_p_small <- function(m, c_n, w_hat_tilde){
 compute_M_MoorePenrose_plarge <- function(
     m, n, p, ihv0, q1, q2, h2, h3, hv0, centeredCov, D_MP, method_invM, verbose)
 {
+  if (verbose > 0){
+    cat("Starting compute_M_MoorePenrose_plarge...\n")
+  }
   if (centeredCov){
     c_n = p / (n-1)
   } else {
@@ -157,6 +160,9 @@ compute_M_MoorePenrose_plarge <- function(
   }
   
   if (method_invM == "solve"){
+    if (verbose > 0){
+      cat("Numerical inversion of the matrix M...\n")
+    }
     M <- s2[1:(m+1)]
     for (j in 2:(m+1))
     {
@@ -167,10 +173,14 @@ compute_M_MoorePenrose_plarge <- function(
     
     invM = solve(M)
   } else if (method_invM == "recursive"){
+    if (verbose > 0){
+      cat("Using the recursive formula to compute the inverse of the matrix M...\n")
+    }
+    
     # We avoid computing M and inverting it numerically. Here we compute the
     # inverse of the matrix M by using the recursive formula.
     invM = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
-                             all_tr = s2[-1], verbose = 2)
+                             all_tr = s2[-1], verbose = verbose - 1)
   } else {
     stop("method_invM '", method_invM, "' unavailable. Possible choices are: ",
          "'solve' and 'recursive'.")
@@ -206,6 +216,9 @@ compute_M_MoorePenrose_plarge <- function(
 compute_M_MoorePenrose_psmall <- function(
     m, n, p, c_n, q1, centeredCov, D_MP, method_invM, verbose)
 {
+  if (verbose > 0){
+    cat("Starting compute_M_MoorePenrose_psmall...\n")
+  }
   w_hat <- estimator_w_hat_derivative_t0(
     m = 2 * m, c_n = c_n, p = p, D_MP = D_MP)
   
@@ -255,6 +268,9 @@ compute_M_MoorePenrose_psmall <- function(
   }
   
   if (method_invM == "solve"){
+    if (verbose > 0){
+      cat("Numerical inversion of the matrix M...\n")
+    }
     M <- s2[1:(m+1)]
     for (j in 2:(m+1))
     {
@@ -264,13 +280,25 @@ compute_M_MoorePenrose_psmall <- function(
     M <- apply(M, c(1,2), Re)
     
     invM = solve(M)
-    print(M)
-    print(invM)
+    if (verbose > 1){
+      cat("M = \n")
+      print(M)
+      cat("M^{-1} = \n")
+      print(invM)
+    }
   } else if (method_invM == "recursive"){
+    if (verbose > 0){
+      cat("Using the recursive formula to compute the inverse of the matrix M...\n")
+    }
+    
     # We avoid computing M and inverting it numerically. Here we compute the
     # inverse of the matrix M by using the recursive formula.
     invM = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
                              all_tr = s2[-1], verbose = 2)
+    if (verbose > 1){
+      cat("M^{-1} = \n")
+      print(invM)
+    }
   } else {
     stop("method_invM '", method_invM, "' unavailable. Possible choices are: ",
          "'solve' and 'recursive'.")
