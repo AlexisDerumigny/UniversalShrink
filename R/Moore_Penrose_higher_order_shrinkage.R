@@ -176,6 +176,9 @@ compute_M_MoorePenrose_plarge <- function(
     if (verbose > 0){
       cat("Using the recursive formula to compute the inverse of the matrix M...\n")
     }
+    # M is not computed but we still need to declare this variable because it
+    # is used in the returned list.
+    M = NULL
     
     # We avoid computing M and inverting it numerically. Here we compute the
     # inverse of the matrix M by using the recursive formula.
@@ -290,6 +293,9 @@ compute_M_MoorePenrose_psmall <- function(
     if (verbose > 0){
       cat("Using the recursive formula to compute the inverse of the matrix M...\n")
     }
+    # M is not computed but we still need to declare this variable because it
+    # is used in the returned list.
+    M = NULL
     
     # We avoid computing M and inverting it numerically. Here we compute the
     # inverse of the matrix M by using the recursive formula.
