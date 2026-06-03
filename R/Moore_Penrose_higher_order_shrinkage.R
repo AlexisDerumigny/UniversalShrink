@@ -438,6 +438,7 @@ Moore_Penrose_higher_order_shrinkage <- function(
   
   # Moore-Penrose inverse of the sample covariance matrix
   iS_MP <- Moore_Penrose(X = X, centeredCov = centeredCov)
+  iS_MP_ <- as.matrix(iS_MP)
   
   D_MP <- diag(eigen(iS_MP)$values)
   q1 <- tr(S) / p
@@ -449,7 +450,6 @@ Moore_Penrose_higher_order_shrinkage <- function(
       verbose = verbose)
     
   } else if (p > iS_MP$n_adjusted){
-    iS_MP_ <- as.matrix(iS_MP)
     
     # trS1 <- tr(iS_MP_) / p
     trS2 <- tr(iS_MP_ %*% iS_MP_) / p
@@ -483,7 +483,7 @@ Moore_Penrose_higher_order_shrinkage <- function(
   power_isMP = Ip
   
   for (k in 1:m){
-    power_isMP = power_isMP %*% iS_MP
+    power_isMP = power_isMP %*% iS_MP_
     result = result + alpha[k + 1] * power_isMP
   }
   
