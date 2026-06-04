@@ -326,14 +326,16 @@ compute_M_MoorePenrose_psmall <- function(
   hm[1] <- q1
   hm[2] <- 1 / (1 - c_n)
   
-  for (j in 2:m)
-  {
-    hm[j+1]<-0
-    for (k in 1:j)
+  if (m >= 2){ # Indeed if m = 1 there is nothing to be done.
+    for (j in 2:m)
     {
-      hm[j+1] <- hm[j+1] +
-        (-1)^(j + k) * factorial(k) / factorial(j) * d_hat_tilde(k - 1) *
-        Bell_polynomials[j, k]
+      hm[j+1]<-0
+      for (k in 1:j)
+      {
+        hm[j+1] <- hm[j+1] +
+          (-1)^(j + k) * factorial(k) / factorial(j) * d_hat_tilde(k - 1) *
+          Bell_polynomials[j, k]
+      }
     }
   }
   
