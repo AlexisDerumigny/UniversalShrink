@@ -183,7 +183,11 @@ compute_M_MoorePenrose_plarge <- function(
     # We avoid computing M and inverting it numerically. Here we compute the
     # inverse of the matrix M by using the recursive formula.
     invM = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
-                             all_tr = s2[-1], verbose = verbose - 1)
+                             all_tr = s2[-1], verbose = verbose - 2)
+    if (verbose > 1){
+      cat("M^{-1} = \n")
+      print(invM)
+    }
   } else {
     stop("method_invM '", method_invM, "' unavailable. Possible choices are: ",
          "'solve' and 'recursive'.")
@@ -207,6 +211,10 @@ compute_M_MoorePenrose_plarge <- function(
     }
   }
   hm <- Re(hm)
+  if (verbose > 0){
+    cat("hm = \n")
+    print(hm)
+  }
   
   alpha = invM %*% hm
   
@@ -300,7 +308,7 @@ compute_M_MoorePenrose_psmall <- function(
     # We avoid computing M and inverting it numerically. Here we compute the
     # inverse of the matrix M by using the recursive formula.
     invM = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
-                             all_tr = s2[-1], verbose = 2)
+                             all_tr = s2[-1], verbose = verbose - 2)
     if (verbose > 1){
       cat("M^{-1} = \n")
       print(invM)
@@ -328,7 +336,12 @@ compute_M_MoorePenrose_psmall <- function(
         Bell_polynomials[j, k]
     }
   }
+  
   hm <- Re(hm)
+  if (verbose > 0){
+    cat("hm = \n")
+    print(hm)
+  }
   
   alpha = invM %*% hm
   
