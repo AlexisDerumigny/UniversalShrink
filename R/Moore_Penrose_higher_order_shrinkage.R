@@ -103,13 +103,22 @@ compute_M_MoorePenrose_plarge <- function(
     c_n = p/n
   }
   
-  h <- rep(NA, 2*m+1)
   d <- matrix(NA, nrow = 2 * m, ncol = 2)
+  v <- estimator_vhat_derivative_t0(m = 2 * m, c_n, p = p, D_MP = D_MP)
   
+  Bell_polynomials = matrix(nrow = 2 * m, ncol = 2 * m)
+  for (j in 1:(2*m))
+  {
+    for (k in 1:j)
+    {
+      Bell_polynomials[j, k] = 
+        kStatistics::e_eBellPol(j, k, c(v[1:(j - k + 1)], rep(0, k - 1)))
+    }
+  }
+  
+  h <- rep(NA, 2*m+1)
   h[2] <- h2
   h[3] <- h3
-  
-  v <- estimator_vhat_derivative_t0(m = 2 * m, c_n, p = p, D_MP = D_MP)
   
   if (m > 1)
   { 
@@ -118,8 +127,7 @@ compute_M_MoorePenrose_plarge <- function(
       sh<- 0
       for (k in 2:(i-1))
       {
-        sh <- sh + (-1)^k * factorial(k) * h[k+1] * 
-          kStatistics::e_eBellPol(i, k, c(v[1:(i-k+1)], rep(0,k-1)))
+        sh <- sh + (-1)^k * factorial(k) * h[k+1] * Bell_polynomials[i, k]
       }
       h[i+1] <- (v[i] + v[1] * sh) / ((v[1])^(i+1) * (-1)^(i+1) * factorial(i))
     }
@@ -153,9 +161,8 @@ compute_M_MoorePenrose_plarge <- function(
     s2[j+1] <- 0
     for (k in 1:j)
     {
-      s2[j+1] <- s2[j+1] +
-        (-1)^(j + k + 1) * factorial(k) / factorial(j) * d[k,2] * 
-        kStatistics::e_eBellPol(j, k, c(v[1:(j - k + 1)], rep(0, k - 1)))
+      s2[j+1] <- s2[j+1] + (-1)^(j + k + 1) * factorial(k) / factorial(j) * 
+        d[k,2] * Bell_polynomials[j, k]
     }
   }
   
