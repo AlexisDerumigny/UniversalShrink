@@ -92,18 +92,12 @@ estimator_d_hat_tilde_p_small <- function(m, c_n, w_hat_tilde){
 
 # Compute the matrix M for the higher-order shrinkage in the p > n regime.
 compute_M_MoorePenrose_plarge <- function(
-    m, n, p, ihv0, q1, q2, h2, h3, hv0, centeredCov, D_MP, method_invM, verbose)
+    m, n, p, c_n, ihv0, q1, q2, h2, h3, hv0, centeredCov, D_MP, method_invM, verbose)
 {
   if (verbose > 0){
     cat("Starting compute_M_MoorePenrose_plarge...\n")
   }
-  if (centeredCov){
-    c_n = p / (n-1)
-  } else {
-    c_n = p/n
-  }
   
-  d <- matrix(NA, nrow = 2 * m, ncol = 2)
   v <- estimator_vhat_derivative_t0(m = 2 * m, c_n, p = p, D_MP = D_MP)
   
   Bell_polynomials = matrix(nrow = 2 * m, ncol = 2 * m)
@@ -133,6 +127,7 @@ compute_M_MoorePenrose_plarge <- function(
     }
   }
   
+  d <- matrix(NA, nrow = 2 * m, ncol = 2)
   for (k in 1:(2*m))
   {
     for (l in 1:2)
@@ -525,7 +520,7 @@ Moore_Penrose_higher_order_shrinkage <- function(
     
     
     estimatedM = compute_M_MoorePenrose_plarge(
-      m = m, n = n, p = p, ihv0 = ihv0,
+      m = m, n = n, p = p, c_n = c_n, ihv0 = ihv0,
       q1 = q1, q2 = q2, h2 = h2, h3 = h3, hv0 = hv0,
       centeredCov = centeredCov, D_MP = D_MP, method_invM = method_invM,
       verbose = verbose)
