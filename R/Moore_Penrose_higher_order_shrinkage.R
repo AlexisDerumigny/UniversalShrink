@@ -394,8 +394,9 @@ compute_M_MoorePenrose_psmall <- function(
 #' @param m order of the shrinkage. Should be at least 1.
 #' 
 #' @param method_invM method for computing the inverse of the matrix M.
-#' It can be \code{"direct"} (computing M and then inverting it) or
-#' \code{"recursive"}.
+#' It can be \code{"solve"} (computing M and then inverting it) or
+#' \code{"recursive"} (using a recursive formula, which is more stable
+#' numerically for large \eqn{m}, and is therefore the default).
 #' 
 #' @inheritParams cov_with_centering
 #' 

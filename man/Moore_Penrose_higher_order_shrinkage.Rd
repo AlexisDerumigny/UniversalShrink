@@ -24,8 +24,9 @@ covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
 zero.}
 
 \item{method_invM}{method for computing the inverse of the matrix M.
-It can be \code{"direct"} (computing M and then inverting it) or
-\code{"recursive"}.}
+It can be \code{"solve"} (computing M and then inverting it) or
+\code{"recursive"} (using a recursive formula, which is more stable
+numerically for large \eqn{m}, and is therefore the default).}
 
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates
@@ -104,6 +105,37 @@ for (m in 1:3){
 }
 
 
+# Example for the case p < n
+n = 10
+p = n / 2
+mu = rep(0, p)
+
+# Generate Sigma
+X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
+H <- eigen(t(X0) \%*\% X0)$vectors
+Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
+
+# Generate example dataset
+X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
+
+precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
+precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
+
+print(LossFrobenius2(precision_MoorePenrose_Cent, Sigma))
+print(LossFrobenius2(precision_MoorePenrose_NoCent, Sigma))
+
+for (m in 1:3){
+  cat("m = ", m, "\n")
+  precision_higher_order_shrinkage_Cent = 
+      Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
+      
+  precision_higher_order_shrinkage_NoCent = 
+      Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = FALSE)
+      
+  print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
+  
+  print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma))
+}
 
 }
 \references{
