@@ -165,15 +165,26 @@ compute_M_MoorePenrose_plarge <- function(
     if (verbose > 0){
       cat("Numerical inversion of the matrix M...\n")
     }
-    M <- s2[1:(m+1)]
-    for (j in 2:(m+1))
-    {
-      M <- cbind(M, s2[j:(m+j)])
-    }
+    # M <- s2[1:(m+1)]
+    # for (j in 2:(m+1))
+    # {
+    #   M <- cbind(M, s2[j:(m+j)])
+    # }
     
-    M <- apply(M, c(1,2), Re)
+    ## Fast generation of Hankel matrices
+    id <- 1:(m+1) + rep(0:m, each = m + 1)
+    
+    M <- matrix(s2[id], nrow = m + 1)
     
     invM = solve(M)
+    
+    if (verbose > 1){
+      cat("M = \n")
+      print(M)
+      cat("M^{-1} = \n")
+      print(invM)
+    }
+    
   } else if (method_invM == "recursive"){
     if (verbose > 0){
       cat("Using the recursive formula to compute the inverse of the matrix M...\n")
@@ -284,15 +295,19 @@ compute_M_MoorePenrose_psmall <- function(
     if (verbose > 0){
       cat("Numerical inversion of the matrix M...\n")
     }
-    M <- s2[1:(m+1)]
-    for (j in 2:(m+1))
-    {
-      M <- cbind(M, s2[j:(m+j)])
-    }
+    # M <- s2[1:(m+1)]
+    # for (j in 2:(m+1))
+    # {
+    #   M <- cbind(M, s2[j:(m+j)])
+    # }
     
-    M <- apply(M, c(1,2), Re)
+    ## Fast generation of Hankel matrices
+    id <- 1:(m+1) + rep(0:m, each = m + 1)
+    
+    M <- matrix(s2[id], nrow = m + 1)
     
     invM = solve(M)
+    
     if (verbose > 1){
       cat("M = \n")
       print(M)
