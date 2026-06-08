@@ -83,7 +83,7 @@ estimator_d_hat_tilde_p_small <- function(m, c_n, w_hat_tilde){
       second_term = second_term * c_n
     }
     num = w_hat_tilde[j] + second_term
-    den = - c_n * (-1)^(j + 1) * factorial(j) * (1 - c_n)^(- j)
+    den = c_n * (-1)^(j + 1) * factorial(j) * (1 - c_n)^(- j)
     d[j] <- num / den
   }
   return (d)
