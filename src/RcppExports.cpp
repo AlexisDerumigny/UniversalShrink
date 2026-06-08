@@ -11,19 +11,20 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // bellPolynomials
-NumericMatrix bellPolynomials(NumericVector x);
-RcppExport SEXP _UniversalShrink_bellPolynomials(SEXP xSEXP) {
+NumericMatrix bellPolynomials(NumericVector x, int verbose);
+RcppExport SEXP _UniversalShrink_bellPolynomials(SEXP xSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(bellPolynomials(x));
+    Rcpp::traits::input_parameter< int >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(bellPolynomials(x, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_UniversalShrink_bellPolynomials", (DL_FUNC) &_UniversalShrink_bellPolynomials, 1},
+    {"_UniversalShrink_bellPolynomials", (DL_FUNC) &_UniversalShrink_bellPolynomials, 2},
     {NULL, NULL, 0}
 };
 

@@ -24,7 +24,7 @@ void precompute_combinations() {
 
 
 // [[Rcpp::export]]
-NumericMatrix bellPolynomials(NumericVector x) {
+NumericMatrix bellPolynomials(NumericVector x, int verbose) {
   
   precompute_combinations();
   
@@ -42,8 +42,10 @@ NumericMatrix bellPolynomials(NumericVector x) {
       double temp = 0;
       for (int j = 1; j <= n - k + 1; j++) {
         double temp_add = C[n-1][j-1] * x(j - 1) * B(n-j, k-1);
-        Rcout << n << " " << k << " " << j << " " << temp_add << "\n";
-        Rcout << C[n-1][j-1] << " " << x(j - 1) << " " << B(n-j, k-1) << "\n";
+        if (verbose > 0) {
+          Rcout << n << " " << k << " " << j << " " << temp_add << "\n";
+          Rcout << C[n-1][j-1] << " " << x(j - 1) << " " << B(n-j, k-1) << "\n";
+        }
         temp = temp + temp_add;
       }
       B(n, k) = temp;
