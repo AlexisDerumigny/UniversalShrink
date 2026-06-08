@@ -269,15 +269,18 @@ compute_M_MoorePenrose_psmall <- function(
     }
   }
   
-  Bell_polynomials = matrix(nrow = 2 * m, ncol = 2 * m)
-  for (j in 1:(2*m))
-  {
-    for (k in 1:j)
-    {
-      Bell_polynomials[j, k] = kStatistics::e_eBellPol(
-      j, k, c(w_hat_tilde[1:(j - k + 1)], rep(0, k - 1) ) )
-    }
-  }
+  # Bell_polynomials = matrix(nrow = 2 * m, ncol = 2 * m)
+  # for (j in 1:(2*m))
+  # {
+  #   for (k in 1:j)
+  #   {
+  #     Bell_polynomials[j, k] = kStatistics::e_eBellPol(
+  #     j, k, c(w_hat_tilde[1:(j - k + 1)], rep(0, k - 1) ) )
+  #   }
+  # }
+  Bell_polynomials = bellPolynomials(w_hat_tilde, verbose = 0)
+  # Removing the lines corresponding to n = 0 and k = 0
+  Bell_polynomials = Bell_polynomials[-1, -1]
   
   s2 <- rep(NA , 2 * m + 1)
   
