@@ -50,12 +50,17 @@ estimator_w_hat_tilde_derivative_t0 <- function(m, c_n, w_hat){
   wtilde <- rep(NA, m)
   wtilde[1] <- 1 / (1 - c_n)
   
+  Bell_polynomials = bellPolynomials(w_hat, verbose = 0)
+  # Removing the lines corresponding to n = 0 and k = 0
+  Bell_polynomials = Bell_polynomials[-1, -1]
+  
   for (j in 2:m)
   {
     wtilde[j] <- 0
     for (k in 1:(j-1)) {
-      Bell_polynomial = 
-        kStatistics::e_eBellPol(j - 1, k, c(w_hat[1:(j - k)], rep(0, k - 1)))
+      # Bell_polynomial = 
+      #   kStatistics::e_eBellPol(j - 1, k, c(w_hat[1:(j - k)], rep(0, k - 1)))
+      Bell_polynomial = Bell_polynomials[j - 1, k]
       
       additional_term = 
         ((-1)^k * factorial(k) / (1 - c_n)^(k + 1)) * Bell_polynomial
