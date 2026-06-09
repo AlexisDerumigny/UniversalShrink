@@ -73,7 +73,7 @@ estimator_w_hat_tilde_derivative_t0 <- function(m, c_n, w_hat){
 } 
 
 
-estimator_d_hat_tilde_p_small <- function(m, c_n, w_hat_tilde, Bell_polynomials){
+estimator_d_hat_tilde_p_small <- function(m, c_n, w_hat, Bell_polynomials){
   d = rep(NA, m)
   for (j in 1:m){
     second_term = 0
@@ -88,7 +88,7 @@ estimator_d_hat_tilde_p_small <- function(m, c_n, w_hat_tilde, Bell_polynomials)
       }
       second_term = second_term * c_n
     }
-    num = w_hat_tilde[j] + second_term
+    num = w_hat[j] + second_term
     den = c_n * (-1)^(j + 1) * factorial(j) * (1 - c_n)^(- j)
     d[j] <- num / den
   }
@@ -274,7 +274,7 @@ compute_M_MoorePenrose_psmall <- function(
   
   
   d_hat_tilde_positive <- estimator_d_hat_tilde_p_small(
-    m = 2 * m, c_n = c_n, w_hat_tilde = w_hat_tilde,
+    m = 2 * m, c_n = c_n, w_hat = w_hat,
     Bell_polynomials = Bell_polynomials)
   
   d_hat_tilde_0 = 1
