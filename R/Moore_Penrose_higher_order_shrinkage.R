@@ -68,14 +68,15 @@ estimator_w_hat_tilde_derivative_t0 <- function(m, c_n, w_hat){
 } 
 
 
-estimator_d_hat_tilde_p_small <- function(m, c_n, w_hat_tilde){
+estimator_d_hat_tilde_p_small <- function(m, c_n, w_hat_tilde, Bell_polynomials){
   d = rep(NA, m)
   for (j in 1:m){
     second_term = 0
     if (j > 1){
       for (k in 1:(j - 1)) {
-        Bell_polynomial = 
-          kStatistics::e_eBellPol(j, k, c(w_hat_tilde[1:(j - k + 1)], rep(0, k - 1)))
+        # Bell_polynomial = 
+        #   kStatistics::e_eBellPol(j, k, c(w_hat_tilde[1:(j - k + 1)], rep(0, k - 1)))
+        Bell_polynomial = Bell_polynomials[j, k]
         
         new_term = (-1)^k * factorial(k) * d[k] * Bell_polynomial
         second_term = second_term + new_term
@@ -252,8 +253,24 @@ compute_M_MoorePenrose_psmall <- function(
   w_hat_tilde <- estimator_w_hat_tilde_derivative_t0(
     m = 2 * m, c_n = c_n, w_hat = w_hat)
   
+  
+  # Bell_polynomials = matrix(nrow = 2 * m, ncol = 2 * m)
+  # for (j in 1:(2*m))
+  # {
+  #   for (k in 1:j)
+  #   {
+  #     Bell_polynomials[j, k] = kStatistics::e_eBellPol(
+  #     j, k, c(w_hat_tilde[1:(j - k + 1)], rep(0, k - 1) ) )
+  #   }
+  # }
+  Bell_polynomials = bellPolynomials(w_hat_tilde, verbose = 0)
+  # Removing the lines corresponding to n = 0 and k = 0
+  Bell_polynomials = Bell_polynomials[-1, -1]
+  
+  
   d_hat_tilde_positive <- estimator_d_hat_tilde_p_small(
-    m = 2 * m, c_n = c_n, w_hat_tilde = w_hat_tilde)
+    m = 2 * m, c_n = c_n, w_hat_tilde = w_hat_tilde,
+    Bell_polynomials = Bell_polynomials)
   
   d_hat_tilde_0 = 1
   d_hat_tilde_minus1 = q1
@@ -268,19 +285,6 @@ compute_M_MoorePenrose_psmall <- function(
       return (d_hat_tilde_positive[k])
     }
   }
-  
-  # Bell_polynomials = matrix(nrow = 2 * m, ncol = 2 * m)
-  # for (j in 1:(2*m))
-  # {
-  #   for (k in 1:j)
-  #   {
-  #     Bell_polynomials[j, k] = kStatistics::e_eBellPol(
-  #     j, k, c(w_hat_tilde[1:(j - k + 1)], rep(0, k - 1) ) )
-  #   }
-  # }
-  Bell_polynomials = bellPolynomials(w_hat_tilde, verbose = 0)
-  # Removing the lines corresponding to n = 0 and k = 0
-  Bell_polynomials = Bell_polynomials[-1, -1]
   
   s2 <- rep(NA , 2 * m + 1)
   
