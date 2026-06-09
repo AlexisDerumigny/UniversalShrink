@@ -22,7 +22,6 @@ Roxygen: list(markdown = TRUE)
 LinkingTo: 
     Rcpp
 Imports:
-    kStatistics,
     Rcpp
 Suggests: 
     MASS,
