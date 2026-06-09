@@ -247,7 +247,7 @@ compute_M_MoorePenrose_plarge <- function(
 
 # Compute the matrix M for the higher-order shrinkage in the p < n regime.
 compute_M_MoorePenrose_psmall <- function(
-    m, n, p, c_n, q1, centeredCov, D_MP, method_invM, verbose)
+    m, n, p, c_n, q1, q2, centeredCov, D_MP, method_invM, verbose)
 {
   if (verbose > 0){
     cat("Starting compute_M_MoorePenrose_psmall...\n")
@@ -293,9 +293,10 @@ compute_M_MoorePenrose_psmall <- function(
   
   s2 <- rep(NA , 2 * m + 1)
   
-  s2[1] <- q1 / (1 - c_n)
+  s2[1] <- q2
+  s2[2] <- q1 / (1 - c_n)
   
-  for (j in 1:(2*m))
+  for (j in 2:(2*m))
   {
     s2[j+1] <- 0
     for (k in 1:j)
@@ -527,10 +528,11 @@ Moore_Penrose_higher_order_shrinkage <- function(
   
   D_MP <- diag(eigen(iS_MP)$values)
   q1 <- tr(S) / p
+  q2 <- tr(S %*% S) / p - c_n * q1^2
   
   if (p < iS_MP$n_adjusted){
     estimatedM = compute_M_MoorePenrose_psmall(
-      m = m, n = n, p = p, c_n = c_n, q1 = q1,
+      m = m, n = n, p = p, c_n = c_n, q1 = q1, q2 = q2,
       centeredCov = centeredCov, D_MP = D_MP, method_invM = method_invM,
       verbose = verbose)
     
@@ -547,7 +549,6 @@ Moore_Penrose_higher_order_shrinkage <- function(
     
     h2 <- 1 / (trS2 * c_n)
     h3 <- trS3 / (trS2^3 * c_n^2)
-    q2 <- tr(S %*% S) / p - c_n * q1^2
     
     
     estimatedM = compute_M_MoorePenrose_plarge(
