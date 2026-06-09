@@ -407,6 +407,10 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     cat("\n")
   }
   
+  Bell_polynomials = bellPolynomials(v, verbose = 0)
+  # Removing the lines corresponding to n = 0 and k = 0
+  Bell_polynomials = Bell_polynomials[-1, -1, drop = FALSE]
+  
   h <- rep(NA, 2 * m)
   h[2] = - 1 / v[1]
   
@@ -414,7 +418,8 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     for (j in 2:(2 * m - 1)){
       h[j + 1] = h_hat_jp1_t(h_hat_until_j = h[1:j],
                              v_hat_until_j = v[1:j],
-                             j = j)
+                             j = j,
+                             Bell_polynomials = Bell_polynomials)
     }
   }
   
@@ -464,8 +469,8 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
           if (verbose > 0){
             cat("This is term i =", i, ", k =", k, "\n")
           }
-          Bell_polynomial = 
-            kStatistics::e_eBellPol(i, k, c(v[1:(i - k + 1)], rep(0, k - 1)) )
+          Bell_polynomial = Bell_polynomials[i, k]
+            # kStatistics::e_eBellPol(i, k, c(v[1:(i - k + 1)], rep(0, k - 1)) )
           
           multiplicative_factor = t^(- (j - i) - 1) * (-1)^(i + k) * 
             factorial(k) / factorial(i) * Bell_polynomial
@@ -584,7 +589,7 @@ compute_d_kl <- function(v_0_t, c_n, kmax, h_hat_kmaxp1_t, t, q1)
 #' @param j value of j, has to be at least 2
 #' 
 #' @noRd
-h_hat_jp1_t <- function(h_hat_until_j, v_hat_until_j, j)
+h_hat_jp1_t <- function(h_hat_until_j, v_hat_until_j, j, Bell_polynomials)
 {
   if (length(h_hat_until_j) != j){
     stop("length(h_hat_until_j) should be equal to j")
@@ -602,7 +607,8 @@ h_hat_jp1_t <- function(h_hat_until_j, v_hat_until_j, j)
     {
       ugly_sum <- ugly_sum +
         (-1)^(k) * factorial(k) * h_hat_until_j[k+1] *
-        kStatistics::e_eBellPol(j, k, c(v_hat_until_j[1:(j - k + 1)], rep(0, k - 1)) )
+        # kStatistics::e_eBellPol(j, k, c(v_hat_until_j[1:(j - k + 1)], rep(0, k - 1)) )
+        Bell_polynomials[j, k]
     }
   }
   
