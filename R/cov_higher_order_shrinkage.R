@@ -170,20 +170,24 @@ compute_HigherOrderCov_hat_f <- function(u, m, p, verbose, all_tr){
   
   q[1] = all_tr[1] / p
   
-  all_Bell_polynomials = matrix(ncol = m + 1, nrow = m + 1)
+  # all_Bell_polynomials = matrix(ncol = m + 1, nrow = m + 1)
+  # 
+  # for (j in 1:(m+1)){
+  #   for (k in 1:j){
+  #     
+  #     all_Bell_polynomials[j, k] = 
+  #       kStatistics::e_eBellPol(j, k, c(u[1:(j - k + 1)], rep(0, k - 1)) )
+  #     
+  #     if (verbose > 0){
+  #       cat("This is term j =", j, ", k =", k,
+  #           ", Bell polynomial =", all_Bell_polynomials[j, k], "\n")
+  #     }
+  #   }
+  # }
+  all_Bell_polynomials = bellPolynomials(u, verbose = 0)
+  # Removing the lines corresponding to n = 0 and k = 0
+  all_Bell_polynomials = all_Bell_polynomials[-1, -1]
   
-  for (j in 1:(m+1)){
-    for (k in 1:j){
-      
-      all_Bell_polynomials[j, k] = 
-        kStatistics::e_eBellPol(j, k, c(u[1:(j - k + 1)], rep(0, k - 1)) )
-      
-      if (verbose > 0){
-        cat("This is term j =", j, ", k =", k,
-            ", Bell polynomial =", all_Bell_polynomials[j, k], "\n")
-      }
-    }
-  }
   
   for (j in 2:(m+1)){
     q[j] = all_tr[j] / p
