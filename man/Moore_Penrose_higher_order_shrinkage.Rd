@@ -135,6 +135,10 @@ for (m in 1:3){
   print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
   
   print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma))
+      
+  print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
+  
+  print(LossInverseFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma))
 }
 
 }

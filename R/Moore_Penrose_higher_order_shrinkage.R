@@ -358,6 +358,10 @@ compute_M_MoorePenrose_psmall <- function(
   
   hm[1] <- q1
   hm[2] <- 1 / (1 - c_n)
+  if (verbose > 0){
+    cat("hm[1] = ", hm[1], "\n")
+    cat("hm[2] = ", hm[2], "\n")
+  }
   
   if (m >= 2){ # Indeed if m = 1 there is nothing to be done.
     for (j in 2:m)
@@ -368,6 +372,9 @@ compute_M_MoorePenrose_psmall <- function(
         hm[j+1] <- hm[j+1] +
           (-1)^(j + k) * factorial(k) / factorial(j) * d_hat_tilde(k - 1) *
           Bell_polynomials[j, k]
+      }
+      if (verbose > 0){
+        cat("hm[", j + 1, "] = ", hm[j + 1], "\n")
       }
     }
   }
@@ -503,6 +510,10 @@ compute_M_MoorePenrose_psmall <- function(
 #'   print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
 #'   
 #'   print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma))
+#'       
+#'   print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
+#'   
+#'   print(LossInverseFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma))
 #' }
 #' 
 #' @export
