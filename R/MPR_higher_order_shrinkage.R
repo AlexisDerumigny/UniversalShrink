@@ -6,7 +6,7 @@
 # - a square matrix M of size (m + 1)
 # - a vector hm of size (m + 1)
 # - the estimator of v
-compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
+compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose)
 {
   s_and_v = compute_sv_ridge(m = 2 * m, # we need additional powers compared
                                         # to the ridge
@@ -44,7 +44,42 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     cat("\n")
   }
   
-  return(list(M = M, hm = hm, v = v))
+  # TODO: compute all estimators for smaller m here using submatrices of this matrix
+  
+  if (method_invM == "solve"){
+    alpha = solve(M) %*% hm
+  } else if (method_invM == "ginv"){
+    if (! requireNamespace("MASS", quietly = TRUE)){
+      stop("MASS needs to be installed to use `method_invM == 'ginv'.`")
+    }
+    alpha = MASS::ginv(M) %*% hm
+  } else if (method_invM == "recursive"){
+    if (verbose > 0){
+      cat("Using the recursive formula to compute the inverse of the matrix M...\n")
+    }
+    
+    # We avoid computing M and inverting it numerically. Here we compute the
+    # inverse of the matrix M by using the recursive formula.
+    invM = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
+                             all_tr = s2[-1], verbose = verbose - 2)
+    if (verbose > 1){
+      cat("M^{-1} = \n")
+      print(invM)
+    }
+    
+    alpha = invM %*% hm
+  } else {
+    stop("method_invM '", method_invM, "' unavailable. Possible choices are: ",
+         "'solve' and 'recursive'.")
+  }
+  
+  if (verbose > 0){
+    cat("Optimal alpha: \n")
+    print(alpha)
+  }
+  
+  
+  return(list(M = M, hm = hm, v = v, alpha = alpha))
 }
 
 
@@ -124,24 +159,25 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 #' @export
 #' 
 MPR_higher_order_shrinkage <- function(
-    X, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50), verbose = 0)
+    X, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50),
+    method_invM = "recursive", verbose = 0)
 {
   call_ = match.call()
   if (is.null(t)){
     result = MPR_higher_order_shrinkage_optimal(
       X = X, m = m, centeredCov = centeredCov, verbose = verbose,
-      interval = interval, call_ = call_)
+      interval = interval, method_invM = method_invM, call_ = call_)
     
   } else {
     result = MPR_higher_order_shrinkage_non_optimized(
       X = X, m = m, centeredCov = centeredCov, t = t, verbose = verbose, 
-      call_ = call_)
+      method_invM = method_invM, call_ = call_)
   }
 }
 
 
 MPR_higher_order_shrinkage_non_optimized <- function(
-    X, m, centeredCov = TRUE, t, verbose = 0, call_ = NULL)
+    X, m, centeredCov = TRUE, t, method_invM = "recursive", verbose = 0, call_ = NULL)
 {
   if (verbose > 0){
     cat("Starting `MPR_higher_order_shrinkage`...\n")
@@ -176,20 +212,16 @@ MPR_higher_order_shrinkage_non_optimized <- function(
     cat("*  q2 = ", q2, "\n\n")
   }
   
-  estimatedM = compute_M_t_MPR(m = m, c_n = c_n, q1 = q1, q2 = q2,
-                               S_t_inverse = iS_ridge,
-                               t = t, verbose = verbose)
+  estimatedM = compute_M_t_MPR(
+    m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = iS_ridge,
+    t = t, method_invM = method_invM, verbose = verbose)
   
   # TODO: compute all estimators for smaller m here using submatrices of this matrix
   
   # TODO: loss = 1 - t(estimatedM$hm) %*% solve(estimatedM$M) %*% estimatedM$hm
   # as in ridge_higher_order_shrinkage_optimal
   
-  alpha = solve(estimatedM$M) %*% estimatedM$hm
-  if (verbose > 0){
-    cat("Optimal alpha: \n")
-    print(alpha)
-  }
+  alpha = estimatedM$alpha
   
   estimated_precision_matrix = alpha[1] * Ip
   power_MPR = Ip
@@ -219,7 +251,8 @@ MPR_higher_order_shrinkage_non_optimized <- function(
 
 
 MPR_higher_order_shrinkage_optimal <- function(
-    X, m, centeredCov = TRUE, t, verbose = 0, interval = c(0, 50), call_ = NULL)
+    X, m, centeredCov = TRUE, t, verbose = 0, interval = c(0, 50),
+    method_invM = "recursive", call_ = NULL)
 {
   if (verbose > 0){
     cat("Starting `MPR_higher_order_shrinkage_optimal` (with unknown t)...\n")
@@ -248,7 +281,7 @@ MPR_higher_order_shrinkage_optimal <- function(
   estimatedLoss <- function(t){
     loss = loss_L2_MPR_higher_order_optimal(
       X = X, m = m, t = t, c_n = c_n, q1 = q1, q2 = q2, S = S, Ip = Ip,
-      verbose = verbose - 1)
+      method_invM = method_invM, verbose = verbose - 1)
     
     return (loss)
   }
@@ -270,17 +303,13 @@ MPR_higher_order_shrinkage_optimal <- function(
   
   MPR_estimator <- iS_ridge - optimal_t * iS_ridge %*% iS_ridge
   
-  estimatedM = compute_M_t_MPR(m = m, c_n = c_n, q1 = q1, q2 = q2,
-                               S_t_inverse = iS_ridge,
-                               t = optimal_t, verbose = verbose - 2)
+  estimatedM = compute_M_t_MPR(
+    m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = iS_ridge,
+    t = optimal_t, method_invM = method_invM, verbose = verbose - 2)
   
   # TODO: compute all estimators for smaller m here using submatrices of this matrix
   
-  alpha = solve(estimatedM$M) %*% estimatedM$hm
-  if (verbose > 0){
-    cat("Optimal alpha: \n")
-    print(alpha)
-  }
+  alpha = estimatedM$alpha
   
   estimated_precision_matrix = alpha[1] * Ip
   power_MPR = Ip
@@ -309,7 +338,7 @@ MPR_higher_order_shrinkage_optimal <- function(
 
 
 loss_L2_MPR_higher_order_optimal <- function (
-    X, m, t, c_n, q1, q2, S, Ip, verbose)
+    X, m, t, c_n, q1, q2, S, Ip, method_invM = "recursive", verbose)
 {
   if (verbose > 0){
     cat("t = ", t)
@@ -323,11 +352,11 @@ loss_L2_MPR_higher_order_optimal <- function (
   S_t_inverse = solve(S + t * Ip)
     
   loss = tryCatch({
-    estimatedM = compute_M_t_MPR(m = m, c_n = c_n, q1 = q1, q2 = q2,
-                                 S_t_inverse = S_t_inverse,
-                                 t = t, verbose = verbose - 2)
+    estimatedM = compute_M_t_MPR(
+      m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = S_t_inverse,
+      t = t, method_invM = method_invM, verbose = verbose - 2)
     
-    loss = 1 - t(estimatedM$hm) %*% solve(estimatedM$M) %*% estimatedM$hm
+    loss = 1 - t(estimatedM$hm) %*% estimatedM$alpha
   }, error = function(e){e}
   )
   

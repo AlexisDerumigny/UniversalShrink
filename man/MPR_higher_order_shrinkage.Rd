@@ -10,6 +10,7 @@ MPR_higher_order_shrinkage(
   centeredCov = TRUE,
   t = NULL,
   interval = c(0, 50),
+  method_invM = "recursive",
   verbose = 0
 )
 }
