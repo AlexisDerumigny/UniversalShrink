@@ -11,7 +11,7 @@ ridge_higher_order_shrinkage(
   t = NULL,
   interval = c(0, 50),
   verbose = 0,
-  inversionMethod = "solve"
+  method_invM = "recursive"
 )
 }
 \arguments{
@@ -33,9 +33,10 @@ details about the progress of the computations. A value of \code{0} indicates
 no printing at all, while higher values indicate increasingly more detailed
 (more verbose) output.}
 
-\item{inversionMethod}{method for inverting the matrix \eqn{M}. Current
+\item{method_invM}{method for inverting the matrix \eqn{M}. Current
 possible choices are \code{solve} (usual inverse) and \code{ginv}
-(Moore-Penrose generalize inverse via \code{MASS::\link[MASS]{ginv}}).}
+(Moore-Penrose generalize inverse via \code{MASS::\link[MASS]{ginv}}).
+The default is the faster and more precise method \code{recursive}.}
 }
 \description{
 The findings of Bodnar and Parolya (2025) yield the ridge higher-order nonlinear

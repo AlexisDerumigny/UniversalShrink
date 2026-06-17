@@ -72,9 +72,10 @@
 #' @param t,interval \code{t} is the penalization parameter, and \code{interval}
 #' is the interval over which the loss is optimized over (with respect to \code{t}).
 #' 
-#' @param inversionMethod method for inverting the matrix \eqn{M}. Current
+#' @param method_invM method for inverting the matrix \eqn{M}. Current
 #' possible choices are \code{solve} (usual inverse) and \code{ginv}
 #' (Moore-Penrose generalize inverse via \code{MASS::\link[MASS]{ginv}}).
+#' The default is the faster and more precise method \code{recursive}.
 #' 
 #' @inheritParams cov_with_centering
 #' 
@@ -159,24 +160,24 @@
 #' 
 ridge_higher_order_shrinkage <- function(
     X, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50), verbose = 0,
-    inversionMethod = "solve")
+    method_invM = "recursive")
 {
   call_ = match.call()
   if (is.null(t)){
     result = ridge_higher_order_shrinkage_optimal(
       X = X, m = m, centeredCov = centeredCov, verbose = verbose,
-      interval = interval, inversionMethod = inversionMethod, call_ = call_)
+      interval = interval, method_invM = method_invM, call_ = call_)
     
   } else {
     result = ridge_higher_order_shrinkage_non_optimized(
       X = X, m = m, centeredCov = centeredCov, t = t, verbose = verbose,
-      inversionMethod = inversionMethod, call_ = call_)
+      method_invM = method_invM, call_ = call_)
   }
 }
 
 
 ridge_higher_order_shrinkage_non_optimized <- function(
-    X, m, centeredCov, t, verbose = 0, inversionMethod = "solve", call_ = NULL)
+    X, m, centeredCov, t, verbose = 0, method_invM = "recursive", call_ = NULL)
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_non_optimized` (known t)...\n")
@@ -212,25 +213,11 @@ ridge_higher_order_shrinkage_non_optimized <- function(
     cat("*  q2 = ", q2, "\n\n")
   }
   
-  estimatedM = compute_M_t_ridge(m = m, c_n = c_n, q1 = q1, q2 = q2,
-                                 S_t_inverse = S_t_inverse,
-                                 t = t, verbose = verbose)
+  estimatedM = compute_M_t_ridge(
+    m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = S_t_inverse,
+    t = t, method_invM = method_invM, verbose = verbose)
   
-  # TODO: compute all estimators for smaller m here using submatrices of this matrix
-  
-  if (inversionMethod == "solve"){
-    alpha = solve(estimatedM$M) %*% estimatedM$hm
-  } else if (inversionMethod == "ginv"){
-    if (! requireNamespace("MASS", quietly = TRUE)){
-      stop("MASS needs to be installed to use `inversionMethod == 'ginv'.`")
-    }
-    alpha = MASS::ginv(estimatedM$M) %*% estimatedM$hm
-  }
-  
-  if (verbose > 0){
-    cat("Optimal alpha: \n")
-    print(alpha)
-  }
+  alpha = estimatedM$alpha
   
   estimated_precision_matrix = alpha[1] * Ip
   power_S_t_inverse = Ip
@@ -266,7 +253,7 @@ ridge_higher_order_shrinkage_non_optimized <- function(
 
 ridge_higher_order_shrinkage_optimal <- function(
     X, m, centeredCov = TRUE, verbose = 0, interval = c(0, 50),
-    inversionMethod = "solve", call_ = NULL)
+    method_invM = "recursive", call_ = NULL)
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_optimal` (with unknown t)...\n")
@@ -297,11 +284,11 @@ ridge_higher_order_shrinkage_optimal <- function(
     S_t_inverse <- as.matrix(ridge_)
     
     loss = tryCatch({
-      estimatedM = compute_M_t_ridge(m = m, c_n = c_n, q1 = q1, q2 = q2,
-                                     S_t_inverse = S_t_inverse,
-                                     t = t, verbose = 0)
+      estimatedM = compute_M_t_ridge(
+        m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = S_t_inverse,
+        t = t, method_invM = method_invM, verbose = 0)
       
-      loss = 1 - t(estimatedM$hm) %*% solve(estimatedM$M) %*% estimatedM$hm
+      loss = 1 - t(estimatedM$hm) %*% estimatedM$alpha
     }, error = function(e){e}
     )
     
@@ -330,18 +317,11 @@ ridge_higher_order_shrinkage_optimal <- function(
   
   S_t_inverse <- as.matrix(ridge_)
   
-  estimatedM = compute_M_t_ridge(m = m, c_n = c_n, q1 = q1, q2 = q2,
-                                 S_t_inverse = S_t_inverse,
-                                 t = optimal_t, verbose = verbose)
+  estimatedM = compute_M_t_ridge(
+    m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = S_t_inverse,
+    t = optimal_t, method_invM = method_invM, verbose = verbose)
   
-  if (inversionMethod == "solve"){
-    alpha = solve(estimatedM$M) %*% estimatedM$hm
-  } else if (inversionMethod == "ginv"){
-    if (! requireNamespace("MASS", quietly = TRUE)){
-      stop("MASS needs to be installed to use `inversionMethod == 'ginv'.`")
-    }
-    alpha = MASS::ginv(estimatedM$M) %*% estimatedM$hm
-  }
+  alpha = estimatedM$alpha
   
   estimated_precision_matrix = alpha[1] * Ip
   power_S_t_inverse = Ip
@@ -511,7 +491,7 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 # - a square matrix M of size (m + 1)
 # - a vector hm of size (m + 1)
 # - the estimator of v
-compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
+compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose)
 {
   s_and_v = compute_sv_ridge(m = m, c_n = c_n,
                              S_t_inverse = S_t_inverse, q1 = q1, q2 = q2, t = t,
@@ -538,7 +518,42 @@ compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     cat("\n")
   }
   
-  return(list(M = M, hm = hm, v = v))
+  # TODO: compute all estimators for smaller m here using submatrices of this matrix
+  
+  if (method_invM == "solve"){
+    alpha = solve(M) %*% hm
+  } else if (method_invM == "ginv"){
+    if (! requireNamespace("MASS", quietly = TRUE)){
+      stop("MASS needs to be installed to use `method_invM == 'ginv'.`")
+    }
+    alpha = MASS::ginv(M) %*% hm
+  } else if (method_invM == "recursive"){
+    if (verbose > 0){
+      cat("Using the recursive formula to compute the inverse of the matrix M...\n")
+    }
+    
+    # We avoid computing M and inverting it numerically. Here we compute the
+    # inverse of the matrix M by using the recursive formula.
+    invM = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
+                             all_tr = s2[-1], verbose = verbose - 2)
+    if (verbose > 1){
+      cat("M^{-1} = \n")
+      print(invM)
+    }
+    
+    alpha = invM %*% hm
+  } else {
+    stop("method_invM '", method_invM, "' unavailable. Possible choices are: ",
+         "'solve' and 'recursive'.")
+  }
+  
+  if (verbose > 0){
+    cat("Optimal alpha: \n")
+    print(alpha)
+  }
+  
+  
+  return(list(M = M, hm = hm, v = v, alpha = alpha))
 }
 
 
