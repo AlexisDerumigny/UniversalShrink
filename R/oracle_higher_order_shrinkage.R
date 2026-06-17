@@ -1,45 +1,20 @@
 
 
+#' Oracle estimator of the precision matrix
 #' 
 #' @examples
 #' 
-#' for (m in 1:10){
-#'   cat("m = ", m, "\n")
+#' for (m in 1:20){
+#'   cat("\nm = ", m, "\n")
 #'   precision_higher_order_shrinkage_Cent = 
-#'       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
+#'       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE, verbose = 0)
 #'   
 #'   oracle = oracle_higher_order_shrinkage(
 #'       X = X, m = m, Sigma = Sigma, nameEstimator = "Moore-Penrose", centeredCov = TRUE,
 #'       method_invM = "recursive", verbose = 0)
 #'       
-#'   #print(precision_higher_order_shrinkage_Cent$M)
-#'   cat("oracle$M = \n")
-#'   print(oracle$M)
-#'   
-#'   cat("oracle$invM = \n")
-#'   #print(oracle$invM_solve)
-#'   print(oracle$invM_recursive)
-#'   
-#'   
-#'   cat("estimated inv M = \n")
-#'   print(precision_higher_order_shrinkage_Cent$invM)
-#' }
-#' 
-#' for (m in 1:10){
-#'   cat("m = ", m, "\n")
-#'   precision_higher_order_shrinkage_Cent = 
-#'       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
-#'   
-#'   oracle = oracle_higher_order_shrinkage(
-#'       X = X, m = m, Sigma = Sigma, nameEstimator = "Moore-Penrose", centeredCov = TRUE,
-#'       method_invM = "recursive", verbose = 0)
-#'       
-#'   #print(precision_higher_order_shrinkage_Cent$M)
-#'   cat("oracle$hm = \n")
-#'   print(oracle$hm)
-#'   
-#'   cat("estimated hm = \n")
-#'   print(precision_higher_order_shrinkage_Cent$hm)
+#'   print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
+#'   print(LossInverseFrobenius2(oracle, Sigma))
 #' }
 #' 
 #' 
@@ -69,12 +44,28 @@ oracle_higher_order_shrinkage <- function(
     estimator_S = iS_MP_, Sigma = Sigma, m = m, Ip = Ip, p = p,
     verbose = verbose)
   
+  alpha = resultM$alpha
+  
+  result = alpha[1] * Ip
+  power_isMP = Ip
+  
+  for (k in 1:m){
+    power_isMP = power_isMP %*% iS_MP_
+    result = result + alpha[k + 1] * power_isMP
+  }
+  
   result = list(
+    estimated_precision_matrix = result,
     M = resultM$M,
     hm = resultM$hm,
     # invM_solve = resultM$invM_solve,
-    invM_recursive = resultM$invM_recursive
+    invM_recursive = resultM$invM_recursive,
+    alpha = alpha,
+    method = "Oracle higher-order shrinkage",
+    call = call_
   )
+  
+  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }
@@ -107,8 +98,15 @@ compute_M_oracle <- function(estimator_S, Sigma, m, Ip, p, verbose) {
   invM_recursive = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
                                      all_tr = s2[-1], verbose = verbose - 2)
   
-  return (list(hm = hm, M = M,
-               # invM_solve = invM_solve,
-               invM_recursive = invM_recursive))
+  alpha = invM_recursive %*% hm
+  
+  result = list(
+    hm = hm,
+    M = M,
+    invM_recursive = invM_recursive,
+    alpha = alpha
+  )
+  
+  return (result)
 }
 
