@@ -35,23 +35,37 @@ oracle_higher_order_shrinkage <- function(
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  # Moore-Penrose inverse of the sample covariance matrix
-  iS_MP <- Moore_Penrose(X = X, centeredCov = centeredCov)
-  iS_MP_ <- as.matrix(iS_MP)
+  if (nameEstimator == "Moore-Penrose") {
+    
+    # Moore-Penrose inverse of the sample covariance matrix
+    iS_MP <- Moore_Penrose(X = X, centeredCov = centeredCov)
+    estimated_precision_matrix <- as.matrix(iS_MP)
+    
+  } else if (nameEstimator == "ridge") {
+    
+    
+  } else if (nameEstimator == "MPR") {
+    
+  } else {
+    stop("nameEstimator = '", nameEstimator, "' is not valid.",
+         "It should be one of the following: 'Moore-Penrose', 'ridge', 'MPR'.")
+  }
   
   
   resultM <- compute_M_oracle(
-    estimator_S = iS_MP_, Sigma = Sigma, m = m, Ip = Ip, p = p,
-    verbose = verbose)
+    estimator_S = estimated_precision_matrix, Sigma = Sigma,
+    m = m, Ip = Ip, p = p, verbose = verbose)
   
   alpha = resultM$alpha
   
   result = alpha[1] * Ip
-  power_isMP = Ip
+  power_estimated_precision = Ip
   
   for (k in 1:m){
-    power_isMP = power_isMP %*% iS_MP_
-    result = result + alpha[k + 1] * power_isMP
+    power_estimated_precision = 
+      power_estimated_precision %*% estimated_precision_matrix
+    
+    result = result + alpha[k + 1] * power_estimated_precision
   }
   
   result = list(
@@ -62,6 +76,7 @@ oracle_higher_order_shrinkage <- function(
     invM_recursive = resultM$invM_recursive,
     alpha = alpha,
     method = "Oracle higher-order shrinkage",
+    nameBaselinEstimator = nameEstimator,
     call = call_
   )
   
