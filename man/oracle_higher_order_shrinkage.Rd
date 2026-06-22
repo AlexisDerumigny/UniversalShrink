@@ -14,19 +14,47 @@ oracle_higher_order_shrinkage(
   verbose = 0
 )
 }
+\arguments{
+\item{X}{data matrix (rows are observations, columns are features).}
+
+\item{m}{order of the shrinkage. Should be at least 1.}
+
+\item{centeredCov}{Boolean variable. If \code{TRUE}, then the sample covariance
+matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector
+is replaced by its sample counterpart. If \code{FALSE}, then the sample
+covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
+zero.}
+
+\item{verbose}{a number indicating whether to print intermediary values and
+details about the progress of the computations. A value of \code{0} indicates
+no printing at all, while higher values indicate increasingly more detailed
+(more verbose) output.}
+}
 \description{
 Oracle estimator of the precision matrix
 }
 \examples{
 
+n = 50
+p = 2 * n
+mu = rep(0, p)
+
+# Generate Sigma
+X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
+H <- eigen(t(X0) \%*\% X0)$vectors
+Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
+
+# Generate example dataset
+X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
+
 for (m in 1:20){
   cat("\nm = ", m, "\n")
-  precision_higher_order_shrinkage_Cent = 
-      Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE, verbose = 0)
+  precision_higher_order_shrinkage_Cent = Moore_Penrose_higher_order_shrinkage(
+      X, m = m, centeredCov = TRUE, verbose = 0)
   
   oracle = oracle_higher_order_shrinkage(
-      X = X, m = m, Sigma = Sigma, nameEstimator = "Moore-Penrose", centeredCov = TRUE,
-      method_invM = "recursive", verbose = 0)
+      X = X, m = m, Sigma = Sigma, nameEstimator = "Moore-Penrose",
+      centeredCov = TRUE,method_invM = "recursive", verbose = 0)
       
   print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
   print(LossInverseFrobenius2(oracle, Sigma))

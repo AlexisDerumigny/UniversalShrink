@@ -2,16 +2,30 @@
 
 #' Oracle estimator of the precision matrix
 #' 
+#' @inheritParams MPR_higher_order_shrinkage
+#' 
 #' @examples
+#' 
+#' n = 50
+#' p = 2 * n
+#' mu = rep(0, p)
+#' 
+#' # Generate Sigma
+#' X0 <- MASS::mvrnorm(n = 10*p, mu = mu, Sigma = diag(p))
+#' H <- eigen(t(X0) %*% X0)$vectors
+#' Sigma = H %*% diag(seq(1, 0.02, length.out = p)) %*% t(H)
+#' 
+#' # Generate example dataset
+#' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
 #' for (m in 1:20){
 #'   cat("\nm = ", m, "\n")
-#'   precision_higher_order_shrinkage_Cent = 
-#'       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE, verbose = 0)
+#'   precision_higher_order_shrinkage_Cent = Moore_Penrose_higher_order_shrinkage(
+#'       X, m = m, centeredCov = TRUE, verbose = 0)
 #'   
 #'   oracle = oracle_higher_order_shrinkage(
-#'       X = X, m = m, Sigma = Sigma, nameEstimator = "Moore-Penrose", centeredCov = TRUE,
-#'       method_invM = "recursive", verbose = 0)
+#'       X = X, m = m, Sigma = Sigma, nameEstimator = "Moore-Penrose",
+#'       centeredCov = TRUE,method_invM = "recursive", verbose = 0)
 #'       
 #'   print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
 #'   print(LossInverseFrobenius2(oracle, Sigma))
