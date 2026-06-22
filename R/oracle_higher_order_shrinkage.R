@@ -2,6 +2,12 @@
 
 #' Oracle estimator of the precision matrix
 #' 
+#' 
+#' @param nameEstimator name of the estimator of which we compute the oracle of.
+#' If \code{nameEstimator = "Moore-Penrose"}, this computes the finite-sample
+#' oracle of the higher-order shrinked Moore-Penrose estimator. Other
+#' possibilities are \code{"ridge"} and \code{"MPR"}.
+#' 
 #' @inheritParams MPR_higher_order_shrinkage
 #' 
 #' @examples
@@ -20,6 +26,7 @@
 #' 
 #' for (m in 1:20){
 #'   cat("\nm = ", m, "\n")
+#'   cat("MP: \n")
 #'   precision_higher_order_shrinkage_Cent = Moore_Penrose_higher_order_shrinkage(
 #'       X, m = m, centeredCov = TRUE, verbose = 0)
 #'   
@@ -29,13 +36,39 @@
 #'       
 #'   print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
 #'   print(LossInverseFrobenius2(oracle, Sigma))
+#'   
+#'   cat("ridge: \n")
+#'   precision_higher_order_shrinkage_Cent = ridge_higher_order_shrinkage(
+#'       X, m = m, centeredCov = TRUE, verbose = 0)
+#'   
+#'   oracle = oracle_higher_order_shrinkage(
+#'       X = X, m = m, Sigma = Sigma, nameEstimator = "ridge",
+#'       centeredCov = TRUE,method_invM = "recursive", verbose = 0)
+#'       
+#'   print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
+#'   print(LossInverseFrobenius2(oracle, Sigma))
+#'   cat("optimal t = ", precision_higher_order_shrinkage_Cent$t,
+#'       " (BF) ,  ", oracle$optimal_t, " (oracle) \n")
+#'   
+#'   cat("MPR: \n")
+#'   precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(
+#'       X, m = m, centeredCov = TRUE, verbose = 0)
+#'   
+#'   oracle = oracle_higher_order_shrinkage(
+#'       X = X, m = m, Sigma = Sigma, nameEstimator = "MPR",
+#'       centeredCov = TRUE,method_invM = "recursive", verbose = 0)
+#'       
+#'   print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
+#'   print(LossInverseFrobenius2(oracle, Sigma))
+#'   cat("optimal t = ", precision_higher_order_shrinkage_Cent$optimal_t,
+#'       " (BF) ,  ", oracle$optimal_t, " (oracle) \n")
 #' }
 #' 
 #' 
 #' @export
 oracle_higher_order_shrinkage <- function(
     X, m, Sigma, nameEstimator = "Moore-Penrose", centeredCov = TRUE,
-    method_invM = "recursive", verbose = 0) {
+    method_invM = "recursive", verbose = 0, interval = c(0, 50)) {
   
   call_ = match.call()
   # Get sizes of X
@@ -55,10 +88,47 @@ oracle_higher_order_shrinkage <- function(
     iS_MP <- Moore_Penrose(X = X, centeredCov = centeredCov)
     estimated_precision_matrix <- as.matrix(iS_MP)
     
-  } else if (nameEstimator == "ridge") {
+  } else if (nameEstimator %in% c("ridge", "MPR")) {
     
+    if (nameEstimator == "ridge") {
+      
+      estimatedLoss <- function(t){
+        loss = loss_L2_ridge_oracle_higher_order_optimal(
+          S = S, t = t, Ip = Ip, m = m, Sigma = Sigma,
+          method_invM = method_invM, verbose = verbose - 2)
+        
+        return (loss)
+      }
+      
+    } else if (nameEstimator == "MPR") {
+      
+      estimatedLoss <- function(t){
+        loss = loss_L2_MPR_oracle_higher_order_optimal(
+          S = S, t = t, Ip = Ip, m = m, Sigma = Sigma, 
+          method_invM = method_invM, verbose = verbose - 2)
+        
+        return (loss)
+      }
+    }
     
-  } else if (nameEstimator == "MPR") {
+    result_optim <- stats::optimize(f = estimatedLoss, interval = interval)
+    
+    optimal_t = result_optim$minimum
+    
+    if (verbose > 0){
+      cat("*  optimal_t = ", optimal_t, "\n")
+    }
+    
+    iS_ridge <- solve(S + optimal_t * Ip)
+    
+    if (nameEstimator == "ridge") {
+      estimated_precision_matrix = iS_ridge
+      
+    } else if (nameEstimator == "MPR") {
+      
+      MPR_estimator <- iS_ridge - optimal_t * iS_ridge %*% iS_ridge
+      estimated_precision_matrix = MPR_estimator
+    }
     
   } else {
     stop("nameEstimator = '", nameEstimator, "' is not valid.",
@@ -89,6 +159,7 @@ oracle_higher_order_shrinkage <- function(
     # invM_solve = resultM$invM_solve,
     invM_recursive = resultM$invM_recursive,
     alpha = alpha,
+    optimal_t = if(nameEstimator %in% c("ridge", "MPR")) {optimal_t} ,
     method = "Oracle higher-order shrinkage",
     nameBaselinEstimator = nameEstimator,
     call = call_
@@ -137,5 +208,79 @@ compute_M_oracle <- function(estimator_S, Sigma, m, Ip, p, verbose) {
   )
   
   return (result)
+}
+
+
+
+loss_L2_ridge_oracle_higher_order_optimal <- function (
+    S, t, Ip, m, Sigma, method_invM = "recursive", verbose)
+{
+  if (verbose > 0){
+    cat("t = ", t)
+    if (verbose > 1){
+      cat("\n")
+    } else {
+      cat(", ")
+    }
+  }
+  
+  iS_ridge <- solve(S + t * Ip)
+  
+  loss = tryCatch({
+    estimatedM = compute_M_oracle(
+      estimator_S = iS_ridge, Sigma = Sigma, m = m,
+      Ip = Ip, p = p, verbose = verbose - 1)
+    
+    loss = 1 - t(estimatedM$hm) %*% estimatedM$alpha
+  }, error = function(e){e}
+  )
+  
+  if (inherits(loss, "simpleError") || !is.finite(loss)){
+    loss <- .Machine$double.xmax
+  }
+  
+  if (verbose > 0){
+    cat("loss = ", loss, "\n")
+  }
+  
+  return (loss)
+}
+
+
+
+loss_L2_MPR_oracle_higher_order_optimal <- function (
+    S, t, Ip, m, Sigma, method_invM = "recursive", verbose)
+{
+  if (verbose > 0){
+    cat("t = ", t)
+    if (verbose > 1){
+      cat("\n")
+    } else {
+      cat(", ")
+    }
+  }
+  
+  iS_ridge <- solve(S + t * Ip)
+  
+  MPR_estimator <- iS_ridge - t * iS_ridge %*% iS_ridge
+  
+  loss = tryCatch({
+    estimatedM = compute_M_oracle(
+      estimator_S = MPR_estimator, Sigma = Sigma, m = m,
+      Ip = Ip, p = p, verbose = verbose - 1)
+    
+    loss = 1 - t(estimatedM$hm) %*% estimatedM$alpha
+  }, error = function(e){e}
+  )
+  
+  if (inherits(loss, "simpleError") || !is.finite(loss)){
+    loss <- .Machine$double.xmax
+  }
+  
+  if (verbose > 0){
+    cat("loss = ", loss, "\n")
+  }
+  
+  return (loss)
 }
 

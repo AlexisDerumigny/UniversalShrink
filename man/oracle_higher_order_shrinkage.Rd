@@ -11,13 +11,19 @@ oracle_higher_order_shrinkage(
   nameEstimator = "Moore-Penrose",
   centeredCov = TRUE,
   method_invM = "recursive",
-  verbose = 0
+  verbose = 0,
+  interval = c(0, 50)
 )
 }
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
 
 \item{m}{order of the shrinkage. Should be at least 1.}
+
+\item{nameEstimator}{name of the estimator of which we compute the oracle of.
+If \code{nameEstimator = "Moore-Penrose"}, this computes the finite-sample
+oracle of the higher-order shrinked Moore-Penrose estimator. Other
+possibilities are \code{"ridge"} and \code{"MPR"}.}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, then the sample covariance
 matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector
@@ -49,6 +55,7 @@ X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
 for (m in 1:20){
   cat("\nm = ", m, "\n")
+  cat("MP: \n")
   precision_higher_order_shrinkage_Cent = Moore_Penrose_higher_order_shrinkage(
       X, m = m, centeredCov = TRUE, verbose = 0)
   
@@ -58,6 +65,32 @@ for (m in 1:20){
       
   print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
   print(LossInverseFrobenius2(oracle, Sigma))
+  
+  cat("ridge: \n")
+  precision_higher_order_shrinkage_Cent = ridge_higher_order_shrinkage(
+      X, m = m, centeredCov = TRUE, verbose = 0)
+  
+  oracle = oracle_higher_order_shrinkage(
+      X = X, m = m, Sigma = Sigma, nameEstimator = "ridge",
+      centeredCov = TRUE,method_invM = "recursive", verbose = 0)
+      
+  print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
+  print(LossInverseFrobenius2(oracle, Sigma))
+  cat("optimal t = ", precision_higher_order_shrinkage_Cent$t,
+      " (BF) ,  ", oracle$optimal_t, " (oracle) \n")
+  
+  cat("MPR: \n")
+  precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(
+      X, m = m, centeredCov = TRUE, verbose = 0)
+  
+  oracle = oracle_higher_order_shrinkage(
+      X = X, m = m, Sigma = Sigma, nameEstimator = "MPR",
+      centeredCov = TRUE,method_invM = "recursive", verbose = 0)
+      
+  print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
+  print(LossInverseFrobenius2(oracle, Sigma))
+  cat("optimal t = ", precision_higher_order_shrinkage_Cent$optimal_t,
+      " (BF) ,  ", oracle$optimal_t, " (oracle) \n")
 }
 
 
