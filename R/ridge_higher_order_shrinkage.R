@@ -184,6 +184,7 @@ ridge_higher_order_shrinkage_non_optimized <- function(
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_non_optimized` (known t)...\n")
   }
+  check_Rmpfr(mpfr)
   
   # Get sizes of Y
   n = nrow(X)
@@ -261,6 +262,7 @@ ridge_higher_order_shrinkage_optimal <- function(
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_optimal` (with unknown t)...\n")
   }
+  check_Rmpfr(mpfr)
   
   # Get sizes of X
   n = nrow(X)

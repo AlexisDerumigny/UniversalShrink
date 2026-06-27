@@ -527,6 +527,8 @@ Moore_Penrose_higher_order_shrinkage <- function(
     mpfr = FALSE, precBits = 2^16)
 {
   call_ = match.call()
+  check_Rmpfr(mpfr)
+  
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)

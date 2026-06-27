@@ -70,6 +70,7 @@ cov_higher_order_shrinkage <- function(X, centeredCov = TRUE, m, verbose = 0,
   if (verbose > 0){
     cat("Starting `cov_higher_order_shrinkage`...\n")
   }
+  check_Rmpfr(mpfr)
   
   # Get sizes of X
   n = nrow(X)

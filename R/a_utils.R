@@ -21,6 +21,17 @@ format_ <- function(x, ...){
 }
 
 
+check_Rmpfr <- function (mpfr){
+  if (!mpfr) {
+    return (NULL) 
+  }
+  if (!requireNamespace("Rmpfr", quietly = TRUE)) {
+    stop(
+      "Package \"Rmpfr\" must be installed to use the higher-precision option."
+    )
+  }
+}
+
 #' Conversion of estimated matrices to matrix class
 #' @name as.matrix.Estimator
 NULL

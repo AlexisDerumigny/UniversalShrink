@@ -187,6 +187,7 @@ MPR_higher_order_shrinkage_non_optimized <- function(
   if (verbose > 0){
     cat("Starting `MPR_higher_order_shrinkage`...\n")
   }
+  check_Rmpfr(mpfr)
   
   # Get sizes of X
   n = nrow(X)
@@ -263,6 +264,7 @@ MPR_higher_order_shrinkage_optimal <- function(
   if (verbose > 0){
     cat("Starting `MPR_higher_order_shrinkage_optimal` (with unknown t)...\n")
   }
+  check_Rmpfr(mpfr)
   
   # Get sizes of X
   n = nrow(X)
