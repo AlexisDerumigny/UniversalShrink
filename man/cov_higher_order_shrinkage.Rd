@@ -40,8 +40,8 @@ matrix (a \code{p} by \code{p} matrix).
 Higher order shrinkage for estimation of the covariance matrix
 }
 \examples{
-p = 500
-n = 30
+p = 100
+n = 20
 Sigma = diag(seq(1, 0.02, length.out = p))
 mu = rep(0, p)
 
@@ -55,7 +55,7 @@ Losses(estimatedCov_sample, Sigma, type = "covariance")
 Losses(estimatedCov_analytical, Sigma)
 Losses(estimatedCov_QIS, Sigma)
 
-for (m in 1:4){
+for (m in 1:3){
   estimatedCov_shrink_higher = cov_higher_order_shrinkage(X, m = m)
   
   loss = LossFrobenius2(estimatedCov_shrink_higher, Sigma)

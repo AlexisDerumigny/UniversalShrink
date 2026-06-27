@@ -24,7 +24,7 @@
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
-#' for (m in 1:20){
+#' for (m in 1:3){
 #'   cat("\nm = ", m, "\n")
 #'   cat("MP: \n")
 #'   precision_higher_order_shrinkage_Cent = Moore_Penrose_higher_order_shrinkage(
