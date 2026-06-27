@@ -64,7 +64,8 @@
 #' }
 #' 
 #' @export
-cov_higher_order_shrinkage <- function(X, centeredCov = TRUE, m, verbose = 0){
+cov_higher_order_shrinkage <- function(X, centeredCov = TRUE, m, verbose = 0,
+                                       mpfr = FALSE, precBits = 2^16){
   
   if (verbose > 0){
     cat("Starting `cov_higher_order_shrinkage`...\n")
@@ -97,9 +98,9 @@ cov_higher_order_shrinkage <- function(X, centeredCov = TRUE, m, verbose = 0){
     list_power_S[[k]] <- power_S
   }
   
-  estimatedM = compute_M_covariance(m = m, c_n = cn, p = p,
-                                    S = S, verbose = verbose,
-                                    list_power_S = list_power_S)
+  estimatedM = compute_M_covariance(
+    m = m, c_n = cn, p = p, S = S, verbose = verbose,
+    list_power_S = list_power_S, mpfr = mpfr, precBits = precBits)
   
   # TODO: compute all estimators for smaller m here using submatrices of this matrix
   
@@ -131,7 +132,8 @@ cov_higher_order_shrinkage <- function(X, centeredCov = TRUE, m, verbose = 0){
 }
 
 
-compute_M_covariance <- function(m, c_n, p, S, verbose, list_power_S){
+compute_M_covariance <- function(m, c_n, p, S, verbose, list_power_S,
+                                 mpfr, precBits){
   q1 = tr(S) / p
   
   if (m == 0){
@@ -156,7 +158,8 @@ compute_M_covariance <- function(m, c_n, p, S, verbose, list_power_S){
   invM = compute_M_inverse(
     m = m,
     all_tr0 = 1, # For covariance matrices, the initialization is at 1.
-    all_tr = all_tr / p, verbose = verbose)
+    all_tr = all_tr / p, verbose = verbose,
+    mpfr = mpfr, precBits = precBits)
   
   return (list(invM = invM, hm = hm))
 }

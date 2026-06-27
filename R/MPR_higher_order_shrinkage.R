@@ -6,7 +6,8 @@
 # - a square matrix M of size (m + 1)
 # - a vector hm of size (m + 1)
 # - the estimator of v
-compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose)
+compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose,
+                            mpfr, precBits)
 {
   s_and_v = compute_sv_ridge(m = 2 * m, # we need additional powers compared
                                         # to the ridge
@@ -61,7 +62,8 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose
     # We avoid computing M and inverting it numerically. Here we compute the
     # inverse of the matrix M by using the recursive formula.
     invM = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
-                             all_tr = s2[-1], verbose = verbose - 2)
+                             all_tr = s2[-1], verbose = verbose - 2,
+                             mpfr = mpfr, precBits = precBits)
     if (verbose > 1){
       cat("M^{-1} = \n")
       print(invM)
@@ -160,24 +162,27 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose
 #' 
 MPR_higher_order_shrinkage <- function(
     X, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50),
-    method_invM = "recursive", verbose = 0)
+    method_invM = "recursive", verbose = 0, mpfr = FALSE, precBits = 2^16)
 {
   call_ = match.call()
   if (is.null(t)){
     result = MPR_higher_order_shrinkage_optimal(
       X = X, m = m, centeredCov = centeredCov, verbose = verbose,
-      interval = interval, method_invM = method_invM, call_ = call_)
+      interval = interval, method_invM = method_invM, call_ = call_,
+      mpfr = mpfr, precBits = precBits)
     
   } else {
     result = MPR_higher_order_shrinkage_non_optimized(
       X = X, m = m, centeredCov = centeredCov, t = t, verbose = verbose, 
-      method_invM = method_invM, call_ = call_)
+      method_invM = method_invM, call_ = call_,
+      mpfr = mpfr, precBits = precBits)
   }
 }
 
 
 MPR_higher_order_shrinkage_non_optimized <- function(
-    X, m, centeredCov = TRUE, t, method_invM = "recursive", verbose = 0, call_ = NULL)
+    X, m, centeredCov = TRUE, t, method_invM = "recursive", verbose = 0,
+    call_ = NULL, mpfr = FALSE, precBits = 2^16)
 {
   if (verbose > 0){
     cat("Starting `MPR_higher_order_shrinkage`...\n")
@@ -214,7 +219,8 @@ MPR_higher_order_shrinkage_non_optimized <- function(
   
   estimatedM = compute_M_t_MPR(
     m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = iS_ridge,
-    t = t, method_invM = method_invM, verbose = verbose)
+    t = t, method_invM = method_invM, verbose = verbose,
+    mpfr = mpfr, precBits = precBits)
   
   # TODO: compute all estimators for smaller m here using submatrices of this matrix
   
@@ -252,7 +258,7 @@ MPR_higher_order_shrinkage_non_optimized <- function(
 
 MPR_higher_order_shrinkage_optimal <- function(
     X, m, centeredCov = TRUE, t, verbose = 0, interval = c(0, 50),
-    method_invM = "recursive", call_ = NULL)
+    method_invM = "recursive", call_ = NULL, mpfr = FALSE, precBits = 2^16)
 {
   if (verbose > 0){
     cat("Starting `MPR_higher_order_shrinkage_optimal` (with unknown t)...\n")
@@ -281,7 +287,8 @@ MPR_higher_order_shrinkage_optimal <- function(
   estimatedLoss <- function(t){
     loss = loss_L2_MPR_higher_order_optimal(
       X = X, m = m, t = t, c_n = c_n, q1 = q1, q2 = q2, S = S, Ip = Ip,
-      method_invM = method_invM, verbose = verbose - 1)
+      method_invM = method_invM, verbose = verbose - 1,
+      mpfr = mpfr, precBits = precBits)
     
     return (loss)
   }
@@ -305,7 +312,8 @@ MPR_higher_order_shrinkage_optimal <- function(
   
   estimatedM = compute_M_t_MPR(
     m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = iS_ridge,
-    t = optimal_t, method_invM = method_invM, verbose = verbose - 2)
+    t = optimal_t, method_invM = method_invM, verbose = verbose - 2,
+    mpfr = mpfr, precBits = precBits)
   
   # TODO: compute all estimators for smaller m here using submatrices of this matrix
   
@@ -338,7 +346,8 @@ MPR_higher_order_shrinkage_optimal <- function(
 
 
 loss_L2_MPR_higher_order_optimal <- function (
-    X, m, t, c_n, q1, q2, S, Ip, method_invM = "recursive", verbose)
+    X, m, t, c_n, q1, q2, S, Ip, method_invM = "recursive", verbose, 
+    mpfr, precBits)
 {
   if (verbose > 0){
     cat("t = ", t)
@@ -354,7 +363,8 @@ loss_L2_MPR_higher_order_optimal <- function (
   loss = tryCatch({
     estimatedM = compute_M_t_MPR(
       m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = S_t_inverse,
-      t = t, method_invM = method_invM, verbose = verbose - 2)
+      t = t, method_invM = method_invM, verbose = verbose - 2,
+      mpfr = mpfr, precBits = precBits)
     
     loss = 1 - t(estimatedM$hm) %*% estimatedM$alpha
   }, error = function(e){e}

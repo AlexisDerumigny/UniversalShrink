@@ -416,7 +416,8 @@ ridge_shrinkage_general_optimal <- function (X, centeredCov, Pi0, verbose = 2,
 #' @param cn the ratio p/n (potentially centered)
 #' @param Pi0 the target
 #'
-#' @returns an estimator of the L2 loss
+#' @returns an estimator of the L2 loss.
+#' This loss is to be maxmimized, in the sense, higher is better.
 #'
 #' @noRd
 loss_L2_ridge_optimal <- function(t, Sn, p, Ip, cn, Pi0, iS_ridge, verbose)

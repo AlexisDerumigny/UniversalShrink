@@ -9,7 +9,9 @@ Moore_Penrose_higher_order_shrinkage(
   m,
   centeredCov = TRUE,
   method_invM = "recursive",
-  verbose = 0
+  verbose = 0,
+  mpfr = FALSE,
+  precBits = 2^16
 )
 }
 \arguments{

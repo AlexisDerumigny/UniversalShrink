@@ -12,7 +12,9 @@ oracle_higher_order_shrinkage(
   centeredCov = TRUE,
   method_invM = "recursive",
   verbose = 0,
-  interval = c(0, 50)
+  interval = c(0, 50),
+  mpfr = FALSE,
+  precBits = 2^16
 )
 }
 \arguments{

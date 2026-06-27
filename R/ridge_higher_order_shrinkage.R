@@ -160,24 +160,26 @@
 #' 
 ridge_higher_order_shrinkage <- function(
     X, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50), verbose = 0,
-    method_invM = "recursive")
+    method_invM = "recursive", mpfr = FALSE, precBits = 2^16)
 {
   call_ = match.call()
   if (is.null(t)){
     result = ridge_higher_order_shrinkage_optimal(
       X = X, m = m, centeredCov = centeredCov, verbose = verbose,
-      interval = interval, method_invM = method_invM, call_ = call_)
+      interval = interval, method_invM = method_invM, call_ = call_,
+      mpfr = mpfr, precBits = precBits)
     
   } else {
     result = ridge_higher_order_shrinkage_non_optimized(
       X = X, m = m, centeredCov = centeredCov, t = t, verbose = verbose,
-      method_invM = method_invM, call_ = call_)
+      method_invM = method_invM, call_ = call_, mpfr = mpfr, precBits = precBits)
   }
 }
 
 
 ridge_higher_order_shrinkage_non_optimized <- function(
-    X, m, centeredCov, t, verbose = 0, method_invM = "recursive", call_ = NULL)
+    X, m, centeredCov, t, verbose = 0, method_invM = "recursive", call_ = NULL,
+    mpfr = mpfr, precBits = precBits)
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_non_optimized` (known t)...\n")
@@ -215,7 +217,8 @@ ridge_higher_order_shrinkage_non_optimized <- function(
   
   estimatedM = compute_M_t_ridge(
     m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = S_t_inverse,
-    t = t, method_invM = method_invM, verbose = verbose)
+    t = t, method_invM = method_invM, verbose = verbose,
+    mpfr = mpfr, precBits = precBits)
   
   alpha = estimatedM$alpha
   
@@ -253,7 +256,7 @@ ridge_higher_order_shrinkage_non_optimized <- function(
 
 ridge_higher_order_shrinkage_optimal <- function(
     X, m, centeredCov = TRUE, verbose = 0, interval = c(0, 50),
-    method_invM = "recursive", call_ = NULL)
+    method_invM = "recursive", call_ = NULL, mpfr, precBits)
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_optimal` (with unknown t)...\n")
@@ -284,11 +287,11 @@ ridge_higher_order_shrinkage_optimal <- function(
     S_t_inverse <- as.matrix(ridge_)
     
     loss = tryCatch({
-      estimatedM = compute_M_t_ridge(
-        m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = S_t_inverse,
-        t = t, method_invM = method_invM, verbose = 0)
+      loss_L2_ridge_higher_order(
+        t = t, m = m, c_n = c_n, q1 = q1, q2, S_t_inverse = S_t_inverse,
+        verbose = verbose - 2, method_invM = method_invM,
+        mpfr = mpfr, precBits = precBits)
       
-      loss = 1 - t(estimatedM$hm) %*% estimatedM$alpha
     }, error = function(e){e}
     )
     
@@ -319,7 +322,8 @@ ridge_higher_order_shrinkage_optimal <- function(
   
   estimatedM = compute_M_t_ridge(
     m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = S_t_inverse,
-    t = optimal_t, method_invM = method_invM, verbose = verbose)
+    t = optimal_t, method_invM = method_invM, verbose = verbose,
+    mpfr = mpfr, precBits = precBits)
   
   alpha = estimatedM$alpha
   
@@ -351,6 +355,24 @@ ridge_higher_order_shrinkage_optimal <- function(
   class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
+}
+
+
+#' This returns the loss (lower is better)
+#' 
+#' @noRd
+loss_L2_ridge_higher_order <- function(t, m, c_n, q1, q2, S_t_inverse,
+                                       verbose = 0, method_invM = "recursive",
+                                       mpfr = FALSE, precBits = 2^16)
+{
+  estimatedM = compute_M_t_ridge(
+    m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = S_t_inverse,
+    t = t, method_invM = method_invM, verbose = 0,
+    mpfr = mpfr, precBits = precBits)
+  
+  loss = 1 - t(estimatedM$hm) %*% estimatedM$alpha
+  
+  return (loss)
 }
 
 
@@ -491,7 +513,8 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 # - a square matrix M of size (m + 1)
 # - a vector hm of size (m + 1)
 # - the estimator of v
-compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose)
+compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
+                              verbose, mpfr, precBits)
 {
   s_and_v = compute_sv_ridge(m = m, c_n = c_n,
                              S_t_inverse = S_t_inverse, q1 = q1, q2 = q2, t = t,
@@ -535,7 +558,8 @@ compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbo
     # We avoid computing M and inverting it numerically. Here we compute the
     # inverse of the matrix M by using the recursive formula.
     invM = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
-                             all_tr = s2[-1], verbose = verbose - 2)
+                             all_tr = s2[-1], verbose = verbose - 2,
+                             mpfr = mpfr, precBits = precBits)
     if (verbose > 1){
       cat("M^{-1} = \n")
       print(invM)

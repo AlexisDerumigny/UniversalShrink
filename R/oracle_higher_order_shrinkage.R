@@ -68,7 +68,8 @@
 #' @export
 oracle_higher_order_shrinkage <- function(
     X, m, Sigma, nameEstimator = "Moore-Penrose", centeredCov = TRUE,
-    method_invM = "recursive", verbose = 0, interval = c(0, 50)) {
+    method_invM = "recursive", verbose = 0, interval = c(0, 50),
+    mpfr = FALSE, precBits = 2^16) {
   
   call_ = match.call()
   # Get sizes of X
@@ -94,8 +95,8 @@ oracle_higher_order_shrinkage <- function(
       
       estimatedLoss <- function(t){
         loss = loss_L2_ridge_oracle_higher_order_optimal(
-          S = S, t = t, Ip = Ip, m = m, Sigma = Sigma,
-          method_invM = method_invM, verbose = verbose - 2)
+          S = S, t = t, Ip = Ip, m = m, Sigma = Sigma, method_invM = method_invM,
+          verbose = verbose - 2, mpfr = mpfr, precBits = precBits)
         
         return (loss)
       }
@@ -104,8 +105,8 @@ oracle_higher_order_shrinkage <- function(
       
       estimatedLoss <- function(t){
         loss = loss_L2_MPR_oracle_higher_order_optimal(
-          S = S, t = t, Ip = Ip, m = m, Sigma = Sigma, 
-          method_invM = method_invM, verbose = verbose - 2)
+          S = S, t = t, Ip = Ip, m = m, Sigma = Sigma, method_invM = method_invM,
+          verbose = verbose - 2, mpfr = mpfr, precBits = precBits)
         
         return (loss)
       }
@@ -137,8 +138,8 @@ oracle_higher_order_shrinkage <- function(
   
   
   resultM <- compute_M_oracle(
-    estimator_S = estimated_precision_matrix, Sigma = Sigma,
-    m = m, Ip = Ip, p = p, verbose = verbose)
+    estimator_S = estimated_precision_matrix, Sigma = Sigma, m = m, Ip = Ip,
+    p = p, verbose = verbose, mpfr = mpfr, precBits = precBits)
   
   alpha = resultM$alpha
   
@@ -170,7 +171,8 @@ oracle_higher_order_shrinkage <- function(
   return (result)
 }
 
-compute_M_oracle <- function(estimator_S, Sigma, m, Ip, p, verbose) {
+compute_M_oracle <- function(estimator_S, Sigma, m, Ip, p, verbose,
+                             mpfr, precBits) {
   hm = rep(NA, m + 1)
   s2 = rep(NA, 2 * m + 1)
   
@@ -196,7 +198,8 @@ compute_M_oracle <- function(estimator_S, Sigma, m, Ip, p, verbose) {
   # invM_solve = solve(M)
   
   invM_recursive = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
-                                     all_tr = s2[-1], verbose = verbose - 2)
+                                     all_tr = s2[-1], verbose = verbose - 2,
+                                     mpfr = mpfr, precBits = precBits)
   
   alpha = invM_recursive %*% hm
   
@@ -213,7 +216,7 @@ compute_M_oracle <- function(estimator_S, Sigma, m, Ip, p, verbose) {
 
 
 loss_L2_ridge_oracle_higher_order_optimal <- function (
-    S, t, Ip, m, Sigma, method_invM = "recursive", verbose)
+    S, t, Ip, m, Sigma, method_invM = "recursive", verbose, mpfr, precBits)
 {
   if (verbose > 0){
     cat("t = ", t)
@@ -228,8 +231,8 @@ loss_L2_ridge_oracle_higher_order_optimal <- function (
   
   loss = tryCatch({
     estimatedM = compute_M_oracle(
-      estimator_S = iS_ridge, Sigma = Sigma, m = m,
-      Ip = Ip, p = p, verbose = verbose - 1)
+      estimator_S = iS_ridge, Sigma = Sigma, m = m, Ip = Ip, p = p,
+      verbose = verbose - 1, mpfr = mpfr, precBits = precBits)
     
     loss = 1 - t(estimatedM$hm) %*% estimatedM$alpha
   }, error = function(e){e}
@@ -249,7 +252,7 @@ loss_L2_ridge_oracle_higher_order_optimal <- function (
 
 
 loss_L2_MPR_oracle_higher_order_optimal <- function (
-    S, t, Ip, m, Sigma, method_invM = "recursive", verbose)
+    S, t, Ip, m, Sigma, method_invM = "recursive", verbose, mpfr, precBits)
 {
   if (verbose > 0){
     cat("t = ", t)
@@ -266,8 +269,8 @@ loss_L2_MPR_oracle_higher_order_optimal <- function (
   
   loss = tryCatch({
     estimatedM = compute_M_oracle(
-      estimator_S = MPR_estimator, Sigma = Sigma, m = m,
-      Ip = Ip, p = p, verbose = verbose - 1)
+      estimator_S = MPR_estimator, Sigma = Sigma, m = m, Ip = Ip, p = p,
+      verbose = verbose - 1, mpfr = mpfr, precBits = precBits)
     
     loss = 1 - t(estimatedM$hm) %*% estimatedM$alpha
   }, error = function(e){e}

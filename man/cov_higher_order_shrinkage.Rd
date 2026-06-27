@@ -4,7 +4,14 @@
 \alias{cov_higher_order_shrinkage}
 \title{Higher order shrinkage for estimation of the covariance matrix}
 \usage{
-cov_higher_order_shrinkage(X, centeredCov = TRUE, m, verbose = 0)
+cov_higher_order_shrinkage(
+  X,
+  centeredCov = TRUE,
+  m,
+  verbose = 0,
+  mpfr = FALSE,
+  precBits = 2^16
+)
 }
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}

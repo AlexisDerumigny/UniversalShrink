@@ -98,7 +98,8 @@ estimator_d_hat_tilde_p_small <- function(m, c_n, w_hat, Bell_polynomials){
 
 # Compute the matrix M for the higher-order shrinkage in the p > n regime.
 compute_M_MoorePenrose_plarge <- function(
-    m, n, p, c_n, ihv0, q1, q2, h2, h3, hv0, centeredCov, D_MP, method_invM, verbose)
+    m, n, p, c_n, ihv0, q1, q2, h2, h3, hv0, centeredCov, D_MP, method_invM,
+    verbose, mpfr, precBits)
 {
   if (verbose > 0){
     cat("Starting compute_M_MoorePenrose_plarge...\n")
@@ -205,7 +206,8 @@ compute_M_MoorePenrose_plarge <- function(
     # We avoid computing M and inverting it numerically. Here we compute the
     # inverse of the matrix M by using the recursive formula.
     invM = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
-                             all_tr = s2[-1], verbose = verbose - 2)
+                             all_tr = s2[-1], verbose = verbose - 2,
+                             mpfr = mpfr, precBits = precBits)
     if (verbose > 1){
       cat("M^{-1} = \n")
       print(invM)
@@ -247,7 +249,8 @@ compute_M_MoorePenrose_plarge <- function(
 
 # Compute the matrix M for the higher-order shrinkage in the p < n regime.
 compute_M_MoorePenrose_psmall <- function(
-    m, n, p, c_n, q1, q2, centeredCov, D_MP, method_invM, verbose)
+    m, n, p, c_n, q1, q2, centeredCov, D_MP, method_invM, verbose,
+    mpfr, precBits)
 {
   if (verbose > 0){
     cat("Starting compute_M_MoorePenrose_psmall...\n")
@@ -341,7 +344,8 @@ compute_M_MoorePenrose_psmall <- function(
     # We avoid computing M and inverting it numerically. Here we compute the
     # inverse of the matrix M by using the recursive formula.
     invM = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
-                             all_tr = s2[-1], verbose = verbose - 2)
+                             all_tr = s2[-1], verbose = verbose - 2,
+                             mpfr = mpfr, precBits = precBits)
     if (verbose > 1){
       cat("M^{-1} = \n")
       print(invM)
@@ -519,7 +523,8 @@ compute_M_MoorePenrose_psmall <- function(
 #' @export
 #' 
 Moore_Penrose_higher_order_shrinkage <- function(
-    X, m, centeredCov = TRUE, method_invM = "recursive", verbose = 0)
+    X, m, centeredCov = TRUE, method_invM = "recursive", verbose = 0,
+    mpfr = FALSE, precBits = 2^16)
 {
   call_ = match.call()
   # Get sizes of X
@@ -545,7 +550,7 @@ Moore_Penrose_higher_order_shrinkage <- function(
     estimatedM = compute_M_MoorePenrose_psmall(
       m = m, n = n, p = p, c_n = c_n, q1 = q1, q2 = q2,
       centeredCov = centeredCov, D_MP = D_MP, method_invM = method_invM,
-      verbose = verbose)
+      verbose = verbose, mpfr = mpfr, precBits = precBits)
     
   } else if (p > iS_MP$n_adjusted){
     
@@ -566,7 +571,7 @@ Moore_Penrose_higher_order_shrinkage <- function(
       m = m, n = n, p = p, c_n = c_n, ihv0 = ihv0,
       q1 = q1, q2 = q2, h2 = h2, h3 = h3, hv0 = hv0,
       centeredCov = centeredCov, D_MP = D_MP, method_invM = method_invM,
-      verbose = verbose)
+      verbose = verbose, mpfr = mpfr, precBits = precBits)
   } else {
     stop("This estimator is not defined for p = n - 1 in the centered case,",
          "and for p = n in the non-centered case. Here p = ", p,

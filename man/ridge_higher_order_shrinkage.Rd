@@ -11,7 +11,9 @@ ridge_higher_order_shrinkage(
   t = NULL,
   interval = c(0, 50),
   verbose = 0,
-  method_invM = "recursive"
+  method_invM = "recursive",
+  mpfr = FALSE,
+  precBits = 2^16
 )
 }
 \arguments{

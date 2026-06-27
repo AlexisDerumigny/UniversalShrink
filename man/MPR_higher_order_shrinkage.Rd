@@ -11,7 +11,9 @@ MPR_higher_order_shrinkage(
   t = NULL,
   interval = c(0, 50),
   method_invM = "recursive",
-  verbose = 0
+  verbose = 0,
+  mpfr = FALSE,
+  precBits = 2^16
 )
 }
 \arguments{
