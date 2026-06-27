@@ -95,8 +95,9 @@ oracle_higher_order_shrinkage <- function(
       
       estimatedLoss <- function(t){
         loss = loss_L2_ridge_oracle_higher_order_optimal(
-          S = S, t = t, Ip = Ip, m = m, Sigma = Sigma, method_invM = method_invM,
-          verbose = verbose - 2, mpfr = mpfr, precBits = precBits)
+          S = S, t = t, Ip = Ip, p = p, m = m, Sigma = Sigma,
+          method_invM = method_invM, verbose = verbose - 2,
+          mpfr = mpfr, precBits = precBits)
         
         return (loss)
       }
@@ -105,8 +106,9 @@ oracle_higher_order_shrinkage <- function(
       
       estimatedLoss <- function(t){
         loss = loss_L2_MPR_oracle_higher_order_optimal(
-          S = S, t = t, Ip = Ip, m = m, Sigma = Sigma, method_invM = method_invM,
-          verbose = verbose - 2, mpfr = mpfr, precBits = precBits)
+          S = S, t = t, Ip = Ip, p = p, m = m, Sigma = Sigma,
+          method_invM = method_invM, verbose = verbose - 2,
+          mpfr = mpfr, precBits = precBits)
         
         return (loss)
       }
@@ -216,7 +218,7 @@ compute_M_oracle <- function(estimator_S, Sigma, m, Ip, p, verbose,
 
 
 loss_L2_ridge_oracle_higher_order_optimal <- function (
-    S, t, Ip, m, Sigma, method_invM = "recursive", verbose, mpfr, precBits)
+    S, t, Ip, p, m, Sigma, method_invM = "recursive", verbose, mpfr, precBits)
 {
   if (verbose > 0){
     cat("t = ", t)
@@ -252,7 +254,7 @@ loss_L2_ridge_oracle_higher_order_optimal <- function (
 
 
 loss_L2_MPR_oracle_higher_order_optimal <- function (
-    S, t, Ip, m, Sigma, method_invM = "recursive", verbose, mpfr, precBits)
+    S, t, Ip, p, m, Sigma, method_invM = "recursive", verbose, mpfr, precBits)
 {
   if (verbose > 0){
     cat("t = ", t)

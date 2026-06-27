@@ -13,7 +13,7 @@ compute_M_inverse <- function(m, all_tr0, all_tr, verbose = 0, mpfr, precBits){
   if (mpfr) {
     all_tr0 = Rmpfr::mpfr(all_tr0, precBits = precBits)
     all_tr  = Rmpfr::mpfr(all_tr , precBits = precBits)
-    old_invM = new("mpfrMatrix", all_tr0, Dim = c(1L, 1L))
+    old_invM = methods::new("mpfrMatrix", all_tr0, Dim = c(1L, 1L))
     
     zero = Rmpfr::mpfr(0, precBits = precBits)
   } else {
@@ -21,9 +21,11 @@ compute_M_inverse <- function(m, all_tr0, all_tr, verbose = 0, mpfr, precBits){
   }
   for (m in 1:m){
     if (mpfr) {
-      invM = new("mpfrMatrix", rep(zero, (m + 1)^2), Dim = c(m + 1L, m + 1L))
+      invM = methods::new("mpfrMatrix",
+                          rep(zero, (m + 1)^2), Dim = c(m + 1L, m + 1L))
       
-      m_tilde = new("mpfrMatrix", all_tr[m:(2 * m - 1)], Dim = c(m, 1L))
+      m_tilde = methods::new("mpfrMatrix",
+                             all_tr[m:(2 * m - 1)], Dim = c(m, 1L))
     } else {
       
       invM = matrix(ncol = m + 1, nrow = m + 1)
