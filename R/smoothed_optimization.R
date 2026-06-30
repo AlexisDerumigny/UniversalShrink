@@ -11,7 +11,7 @@ smoothed_optimization <- function(FUN, grid, k, verbose, ...)
   optimal_t = vec_t[which.min( vec_loss )]
   
   # Smoothing
-  fit.rollmedian = zoo::rollmedian(vec_loss, k = k, fill = NA)
+  fit.rollmedian = stats::runmed(vec_loss, k = k, fill = NA)
   optimal_t_smoothed = vec_t[which.min( fit.rollmedian )]
   
   result = list(
