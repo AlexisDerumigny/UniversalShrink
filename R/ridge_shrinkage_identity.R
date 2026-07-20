@@ -28,43 +28,15 @@ ridge_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0
   
   ##### shrinkage Ridge
   
-  hL2R <- function(u)
-  {
-    t <- tan(u)
+  result_optimization = optimization(
+    FUN = loss_L2_ridge_shrinkage_identity,
+    optimizationMethod = "optim with tan",
+    grid = NULL, k = NULL, verbose = verbose - 2,
+    lower = eps, upper = upp, initialValue = initialValue,
     
-    ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = 0,
-                   method_inversion = "auto")
-    
-    iS_Rt <- as.matrix(ridge_)
-    
-    trS1_t <- sum(diag(iS_Rt)) / p
-    trS2_t <- sum(diag(iS_Rt %*% iS_Rt)) / p
-    
-    hvt <- c_n * (trS1_t - r / t)
-    hvprt <- - c_n * (trS2_t - r / t^2)
-    ihvt <- 1 / hvt
-    ihvt_2 <- ihvt^2
-    
-    d0_t <- t * trS1_t
-    d1_t <- - ( t * trS2_t - d0_t / t) / (c_n * (trS2_t - r / t^2) )
-    
-    d0Sig_t <- ihvt / c_n - t / c_n
-    d0Sig2_t <- ihvt * (q1 - d0Sig_t)
-    d1Sig2_t <- ihvt_2 * (q1 + d1_t - 2 * d0Sig_t)
-    
-    num_a_ShRt <- d0Sig_t * q2 - d0Sig2_t * q1
-    den_ShRt <- (d0Sig2_t + t * hvprt * d1Sig2_t) * q2 - d0Sig2_t^2
-    L2_ShRt <- num_a_ShRt^2 / den_ShRt / q2
-    
-    return(L2_ShRt)
-  }
+    X = X, c_n = c_n, r = r, q1 = q1, q2 = q2, centeredCov = centeredCov)
   
-  
-  hL2R_max <- stats::optim(par = initialValue, fn = hL2R,
-                           lower = eps, upper = upp,
-                           method = "L-BFGS-B", control = list(fnscale = -1))
-  
-  u_R <- hL2R_max$par
+  u_R <- result_optimization$par
   
   t_R <- tan(u_R)
   
@@ -113,6 +85,35 @@ ridge_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0
   return (result)
 }
 
+
+loss_L2_ridge_shrinkage_identity <- function(t, X, c_n, r, q1, q2, centeredCov)
+{
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = 0,
+                 method_inversion = "auto")
+  
+  iS_Rt <- as.matrix(ridge_)
+  
+  trS1_t <- sum(diag(iS_Rt)) / p
+  trS2_t <- sum(diag(iS_Rt %*% iS_Rt)) / p
+  
+  hvt <- c_n * (trS1_t - r / t)
+  hvprt <- - c_n * (trS2_t - r / t^2)
+  ihvt <- 1 / hvt
+  ihvt_2 <- ihvt^2
+  
+  d0_t <- t * trS1_t
+  d1_t <- - ( t * trS2_t - d0_t / t) / (c_n * (trS2_t - r / t^2) )
+  
+  d0Sig_t <- ihvt / c_n - t / c_n
+  d0Sig2_t <- ihvt * (q1 - d0Sig_t)
+  d1Sig2_t <- ihvt_2 * (q1 + d1_t - 2 * d0Sig_t)
+  
+  num_a_ShRt <- d0Sig_t * q2 - d0Sig2_t * q1
+  den_ShRt <- (d0Sig2_t + t * hvprt * d1Sig2_t) * q2 - d0Sig2_t^2
+  L2_ShRt <- num_a_ShRt^2 / den_ShRt / q2
+  
+  return(L2_ShRt)
+}
 
 
 ridge_shrinkage_identity_semioptimal <- function (X, centeredCov, t, verbose = 2,

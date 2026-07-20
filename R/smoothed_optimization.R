@@ -1,9 +1,21 @@
 
-optimization <- function(FUN, smoothed, grid = NULL, k = NULL, verbose, ...)
+optimization <- function(FUN, optimizationMethod,
+                         grid = NULL, k = NULL,
+                         initialValue = NULL, lower = NULL, upper = NULL,
+                         verbose, ...)
 {
-  if (smoothed) {
+  if (optimizationMethod == "smoothed") {
     result = smoothed_optimization(
       FUN = FUN, grid = grid, k = k, verbose = verbose, ...)
+    
+  } else if (optimizationMethod == "optim with tan") {
+    FUN2 = function (u){ return (FUN(tan(u), ...))}
+    
+    result = stats::optim(
+      par = initialValue, fn = FUN2, lower = lower, upper = upper,
+      method = "L-BFGS-B",
+      control = list(fnscale = -1) # for maximization
+    )
   }
   
   return (result)
