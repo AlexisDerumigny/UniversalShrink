@@ -18,6 +18,14 @@ optimization <- function(FUN, optimizationMethod,
     )
     
     result$optimal_t = tan(result$par)
+  } else if (optimizationMethod == "optimize") {
+    result <- stats::optimize(f = FUN, maximum = maximum,
+                              interval = c(lower, upper), ...)
+    if (maximum) {
+      result$optimal_t = result$maximum
+    } else {
+      result$optimal_t = result$minimum
+    }
   }
   
   return (result)
