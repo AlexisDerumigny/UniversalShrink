@@ -2,9 +2,11 @@
 
 
 
-ridge_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0,
-                                           eps = 1/(10^6), upp = pi/2 - eps,
-                                           initialValue = 1.5, call_ = NULL){
+ridge_shrinkage_identity_optimal <- function (
+    X, centeredCov = TRUE, verbose = 0,
+    eps = 1/(10^6), upp = pi/2 - eps, initialValue = 1.5,
+    optimizationMethod = NULL, k = NULL, call_ = NULL)
+{
   if (verbose > 0){
     cat("Starting `ridge_shrinkage_identity_optimal`...\n")
   }
@@ -28,17 +30,21 @@ ridge_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0
   
   ##### shrinkage Ridge
   
+  eigenvalues_S = eigen(S)$values
+  epsilon_steps = mean(abs(diff(eigenvalues_S)))
+  grid_optim = seq(from = epsilon_steps / 2,
+                   to = max(eigenvalues_S), 
+                   by = epsilon_steps)
+  
   result_optimization = optimization(
     FUN = loss_L2_ridge_shrinkage_identity,
-    optimizationMethod = "optim with tan",
-    grid = NULL, k = NULL, verbose = verbose - 2,
+    optimizationMethod = optimizationMethod,
+    grid = grid_optim, k = k, verbose = verbose - 2,
     lower = eps, upper = upp, initialValue = initialValue,
     
     X = X, c_n = c_n, r = r, q1 = q1, q2 = q2, centeredCov = centeredCov)
   
-  u_R <- result_optimization$par
-  
-  t_R <- tan(u_R)
+  t_R <- result_optimization$optimal_t
   
   ridge_ = ridge(X = X, centeredCov = centeredCov, t = t_R, verbose = verbose - 1,
                  method_inversion = "auto")
@@ -77,7 +83,8 @@ ridge_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 0
     centeredCov = centeredCov,
     method = "Ridge shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
-    call = call_
+    call = call_,
+    result_optimization = result_optimization
   )
   
   class(result) <- c("EstimatedPrecisionMatrix")

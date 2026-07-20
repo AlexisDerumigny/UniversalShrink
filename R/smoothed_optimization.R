@@ -2,6 +2,7 @@
 optimization <- function(FUN, optimizationMethod,
                          grid = NULL, k = NULL,
                          initialValue = NULL, lower = NULL, upper = NULL,
+                         maximum = FALSE,
                          verbose, ...)
 {
   if (optimizationMethod == "smoothed") {
@@ -14,8 +15,10 @@ optimization <- function(FUN, optimizationMethod,
     result = stats::optim(
       par = initialValue, fn = FUN2, lower = lower, upper = upper,
       method = "L-BFGS-B",
-      control = list(fnscale = -1) # for maximization
+      control = list(fnscale = -maximum) # -1 for maximization
     )
+    
+    result$optimal_t = tan(result$par)
   }
   
   return (result)
