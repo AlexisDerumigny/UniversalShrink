@@ -31,11 +31,7 @@ ridge_shrinkage_identity_optimal <- function (
   ##### shrinkage Ridge
   
   if (is.null(grid_optim)) {
-    eigenvalues_S = eigen(S)$values
-    epsilon_steps = mean(abs(diff(eigenvalues_S)))
-    grid_optim = seq(from = epsilon_steps / 2,
-                     to = max(eigenvalues_S), 
-                     by = epsilon_steps)
+    grid_optim <- make_default_grid_optimization(S = S, c_n = c_n)
   }
   
   result_optimization = optimization(
