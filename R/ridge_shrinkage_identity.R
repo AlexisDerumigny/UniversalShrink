@@ -39,6 +39,8 @@ ridge_shrinkage_identity_optimal <- function (
   result_optimization = optimization(
     FUN = loss_L2_ridge_shrinkage_identity,
     optimizationMethod = optimizationMethod,
+    maximum = TRUE,
+    # we want to maximize this since it is the opposite of the loss
     grid = grid_optim, k = k, verbose = verbose - 2,
     lower = eps, upper = upp, initialValue = initialValue,
     

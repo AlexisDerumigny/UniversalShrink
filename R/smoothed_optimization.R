@@ -2,12 +2,11 @@
 optimization <- function(FUN, optimizationMethod,
                          grid = NULL, k = NULL,
                          initialValue = NULL, lower = NULL, upper = NULL,
-                         maximum = FALSE,
-                         verbose, ...)
+                         maximum = FALSE, verbose, ...)
 {
   if (optimizationMethod == "smoothed") {
     result = smoothed_optimization(
-      FUN = FUN, grid = grid, k = k, verbose = verbose, ...)
+      FUN = FUN, grid = grid, k = k, verbose = verbose, maximum = maximum, ...)
     
   } else if (optimizationMethod == "optim with tan") {
     FUN2 = function (u){ return (FUN(tan(u), ...))}
@@ -25,7 +24,7 @@ optimization <- function(FUN, optimizationMethod,
 }
 
 
-smoothed_optimization <- function(FUN, grid, k, verbose, ...)
+smoothed_optimization <- function(FUN, grid, k, verbose, maximum, ...)
 {
   if (verbose > 0) {
     cat("Starting `smoothed_optimization` ... \n")
@@ -38,11 +37,17 @@ smoothed_optimization <- function(FUN, grid, k, verbose, ...)
     vec_loss[i_t] = FUN(t = grid[i_t], ...)
   }
   
-  optimal_t = vec_t[which.min( vec_loss )]
-  
   # Smoothing
   fit.rollmedian = stats::runmed(vec_loss, k = k)
-  optimal_t_smoothed = vec_t[which.min( fit.rollmedian )]
+  
+  # Finding the maximum or minimum as requested
+  if (maximum) {
+    optimal_t = vec_t[which.max( vec_loss )]
+    optimal_t_smoothed = vec_t[which.max( fit.rollmedian )]
+  } else {
+    optimal_t = vec_t[which.min( vec_loss )]
+    optimal_t_smoothed = vec_t[which.min( fit.rollmedian )]
+  }
   
   result = list(
     optimal_t = optimal_t,
@@ -50,7 +55,8 @@ smoothed_optimization <- function(FUN, grid, k, verbose, ...)
     optimization_type = "smoothed",
     k = k,
     grid = grid,
-    vec_loss = vec_loss
+    vec_loss = vec_loss,
+    maximum = maximum
   )
   
   return (result)
