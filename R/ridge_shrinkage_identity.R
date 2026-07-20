@@ -5,7 +5,7 @@
 ridge_shrinkage_identity_optimal <- function (
     X, centeredCov = TRUE, verbose = 0,
     eps = 1/(10^6), upp = pi/2 - eps, initialValue = 1.5,
-    optimizationMethod = NULL, k = NULL, call_ = NULL)
+    optimizationMethod = NULL, k = NULL, grid_optim = NULL, call_ = NULL)
 {
   if (verbose > 0){
     cat("Starting `ridge_shrinkage_identity_optimal`...\n")
@@ -30,11 +30,13 @@ ridge_shrinkage_identity_optimal <- function (
   
   ##### shrinkage Ridge
   
-  eigenvalues_S = eigen(S)$values
-  epsilon_steps = mean(abs(diff(eigenvalues_S)))
-  grid_optim = seq(from = epsilon_steps / 2,
-                   to = max(eigenvalues_S), 
-                   by = epsilon_steps)
+  if (is.null(grid_optim)) {
+    eigenvalues_S = eigen(S)$values
+    epsilon_steps = mean(abs(diff(eigenvalues_S)))
+    grid_optim = seq(from = epsilon_steps / 2,
+                     to = max(eigenvalues_S), 
+                     by = epsilon_steps)
+  }
   
   result_optimization = optimization(
     FUN = loss_L2_ridge_shrinkage_identity,
