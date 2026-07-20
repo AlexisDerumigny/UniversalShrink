@@ -64,6 +64,7 @@ smoothed_optimization <- function(FUN, grid, k, verbose, maximum, ...)
     k = k,
     grid = grid,
     vec_loss = vec_loss,
+    vec_loss_smoothed = fit.rollmedian,
     maximum = maximum
   )
   
