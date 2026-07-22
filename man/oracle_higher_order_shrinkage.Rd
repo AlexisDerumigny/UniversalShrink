@@ -22,6 +22,8 @@ oracle_higher_order_shrinkage(
 
 \item{m}{order of the shrinkage. Should be at least 1.}
 
+\item{Sigma}{true covariance matrix}
+
 \item{nameEstimator}{name of the estimator of which we compute the oracle of.
 If \code{nameEstimator = "Moore-Penrose"}, this computes the finite-sample
 oracle of the higher-order shrinked Moore-Penrose estimator. Other
