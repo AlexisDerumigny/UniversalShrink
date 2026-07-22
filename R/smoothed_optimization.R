@@ -98,7 +98,7 @@ smoothed_optimization <- function(FUN, grid, k, verbose, maximum, ...)
 
 grid_optimization_default <- function(S, c_n){
   eigenvalues_S = eigen(S)$values
-  epsilon_steps = median(abs(diff(eigenvalues_S))) / (1 + sqrt(c_n))^2
+  epsilon_steps = stats::median(abs(diff(eigenvalues_S))) / (1 + sqrt(c_n))^2
   grid_optim = seq(from = epsilon_steps / 2,
                    to = max(eigenvalues_S), 
                    by = epsilon_steps)

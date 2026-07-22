@@ -46,7 +46,7 @@ ridge_shrinkage_identity_optimal <- function (
     optimizationControls = optimizationControls,
     verbose = verbose - 2,
     
-    X = X, c_n = c_n, r = r, q1 = q1, q2 = q2, centeredCov = centeredCov)
+    X = X, c_n = c_n, p = p, r = r, q1 = q1, q2 = q2, centeredCov = centeredCov)
   
   t_R <- result_optimization$optimal_t
   
@@ -97,7 +97,8 @@ ridge_shrinkage_identity_optimal <- function (
 }
 
 
-loss_L2_ridge_shrinkage_identity <- function(t, X, c_n, r, q1, q2, centeredCov)
+loss_L2_ridge_shrinkage_identity <- function(
+    t, X, c_n, p, r, q1, q2, centeredCov)
 {
   ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = 0,
                  method_inversion = "auto")
