@@ -159,14 +159,16 @@
 #' @export
 #' 
 ridge_higher_order_shrinkage <- function(
-    X, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50), verbose = 0,
+    X, m = 3, centeredCov = TRUE, t = NULL, 
+    optimizationControls = NULL, verbose = 0, 
     method_invM = "recursive", mpfr = FALSE, precBits = 2^16)
 {
   call_ = match.call()
   if (is.null(t)){
     result = ridge_higher_order_shrinkage_optimal(
       X = X, m = m, centeredCov = centeredCov, verbose = verbose,
-      interval = interval, method_invM = method_invM, call_ = call_,
+      optimizationControls = optimizationControls,
+      method_invM = method_invM, call_ = call_,
       mpfr = mpfr, precBits = precBits)
     
   } else {
@@ -256,7 +258,7 @@ ridge_higher_order_shrinkage_non_optimized <- function(
 
 
 ridge_higher_order_shrinkage_optimal <- function(
-    X, m, centeredCov = TRUE, verbose = 0, interval = c(0, 50),
+    X, m, centeredCov = TRUE, verbose = 0, optimizationControls = NULL,
     method_invM = "recursive", call_ = NULL, mpfr, precBits)
 {
   if (verbose > 0){
@@ -304,13 +306,20 @@ ridge_higher_order_shrinkage_optimal <- function(
     return (loss)
   }
   
-  # initialValue = 1
-  # eps <- 1/(10^6)
-  # upp <- pi/2 - eps
+  if (is.null(optimizationControls)) {
+    optimizationControls = list(method = "optimize")
+  }
+  if (optimizationControls$method == "smoothed" && 
+      is.null(optimizationControls$grid) ) {
+    
+    optimizationControls$grid <- grid_optimization_default(S = S, c_n = c_n)
+  }
   
-  result_optim <- stats::optimize(f = estimatedLoss, interval = interval)
+  result_optimization = optimization(
+    FUN = estimatedLoss, optimizationControls = optimizationControls,
+    maximum = FALSE, verbose = verbose - 2)
   
-  optimal_t = result_optim$minimum
+  optimal_t = result_optimization$optimal_t
   
   
   # ============================================================================
@@ -345,12 +354,14 @@ ridge_higher_order_shrinkage_optimal <- function(
     alpha = alpha,
     v = estimatedM$v,
     t = optimal_t,
-    estimated_loss = result_optim$objective,
+    estimated_loss = if (optimizationControls$method == "optimize") {
+      result_optimization$objective},
     n = n,
     p = p,
     centeredCov = centeredCov,
     method = "Ridge higher-order shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
+    result_optimization = result_optimization,
     call = call_
   )
   

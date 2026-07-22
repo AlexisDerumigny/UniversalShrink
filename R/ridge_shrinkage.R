@@ -170,8 +170,7 @@
 #' @export
 ridge_shrinkage <- function(X, centeredCov = TRUE, Pi0 = NULL,
                          t = NULL, alpha = NULL, beta = NULL,
-                         verbose = 0,
-                         eps = 1/(10^6), upp = pi/2 - eps, initialValue = 1.5)
+                         verbose = 0, optimizationControls = NULL)
 {
   call_ = match.call()
   optimizationType = selectOptimizationType(t = t, alpha = alpha, beta = beta)
@@ -195,7 +194,7 @@ ridge_shrinkage <- function(X, centeredCov = TRUE, Pi0 = NULL,
       
       all = ridge_shrinkage_identity_optimal(
         X = X, centeredCov = centeredCov, verbose = verbose,
-        eps = eps, upp = upp, initialValue = initialValue, call_ = call_)
+        optimizationControls = optimizationControls, call_ = call_)
     )
   } else {
     
@@ -212,7 +211,7 @@ ridge_shrinkage <- function(X, centeredCov = TRUE, Pi0 = NULL,
       
       all = ridge_shrinkage_general_optimal(
         X = X, centeredCov = centeredCov, Pi0 = Pi0, verbose = verbose,
-        eps = eps, upp = upp, initialValue = initialValue, call_ = call_)
+        optimizationControls = optimizationControls, call_ = call_)
     )
   }
   

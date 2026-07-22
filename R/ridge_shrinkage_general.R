@@ -340,9 +340,9 @@ ridge_shrinkage_general_semioptimal <- function (X, centeredCov, t, Pi0,
 
 
 
-ridge_shrinkage_general_optimal <- function (X, centeredCov, Pi0, verbose = 2,
-                                          eps = 1/(10^6), upp = pi/2 - eps,
-                                          initialValue = 1.5, call_ = NULL){
+ridge_shrinkage_general_optimal <- function (
+    X, centeredCov, Pi0, verbose = 2, optimizationControls = NULL, 
+    call_ = NULL){
   
   if (verbose > 0){
     cat("Starting `ridge_shrinkage_general_optimal`...\n")
@@ -359,20 +359,32 @@ ridge_shrinkage_general_optimal <- function (X, centeredCov, Pi0, verbose = 2,
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
-  hL2R <- function(u){
-    t = tan(u)
+  hL2R <- function(t){
     iS_ridge <- solve(S + t * Ip)
     loss = loss_L2_ridge_optimal(t = t, Sn = S, p = p, Ip = Ip, cn = c_n,
                                  Pi0 = Pi0, iS_ridge = iS_ridge, verbose = verbose - 1)
     return(loss)
   }
   
-  hL2R_max <- stats::optim(par = initialValue, fn = hL2R,
-                           lower = eps, upper = upp,
-                           method= "L-BFGS-B", control = list(fnscale = -1))
+  if (is.null(optimizationControls)) {
+    optimizationControls = list(method = "optim with tan")
+  }
+  if (optimizationControls$method == "smoothed" && 
+      is.null(optimizationControls$grid) ) {
+    
+    optimizationControls$grid <- grid_optimization_default(S = S, c_n = c_n)
+  }
   
-  u_R <- hL2R_max$par
-  t <- tan(u_R)
+  
+  result_optimization = optimization(
+    FUN = hL2R,
+    maximum = TRUE,
+    # we want to maximize this since it is the opposite of the loss
+    optimizationControls = optimizationControls,
+    verbose = verbose - 2)
+  
+  t <- result_optimization$optimal_t
+  
   if (verbose > 0){
     cat("*  optimal t =", t ,"\n")
   }
