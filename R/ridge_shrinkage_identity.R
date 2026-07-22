@@ -3,9 +3,8 @@
 
 
 ridge_shrinkage_identity_optimal <- function (
-    X, centeredCov = TRUE, verbose = 0,
-    eps = 1/(10^6), upp = pi/2 - eps, initialValue = 1.5,
-    optimizationMethod = NULL, k = NULL, grid_optim = NULL, call_ = NULL)
+    X, centeredCov = TRUE, verbose = 0, optimizationControls = NULL, 
+    call_ = NULL)
 {
   if (verbose > 0){
     cat("Starting `ridge_shrinkage_identity_optimal`...\n")
@@ -30,17 +29,22 @@ ridge_shrinkage_identity_optimal <- function (
   
   ##### shrinkage Ridge
   
-  if (is.null(grid_optim)) {
-    grid_optim <- make_default_grid_optimization(S = S, c_n = c_n)
+  if (is.null(optimizationControls)) {
+    optimizationControls = list(method = "optim with tan")
   }
+  if (optimizationControls$method == "smoothed" && 
+      is.null(optimizationControls$grid) ) {
+    
+    optimizationControls$grid <- grid_optimization_default(S = S, c_n = c_n)
+  }
+
   
   result_optimization = optimization(
     FUN = loss_L2_ridge_shrinkage_identity,
-    optimizationMethod = optimizationMethod,
     maximum = TRUE,
     # we want to maximize this since it is the opposite of the loss
-    grid = grid_optim, k = k, verbose = verbose - 2,
-    lower = eps, upper = upp, initialValue = initialValue,
+    optimizationControls = optimizationControls,
+    verbose = verbose - 2,
     
     X = X, c_n = c_n, r = r, q1 = q1, q2 = q2, centeredCov = centeredCov)
   

@@ -160,15 +160,14 @@
 #' 
 ridge_higher_order_shrinkage <- function(
     X, m = 3, centeredCov = TRUE, t = NULL, 
-    optimizationMethod = NULL, grid_optim = NULL, k = NULL, interval = c(0, 50),
-    verbose = 0, method_invM = "recursive", mpfr = FALSE, precBits = 2^16)
+    optimizationControls = NULL, verbose = 0, 
+    method_invM = "recursive", mpfr = FALSE, precBits = 2^16)
 {
   call_ = match.call()
   if (is.null(t)){
     result = ridge_higher_order_shrinkage_optimal(
       X = X, m = m, centeredCov = centeredCov, verbose = verbose,
-      optimizationMethod = optimizationMethod,
-      grid_optim = grid_optim, k = k, interval = interval,
+      optimizationControls = optimizationControls,
       method_invM = method_invM, call_ = call_,
       mpfr = mpfr, precBits = precBits)
     
@@ -259,8 +258,7 @@ ridge_higher_order_shrinkage_non_optimized <- function(
 
 
 ridge_higher_order_shrinkage_optimal <- function(
-    X, m, centeredCov = TRUE, verbose = 0, interval = c(0, 50),
-    optimizationMethod = NULL, grid_optim = NULL, k = NULL,
+    X, m, centeredCov = TRUE, verbose = 0, optimizationControls = NULL,
     method_invM = "recursive", call_ = NULL, mpfr, precBits)
 {
   if (verbose > 0){
@@ -308,16 +306,18 @@ ridge_higher_order_shrinkage_optimal <- function(
     return (loss)
   }
   
-  if (is.null(grid_optim)) {
-    grid_optim <- make_default_grid_optimization(S = S, c_n = c_n)
+  if (is.null(optimizationControls)) {
+    optimizationControls = list(method = "optimize")
+  }
+  if (optimizationControls$method == "smoothed" && 
+      is.null(optimizationControls$grid) ) {
+    
+    optimizationControls$grid <- grid_optimization_default(S = S, c_n = c_n)
   }
   
   result_optimization = optimization(
-    FUN = estimatedLoss,
-    optimizationMethod = optimizationMethod,
-    maximum = FALSE,
-    grid = grid_optim, k = k, verbose = verbose - 2,
-    lower = interval[1], upper = interval[2])
+    FUN = estimatedLoss, optimizationControls = optimizationControls,
+    maximum = FALSE, verbose = verbose - 2)
   
   optimal_t = result_optimization$optimal_t
   
@@ -354,8 +354,8 @@ ridge_higher_order_shrinkage_optimal <- function(
     alpha = alpha,
     v = estimatedM$v,
     t = optimal_t,
-    estimated_loss = 
-      if (optimizationMethod == "optimize") result_optimization$objective,
+    estimated_loss = if (optimizationControls$method == "optimize") {
+      result_optimization$objective},
     n = n,
     p = p,
     centeredCov = centeredCov,

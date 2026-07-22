@@ -12,15 +12,17 @@ test_that("`ridge_shrinkage` is coherent between target general and target ident
   # Generate example dataset
   X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
   
-  precision_ridge_optimal = ridge_shrinkage(X = X,
-                                            verbose = 0, upp = atan(10^2))
+  optimizationControls = list(method = "optim with tan", upper = atan(10^2))
+  
+  precision_ridge_optimal = ridge_shrinkage(
+    X = X, verbose = 0, optimizationControls = optimizationControls)
   
   
   # Using the identity target directly
   Ip = diag(nrow = p)
   
-  precision_ridge_optimal_Ip = ridge_shrinkage(X = X, Pi0 = Ip,
-                                               verbose = 0, upp = atan(10^2))
+  precision_ridge_optimal_Ip = ridge_shrinkage(
+    X = X, Pi0 = Ip, verbose = 0, optimizationControls = optimizationControls)
   
   expect_equal(precision_ridge_optimal_Ip$t_optimal,
                precision_ridge_optimal$t_optimal)
