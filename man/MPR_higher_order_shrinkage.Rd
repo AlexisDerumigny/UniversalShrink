@@ -56,6 +56,11 @@ Used only for \code{method = "optimize"} and \code{"optim with tan"}.
 Used only for \code{"optim with tan"}.
 }}
 
+\item{method_invM}{method for inverting the matrix \eqn{M}. Current
+possible choices are \code{solve} (usual inverse) and \code{ginv}
+(Moore-Penrose generalize inverse via \code{MASS::\link[MASS]{ginv}}).
+The default is the faster and more precise method \code{recursive}.}
+
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates
 no printing at all, while higher values indicate increasingly more detailed

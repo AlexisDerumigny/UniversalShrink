@@ -99,6 +99,7 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose
 #' 
 #' @template param-mpfr
 #' @template param-optimizationControls
+#' @template param-method_invM
 #' 
 #' @examples
 #' 
