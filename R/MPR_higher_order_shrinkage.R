@@ -161,14 +161,15 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose
 #' @export
 #' 
 MPR_higher_order_shrinkage <- function(
-    X, m = 3, centeredCov = TRUE, t = NULL, interval = c(0, 50),
+    X, m = 3, centeredCov = TRUE, t = NULL, optimizationControls = NULL,
     method_invM = "recursive", verbose = 0, mpfr = FALSE, precBits = 2^16)
 {
   call_ = match.call()
   if (is.null(t)){
     result = MPR_higher_order_shrinkage_optimal(
       X = X, m = m, centeredCov = centeredCov, verbose = verbose,
-      interval = interval, method_invM = method_invM, call_ = call_,
+      optimizationControls = optimizationControls, method_invM = method_invM,
+      call_ = call_,
       mpfr = mpfr, precBits = precBits)
     
   } else {
@@ -258,7 +259,7 @@ MPR_higher_order_shrinkage_non_optimized <- function(
 
 
 MPR_higher_order_shrinkage_optimal <- function(
-    X, m, centeredCov = TRUE, t, verbose = 0, interval = c(0, 50),
+    X, m, centeredCov = TRUE, t, verbose = 0, optimizationControls = NULL,
     method_invM = "recursive", call_ = NULL, mpfr = FALSE, precBits = 2^16)
 {
   if (verbose > 0){
@@ -295,9 +296,20 @@ MPR_higher_order_shrinkage_optimal <- function(
     return (loss)
   }
   
-  result_optim <- stats::optimize(f = estimatedLoss, interval = interval)
+  if (is.null(optimizationControls)) {
+    optimizationControls = list(method = "optimize")
+  }
+  if (optimizationControls$method == "smoothed" && 
+      is.null(optimizationControls$grid) ) {
+    
+    optimizationControls$grid <- grid_optimization_default(S = S, c_n = c_n)
+  }
   
-  optimal_t = result_optim$minimum
+  result_optimization = optimization(
+    FUN = estimatedLoss, optimizationControls = optimizationControls,
+    maximum = FALSE, verbose = verbose - 2)
+  
+  optimal_t = result_optimization$optimal_t
   
   if (verbose > 0){
     cat("*  optimal_t = ", optimal_t, "\n")
@@ -338,6 +350,7 @@ MPR_higher_order_shrinkage_optimal <- function(
     v = estimatedM$v,
     m = m,
     optimal_t = optimal_t,
+    result_optimization = result_optimization,
     call = call_
   )
   
