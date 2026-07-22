@@ -93,12 +93,12 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose
 #' 
 #' @param m order of the shrinkage. Should be at least 1.
 #' 
-#' @param t,interval \code{t} is the penalization parameter, and \code{interval}
-#' is the interval over which the loss is optimized over (with respect to \code{t}).
+#' @param t \code{t} is the penalization parameter.
 #' 
 #' @inheritParams cov_with_centering
 #' 
 #' @template param-mpfr
+#' @template param-optimizationControls
 #' 
 #' @examples
 #' 

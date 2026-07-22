@@ -9,7 +9,7 @@ ridge_higher_order_shrinkage(
   m = 3,
   centeredCov = TRUE,
   t = NULL,
-  interval = c(0, 50),
+  optimizationControls = NULL,
   verbose = 0,
   method_invM = "recursive",
   mpfr = FALSE,
@@ -27,8 +27,34 @@ is replaced by its sample counterpart. If \code{FALSE}, then the sample
 covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
 zero.}
 
-\item{t, interval}{\code{t} is the penalization parameter, and \code{interval}
-is the interval over which the loss is optimized over (with respect to \code{t}).}
+\item{t}{\code{t} is the penalization parameter.}
+
+\item{optimizationControls}{It describes the optimization method that it
+used to choose \code{t} (if not given). The input \code{optimizationControls}
+is either \code{NULL} (default optimization), or a list. This list can have
+the following components:
+\itemize{
+\item \code{method}: the name of the optimization method that is used.
+Currently, the following possibilities are implemented:
+\itemize{
+\item \code{"smoothed"}: this computes the loss on a grid, smooths it with a
+rolling median and minimizes this smoothed loss.
+\item \code{"optimize"}: this uses the \code{\link[stats:optimize]{optimize}}
+function.
+\item \code{"optim with tan"}: this uses the \code{\link[stats:optim]{optim}}
+function with the change of variable \code{u = tan(t)} so as to optimize
+over the compact interval \eqn{[0, \pi/2]}.
+}
+\item \code{k}: an integer giving the width of the window for median smoothing.
+Used only for \code{method = "smoothed"}.
+\item \code{grid}: an increasing (not necessarily uniform) grid of points at
+which to evaluate the loss.
+Used only for \code{method = "smoothed"}.
+\item \code{lower,upper}: lower and upper bound on the search interval.
+Used only for \code{method = "optimize"} and \code{"optim with tan"}.
+\item \code{initialValue}: initial value of the search.
+Used only for \code{"optim with tan"}.
+}}
 
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates

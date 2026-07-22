@@ -69,8 +69,7 @@
 #' 
 #' @param m order of the shrinkage. Should be at least 1.
 #' 
-#' @param t,interval \code{t} is the penalization parameter, and \code{interval}
-#' is the interval over which the loss is optimized over (with respect to \code{t}).
+#' @param t \code{t} is the penalization parameter.
 #' 
 #' @param method_invM method for inverting the matrix \eqn{M}. Current
 #' possible choices are \code{solve} (usual inverse) and \code{ginv}
@@ -80,6 +79,8 @@
 #' @template param-mpfr
 #' 
 #' @inheritParams cov_with_centering
+#' 
+#' @template param-optimizationControls
 #' 
 #' @examples
 #' 

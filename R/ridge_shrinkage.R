@@ -111,10 +111,8 @@
 #' @param X data matrix (rows are features, columns are observations).
 #' TODO: transpose everything.
 #' 
-#' @param t,alpha,beta,eps,upp,initialValue \code{t}, \code{alpha} and
-#' \code{beta} are parameters of the estimation. In the optimized version,
-#' the loss is optimized with respect to \eqn{u = arctan(t)} over the interval
-#' \code{[eps, upp]}, and the optimizer starts at the \code{initialValue}.
+#' @param t,alpha,beta \code{t}, \code{alpha} and \code{beta} are parameters
+#' of the estimation.
 #' 
 #' @param Pi0 shrinkage target. By default it is the identity matrix and
 #' optimized computations are run in this case. Note that because of numerical
@@ -123,6 +121,8 @@
 #' \code{t = 10^4}.
 #' 
 #' @inheritParams cov_with_centering
+#' 
+#' @template param-optimizationControls
 #' 
 #' @returns the estimator of the precision matrix
 #' (a `p` by `p` matrix).
