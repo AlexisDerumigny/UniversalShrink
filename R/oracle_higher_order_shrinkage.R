@@ -8,6 +8,8 @@
 #' oracle of the higher-order shrinked Moore-Penrose estimator. Other
 #' possibilities are \code{"ridge"} and \code{"MPR"}.
 #' 
+#' @template param-mpfr
+#' 
 #' @inheritParams MPR_higher_order_shrinkage
 #' 
 #' @examples

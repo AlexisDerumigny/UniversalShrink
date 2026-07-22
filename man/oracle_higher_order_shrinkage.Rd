@@ -37,6 +37,14 @@ zero.}
 details about the progress of the computations. A value of \code{0} indicates
 no printing at all, while higher values indicate increasingly more detailed
 (more verbose) output.}
+
+\item{mpfr}{if \code{mpfr = TRUE}, multiple precision floating point is used
+via the package \link[Rmpfr:Rmpfr]{Rmpfr}.
+This allows for a higher (numerical) accuracy, at the expense of computing time.
+It is recommended to use this option for higher dimensions.}
+
+\item{precBits}{number of precBits used for floating point precision
+(only used if \code{mpfr = TRUE}).}
 }
 \description{
 Oracle estimator of the precision matrix

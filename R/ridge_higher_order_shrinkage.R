@@ -77,6 +77,8 @@
 #' (Moore-Penrose generalize inverse via \code{MASS::\link[MASS]{ginv}}).
 #' The default is the faster and more precise method \code{recursive}.
 #' 
+#' @template param-mpfr
+#' 
 #' @inheritParams cov_with_centering
 #' 
 #' @examples

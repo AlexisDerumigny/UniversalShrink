@@ -39,6 +39,14 @@ no printing at all, while higher values indicate increasingly more detailed
 possible choices are \code{solve} (usual inverse) and \code{ginv}
 (Moore-Penrose generalize inverse via \code{MASS::\link[MASS]{ginv}}).
 The default is the faster and more precise method \code{recursive}.}
+
+\item{mpfr}{if \code{mpfr = TRUE}, multiple precision floating point is used
+via the package \link[Rmpfr:Rmpfr]{Rmpfr}.
+This allows for a higher (numerical) accuracy, at the expense of computing time.
+It is recommended to use this option for higher dimensions.}
+
+\item{precBits}{number of precBits used for floating point precision
+(only used if \code{mpfr = TRUE}).}
 }
 \description{
 The findings of Bodnar and Parolya (2025) yield the ridge higher-order nonlinear

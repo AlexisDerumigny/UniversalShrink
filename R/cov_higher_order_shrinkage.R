@@ -8,6 +8,8 @@
 #' 
 #' @inheritParams cov_with_centering
 #' 
+#' @template param-mpfr
+#' 
 #' @returns an object of class `EstimatedCovarianceMatrix` containing 
 #' \itemize{
 #'    \item `estimated_covariance_matrix`: the estimator of the covariance

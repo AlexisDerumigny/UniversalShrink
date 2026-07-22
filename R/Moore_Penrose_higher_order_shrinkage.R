@@ -442,6 +442,8 @@ compute_M_MoorePenrose_psmall <- function(
 #' 
 #' @inheritParams cov_with_centering
 #' 
+#' @template param-mpfr
+#' 
 #' @returns the estimator of the precision matrix
 #' (a `p` by `p` matrix, i.e. the inverse of the covariance matrix).
 #' 

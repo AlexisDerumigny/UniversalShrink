@@ -98,6 +98,8 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose
 #' 
 #' @inheritParams cov_with_centering
 #' 
+#' @template param-mpfr
+#' 
 #' @examples
 #' 
 #' n = 50
