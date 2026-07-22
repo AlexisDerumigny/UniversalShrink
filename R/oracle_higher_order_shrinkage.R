@@ -68,7 +68,7 @@
 #' @export
 oracle_higher_order_shrinkage <- function(
     X, m, Sigma, nameEstimator = "Moore-Penrose", centeredCov = TRUE,
-    method_invM = "recursive", verbose = 0, interval = c(0, 50),
+    method_invM = "recursive", verbose = 0, optimizationControls = NULL,
     mpfr = FALSE, precBits = 2^16) {
   
   call_ = match.call()
@@ -116,9 +116,20 @@ oracle_higher_order_shrinkage <- function(
       }
     }
     
-    result_optim <- stats::optimize(f = estimatedLoss, interval = interval)
+    if (is.null(optimizationControls)) {
+      optimizationControls = list(method = "optimize")
+    }
+    if (optimizationControls$method == "smoothed" && 
+        is.null(optimizationControls$grid) ) {
+      
+      optimizationControls$grid <- grid_optimization_default(S = S, c_n = c_n)
+    }
     
-    optimal_t = result_optim$minimum
+    result_optimization = optimization(
+      FUN = estimatedLoss, optimizationControls = optimizationControls,
+      maximum = FALSE, verbose = verbose - 2)
+    
+    optimal_t = result_optimization$optimal_t
     
     if (verbose > 0){
       cat("*  optimal_t = ", optimal_t, "\n")
@@ -165,6 +176,8 @@ oracle_higher_order_shrinkage <- function(
     invM_recursive = resultM$invM_recursive,
     alpha = alpha,
     optimal_t = if(nameEstimator %in% c("ridge", "MPR")) {optimal_t} ,
+    result_optimization = if(nameEstimator %in% c("ridge", "MPR")) {
+      result_optimization} ,
     method = "Oracle higher-order shrinkage",
     nameBaselinEstimator = nameEstimator,
     call = call_
