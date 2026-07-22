@@ -1,9 +1,10 @@
 
 
 
-MPR_shrinkage_general_optimal <- function (X, centeredCov, Pi0, verbose = 3, 
-                                        eps = 1/(10^6), upp = pi/2 - eps,
-                                        initialValue = 1.5, call_ = NULL){
+MPR_shrinkage_general_optimal <- function (
+    X, centeredCov, Pi0, verbose = 3, optimizationControls = NULL,
+    call_ = NULL)
+{
   if (verbose > 0){
     cat("Starting `MPR_shrinkage_general_optimal`...\n")
   }
@@ -19,8 +20,7 @@ MPR_shrinkage_general_optimal <- function (X, centeredCov, Pi0, verbose = 3,
   # Sample covariance matrix
   S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
-  hL2R <- function(u){
-    t = tan(u)
+  hL2R <- function(t){
     
     ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = verbose - 2,
                    method_inversion = "auto")
@@ -38,18 +38,24 @@ MPR_shrinkage_general_optimal <- function (X, centeredCov, Pi0, verbose = 3,
     return(loss)
   }
   
-  control = list(fnscale = -1,
-                 trace = if(verbose > 2){6} else {0},
-                 factr = 1e8
-                 # ndeps = 0.01
-  )
+  if (is.null(optimizationControls)) {
+    optimizationControls = list(method = "optim with tan")
+  }
+  if (optimizationControls$method == "smoothed" && 
+      is.null(optimizationControls$grid) ) {
+    
+    optimizationControls$grid <- grid_optimization_default(S = S, c_n = cn)
+  }
   
-  hL2R_max <- stats::optim(par = initialValue, fn = hL2R,
-                           lower = eps, upper = upp,
-                           method = "L-BFGS-B", control = control)
+  result_optimization = optimization(
+    FUN = hL2R,
+    maximum = TRUE,
+    # we want to maximize this since it is the opposite of the loss
+    optimizationControls = optimizationControls,
+    verbose = verbose - 2)
   
-  u_R <- hL2R_max$par
-  t <- tan(u_R)
+  t <- result_optimization$optimal_t
+  
   if (verbose > 0){
     cat("*  optimal t =", t ,"\n")
   }
@@ -85,6 +91,7 @@ MPR_shrinkage_general_optimal <- function (X, centeredCov, Pi0, verbose = 3,
     centeredCov = centeredCov,
     method = "Moore-Penrose-ridge (MPR) with shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
+    result_optimization = result_optimization,
     call = call_
   )
   

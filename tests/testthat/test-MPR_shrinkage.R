@@ -180,14 +180,17 @@ test_that("`MPR_shrinkage` is coherent between target general and target identit
   
   Y = t(X)
   
-  precision_MPR_optimal = MPR_shrinkage(X = X, verbose = 0, upp = atan(10^2))
+  optimizationControls = list(method = "optim with tan", upper = atan(10^2))
+  
+  precision_MPR_optimal = MPR_shrinkage(
+    X = X, verbose = 0, optimizationControls = optimizationControls)
   
   
   # Using the identity target directly
   Ip = diag(nrow = p)
   
-  precision_MPR_optimal_Ip = MPR_shrinkage(X = X, Pi0 = Ip,
-                                        verbose = 0, upp = atan(10^2))
+  precision_MPR_optimal_Ip = MPR_shrinkage(
+    X = X, Pi0 = Ip, verbose = 0, optimizationControls = optimizationControls)
   
   expect_equal(precision_MPR_optimal_Ip$t_optimal,
                precision_MPR_optimal$t_optimal)

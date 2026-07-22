@@ -1,8 +1,9 @@
 
 
-MPR_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 2,
-                                         eps = 1/(10^6), upp = pi/2 - eps, 
-                                         initialValue = 1.5, call_ = NULL){
+MPR_shrinkage_identity_optimal <- function(
+    X, centeredCov = TRUE, verbose = 2, optimizationControls = NULL,
+    call_ = NULL)
+{
   if (verbose > 0){
     cat("Starting `MPR_shrinkage_identity_optimal`...\n")
   }
@@ -19,9 +20,9 @@ MPR_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 2,
   S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   
-  hL2MPr <- function(u){
+  hL2MPr <- function(t){
     loss = loss_L2_MPR_optimal(
-      t = tan(u), X = X, S = S, cn = cn, p = p, Ip = Ip, verbose = verbose - 2,
+      t = t, X = X, S = S, cn = cn, p = p, Ip = Ip, verbose = verbose - 2,
       centeredCov = centeredCov)
     return(loss)
   }
@@ -30,10 +31,23 @@ MPR_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 2,
   # also in the target_general case
   
   
-  hL2MPR_max <- stats::optim(par = initialValue, hL2MPr,lower = eps, upper = upp,
-                             method = "L-BFGS-B", control = list(fnscale = -1))
-  u_MPR <- hL2MPR_max$par
-  t <- tan(u_MPR)
+  if (is.null(optimizationControls)) {
+    optimizationControls = list(method = "optim with tan")
+  }
+  if (optimizationControls$method == "smoothed" && 
+      is.null(optimizationControls$grid) ) {
+    
+    optimizationControls$grid <- grid_optimization_default(S = S, c_n = cn)
+  }
+  
+  result_optimization = optimization(
+    FUN = hL2MPr,
+    maximum = TRUE,
+    # we want to maximize this since it is the opposite of the loss
+    optimizationControls = optimizationControls,
+    verbose = verbose - 2)
+  
+  t <- result_optimization$optimal_t
   
   if (verbose > 0){
     cat("*  optimal t =", t ,"\n\n")
@@ -68,6 +82,7 @@ MPR_shrinkage_identity_optimal <- function (X, centeredCov = TRUE, verbose = 2,
     centeredCov = centeredCov,
     method = "Moore-Penrose-ridge (MPR) with shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
+    result_optimization = result_optimization,
     call = call_
   )
   
