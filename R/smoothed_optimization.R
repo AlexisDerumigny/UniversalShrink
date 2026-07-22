@@ -74,16 +74,16 @@ smoothed_optimization <- function(FUN, grid, k, verbose, maximum, ...)
   
   # Finding the maximum or minimum as requested
   if (maximum) {
-    optimal_t = grid[which.max( vec_loss )]
+    optimal_t_unsmoothed = grid[which.max( vec_loss )]
     optimal_t_smoothed = grid[which.max( fit.rollmedian )]
   } else {
-    optimal_t = grid[which.min( vec_loss )]
+    optimal_t_unsmoothed = grid[which.min( vec_loss )]
     optimal_t_smoothed = grid[which.min( fit.rollmedian )]
   }
   
   result = list(
-    optimal_t = optimal_t,
-    optimal_t_smoothed = optimal_t_smoothed,
+    optimal_t_unsmoothed = optimal_t_unsmoothed,
+    optimal_t = optimal_t_smoothed,
     optimization_type = "smoothed",
     k = k,
     grid = grid,
