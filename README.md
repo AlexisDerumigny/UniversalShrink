@@ -33,7 +33,7 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
   
 - `Moore_Penrose_higher_order_shrinkage()`: estimate the precision matrix via
   a polynomial in the Moore-Penrose estimator of the precision matrix.
-TODO: include p < n
+
 
 ## 2.2. Ridge-type estimators
 
