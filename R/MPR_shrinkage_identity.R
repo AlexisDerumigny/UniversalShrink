@@ -32,7 +32,7 @@ MPR_shrinkage_identity_optimal <- function(
   
   
   if (is.null(optimizationControls)) {
-    optimizationControls = list(method = "optim with tan")
+    optimizationControls = list(method = "smoothed")
   }
   if (optimizationControls$method == "smoothed" && 
       is.null(optimizationControls$grid) ) {

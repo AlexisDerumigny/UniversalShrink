@@ -305,7 +305,7 @@ ridge_higher_order_shrinkage_optimal <- function(
   }
   
   if (is.null(optimizationControls)) {
-    optimizationControls = list(method = "optimize")
+    optimizationControls = list(method = "smoothed")
   }
   if (optimizationControls$method == "smoothed" && 
       is.null(optimizationControls$grid) ) {

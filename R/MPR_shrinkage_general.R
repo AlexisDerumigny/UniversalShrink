@@ -39,7 +39,7 @@ MPR_shrinkage_general_optimal <- function (
   }
   
   if (is.null(optimizationControls)) {
-    optimizationControls = list(method = "optim with tan")
+    optimizationControls = list(method = "smoothed")
   }
   if (optimizationControls$method == "smoothed" && 
       is.null(optimizationControls$grid) ) {
