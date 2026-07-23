@@ -44,8 +44,6 @@ remotes::install_github("AlexisDerumigny/UniversalShrink")
   
 - `ridge_higher_order_shrinkage()`: perform higher-order shrinkage of the Ridge
   estimator
-
-TODO: add the faster computation of the $\hat s$ coefficients
   
 - `ridge_shrinkage_Wang()`
 
