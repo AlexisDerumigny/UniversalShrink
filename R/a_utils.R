@@ -45,6 +45,12 @@ NULL
 #' @rdname as.matrix.Estimator
 #' @export
 as.matrix.EstimatedPrecisionMatrix <- function(x, ...){
+  if (length(x$estimated_precision_matrix) == 0) {
+    stop(
+      UniversalShrink_error_condition_base(
+        message = paste("Invalid x object:", 
+                        "x must not have an empty precision matrix.") ) )
+  }
   return (x$estimated_precision_matrix)
 }
 
@@ -52,6 +58,12 @@ as.matrix.EstimatedPrecisionMatrix <- function(x, ...){
 #' @rdname as.matrix.Estimator
 #' @export
 as.matrix.EstimatedCovarianceMatrix <- function(x, ...){
+  if (length(x$estimated_covariance_matrix) == 0) {
+    stop(
+      UniversalShrink_error_condition_base(
+        message = paste("Invalid x object:", 
+                        "x must not have an empty covariance matrix.") ) )
+  }
   return (x$estimated_covariance_matrix)
 }
 
@@ -78,3 +90,20 @@ UniversalShrink_warning_condition_base <- function(message, subclass = NULL,
     )
   )
 }
+
+#' Constructor for error conditions of the package
+#'
+#' @noRd
+UniversalShrink_error_condition_base <- function(message, subclass = NULL,
+                                                 call = sys.call(-1), ...) {
+  # errorCondition() automatically adds 'error' and 'condition' to the class
+  return (
+    errorCondition(
+      message = message,
+      class = c(subclass, "UniversalShrinkError"), # Base error class
+      call = call,
+      ... # Allows for additional custom fields
+    )
+  )
+}
+
