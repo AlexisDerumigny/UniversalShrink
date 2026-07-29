@@ -96,7 +96,7 @@ smoothed_optimization <- function(FUN, grid, k, verbose, maximum, ...)
 }
 
 
-grid_optimization_default <- function(S, c_n, p, n){
+grid_optimization_default <- function(S, c_n, p, n, verbose){
   eigenvalues_S = eigen(S)$values
   if (p - 1 > n) {
     eigenvalues_S_ = eigenvalues_S[1:(n - 1)]
@@ -104,7 +104,17 @@ grid_optimization_default <- function(S, c_n, p, n){
     eigenvalues_S_ = eigenvalues_S
   }
   epsilon_steps = stats::median(abs(diff(eigenvalues_S_))) / (1 + sqrt(c_n))^2
-  grid_optim = seq(from = epsilon_steps / 2,
-                   to = max(eigenvalues_S_), 
-                   by = epsilon_steps)
+  from = epsilon_steps / 2
+  to = max(eigenvalues_S_)
+  by = epsilon_steps
+  grid_optim = seq(from = from, to = to, by = by)
+  length_grid = length(grid_optim)
+  
+  if (verbose) {
+    cat("Computation of the default grid for optimization purpose:",
+        "from =", from, " , to = ", to, " , by = ", by, 
+        " , length = ", length_grid, "\n")
+  }
+  
+  return (grid_optim)
 }

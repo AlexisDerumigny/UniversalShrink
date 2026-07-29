@@ -44,7 +44,7 @@ MPR_shrinkage_general_optimal <- function (
   if (optimizationControls$method == "smoothed") {
     if (is.null(optimizationControls$grid)) {
       optimizationControls$grid <- grid_optimization_default(
-        S = S, c_n = cn, p = p, n = n)
+        S = S, c_n = cn, p = p, n = n, verbose = verbose)
     }
     
     if (is.null(optimizationControls$k)) {

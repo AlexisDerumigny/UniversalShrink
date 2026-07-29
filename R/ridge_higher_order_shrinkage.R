@@ -310,7 +310,7 @@ ridge_higher_order_shrinkage_optimal <- function(
   if (optimizationControls$method == "smoothed") {
     if (is.null(optimizationControls$grid)) {
       optimizationControls$grid <- grid_optimization_default(
-        S = S, c_n = c_n, p = p, n = n)
+        S = S, c_n = c_n, p = p, n = n, verbose = verbose)
     }
     
     if (is.null(optimizationControls$k)) {
