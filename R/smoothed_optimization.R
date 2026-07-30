@@ -126,7 +126,7 @@ grid_optimization_default <- function(S, c_n, p, n, max_length, verbose){
   grid_optim = seq(from = from, to = to, by = by)
   length_grid = length(grid_optim)
   
-  if (verbose) {
+  if (verbose > 0) {
     cat("Computation of the default grid for optimization purpose:",
         "from =", from, " , to = ", to, " , by = ", by, 
         " , length = ", length_grid, "\n")
