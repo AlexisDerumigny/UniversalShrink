@@ -47,8 +47,13 @@ over the compact interval \eqn{[0, \pi/2]}.
 }
 \item \code{k}: an integer giving the width of the window for median smoothing.
 Used only for \code{method = "smoothed"}.
-\item \code{grid}: an increasing (not necessarily uniform) grid of points at
-which to evaluate the loss.
+\item \code{grid,max_length}: \code{grid} is an increasing (not necessarily
+uniform) grid of positive reals at which to evaluate the loss. If \code{grid}
+is \code{NULL} (the default), a regular grid is computed using the
+eigenvalues of the sample covariance matrix.
+To reduce computation time, the length of this grid is capped at
+\code{max_length} (by default, 100). Use \code{max_length = Inf} to use the
+ideal grid.
 Used only for \code{method = "smoothed"}.
 \item \code{lower,upper}: lower and upper bound on the search interval.
 Used only for \code{method = "optimize"} and \code{"optim with tan"}.

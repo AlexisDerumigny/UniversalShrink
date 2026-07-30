@@ -37,7 +37,8 @@ MPR_shrinkage_identity_optimal <- function(
   if (optimizationControls$method == "smoothed") {
     if (is.null(optimizationControls$grid)) {
       optimizationControls$grid <- grid_optimization_default(
-        S = S, c_n = cn, p = p, n = n, verbose = verbose)
+        S = S, c_n = cn, p = p, n = n, 
+        max_length = optimizationControls$max_length, verbose = verbose)
     }
     
     if (is.null(optimizationControls$k)) {

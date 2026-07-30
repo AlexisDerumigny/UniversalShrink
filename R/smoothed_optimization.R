@@ -100,8 +100,14 @@ smoothed_optimization <- function(FUN, grid, k, verbose, maximum, ...)
   return (result)
 }
 
-
-grid_optimization_default <- function(S, c_n, p, n, verbose){
+# Compute a regular grid using the eigenvalues of S.
+#
+# The length of this grid is capped at max_length.
+grid_optimization_default <- function(S, c_n, p, n, max_length, verbose){
+  if (is.null(max_length)) {
+    max_length = 100
+  }
+  
   eigenvalues_S = eigen(S)$values
   if (p - 1 > n) {
     eigenvalues_S_ = eigenvalues_S[1:(n - 1)]
@@ -119,6 +125,15 @@ grid_optimization_default <- function(S, c_n, p, n, verbose){
     cat("Computation of the default grid for optimization purpose:",
         "from =", from, " , to = ", to, " , by = ", by, 
         " , length = ", length_grid, "\n")
+  }
+  
+  if (length_grid > max_length) {
+    grid_optim = seq(from = from, to = to, length.out = max_length)
+    
+    if (verbose > 0) {
+      cat("Grid length ", length_grid, " exceeds max_length ", max_length,
+          ". Now changed to use a grid of length 'max_length'.\n")
+    }
   }
   
   return (grid_optim)
