@@ -49,7 +49,7 @@ ridge_shrinkage_identity_optimal <- function (
     maximum = TRUE,
     # we want to maximize this since it is the opposite of the loss
     optimizationControls = optimizationControls,
-    verbose = verbose - 2,
+    verbose = verbose,
     
     X = X, c_n = c_n, p = p, r = r, q1 = q1, q2 = q2, centeredCov = centeredCov)
   

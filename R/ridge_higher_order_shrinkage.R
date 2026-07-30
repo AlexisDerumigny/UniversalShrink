@@ -320,7 +320,7 @@ ridge_higher_order_shrinkage_optimal <- function(
   
   result_optimization = optimization(
     FUN = estimatedLoss, optimizationControls = optimizationControls,
-    maximum = FALSE, verbose = verbose - 2)
+    maximum = FALSE, verbose = verbose)
   
   optimal_t = result_optimization$optimal_t
   

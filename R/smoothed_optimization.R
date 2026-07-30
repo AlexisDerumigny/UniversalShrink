@@ -67,6 +67,11 @@ smoothed_optimization <- function(FUN, grid, k, verbose, maximum, ...)
   vec_loss = rep(NA_real_, length(grid))
   for (i_t in 1:length(grid)) {
     vec_loss[i_t] = FUN(t = grid[i_t], ...)
+    if (verbose > 0) {
+      if (i_t %% 10 == 0) {
+        cat("Optimization:", i_t, " out of ", length(grid), " values of t\n")
+      }
+    }
   }
   
   # Smoothing

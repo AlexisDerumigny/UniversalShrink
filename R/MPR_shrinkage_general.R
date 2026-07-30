@@ -57,7 +57,7 @@ MPR_shrinkage_general_optimal <- function (
     maximum = TRUE,
     # we want to maximize this since it is the opposite of the loss
     optimizationControls = optimizationControls,
-    verbose = verbose - 2)
+    verbose = verbose)
   
   t <- result_optimization$optimal_t
   
