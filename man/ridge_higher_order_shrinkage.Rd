@@ -80,8 +80,8 @@ It is recommended to use this option for higher dimensions.}
 (only used if \code{mpfr = TRUE}).}
 }
 \description{
-The findings of Bodnar and Parolya (2025) yield the ridge higher-order nonlinear
-shrinkage estimator of the precision matrix given by
+The findings of Bodnar and Parolya (2025) yield the ridge higher-order
+nonlinear shrinkage estimator of the precision matrix given by
 \deqn{
 \mathbf{S}_{HOS}^-(t^*)
 =
@@ -91,13 +91,14 @@ shrinkage estimator of the precision matrix given by
 \hat{\alpha}_j^-(t^*)
 (\mathbf{S}_n^-(t))^j
 }
-where \eqn{\mathbf{S}_n^-(t^*)=(\mathbf{S}_n+t^*\mathbf{I}_p)^{-1}} is the Ridge
-estimator evaluated at optimal point \eqn{t^*>0} and
+where \eqn{\mathbf{S}_n^-(t^*)=(\mathbf{S}_n+t^*\mathbf{I}_p)^{-1}} is the
+Ridge estimator evaluated at optimal point \eqn{t^*>0} and
 \eqn{\mathbf{S}} is the sample covariance matrix and \eqn{\mathbf{I}_p} is
 \eqn{p}-dimensional identity matrix. The vector \eqn{
 \hat{\boldsymbol{\alpha}}^{-}(m,t^*)
 =
-(\hat{\alpha}_0^-(t^*),\hat{\alpha}_1^-(t^*),\ldots,\hat{\alpha}_m^-(t^*))^\top
+(\hat{\alpha}_0^-(t^*),\hat{\alpha}_1^-(t^*),\ldots,
+\hat{\alpha}_m^-(t^*) )^\top
 }
 is given by
 \deqn{
@@ -106,12 +107,12 @@ is given by
 \widehat{\mathbf{M}}^{-}(m,t^*)^{-1}
 \hat{\mathbf{m}}^{-}(m,t^*)
 .}
-The optimal value \eqn{t^*} is obtained by minimizing over \eqn{t>0} the function
+The optimal value \eqn{t^*} is obtained by minimizing over \eqn{t > 0}
+the function
 \deqn{
 \hat{L}_2^{-}(m,t)
 =
-1
--
+1 -
 \hat{\mathbf{m}}^{-}(m,t)^\top
 \widehat{\mathbf{M}}^{-}(m,t)^{-1}
 \hat{\mathbf{m}}^{-}(m,t)
@@ -133,9 +134,11 @@ and
 =
 \begin{pmatrix}
 \hat{q}_2 & \hat{\tilde{s}}_{1,2}(t) & \ldots & \hat{\tilde{s}}_{m,2}(t) \\
-\hat{\tilde{s}}_{1,2}(t) & \hat{\tilde{s}}_2(t) & \ldots & \hat{\tilde{s}}_{m+1,2}(t) \\
+\hat{\tilde{s}}_{1,2}(t) & \hat{\tilde{s}}_2(t) & \ldots
+& \hat{\tilde{s}}_{m+1,2}(t) \\
 \vdots & \vdots & \ddots & \vdots \\
-\hat{\tilde{s}}_{m,2}(t) & \hat{\tilde{s}}_{m+1,2}(t) & \ldots & \hat{\tilde{s}}_{2m,2}(t)
+\hat{\tilde{s}}_{m,2}(t) & \hat{\tilde{s}}_{m+1,2}(t) & \ldots
+& \hat{\tilde{s}}_{2m,2}(t)
 \end{pmatrix}
 }, where
 the quantities \eqn{\hat{\tilde{s}}_{j,l}(t)} are defined in
@@ -157,23 +160,23 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
-precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
+prec_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
+prec_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
 
-LossFrobenius2(precision_MoorePenrose_Cent, Sigma = Sigma)
-LossFrobenius2(precision_MoorePenrose_NoCent, Sigma = Sigma)
+LossFrobenius2(prec_MoorePenrose_Cent, Sigma = Sigma)
+LossFrobenius2(prec_MoorePenrose_NoCent, Sigma = Sigma)
 
 for (m in 1:2){
   cat("m = ", m, "\n")
-  precision_higher_order_shrinkage_Cent = 
+  prec_higher_order_shrinkage_Cent = 
       ridge_higher_order_shrinkage(X, m = m, centeredCov = TRUE, t = 10)
       
-  precision_higher_order_shrinkage_NoCent = 
+  prec_higher_order_shrinkage_NoCent = 
       ridge_higher_order_shrinkage(X, m = m, centeredCov = FALSE, t = 10)
       
-  print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
+  print(LossFrobenius2(prec_higher_order_shrinkage_Cent, Sigma = Sigma))
   
-  print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
+  print(LossFrobenius2(prec_higher_order_shrinkage_NoCent, Sigma = Sigma))
 }
 
 
@@ -199,15 +202,15 @@ LossFrobenius2(precision_target, Sigma = Sigma)
 
 for (m in 1:2){
   cat("m = ", m, "\n")
-  precision_higher_order_shrinkage_Cent = 
+  prec_higher_order_shrinkage_Cent = 
       ridge_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
       
-  precision_higher_order_shrinkage_NoCent = 
+  prec_higher_order_shrinkage_NoCent = 
       ridge_higher_order_shrinkage(X, m = m, centeredCov = FALSE)
       
-  print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
+  print(LossFrobenius2(prec_higher_order_shrinkage_Cent, Sigma = Sigma))
   
-  print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
+  print(LossFrobenius2(prec_higher_order_shrinkage_NoCent, Sigma = Sigma))
 }
 
 precision_higher_order_shrinkage_Cent = 

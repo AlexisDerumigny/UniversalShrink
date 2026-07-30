@@ -1,8 +1,8 @@
 
 #' Ridge higher order shrinkage
 #' 
-#' The findings of Bodnar and Parolya (2025) yield the ridge higher-order nonlinear
-#' shrinkage estimator of the precision matrix given by
+#' The findings of Bodnar and Parolya (2025) yield the ridge higher-order
+#' nonlinear shrinkage estimator of the precision matrix given by
 #' \deqn{
 #' \mathbf{S}_{HOS}^-(t^*)
 #' =
@@ -12,13 +12,14 @@
 #' \hat{\alpha}_j^-(t^*)
 #' (\mathbf{S}_n^-(t))^j
 #' }
-#' where \eqn{\mathbf{S}_n^-(t^*)=(\mathbf{S}_n+t^*\mathbf{I}_p)^{-1}} is the Ridge 
-#' estimator evaluated at optimal point \eqn{t^*>0} and
-#'  \eqn{\mathbf{S}} is the sample covariance matrix and \eqn{\mathbf{I}_p} is 
+#' where \eqn{\mathbf{S}_n^-(t^*)=(\mathbf{S}_n+t^*\mathbf{I}_p)^{-1}} is the
+#' Ridge estimator evaluated at optimal point \eqn{t^*>0} and
+#' \eqn{\mathbf{S}} is the sample covariance matrix and \eqn{\mathbf{I}_p} is 
 #' \eqn{p}-dimensional identity matrix. The vector \eqn{
 #' \hat{\boldsymbol{\alpha}}^{-}(m,t^*)
 #' =
-#' (\hat{\alpha}_0^-(t^*),\hat{\alpha}_1^-(t^*),\ldots,\hat{\alpha}_m^-(t^*))^\top
+#' (\hat{\alpha}_0^-(t^*),\hat{\alpha}_1^-(t^*),\ldots,
+#' \hat{\alpha}_m^-(t^*) )^\top
 #' }
 #' is given by
 #' \deqn{
@@ -27,12 +28,12 @@
 #' \widehat{\mathbf{M}}^{-}(m,t^*)^{-1}
 #' \hat{\mathbf{m}}^{-}(m,t^*)
 #' .}
-#' The optimal value \eqn{t^*} is obtained by minimizing over \eqn{t>0} the function
+#' The optimal value \eqn{t^*} is obtained by minimizing over \eqn{t > 0}
+#' the function
 #' \deqn{
 #' \hat{L}_2^{-}(m,t)
 #' =
-#' 1
-#' -
+#' 1 -
 #' \hat{\mathbf{m}}^{-}(m,t)^\top
 #' \widehat{\mathbf{M}}^{-}(m,t)^{-1}
 #' \hat{\mathbf{m}}^{-}(m,t)
@@ -54,9 +55,11 @@
 #' =
 #' \begin{pmatrix}
 #' \hat{q}_2 & \hat{\tilde{s}}_{1,2}(t) & \ldots & \hat{\tilde{s}}_{m,2}(t) \\
-#' \hat{\tilde{s}}_{1,2}(t) & \hat{\tilde{s}}_2(t) & \ldots & \hat{\tilde{s}}_{m+1,2}(t) \\
+#' \hat{\tilde{s}}_{1,2}(t) & \hat{\tilde{s}}_2(t) & \ldots
+#' & \hat{\tilde{s}}_{m+1,2}(t) \\
 #' \vdots & \vdots & \ddots & \vdots \\
-#' \hat{\tilde{s}}_{m,2}(t) & \hat{\tilde{s}}_{m+1,2}(t) & \ldots & \hat{\tilde{s}}_{2m,2}(t)
+#' \hat{\tilde{s}}_{m,2}(t) & \hat{\tilde{s}}_{m+1,2}(t) & \ldots
+#' & \hat{\tilde{s}}_{2m,2}(t)
 #' \end{pmatrix}
 #' }, where
 #' the quantities \eqn{\hat{\tilde{s}}_{j,l}(t)} are defined in
@@ -91,23 +94,23 @@
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
-#' precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
-#' precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
+#' prec_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
+#' prec_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
 #'
-#' LossFrobenius2(precision_MoorePenrose_Cent, Sigma = Sigma)
-#' LossFrobenius2(precision_MoorePenrose_NoCent, Sigma = Sigma)
+#' LossFrobenius2(prec_MoorePenrose_Cent, Sigma = Sigma)
+#' LossFrobenius2(prec_MoorePenrose_NoCent, Sigma = Sigma)
 #' 
 #' for (m in 1:2){
 #'   cat("m = ", m, "\n")
-#'   precision_higher_order_shrinkage_Cent = 
+#'   prec_higher_order_shrinkage_Cent = 
 #'       ridge_higher_order_shrinkage(X, m = m, centeredCov = TRUE, t = 10)
 #'       
-#'   precision_higher_order_shrinkage_NoCent = 
+#'   prec_higher_order_shrinkage_NoCent = 
 #'       ridge_higher_order_shrinkage(X, m = m, centeredCov = FALSE, t = 10)
 #'       
-#'   print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
+#'   print(LossFrobenius2(prec_higher_order_shrinkage_Cent, Sigma = Sigma))
 #'   
-#'   print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
+#'   print(LossFrobenius2(prec_higher_order_shrinkage_NoCent, Sigma = Sigma))
 #' }
 #' 
 #' 
@@ -133,15 +136,15 @@
 #' 
 #' for (m in 1:2){
 #'   cat("m = ", m, "\n")
-#'   precision_higher_order_shrinkage_Cent = 
+#'   prec_higher_order_shrinkage_Cent = 
 #'       ridge_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
 #'       
-#'   precision_higher_order_shrinkage_NoCent = 
+#'   prec_higher_order_shrinkage_NoCent = 
 #'       ridge_higher_order_shrinkage(X, m = m, centeredCov = FALSE)
 #'       
-#'   print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
+#'   print(LossFrobenius2(prec_higher_order_shrinkage_Cent, Sigma = Sigma))
 #'   
-#'   print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
+#'   print(LossFrobenius2(prec_higher_order_shrinkage_NoCent, Sigma = Sigma))
 #' }
 #' 
 #' precision_higher_order_shrinkage_Cent = 
@@ -189,7 +192,8 @@ ridge_higher_order_shrinkage_non_optimized <- function(
   # Get sizes of Y
   n = nrow(X)
   p = ncol(X)
-  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
+                       verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = X, centeredCov = centeredCov)
@@ -218,7 +222,7 @@ ridge_higher_order_shrinkage_non_optimized <- function(
   
   estimatedM = compute_M_t_ridge(
     m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = S_t_inverse,
-    t = t, method_invM = method_invM, verbose = verbose,
+    t = t, method_invM = method_invM, verbose = verbose - 1,
     mpfr = mpfr, precBits = precBits)
   
   alpha = estimatedM$alpha
@@ -267,7 +271,8 @@ ridge_higher_order_shrinkage_optimal <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
+                       verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = X, centeredCov = centeredCov)
@@ -384,7 +389,7 @@ loss_L2_ridge_higher_order <- function(t, m, c_n, q1, q2, S_t_inverse,
 {
   estimatedM = compute_M_t_ridge(
     m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = S_t_inverse,
-    t = t, method_invM = method_invM, verbose = 0,
+    t = t, method_invM = method_invM, verbose = verbose - 1,
     mpfr = mpfr, precBits = precBits)
   
   loss = 1 - t(estimatedM$hm) %*% estimatedM$alpha
@@ -393,8 +398,8 @@ loss_L2_ridge_higher_order <- function(t, m, c_n, q1, q2, S_t_inverse,
 }
 
 
-#' Compute the vector hat s for the higher-order shrinkage of the ridge estimator
-#' and also hat v
+#' Compute the vector hat s for the higher-order shrinkage of the ridge
+#' estimator and also hat v
 #'
 #' Do we want to make it two separate functions?
 #'
@@ -407,7 +412,8 @@ loss_L2_ridge_higher_order <- function(t, m, c_n, q1, q2, S_t_inverse,
 #' @noRd
 compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
 {
-  v_0_t <- v_hat_j_of_t(t = t, j = 0, S_t_inverse_pow_jp1 = S_t_inverse, c_n = c_n)
+  v_0_t <- v_hat_j_of_t(t = t, j = 0, S_t_inverse_pow_jp1 = S_t_inverse,
+                        c_n = c_n)
   
   v = rep(NA, 2 * m - 1)
   
@@ -467,8 +473,8 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     j = index - 1
     # so that index = j + 1
     if (verbose > 0){
-      cat("We are now computing s[", index, ",], corresponding to j =", j, "\n",
-          sep = "")
+      cat("We are now computing s[", index, ",], corresponding to j =", j,
+          "\n", sep = "")
     }
     
     # Remember that d[1,l] corresponds in the paper to d_{0,l}
@@ -534,8 +540,8 @@ compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
                               verbose, mpfr, precBits)
 {
   s_and_v = compute_sv_ridge(m = m, c_n = c_n,
-                             S_t_inverse = S_t_inverse, q1 = q1, q2 = q2, t = t,
-                             verbose = verbose)
+                             S_t_inverse = S_t_inverse, q1 = q1, q2 = q2,
+                             t = t, verbose = verbose - 1)
   s = s_and_v$s
   v = s_and_v$v
   
@@ -558,7 +564,8 @@ compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
     cat("\n")
   }
   
-  # TODO: compute all estimators for smaller m here using submatrices of this matrix
+  # TODO: compute all estimators for smaller m here using submatrices of
+  # this matrix
   
   if (method_invM == "solve"){
     alpha = solve(M) %*% hm
@@ -569,7 +576,8 @@ compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
     alpha = MASS::ginv(M) %*% hm
   } else if (method_invM == "recursive"){
     if (verbose > 0){
-      cat("Using the recursive formula to compute the inverse of the matrix M...\n")
+      cat("Using the recursive formula to compute the inverse of the",
+          "matrix M...\n")
     }
     
     # We avoid computing M and inverting it numerically. Here we compute the
@@ -663,7 +671,8 @@ h_hat_jp1_t <- function(h_hat_until_j, v_hat_until_j, j, Bell_polynomials)
     {
       ugly_sum <- ugly_sum +
         (-1)^(k) * factorial(k) * h_hat_until_j[k+1] *
-        # kStatistics::e_eBellPol(j, k, c(v_hat_until_j[1:(j - k + 1)], rep(0, k - 1)) )
+        # kStatistics::e_eBellPol(
+        #   j, k, c(v_hat_until_j[1:(j - k + 1)], rep(0, k - 1)) )
         Bell_polynomials[j, k]
     }
   }

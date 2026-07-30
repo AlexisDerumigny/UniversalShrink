@@ -106,40 +106,41 @@ LossFrobenius2(precision_MPR_NoCent, Sigma = Sigma)
 
 for (m in 1:3){
   cat("m = ", m, "\n")
-  precision_higher_order_shrinkage_Cent = 
+  prec_higher_order_shrinkage_Cent = 
       MPR_higher_order_shrinkage(X, m = m, centeredCov = TRUE, t = t)
       
-  precision_higher_order_shrinkage_NoCent = 
+  prec_higher_order_shrinkage_NoCent = 
       MPR_higher_order_shrinkage(X, m = m, centeredCov = FALSE, t = t)
       
-  print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
+  print(LossFrobenius2(prec_higher_order_shrinkage_Cent, Sigma = Sigma))
   
-  print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
+  print(LossFrobenius2(prec_higher_order_shrinkage_NoCent, Sigma = Sigma))
 }
 
-precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(X, m = 2, verbose = 1)
+prec_higher_order_Cent2 = MPR_higher_order_shrinkage(X, m = 2, verbose = 1)
 
-precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(X, m = 1, t = 100)
+prec_higher_order_Cent1 = MPR_higher_order_shrinkage(X, m = 1, t = 100)
 
-precision_shrinkage_identity_semioptimal_Cent = MPR_shrinkage(X, t = 100)
+prec_identity_semioptimal_Cent = MPR_shrinkage(X, t = 100)
       
-precision_shrinkage_general_semioptimal_Cent = MPR_shrinkage(X, t = 100, Pi0 = diag(p))
+prec_general_semioptimal_Cent = MPR_shrinkage(X, t = 100, Pi0 = diag(p))
 
-precision_higher_order_shrinkage_Cent$alpha
-precision_shrinkage_identity_semioptimal_Cent$beta_optimal
-precision_shrinkage_identity_semioptimal_Cent$alpha_optimal
+prec_higher_order_Cent1$alpha
+prec_identity_semioptimal_Cent$beta_optimal
+prec_identity_semioptimal_Cent$alpha_optimal
 
-precision_shrinkage_general_semioptimal_Cent$beta_optimal
-precision_shrinkage_general_semioptimal_Cent$alpha_optimal
+prec_general_semioptimal_Cent$beta_optimal
+prec_general_semioptimal_Cent$alpha_optimal
 
-precision_higher_order_shrinkage_Cent$M
-precision_shrinkage_identity_semioptimal_Cent$M
+prec_higher_order_Cent1$M
+prec_identity_semioptimal_Cent$M
 
-precision_higher_order_shrinkage_Cent$hm
-precision_shrinkage_identity_semioptimal_Cent$hm
+prec_higher_order_Cent1$hm
+prec_identity_semioptimal_Cent$hm
 
-LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
-LossFrobenius2(precision_shrinkage_identity_semioptimal_Cent, Sigma = Sigma)
+LossFrobenius2(prec_higher_order_Cent1, Sigma = Sigma)
+LossFrobenius2(prec_identity_semioptimal_Cent, Sigma = Sigma)
+LossFrobenius2(prec_higher_order_Cent2, Sigma = Sigma)
 
 
 }

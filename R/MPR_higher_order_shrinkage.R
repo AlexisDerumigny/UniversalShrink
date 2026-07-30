@@ -1,19 +1,19 @@
 
-# Compute the matrix M for the higher-order shrinkage of the Moore-Penrose-Ridge
-# estimator
+# Compute the matrix M for the higher-order shrinkage of the
+# Moore-Penrose-Ridge estimator
 # 
 # @return a list with
 # - a square matrix M of size (m + 1)
 # - a vector hm of size (m + 1)
 # - the estimator of v
-compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose,
-                            mpfr, precBits)
+compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
+                            verbose, mpfr, precBits)
 {
   s_and_v = compute_sv_ridge(m = 2 * m, # we need additional powers compared
                                         # to the ridge
                              c_n = c_n,
                              S_t_inverse = S_t_inverse, q1 = q1, q2 = q2, t = t,
-                             verbose = verbose)
+                             verbose = verbose - 1)
   s_ridge = s_and_v$s
   v = s_and_v$v
   
@@ -22,7 +22,8 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose
   for (j in 1:(2*m)){
     s[j, ] = 0
     for (k in 0:j){
-      additional_term = (-t)^(j - k) * choose(n = j, k = k) * s_ridge[2 * j - k, ]
+      additional_term = 
+        (-t)^(j - k) * choose(n = j, k = k) * s_ridge[2 * j - k, ]
       s[j, ] = s[j, ] + additional_term
     }
   }
@@ -45,7 +46,8 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose
     cat("\n")
   }
   
-  # TODO: compute all estimators for smaller m here using submatrices of this matrix
+  # TODO: compute all estimators for smaller m here using submatrices
+  # of this matrix
   
   if (method_invM == "solve"){
     alpha = solve(M) %*% hm
@@ -56,7 +58,8 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose
     alpha = MASS::ginv(M) %*% hm
   } else if (method_invM == "recursive"){
     if (verbose > 0){
-      cat("Using the recursive formula to compute the inverse of the matrix M...\n")
+      cat("Using the recursive formula to compute the inverse of",
+          "the matrix M...\n")
     }
     
     # We avoid computing M and inverting it numerically. Here we compute the
@@ -125,40 +128,41 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM, verbose
 #' 
 #' for (m in 1:3){
 #'   cat("m = ", m, "\n")
-#'   precision_higher_order_shrinkage_Cent = 
+#'   prec_higher_order_shrinkage_Cent = 
 #'       MPR_higher_order_shrinkage(X, m = m, centeredCov = TRUE, t = t)
 #'       
-#'   precision_higher_order_shrinkage_NoCent = 
+#'   prec_higher_order_shrinkage_NoCent = 
 #'       MPR_higher_order_shrinkage(X, m = m, centeredCov = FALSE, t = t)
 #'       
-#'   print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma))
+#'   print(LossFrobenius2(prec_higher_order_shrinkage_Cent, Sigma = Sigma))
 #'   
-#'   print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma = Sigma))
+#'   print(LossFrobenius2(prec_higher_order_shrinkage_NoCent, Sigma = Sigma))
 #' }
 #' 
-#' precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(X, m = 2, verbose = 1)
+#' prec_higher_order_Cent2 = MPR_higher_order_shrinkage(X, m = 2, verbose = 1)
 #' 
-#' precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(X, m = 1, t = 100)
+#' prec_higher_order_Cent1 = MPR_higher_order_shrinkage(X, m = 1, t = 100)
 #' 
-#' precision_shrinkage_identity_semioptimal_Cent = MPR_shrinkage(X, t = 100)
+#' prec_identity_semioptimal_Cent = MPR_shrinkage(X, t = 100)
 #'       
-#' precision_shrinkage_general_semioptimal_Cent = MPR_shrinkage(X, t = 100, Pi0 = diag(p))
+#' prec_general_semioptimal_Cent = MPR_shrinkage(X, t = 100, Pi0 = diag(p))
 #'
-#' precision_higher_order_shrinkage_Cent$alpha
-#' precision_shrinkage_identity_semioptimal_Cent$beta_optimal
-#' precision_shrinkage_identity_semioptimal_Cent$alpha_optimal
+#' prec_higher_order_Cent1$alpha
+#' prec_identity_semioptimal_Cent$beta_optimal
+#' prec_identity_semioptimal_Cent$alpha_optimal
 #' 
-#' precision_shrinkage_general_semioptimal_Cent$beta_optimal
-#' precision_shrinkage_general_semioptimal_Cent$alpha_optimal
+#' prec_general_semioptimal_Cent$beta_optimal
+#' prec_general_semioptimal_Cent$alpha_optimal
 #' 
-#' precision_higher_order_shrinkage_Cent$M
-#' precision_shrinkage_identity_semioptimal_Cent$M
+#' prec_higher_order_Cent1$M
+#' prec_identity_semioptimal_Cent$M
 #' 
-#' precision_higher_order_shrinkage_Cent$hm
-#' precision_shrinkage_identity_semioptimal_Cent$hm
+#' prec_higher_order_Cent1$hm
+#' prec_identity_semioptimal_Cent$hm
 #' 
-#' LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
-#' LossFrobenius2(precision_shrinkage_identity_semioptimal_Cent, Sigma = Sigma)
+#' LossFrobenius2(prec_higher_order_Cent1, Sigma = Sigma)
+#' LossFrobenius2(prec_identity_semioptimal_Cent, Sigma = Sigma)
+#' LossFrobenius2(prec_higher_order_Cent2, Sigma = Sigma)
 #' 
 #' 
 #' @export
@@ -196,7 +200,8 @@ MPR_higher_order_shrinkage_non_optimized <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
+                       verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = X, centeredCov = centeredCov)
@@ -224,10 +229,11 @@ MPR_higher_order_shrinkage_non_optimized <- function(
   
   estimatedM = compute_M_t_MPR(
     m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = iS_ridge,
-    t = t, method_invM = method_invM, verbose = verbose,
+    t = t, method_invM = method_invM, verbose = verbose - 1,
     mpfr = mpfr, precBits = precBits)
   
-  # TODO: compute all estimators for smaller m here using submatrices of this matrix
+  # TODO: compute all estimators for smaller m here using submatrices
+  # of this matrix
   
   # TODO: loss = 1 - t(estimatedM$hm) %*% solve(estimatedM$M) %*% estimatedM$hm
   # as in ridge_higher_order_shrinkage_optimal
@@ -273,7 +279,8 @@ MPR_higher_order_shrinkage_optimal <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
+                       verbose = verbose)
   
   if (verbose > 0){
     cat("*  m = ", m, "\n")
@@ -338,7 +345,8 @@ MPR_higher_order_shrinkage_optimal <- function(
     t = optimal_t, method_invM = method_invM, verbose = verbose - 2,
     mpfr = mpfr, precBits = precBits)
   
-  # TODO: compute all estimators for smaller m here using submatrices of this matrix
+  # TODO: compute all estimators for smaller m here using submatrices
+  # of this matrix
   
   alpha = estimatedM$alpha
   
