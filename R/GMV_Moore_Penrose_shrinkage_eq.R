@@ -1,6 +1,6 @@
 
 
-GMV_Moore_Penrose_shrinkage_eq <- function(X, centeredCov = TRUE, verbose = 2,
+GMV_Moore_Penrose_shrinkage_eq <- function(X, centeredCov = TRUE, verbose = 0,
                                            call_ = NULL){
   
   # Get sizes of X

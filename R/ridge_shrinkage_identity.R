@@ -134,8 +134,8 @@ loss_L2_ridge_shrinkage_identity <- function(
 }
 
 
-ridge_shrinkage_identity_semioptimal <- function (X, centeredCov, t, verbose = 2,
-                                               call_ = NULL){
+ridge_shrinkage_identity_semioptimal <- function (
+    X, centeredCov, t, verbose = 0, call_ = NULL){
   
   if (verbose > 0){
     cat("Starting `ridge_shrinkage_identity_semioptimal`...\n")

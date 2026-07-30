@@ -337,7 +337,7 @@ ridge_higher_order_shrinkage_optimal <- function(
   
   estimatedM = compute_M_t_ridge(
     m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = S_t_inverse,
-    t = optimal_t, method_invM = method_invM, verbose = verbose,
+    t = optimal_t, method_invM = method_invM, verbose = verbose - 1,
     mpfr = mpfr, precBits = precBits)
   
   alpha = estimatedM$alpha

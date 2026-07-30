@@ -2,7 +2,7 @@
 
 
 GMV_Moore_Penrose_shrinkage_general <- function(X, centeredCov = TRUE, b = NULL,
-                                                verbose = 2, call_ = NULL){
+                                                verbose = 0, call_ = NULL){
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)

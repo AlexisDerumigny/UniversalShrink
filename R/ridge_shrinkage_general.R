@@ -238,7 +238,7 @@ estimator_vhat_derivative <- function(t, m, iS_ridge, p, Ip, cn){
 
 
 ridge_shrinkage_general <- function (X, centeredCov, t, Pi0, alpha, beta,
-                                  verbose = 2, call_ = NULL){
+                                     verbose = 0, call_ = NULL){
   
   if (verbose > 0){
     cat("Starting `ridge_shrinkage_general`...\n")
@@ -285,8 +285,8 @@ ridge_shrinkage_general <- function (X, centeredCov, t, Pi0, alpha, beta,
 
 
 
-ridge_shrinkage_general_semioptimal <- function (X, centeredCov, t, Pi0,
-                                              verbose = 2, call_ = NULL){
+ridge_shrinkage_general_semioptimal <- function (
+    X, centeredCov, t, Pi0, verbose = 0, call_ = NULL){
   
   if (verbose > 0){
     cat("Starting `ridge_shrinkage_general_semioptimal`...\n")
@@ -341,7 +341,7 @@ ridge_shrinkage_general_semioptimal <- function (X, centeredCov, t, Pi0,
 
 
 ridge_shrinkage_general_optimal <- function (
-    X, centeredCov, Pi0, verbose = 2, optimizationControls = NULL, 
+    X, centeredCov, Pi0, verbose = 0, optimizationControls = NULL, 
     call_ = NULL){
   
   if (verbose > 0){

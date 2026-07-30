@@ -1,7 +1,7 @@
 
 
 MPR_shrinkage_identity_optimal <- function(
-    X, centeredCov = TRUE, verbose = 2, optimizationControls = NULL,
+    X, centeredCov = TRUE, verbose = 0, optimizationControls = NULL,
     call_ = NULL)
 {
   if (verbose > 0){
@@ -145,8 +145,8 @@ loss_L2_MPR_optimal <- function(t, X, S, cn, p, Ip, centeredCov, verbose){
 
 
 
-MPR_shrinkage_identity_semioptimal <- function (X, centeredCov = TRUE, t,
-                                             verbose = 2, call_ = NULL){
+MPR_shrinkage_identity_semioptimal <- function (
+    X, centeredCov = TRUE, t, verbose = 0, call_ = NULL){
   
   # Get sizes of X
   n = nrow(X)

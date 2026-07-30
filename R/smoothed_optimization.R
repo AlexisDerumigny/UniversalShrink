@@ -1,6 +1,6 @@
 
 optimization <- function(FUN, optimizationControls = NULL,
-                         maximum = FALSE, verbose, ...)
+                         maximum = FALSE, verbose = 0, ...)
 {
   method = optimizationControls$method
   
@@ -108,7 +108,7 @@ smoothed_optimization <- function(FUN, grid, k, verbose, maximum, ...)
 # Compute a regular grid using the eigenvalues of S.
 #
 # The length of this grid is capped at max_length.
-grid_optimization_default <- function(S, c_n, p, n, max_length, verbose){
+grid_optimization_default <- function(S, c_n, p, n, max_length, verbose = 0){
   if (is.null(max_length)) {
     max_length = 100
   }

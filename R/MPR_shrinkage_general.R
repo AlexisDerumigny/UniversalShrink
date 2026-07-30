@@ -161,8 +161,8 @@ loss_L2_MPR_optimal_shrinkage_general <- function(
 
 
 
-MPR_shrinkage_general_semioptimal <- function (X, centeredCov, t, Pi0, verbose = 2,
-                                            call_ = NULL){
+MPR_shrinkage_general_semioptimal <- function (
+    X, centeredCov, t, Pi0, verbose = 0, call_ = NULL){
   
   # Get sizes of X
   n = nrow(X)
