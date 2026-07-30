@@ -22,7 +22,8 @@ Roxygen: list(markdown = TRUE)
 LinkingTo: 
     Rcpp
 Imports:
-    Rcpp
+    Rcpp,
+    pbapply
 Suggests: 
     MASS,
     ggplot2,
