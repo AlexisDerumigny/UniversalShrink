@@ -190,7 +190,7 @@ compute_HigherOrderCov_hat_f <- function(u, m, p, verbose, all_tr){
   #     }
   #   }
   # }
-  all_Bell_polynomials = bellPolynomials(u, verbose = 0)
+  all_Bell_polynomials = bellPolynomials(u, verbose = verbose - 1)
   # Removing the lines corresponding to n = 0 and k = 0
   all_Bell_polynomials = all_Bell_polynomials[-1, -1]
   

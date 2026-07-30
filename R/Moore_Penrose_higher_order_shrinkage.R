@@ -46,11 +46,11 @@ estimator_vhat_t0 <- function(c_n, p, D_MP){
   return (v)
 }
 
-estimator_w_hat_tilde_derivative_t0 <- function(m, c_n, w_hat){
+estimator_w_hat_tilde_derivative_t0 <- function(m, c_n, w_hat, verbose = 0){
   wtilde <- rep(NA, m)
   wtilde[1] <- 1 / (1 - c_n)
   
-  Bell_polynomials = bellPolynomials(w_hat, verbose = 0)
+  Bell_polynomials = bellPolynomials(w_hat, verbose = verbose - 1)
   # Removing the lines corresponding to n = 0 and k = 0
   Bell_polynomials = Bell_polynomials[-1, -1]
   
@@ -116,7 +116,7 @@ compute_M_MoorePenrose_plarge <- function(
   #       kStatistics::e_eBellPol(j, k, c(v[1:(j - k + 1)], rep(0, k - 1)))
   #   }
   # }
-  Bell_polynomials = bellPolynomials(v, verbose = 0)
+  Bell_polynomials = bellPolynomials(v, verbose = verbose - 1)
   # Removing the lines corresponding to n = 0 and k = 0
   Bell_polynomials = Bell_polynomials[-1, -1]
   
@@ -259,7 +259,7 @@ compute_M_MoorePenrose_psmall <- function(
     m = 2 * m, c_n = c_n, p = p, D_MP = D_MP)
   
   w_hat_tilde <- estimator_w_hat_tilde_derivative_t0(
-    m = 2 * m, c_n = c_n, w_hat = w_hat)
+    m = 2 * m, c_n = c_n, w_hat = w_hat, verbose = verbose - 1)
   
   
   # Bell_polynomials = matrix(nrow = 2 * m, ncol = 2 * m)
@@ -271,7 +271,7 @@ compute_M_MoorePenrose_psmall <- function(
   #     j, k, c(w_hat_tilde[1:(j - k + 1)], rep(0, k - 1) ) )
   #   }
   # }
-  Bell_polynomials = bellPolynomials(w_hat_tilde, verbose = 0)
+  Bell_polynomials = bellPolynomials(w_hat_tilde, verbose = verbose - 1)
   # Removing the lines corresponding to n = 0 and k = 0
   Bell_polynomials = Bell_polynomials[-1, -1]
   

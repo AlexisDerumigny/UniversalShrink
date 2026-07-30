@@ -426,7 +426,7 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     cat("\n")
   }
   
-  Bell_polynomials = bellPolynomials(v, verbose = 0)
+  Bell_polynomials = bellPolynomials(v, verbose = verbose - 1)
   # Removing the lines corresponding to n = 0 and k = 0
   Bell_polynomials = Bell_polynomials[-1, -1, drop = FALSE]
   
