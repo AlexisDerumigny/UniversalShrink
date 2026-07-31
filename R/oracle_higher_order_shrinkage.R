@@ -71,7 +71,7 @@
 #' 
 #' @export
 oracle_higher_order_shrinkage <- function(
-    X, m, Sigma, t = NULL, nameEstimator = "Moore-Penrose", centeredCov = TRUE,
+    X, m, Sigma, nameEstimator, t = NULL, centeredCov = TRUE,
     method_invM = "recursive", verbose = 0, optimizationControls = NULL,
     mpfr = FALSE, precBits = 2^16)
 {

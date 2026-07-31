@@ -8,8 +8,8 @@ oracle_higher_order_shrinkage(
   X,
   m,
   Sigma,
+  nameEstimator,
   t = NULL,
-  nameEstimator = "Moore-Penrose",
   centeredCov = TRUE,
   method_invM = "recursive",
   verbose = 0,
@@ -25,12 +25,12 @@ oracle_higher_order_shrinkage(
 
 \item{Sigma}{true covariance matrix}
 
-\item{t}{\code{t} is the penalization parameter.}
-
 \item{nameEstimator}{name of the estimator of which we compute the oracle of.
 If \code{nameEstimator = "Moore-Penrose"}, this computes the finite-sample
 oracle of the higher-order shrinked Moore-Penrose estimator. Other
 possibilities are \code{"ridge"} and \code{"MPR"}.}
+
+\item{t}{\code{t} is the penalization parameter.}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, then the sample covariance
 matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector
