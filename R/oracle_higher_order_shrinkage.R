@@ -73,21 +73,39 @@
 oracle_higher_order_shrinkage <- function(
     X, m, Sigma, t = NULL, nameEstimator = "Moore-Penrose", centeredCov = TRUE,
     method_invM = "recursive", verbose = 0, optimizationControls = NULL,
-    mpfr = FALSE, precBits = 2^16) {
-  
+    mpfr = FALSE, precBits = 2^16)
+{
+  if (verbose > 0) {
+    cat("Starting oracle_higher_order_shrinkage...\n")
+  }
   call_ = match.call()
   check_Rmpfr(mpfr)
   
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
+                       verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = X, centeredCov = centeredCov)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
+  
+  if (verbose > 0) {
+    cat("nameEstimator = ", nameEstimator, "\n")
+  }
+  if (!is.matrix(Sigma)) {
+    stop(UniversalShrink_error_condition_base(
+      "Sigma should be a matrix."
+    ))
+  }
+  if (nrow(Sigma) != p || ncol(Sigma) != p) {
+    stop(UniversalShrink_error_condition_base(
+      "Sigma should be of dimension p * p."
+    ))
+  }
   
   if (nameEstimator == "Moore-Penrose") {
     
