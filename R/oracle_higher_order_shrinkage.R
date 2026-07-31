@@ -71,7 +71,7 @@
 #' 
 #' @export
 oracle_higher_order_shrinkage <- function(
-    X, m, Sigma, nameEstimator = "Moore-Penrose", centeredCov = TRUE,
+    X, m, Sigma, t = NULL, nameEstimator = "Moore-Penrose", centeredCov = TRUE,
     method_invM = "recursive", verbose = 0, optimizationControls = NULL,
     mpfr = FALSE, precBits = 2^16) {
   
@@ -97,65 +97,75 @@ oracle_higher_order_shrinkage <- function(
     
   } else if (nameEstimator %in% c("ridge", "MPR")) {
     
-    if (nameEstimator == "ridge") {
+    if (is.null(t)) {
+      do_optimization = TRUE
       
-      estimatedLoss <- function(t){
-        loss = loss_L2_ridge_oracle_higher_order_optimal(
-          S = S, t = t, Ip = Ip, p = p, m = m, Sigma = Sigma,
-          method_invM = method_invM, verbose = verbose - 2,
-          mpfr = mpfr, precBits = precBits)
+      if (nameEstimator == "ridge") {
         
-        return (loss)
-      }
-      
-    } else if (nameEstimator == "MPR") {
-      
-      estimatedLoss <- function(t){
-        loss = loss_L2_MPR_oracle_higher_order_optimal(
-          S = S, t = t, Ip = Ip, p = p, m = m, Sigma = Sigma,
-          method_invM = method_invM, verbose = verbose - 2,
-          mpfr = mpfr, precBits = precBits)
+        estimatedLoss <- function(t){
+          loss = loss_L2_ridge_oracle_higher_order_optimal(
+            S = S, t = t, Ip = Ip, p = p, m = m, Sigma = Sigma,
+            method_invM = method_invM, verbose = verbose - 2,
+            mpfr = mpfr, precBits = precBits)
+          
+          return (loss)
+        }
         
-        return (loss)
-      }
-    }
-    
-    if (is.null(optimizationControls)) {
-      optimizationControls = list(method = "smoothed")
-    }
-    if (optimizationControls$method == "smoothed") {
-      if (is.null(optimizationControls$grid)) {
-        optimizationControls$grid <- grid_optimization_default(
-          S = S, c_n = c_n, p = p, n = n, 
-          max_length = optimizationControls$max_length, verbose = verbose)
+      } else if (nameEstimator == "MPR") {
+        
+        estimatedLoss <- function(t){
+          loss = loss_L2_MPR_oracle_higher_order_optimal(
+            S = S, t = t, Ip = Ip, p = p, m = m, Sigma = Sigma,
+            method_invM = method_invM, verbose = verbose - 2,
+            mpfr = mpfr, precBits = precBits)
+          
+          return (loss)
+        }
       }
       
-      if (is.null(optimizationControls$k)) {
-        optimizationControls$k <- 2 * m + 1
+      if (is.null(optimizationControls)) {
+        optimizationControls = list(method = "smoothed")
+      }
+      if (optimizationControls$method == "smoothed") {
+        if (is.null(optimizationControls$grid)) {
+          optimizationControls$grid <- grid_optimization_default(
+            S = S, c_n = c_n, p = p, n = n, 
+            max_length = optimizationControls$max_length, verbose = verbose)
+        }
+        
+        if (is.null(optimizationControls$k)) {
+          optimizationControls$k <- 2 * m + 1
+        }
+      }
+      
+      result_optimization = optimization(
+        FUN = estimatedLoss, optimizationControls = optimizationControls,
+        maximum = FALSE, verbose = verbose)
+      
+      optimal_t = result_optimization$optimal_t
+      
+      if (verbose > 0){
+        cat("*  optimal_t = ", optimal_t, "\n")
+      }
+      t = optimal_t
+      
+    } else {
+      do_optimization = FALSE
+      if (verbose > 0){
+        cat("*  t = ", t, "\n")
       }
     }
     
-    result_optimization = optimization(
-      FUN = estimatedLoss, optimizationControls = optimizationControls,
-      maximum = FALSE, verbose = verbose)
-    
-    optimal_t = result_optimization$optimal_t
-    
-    if (verbose > 0){
-      cat("*  optimal_t = ", optimal_t, "\n")
-    }
-    
-    iS_ridge <- solve(S + optimal_t * Ip)
+    iS_ridge <- solve(S + t * Ip)
     
     if (nameEstimator == "ridge") {
       estimated_precision_matrix = iS_ridge
       
     } else if (nameEstimator == "MPR") {
       
-      MPR_estimator <- iS_ridge - optimal_t * iS_ridge %*% iS_ridge
+      MPR_estimator <- iS_ridge - t * iS_ridge %*% iS_ridge
       estimated_precision_matrix = MPR_estimator
     }
-    
   } else {
     stop("nameEstimator = '", nameEstimator, "' is not valid.",
          "It should be one of the following: 'Moore-Penrose', 'ridge', 'MPR'.")
@@ -185,7 +195,10 @@ oracle_higher_order_shrinkage <- function(
     # invM_solve = resultM$invM_solve,
     invM_recursive = resultM$invM_recursive,
     alpha = alpha,
-    optimal_t = if(nameEstimator %in% c("ridge", "MPR")) {optimal_t} ,
+    optimal_t = if(nameEstimator %in% c("ridge", "MPR") && do_optimization) {
+      optimal_t} ,
+    t = if(nameEstimator %in% c("ridge", "MPR") && !do_optimization) {
+      t} ,
     result_optimization = if(nameEstimator %in% c("ridge", "MPR")) {
       result_optimization} ,
     method = "Oracle higher-order shrinkage",

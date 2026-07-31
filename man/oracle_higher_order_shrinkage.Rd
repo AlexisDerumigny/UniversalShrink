@@ -8,6 +8,7 @@ oracle_higher_order_shrinkage(
   X,
   m,
   Sigma,
+  t = NULL,
   nameEstimator = "Moore-Penrose",
   centeredCov = TRUE,
   method_invM = "recursive",
@@ -23,6 +24,8 @@ oracle_higher_order_shrinkage(
 \item{m}{order of the shrinkage. Should be at least 1.}
 
 \item{Sigma}{true covariance matrix}
+
+\item{t}{\code{t} is the penalization parameter.}
 
 \item{nameEstimator}{name of the estimator of which we compute the oracle of.
 If \code{nameEstimator = "Moore-Penrose"}, this computes the finite-sample
