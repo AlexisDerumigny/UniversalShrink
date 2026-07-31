@@ -9,8 +9,8 @@
 #' 
 #' @param p number of variables
 #' 
-#' @param D_MP diagonal matrix containing on the diagonal the eigenvalues of the
-#' Moore-Penrose inverse of the sample covariance matrix.
+#' @param D_MP diagonal matrix containing on the diagonal the eigenvalues of
+#' the Moore-Penrose inverse of the sample covariance matrix.
 #' 
 #' @returns a vector of size \code{m} containing
 #' \eqn{\widehat{v'}(0), \dots, \widehat{v^{(m)}}(0)}.
@@ -79,8 +79,8 @@ estimator_d_hat_tilde_p_small <- function(m, c_n, w_hat, Bell_polynomials){
     second_term = 0
     if (j > 1){
       for (k in 1:(j - 1)) {
-        # Bell_polynomial = 
-        #   kStatistics::e_eBellPol(j, k, c(w_hat_tilde[1:(j - k + 1)], rep(0, k - 1)))
+        # Bell_polynomial = kStatistics::e_eBellPol(
+        #   j, k, c(w_hat_tilde[1:(j - k + 1)], rep(0, k - 1)))
         Bell_polynomial = Bell_polynomials[j, k]
         
         new_term = (-1)^k * factorial(k) * d[k] * Bell_polynomial
@@ -146,7 +146,8 @@ compute_M_MoorePenrose_plarge <- function(
         d[k,l] <- 1 / c_n * (1 / (hv0^(k+1)) - h[k+1])
       } else if (l == 2 && k == 1) {
         # if (centeredCov){
-        #   d[k,l] <- ihv0 * (ihv0 * (q1 - ihv0 * ( (1 - 1/n) / c_n ) ) - d[1,1] )
+        #   d[k,l] <- ihv0 * 
+        #      (ihv0 * (q1 - ihv0 * ( (1 - 1/n) / c_n ) ) - d[1,1] )
         # } else {
         #   d[k,l] <- ihv0 * (ihv0 * (q1 - ihv0 * ( 1 / c_n ) ) - d[1,1] )
         # }
@@ -197,7 +198,8 @@ compute_M_MoorePenrose_plarge <- function(
     
   } else if (method_invM == "recursive"){
     if (verbose > 0){
-      cat("Using the recursive formula to compute the inverse of the matrix M...\n")
+      cat("Using the recursive formula to compute the inverse of",
+          "the matrix M...\n")
     }
     # M is not computed but we still need to declare this variable because it
     # is used in the returned list.
@@ -335,7 +337,8 @@ compute_M_MoorePenrose_psmall <- function(
     }
   } else if (method_invM == "recursive"){
     if (verbose > 0){
-      cat("Using the recursive formula to compute the inverse of the matrix M...\n")
+      cat("Using the recursive formula to compute the inverse of",
+          "the matrix M...\n")
     }
     # M is not computed but we still need to declare this variable because it
     # is used in the returned list.
@@ -404,32 +407,34 @@ compute_M_MoorePenrose_psmall <- function(
 #' \mathbf{S}_{n;HOS}^+=\hat{\alpha}_0^+\mathbf{I}_p 
 #' +\sum_{j=1}^m\hat{\alpha}^+_j(\mathbf{S}^+_n)^j,
 #' }
-#' where \eqn{\hat{\boldsymbol{\alpha}}^{+}(m)=(\hat{\alpha}_0^+,\hat{\alpha}_1^+,
-#' \ldots,\hat{\alpha}_m^+)^\top} given by
-#'\deqn{
-#'\hat{\boldsymbol{\alpha}}^{+}(m)=\widehat{\mathbf{M}}^+(m)^{-1} \hat{\mathbf{m}}^+(m)
-#'}  with
+#' where \eqn{\hat{\boldsymbol{\alpha}}^{+}(m)
+#' = (\hat{\alpha}_0^+,\hat{\alpha}_1^+, \ldots,\hat{\alpha}_m^+)^\top}
+#' given by
 #' \deqn{
-#'\hat{\mathbf{m}}^+(m)=
+#' \hat{\boldsymbol{\alpha}}^{+}(m)
+#' = \widehat{\mathbf{M}}^+(m)^{-1} \hat{\mathbf{m}}^+(m)
+#' }  with
+#' \deqn{
+#' \hat{\mathbf{m}}^+(m)=
 #'  \begin{pmatrix}
-#'\hat{q}_1\\
-#'\hat{s}_{1,1}\\
-#'\vdots\\
-#'\hat{s}_{m,1}
-#'\end{pmatrix}
-#'\quad \text{and}\quad
-#'\widehat{\mathbf{M}}^+(m)=\begin{pmatrix}
-#'\hat{q}_2 & \hat{s}_{1,2}  & \ldots & \hat{s}_{m,2} \\
-#'\hat{s}_{1,2}& \hat{s}_{2,2}  & \ldots & \hat{s}_{m+1,2} \\
-#'\vdots&\vdots&\ddots&\vdots\\
-#'\hat{s}_{m,2}& \hat{s}_{m+1,2} & \ldots & \hat{s}_{2m,2}
-#'\end{pmatrix},
-#'} where
+#' \hat{q}_1\\
+#' \hat{s}_{1,1}\\
+#' \vdots\\
+#' \hat{s}_{m,1}
+#' \end{pmatrix}
+#' \quad \text{and}\quad
+#' \widehat{\mathbf{M}}^+(m)=\begin{pmatrix}
+#' \hat{q}_2 & \hat{s}_{1,2}  & \ldots & \hat{s}_{m,2} \\
+#' \hat{s}_{1,2}& \hat{s}_{2,2}  & \ldots & \hat{s}_{m+1,2} \\
+#' \vdots&\vdots&\ddots&\vdots\\
+#' \hat{s}_{m,2}& \hat{s}_{m+1,2} & \ldots & \hat{s}_{2m,2}
+#' \end{pmatrix},
+#' } where
 #' \eqn{\mathbf{S}^+_n} is the Moore-Penrose inverse of the sample
-#' covariance matrix and \eqn{\mathbf{I}_p} is the identity matrix of size \eqn{p}.
-#' The details on the computation of the terms \eqn{\hat q_1}, \eqn{\hat q_2} and
-#'  \eqn{s_{i,j}} are given in 
-#' Theorem 2.5 of Bodnar and Parolya (2025).
+#' covariance matrix and \eqn{\mathbf{I}_p} is the identity matrix of
+#' size \eqn{p}.
+#' The details on the computation of the terms \eqn{\hat q_1}, \eqn{\hat q_2}
+#' and \eqn{s_{i,j}} are given in Theorem 2.5 of Bodnar and Parolya (2025).
 #' 
 #' @param X data matrix (rows are observations, columns are features).
 #' 
@@ -449,7 +454,8 @@ compute_M_MoorePenrose_psmall <- function(
 #' 
 #' @references
 #' Nestor Parolya & Taras Bodnar (2025).
-#' Higher-order nonlinear shrinkage estimator of large-dimensional precision matrix.
+#' Higher-order nonlinear shrinkage estimator of large-dimensional precision
+#' matrix.
 #' \doi{10.1090/tpms/1239}
 #' 
 #' @examples
@@ -466,11 +472,11 @@ compute_M_MoorePenrose_psmall <- function(
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
-#' precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
-#' precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
+#' prec_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
+#' prec_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
 #'
-#' print(LossFrobenius2(precision_MoorePenrose_Cent, Sigma))
-#' print(LossFrobenius2(precision_MoorePenrose_NoCent, Sigma))
+#' print(LossFrobenius2(prec_MoorePenrose_Cent, Sigma))
+#' print(LossFrobenius2(prec_MoorePenrose_NoCent, Sigma))
 #' 
 #' for (m in 1:3){
 #'   cat("m = ", m, "\n")
@@ -499,27 +505,27 @@ compute_M_MoorePenrose_psmall <- function(
 #' # Generate example dataset
 #' X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 #' 
-#' precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
-#' precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
+#' prec_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
+#' prec_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
 #'
-#' print(LossFrobenius2(precision_MoorePenrose_Cent, Sigma))
-#' print(LossFrobenius2(precision_MoorePenrose_NoCent, Sigma))
+#' print(LossFrobenius2(prec_MoorePenrose_Cent, Sigma))
+#' print(LossFrobenius2(prec_MoorePenrose_NoCent, Sigma))
 #' 
 #' for (m in 1:3){
 #'   cat("m = ", m, "\n")
-#'   precision_higher_order_shrinkage_Cent = 
+#'   prec_higher_order_shrinkage_Cent = 
 #'       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
 #'       
-#'   precision_higher_order_shrinkage_NoCent = 
+#'   prec_higher_order_shrinkage_NoCent = 
 #'       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = FALSE)
 #'       
-#'   print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
+#'   print(LossFrobenius2(prec_higher_order_shrinkage_Cent, Sigma))
 #'   
-#'   print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma))
+#'   print(LossFrobenius2(prec_higher_order_shrinkage_NoCent, Sigma))
 #'       
-#'   print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
+#'   print(LossInverseFrobenius2(prec_higher_order_shrinkage_Cent, Sigma))
 #'   
-#'   print(LossInverseFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma))
+#'   print(LossInverseFrobenius2(prec_higher_order_shrinkage_NoCent, Sigma))
 #' }
 #' 
 #' @export
@@ -534,7 +540,8 @@ Moore_Penrose_higher_order_shrinkage <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
+                       verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = X, centeredCov = centeredCov)

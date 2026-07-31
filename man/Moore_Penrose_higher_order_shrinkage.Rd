@@ -54,10 +54,12 @@ polynomial
 \mathbf{S}_{n;HOS}^+=\hat{\alpha}_0^+\mathbf{I}_p 
 +\sum_{j=1}^m\hat{\alpha}^+_j(\mathbf{S}^+_n)^j,
 }
-where \eqn{\hat{\boldsymbol{\alpha}}^{+}(m)=(\hat{\alpha}_0^+,\hat{\alpha}_1^+,
-\ldots,\hat{\alpha}_m^+)^\top} given by
+where \eqn{\hat{\boldsymbol{\alpha}}^{+}(m)
+= (\hat{\alpha}_0^+,\hat{\alpha}_1^+, \ldots,\hat{\alpha}_m^+)^\top}
+given by
 \deqn{
-\hat{\boldsymbol{\alpha}}^{+}(m)=\widehat{\mathbf{M}}^+(m)^{-1} \hat{\mathbf{m}}^+(m)
+\hat{\boldsymbol{\alpha}}^{+}(m)
+= \widehat{\mathbf{M}}^+(m)^{-1} \hat{\mathbf{m}}^+(m)
 }  with
 \deqn{
 \hat{\mathbf{m}}^+(m)=
@@ -76,10 +78,10 @@ where \eqn{\hat{\boldsymbol{\alpha}}^{+}(m)=(\hat{\alpha}_0^+,\hat{\alpha}_1^+,
 \end{pmatrix},
 } where
 \eqn{\mathbf{S}^+_n} is the Moore-Penrose inverse of the sample
-covariance matrix and \eqn{\mathbf{I}_p} is the identity matrix of size \eqn{p}.
-The details on the computation of the terms \eqn{\hat q_1}, \eqn{\hat q_2} and
-\eqn{s_{i,j}} are given in
-Theorem 2.5 of Bodnar and Parolya (2025).
+covariance matrix and \eqn{\mathbf{I}_p} is the identity matrix of
+size \eqn{p}.
+The details on the computation of the terms \eqn{\hat q_1}, \eqn{\hat q_2}
+and \eqn{s_{i,j}} are given in Theorem 2.5 of Bodnar and Parolya (2025).
 }
 \examples{
 
@@ -95,11 +97,11 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
-precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
+prec_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
+prec_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
 
-print(LossFrobenius2(precision_MoorePenrose_Cent, Sigma))
-print(LossFrobenius2(precision_MoorePenrose_NoCent, Sigma))
+print(LossFrobenius2(prec_MoorePenrose_Cent, Sigma))
+print(LossFrobenius2(prec_MoorePenrose_NoCent, Sigma))
 
 for (m in 1:3){
   cat("m = ", m, "\n")
@@ -128,32 +130,33 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-precision_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
-precision_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
+prec_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
+prec_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
 
-print(LossFrobenius2(precision_MoorePenrose_Cent, Sigma))
-print(LossFrobenius2(precision_MoorePenrose_NoCent, Sigma))
+print(LossFrobenius2(prec_MoorePenrose_Cent, Sigma))
+print(LossFrobenius2(prec_MoorePenrose_NoCent, Sigma))
 
 for (m in 1:3){
   cat("m = ", m, "\n")
-  precision_higher_order_shrinkage_Cent = 
+  prec_higher_order_shrinkage_Cent = 
       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
       
-  precision_higher_order_shrinkage_NoCent = 
+  prec_higher_order_shrinkage_NoCent = 
       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = FALSE)
       
-  print(LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
+  print(LossFrobenius2(prec_higher_order_shrinkage_Cent, Sigma))
   
-  print(LossFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma))
+  print(LossFrobenius2(prec_higher_order_shrinkage_NoCent, Sigma))
       
-  print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
+  print(LossInverseFrobenius2(prec_higher_order_shrinkage_Cent, Sigma))
   
-  print(LossInverseFrobenius2(precision_higher_order_shrinkage_NoCent, Sigma))
+  print(LossInverseFrobenius2(prec_higher_order_shrinkage_NoCent, Sigma))
 }
 
 }
 \references{
 Nestor Parolya & Taras Bodnar (2025).
-Higher-order nonlinear shrinkage estimator of large-dimensional precision matrix.
+Higher-order nonlinear shrinkage estimator of large-dimensional precision
+matrix.
 \doi{10.1090/tpms/1239}
 }
