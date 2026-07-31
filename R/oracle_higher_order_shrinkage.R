@@ -217,8 +217,9 @@ oracle_higher_order_shrinkage <- function(
       optimal_t} ,
     t = if(nameEstimator %in% c("ridge", "MPR") && !do_optimization) {
       t} ,
-    result_optimization = if(nameEstimator %in% c("ridge", "MPR")) {
-      result_optimization} ,
+    result_optimization =
+      if(nameEstimator %in% c("ridge", "MPR") && do_optimization) {
+        result_optimization} ,
     method = "Oracle higher-order shrinkage",
     nameBaselinEstimator = nameEstimator,
     call = call_
