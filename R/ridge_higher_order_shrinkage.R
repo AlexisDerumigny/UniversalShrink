@@ -435,6 +435,12 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
   Bell_polynomials = bellPolynomials(v, verbose = verbose - 1)
   # Removing the lines corresponding to n = 0 and k = 0
   Bell_polynomials = Bell_polynomials[-1, -1, drop = FALSE]
+  if (any(!is.finite(Bell_polynomials))) {
+    stop(UniversalShrink_error_condition_base(
+      message = "Numerical error in computing Bell polynomials",
+      subclass = "NumericalError"
+    ))
+  }
   
   h <- rep(NA, 2 * m)
   h[2] = - 1 / v[1]
@@ -452,6 +458,14 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     cat("Estimation of h:\n")
     print(h)
     cat("\n")
+  }
+  
+  # we use h[-1] because h[1] is always NA.
+  if (any(!is.finite(h[-1]))) {
+    stop(UniversalShrink_error_condition_base(
+      message = "Numerical error in computing h",
+      subclass = "NumericalError"
+    ))
   }
   
   d <- compute_d_kl(v_0_t = v_0_t, c_n = c_n, kmax = 2 * m - 1,
@@ -524,6 +538,13 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     cat("Estimation of s:\n")
     print(s)
     cat("\n")
+  }
+  
+  if (any(!is.finite(s))) {
+    stop(UniversalShrink_error_condition_base(
+      message = "Numerical error in computing s",
+      subclass = "NumericalError"
+    ))
   }
   
   return (list(s = s, v = v))
