@@ -472,7 +472,7 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
   for (index in 1:(2 * m)){
     j = index - 1
     # so that index = j + 1
-    if (verbose > 0){
+    if (verbose > 1){
       cat("We are now computing s[", index, ",], corresponding to j =", j,
           "\n", sep = "")
     }
@@ -482,7 +482,7 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
     s[index, 1] = t^(-j - 1) * d[1, 1]
     s[index, 2] = t^(-j - 1) * d[1, 2]
     
-    if (verbose > 0){
+    if (verbose > 1){
       cat("d[0, 2] = ", d[1, 2], "\n")
       cat("s[", index, ", 2] =", s[index, 2], "\n", sep = "")
     }
@@ -491,7 +491,7 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
       # Otherwise the sum is empty
       for (i in 1:j){
         for (k in 1:i){
-          if (verbose > 0){
+          if (verbose > 2){
             cat("This is term i =", i, ", k =", k, "\n")
           }
           Bell_polynomial = Bell_polynomials[i, k]
@@ -500,7 +500,7 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
           multiplicative_factor = t^(- (j - i) - 1) * (-1)^(i + k) * 
             factorial(k) / factorial(i) * Bell_polynomial
           
-          if (verbose > 0){
+          if (verbose > 2){
             cat("Bell_polynomial = ", Bell_polynomial, "\n")
           }
           
@@ -508,7 +508,7 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
             # Remember that d[k + 1, l] corresponds in the paper to d_{k,l}
             additional_term = multiplicative_factor * d[k + 1, l]
             
-            if ( (verbose > 0) && (l == 2)){
+            if ( (verbose > 2) && (l == 2)){
               cat("l = ", l, ", d_{k,l} = ", d[k + 1, l], "\n")
               cat("l = ", l, ", additional_term = ", additional_term, "\n")
             }
