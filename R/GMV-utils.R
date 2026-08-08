@@ -8,6 +8,9 @@
 #' @param p dimension of the random vector of interest ( = number of assets
 #' in the portfolio).
 #' 
+#' @param tolerance a given bound on the check that the sum of the elements of
+#' `b` is indeed 1.
+#' 
 #' @returns a non-\code{NULL} vector b, checked.
 #' 
 #' @noRd
@@ -23,14 +26,16 @@ prepare_and_check_b <- function(b, p, tolerance = 0.001)
   # so we try to convert it to a numeric vector.
   b = as.numeric(b)
   if (anyNA(b)){
-    UniversalShrink_warning_condition_base(
-      paste0(length(which(is.na(b))), " NAs in target portfolio 'b'."))
+    stop(UniversalShrink_error_condition_base(
+      paste0(length(which(is.na(b))), " NAs in target portfolio 'b'.")))
   }
   if (length(b) != p){
-    stop("'b' should be a vector of length 'p'.")
+    stop(UniversalShrink_error_condition_base(
+      "'b' should be a vector of length 'p'.") )
   }
   if (abs(sum(b) - 1) > tolerance){
-    stop("The weights (b) should sum up to 1.")
+    stop(UniversalShrink_error_condition_base(
+      "The weights (b) should sum up to 1.") )
   }
   
   return (b)
