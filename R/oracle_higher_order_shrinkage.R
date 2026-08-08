@@ -17,7 +17,7 @@
 #' @examples
 #' 
 #' n = 50
-#' p = 2 * n
+#' p = 1.2 * n
 #' mu = rep(0, p)
 #' 
 #' # Generate Sigma

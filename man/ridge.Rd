@@ -47,7 +47,7 @@ parameter.
 \examples{
 
 n = 100
-p = 5 * n
+p = 2 * n
 mu = rep(0, p)
 
 # Generate Sigma
