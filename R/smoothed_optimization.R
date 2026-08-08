@@ -113,7 +113,7 @@ grid_optimization_default <- function(S, c_n, p, n, max_length, verbose = 0){
     max_length = 100
   }
   
-  eigenvalues_S = eigen(S)$values
+  eigenvalues_S = eigen(S, symmetric = TRUE, only.values = TRUE)$values
   if (p - 1 > n) {
     eigenvalues_S_ = eigenvalues_S[1:(n - 1)]
   } else {

@@ -50,7 +50,7 @@ LossInverseFrobenius2(x, Sigma, normalized = TRUE, ...)
 
 \method{LossInverseFrobenius2}{EstimatedPrecisionMatrix}(x, Sigma, normalized = TRUE, ...)
 
-DistanceEuclideanEigenvalues2(M1, M2, normalized)
+DistanceEuclideanEigenvalues2(M1, M2, normalized, symmetric = FALSE)
 
 LossEuclideanEigenvalues2(x, Sigma, type, normalized = TRUE, ...)
 
@@ -103,6 +103,9 @@ Frobenius loss for the estimation of the precision matrix, i.e.
 Frobenius loss for the estimation of the precision matrix, i.e.
 \code{NormFrobenius2(x - Sigma )}, potentially normalized.
 }}
+
+\item{symmetric}{if \code{TRUE}, the matrices are assumed to be symmetric,
+which speeds-up the computations in \code{\link[base]{eigen}}.}
 }
 \value{
 All these functions return a positive numeric value.

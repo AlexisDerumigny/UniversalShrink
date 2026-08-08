@@ -86,6 +86,9 @@ DistanceFrobenius2 <- function(M1, M2, normalized){
 #' @param normalized if \code{TRUE}, the norm (or loss) is divided by the
 #' matrix size \code{p}.
 #' 
+#' @param symmetric if \code{TRUE}, the matrices are assumed to be symmetric,
+#' which speeds-up the computations in \code{\link[base]{eigen}}.
+#' 
 #' @param ... Additional arguments passed to methods.
 #' 
 #' 
@@ -235,13 +238,13 @@ LossInverseFrobenius2.EstimatedPrecisionMatrix <- function(
 
 #' @export
 #' @rdname quadratic_losses
-DistanceEuclideanEigenvalues2 <- function(M1, M2, normalized){
+DistanceEuclideanEigenvalues2 <- function(
+    M1, M2, normalized, symmetric = FALSE){
   
-  if (normalized){
-    result = mean((eigen(M1)$values - eigen(M2)$values)^2)
-  } else {
-    result = sum((eigen(M1)$values - eigen(M2)$values)^2)
-  }
+  eigvals1 = eigen(M1, symmetric = symmetric, only.values = TRUE)$values
+  eigvals2 = eigen(M2, symmetric = symmetric, only.values = TRUE)$values
+  diff_sq = (eigvals2 - eigvals1)^2
+  result = if (normalized) mean(diff_sq) else sum(diff_sq)
   
   return (result)
 }
@@ -281,11 +284,13 @@ LossEuclideanEigenvalues2.matrix <- function(
       if (is.null(SigmaInv)) {
         SigmaInv = solve(Sigma)
       }
-      result = DistanceEuclideanEigenvalues2(x, SigmaInv, normalized = normalized)
+      result = DistanceEuclideanEigenvalues2(
+        x, SigmaInv, normalized = normalized, symmetric = TRUE)
     },
     
     "covariance matrix" = {
-      result = DistanceEuclideanEigenvalues2(x, Sigma, normalized = normalized)
+      result = DistanceEuclideanEigenvalues2(
+        x, Sigma, normalized = normalized, symmetric = TRUE)
     },
     
     # default

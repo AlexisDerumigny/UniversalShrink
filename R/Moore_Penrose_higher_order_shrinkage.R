@@ -553,7 +553,7 @@ Moore_Penrose_higher_order_shrinkage <- function(
   iS_MP <- Moore_Penrose(X = X, centeredCov = centeredCov)
   iS_MP_ <- as.matrix(iS_MP)
   
-  D_MP <- diag(eigen(iS_MP)$values)
+  D_MP <- diag(eigen(iS_MP, symmetric = TRUE, only.values = TRUE)$values)
   q1 <- tr(S) / p
   q2 <- tr(S %*% S) / p - c_n * q1^2
   
