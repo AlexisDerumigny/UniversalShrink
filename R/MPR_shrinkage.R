@@ -223,11 +223,11 @@ selectOptimizationType <- function (t, alpha, beta)
     if (!is.null(alpha) || !is.null(beta)){
       warning(UniversalShrink_warning_condition_base(
         message = paste0(
-          "The input t is NULL: ", t,
-          " , but (at least) one of alpha and/or beta is provided:",
-          "alpha = ", alpha, ", beta = ", "beta. \n",
+          "The input t is NULL,",
+          "but (at least) one of alpha and/or beta is provided:",
+          "alpha = ", dput(alpha), ", beta = ", dput(beta), ".\n",
           "Therefore optimization in t is done, and alpha and/or beta are ignored.",
-          "If you want t alpha and beta to be used, please also specify t."
+          "If you want t, alpha and beta to be used, please also specify t."
         ), subclass = "MissingParametersWarning") )
       
       optimizationType = "all"
