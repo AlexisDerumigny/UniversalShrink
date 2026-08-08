@@ -49,9 +49,9 @@ Currently, the following possibilities are implemented:
 \itemize{
 \item \code{"smoothed"}: this computes the loss on a grid, smooths it with a
 rolling median and minimizes this smoothed loss.
-\item \code{"optimize"}: this uses the \code{\link[stats:optimize]{optimize}}
+\item \code{"optimize"}: this uses the \code{stats::\link[stats]{optimize}}
 function.
-\item \code{"optim with tan"}: this uses the \code{\link[stats:optim]{optim}}
+\item \code{"optim with tan"}: this uses the \code{stats::\link[stats]{optim}}
 function with the change of variable \code{u = tan(t)} so as to optimize
 over the compact interval \eqn{[0, \pi/2]}.
 }

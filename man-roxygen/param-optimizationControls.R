@@ -10,10 +10,10 @@
 #'   * \code{"smoothed"}: this computes the loss on a grid, smooths it with a
 #'   rolling median and minimizes this smoothed loss.
 #'   
-#'   * \code{"optimize"}: this uses the \code{\link[stats:optimize]{optimize}}
+#'   * \code{"optimize"}: this uses the \code{stats::\link[stats]{optimize}}
 #'   function.
 #'   
-#'   * \code{"optim with tan"}: this uses the \code{\link[stats:optim]{optim}}
+#'   * \code{"optim with tan"}: this uses the \code{stats::\link[stats]{optim}}
 #'   function with the change of variable \code{u = tan(t)} so as to optimize
 #'   over the compact interval \eqn{[0, \pi/2]}.
 #'   
