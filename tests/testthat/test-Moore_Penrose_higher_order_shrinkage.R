@@ -6,7 +6,6 @@ test_that("Both method_invM = 'solve' and 'recursive' give the same result for s
     for (m in 1:2){
       # Remark: we start to observe differences for m = 5
       
-      p = 2 * n
       mu = rep(0, p)
       
       # Generate Sigma
