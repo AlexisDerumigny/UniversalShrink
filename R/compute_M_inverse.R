@@ -19,18 +19,18 @@ compute_M_inverse <- function(m, all_tr0, all_tr, verbose = 0, mpfr, precBits){
   } else {
     old_invM = matrix(all_tr0, ncol = 1, nrow = 1)
   }
-  for (m in 1:m){
+  for (m_ in 1:m){
     if (mpfr) {
       invM = methods::new("mpfrMatrix",
-                          rep(zero, (m + 1)^2), Dim = c(m + 1L, m + 1L))
+                          rep(zero, (m_ + 1)^2), Dim_ = c(m_ + 1L, m_ + 1L))
       
       m_tilde = methods::new("mpfrMatrix",
-                             all_tr[m:(2 * m - 1)], Dim = c(m, 1L))
+                             all_tr[m_:(2 * m_ - 1)], Dim = c(m_, 1L))
     } else {
       
-      invM = matrix(ncol = m + 1, nrow = m + 1)
+      invM = matrix(ncol = m_ + 1, nrow = m_ + 1)
       
-      m_tilde = matrix(all_tr[m:(2 * m - 1)], ncol = 1)
+      m_tilde = matrix(all_tr[m_:(2 * m_ - 1)], ncol = 1)
     }
     
     # Transposed version:
@@ -38,19 +38,19 @@ compute_M_inverse <- function(m, all_tr0, all_tr, verbose = 0, mpfr, precBits){
     
     vector_correction_term = old_invM %*% m_tilde
     
-    xi_n_m = all_tr[2 * m] - m_tilde_t %*% vector_correction_term
+    xi_n_m = all_tr[2 * m_] - m_tilde_t %*% vector_correction_term
     xi_n_m = as.numeric(xi_n_m)
     
     corr_term = vector_correction_term %*% t(vector_correction_term) / xi_n_m
     
-    invM[1:m, 1:m] = old_invM + corr_term
-    invM[1:m, m+1] = - vector_correction_term / xi_n_m
-    invM[m+1, 1:m] = - t(vector_correction_term) / xi_n_m
-    invM[m+1, m+1] = 1 / xi_n_m
+    invM[1:m_, 1:m_] = old_invM + corr_term
+    invM[1:m_, m_+1] = - vector_correction_term / xi_n_m
+    invM[m_+1, 1:m_] = - t(vector_correction_term) / xi_n_m
+    invM[m_+1, m_+1] = 1 / xi_n_m
     
     old_invM = invM
     if (verbose > 0){
-      cat("m =", m, "M^{-1} =\n")
+      cat("m =", m_, "M^{-1} =\n")
       print(invM)
     }
   }
