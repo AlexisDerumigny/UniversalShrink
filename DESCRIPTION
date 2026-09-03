@@ -22,10 +22,10 @@ Roxygen: list(markdown = TRUE)
 LinkingTo: 
     Rcpp
 Imports:
+    MASS,
     Rcpp,
     pbapply
 Suggests: 
-    MASS,
     ggplot2,
     dplyr,
     stringr,
