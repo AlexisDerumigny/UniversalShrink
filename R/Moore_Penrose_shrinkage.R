@@ -139,12 +139,12 @@ Moore_Penrose_shrinkage <- function(X, centeredCov = TRUE, Pi0 = NULL, verbose =
 {
   call_ = match.call()
   if (is.null(Pi0)) {
+    result = Moore_Penrose_shrinkage_identity(X = X, centeredCov = centeredCov,
+                                              verbose = verbose, call_ = call_)
+  } else {
     result = Moore_Penrose_shrinkage_general(X = X, centeredCov = centeredCov,
                                              Pi0 = Pi0, verbose = verbose,
                                              call_ = call_)
-  } else {
-    result = Moore_Penrose_shrinkage_identity(X = X, centeredCov = centeredCov,
-                                              verbose = verbose, call_ = call_)
   }
   
   return (result)
