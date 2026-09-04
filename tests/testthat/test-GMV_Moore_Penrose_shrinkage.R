@@ -22,3 +22,25 @@ test_that("GMV_Moore_Penrose_shrinkage is coherent for eq weighted targets", {
   expect_equal(as.numeric(GMV_MP_shrinkage_Cent_gen),
                as.numeric(GMV_MP_shrinkage_Cent_eq))
 })
+
+
+test_that("default and explicit equal-weight targets agree", {
+  X0 <- matrix(c(1, 0,
+                 0, 1,
+                 1, 1,
+                 2, -1), ncol = 2, byrow = TRUE)
+
+  for (X in list(X0, t(X0))) {
+    p <- ncol(X)
+
+    for (centered in c(TRUE, FALSE)) {
+      default_result <- as.numeric(
+        GMV_Moore_Penrose_shrinkage(X, centeredCov = centered))
+      explicit_result <- as.numeric(
+        GMV_Moore_Penrose_shrinkage(
+          X, centeredCov = centered, b = rep(1 / p, p)))
+
+      expect_equal(explicit_result, default_result)
+    }
+  }
+})
