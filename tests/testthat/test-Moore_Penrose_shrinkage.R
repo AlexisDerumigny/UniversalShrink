@@ -44,3 +44,21 @@ test_that("`Moore_Penrose_shrinkage_general` and `Moore_Penrose_shrinkage_identi
   expect_equal(precision_MoorePenrose_Cent, precision_MoorePenrose_Cent_id)
   expect_equal(precision_MoorePenrose_NoCent, precision_MoorePenrose_NoCent_id)
 })
+
+
+test_that("default and explicit identity targets give the same result in the case p < n", {
+  X <- matrix(c(1, 0,
+                0, 1,
+                1, 1,
+                2, -1), ncol = 2, byrow = TRUE)
+  p <- ncol(X)
+
+  default_result <- as.matrix(
+    Moore_Penrose_shrinkage(X, centeredCov = FALSE))
+  
+  identity_result <- as.matrix(
+    Moore_Penrose_shrinkage(X, centeredCov = FALSE, Pi0 = diag(p)))
+
+  expect_equal(identity_result, default_result)
+})
+
