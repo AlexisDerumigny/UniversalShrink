@@ -46,19 +46,33 @@ test_that("`Moore_Penrose_shrinkage_general` and `Moore_Penrose_shrinkage_identi
 })
 
 
-test_that("default and explicit identity targets give the same result in the case p < n", {
+test_that("default and explicit identity targets give the same result", {
   X <- matrix(c(1, 0,
                 0, 1,
                 1, 1,
                 2, -1), ncol = 2, byrow = TRUE)
   p <- ncol(X)
 
-  default_result <- as.matrix(
-    Moore_Penrose_shrinkage(X, centeredCov = FALSE))
+  for (centered in c(TRUE, FALSE)) {
+    default_result <- as.matrix(
+      Moore_Penrose_shrinkage(X, centeredCov = centered))
+    
+    identity_result <- as.matrix(
+      Moore_Penrose_shrinkage(X, centeredCov = centered, Pi0 = diag(p)))
+    
+    expect_equal(identity_result, default_result)
+  }
   
-  identity_result <- as.matrix(
-    Moore_Penrose_shrinkage(X, centeredCov = FALSE, Pi0 = diag(p)))
-
-  expect_equal(identity_result, default_result)
+  for (centered in c(TRUE, FALSE)) {
+    default_result <- as.matrix(
+      Moore_Penrose_shrinkage(t(X), centeredCov = centered))
+    
+    identity_result <- as.matrix(
+      Moore_Penrose_shrinkage(t(X), centeredCov = centered, Pi0 = diag(4)))
+    
+    expect_equal(identity_result, default_result)
+  }
 })
+
+
 

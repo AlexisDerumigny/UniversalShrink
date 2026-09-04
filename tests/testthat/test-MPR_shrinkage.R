@@ -267,6 +267,42 @@ test_that("`MPR_shrinkage` is coherent between optimized and non-optimized versi
 })
 
 
+test_that("`MPR_shrinkage` identity targets agree for centered and non-centered data", {
+  X <- matrix(c(1, 0,
+                0, 1,
+                1, 1,
+                2, -1), ncol = 2, byrow = TRUE)
+  p <- ncol(X)
+
+  for (centered in c(TRUE, FALSE)) {
+    default_result <- as.matrix(MPR_shrinkage(
+      X, centeredCov = centered, t = 1, alpha = 1, beta = 0))
+    identity_result <- as.matrix(MPR_shrinkage(
+      X, centeredCov = centered, Pi0 = diag(p), t = 1, alpha = 1, beta = 0))
+
+    expect_equal(identity_result, default_result)
+  }
+})
+
+
+test_that("`MPR_shrinkage` identity targets agree when p > n", {
+  X <- t(matrix(c(1, 0,
+                  0, 1,
+                  1, 1,
+                  2, -1), ncol = 2, byrow = TRUE))
+  p <- ncol(X)
+
+  for (centered in c(TRUE, FALSE)) {
+    default_result <- as.matrix(MPR_shrinkage(
+      X, centeredCov = centered, t = 1, alpha = 1, beta = 0))
+    identity_result <- as.matrix(MPR_shrinkage(
+      X, centeredCov = centered, Pi0 = diag(p), t = 1, alpha = 1, beta = 0))
+
+    expect_equal(identity_result, default_result)
+  }
+})
+
+
 test_that("`selectOptimizationType` behave as intended", {
   
   # Case where everything is provided
