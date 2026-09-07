@@ -4,7 +4,7 @@ test_that("`Moore_Penrose_shrinkage` uses a supplied target", {
                 1, 1,
                 2, -1), ncol = 2, byrow = TRUE)
   p <- ncol(X)
-  Pi0 <- diag(p) * 2
+  Pi0 <- diag(c(1, 2))
 
   result <- as.matrix(
     Moore_Penrose_shrinkage(X, centeredCov = FALSE, Pi0 = Pi0))
@@ -15,7 +15,8 @@ test_that("`Moore_Penrose_shrinkage` uses a supplied target", {
   expect_false(isTRUE(all.equal(result, identity_result)))
 })
 
-test_that("`Moore_Penrose_shrinkage_general` and `Moore_Penrose_shrinkage_identity` give coherent results", {
+test_that(paste0("`Moore_Penrose_shrinkage_general_plarge` and\n",
+                 "`Moore_Penrose_shrinkage_identity_plarge` give coherent results"), {
   set.seed(1)
   n = 50
   p = 5 * n
@@ -30,16 +31,16 @@ test_that("`Moore_Penrose_shrinkage_general` and `Moore_Penrose_shrinkage_identi
   X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
   
   precision_MoorePenrose_Cent =
-     Moore_Penrose_shrinkage_general(X = X, centeredCov = TRUE)
+     Moore_Penrose_shrinkage_general_plarge(X = X, centeredCov = TRUE)
      
   precision_MoorePenrose_NoCent = 
-     Moore_Penrose_shrinkage_general(X = X, centeredCov = FALSE)
+     Moore_Penrose_shrinkage_general_plarge(X = X, centeredCov = FALSE)
   
   precision_MoorePenrose_Cent_id =
-    Moore_Penrose_shrinkage_identity(X = X, centeredCov = TRUE)
+    Moore_Penrose_shrinkage_identity_plarge(X = X, centeredCov = TRUE)
   
   precision_MoorePenrose_NoCent_id = 
-    Moore_Penrose_shrinkage_identity(X = X, centeredCov = FALSE)
+    Moore_Penrose_shrinkage_identity_plarge(X = X, centeredCov = FALSE)
   
   expect_equal(precision_MoorePenrose_Cent, precision_MoorePenrose_Cent_id)
   expect_equal(precision_MoorePenrose_NoCent, precision_MoorePenrose_NoCent_id)
