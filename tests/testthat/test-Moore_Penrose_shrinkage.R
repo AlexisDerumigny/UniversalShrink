@@ -4,7 +4,7 @@ test_that("`Moore_Penrose_shrinkage` uses a supplied target", {
                 1, 1,
                 2, -1), ncol = 2, byrow = TRUE)
   p <- ncol(X)
-  Pi0 <- diag(p) * 2
+  Pi0 <- diag(c(1, 2))
 
   result <- as.matrix(
     Moore_Penrose_shrinkage(X, centeredCov = FALSE, Pi0 = Pi0))
