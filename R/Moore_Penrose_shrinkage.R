@@ -2,17 +2,18 @@
 #' First-order shrinkage of the Moore-Penrose inverse towards a fixed target
 #' 
 #' Following Bodnar and Parolya (2006), the shrinkage estimator
-#'  for the precision matrix using the Moore-Penrose inverse of the sample 
-#'  covariance matrix \eqn{\mathbf{S}_n} is computed as
+#' for the precision matrix using the Moore-Penrose inverse of the sample 
+#' covariance matrix \eqn{\mathbf{S}_n} is computed as
 #' \deqn{
 #' \widehat{\boldsymbol{\Pi}}_{MP}=\hat{\alpha}_{MP}^*\mathbf{S}_n^{+}+
 #' \hat{\beta}_{MP}^*\boldsymbol{\Pi}_0\,,
-#'} where \eqn{\mathbf{S}^+_n} denotes the Moore-Penrose inverse the sample
+#' } where \eqn{\mathbf{S}^+_n} denotes the Moore-Penrose inverse the sample
 #' covariance matrix, \eqn{\boldsymbol{\Pi}_0} is the shrinkage target 
 #' (\eqn{\boldsymbol{\Pi}_0=\mathbf{I}_p}, i.e., identity matrix by default) and
 #'   \eqn{\hat{\alpha}_{MP}^*} and \eqn{\hat{\beta}_{MP}^*} are the optimal 
 #'   shrinkage intensities (in sense of minimizing asymptotically 
-#'   \eqn{||\widehat{\boldsymbol{\Pi}}_{MP}\boldsymbol{\Sigma}-\mathbf{I}_p||^2_F}) given by 
+#'   \eqn{||\widehat{\boldsymbol{\Pi}}_{MP}\boldsymbol{\Sigma}
+#'   - \mathbf{I}_p||^2_F}) given by 
 #' \deqn{
 #' \hat{\alpha}_{MP}^* =
 #'  \dfrac{
@@ -63,8 +64,9 @@
 #' where \eqn{\hat{d}_1\left(\frac{1}{p}\boldsymbol{\Sigma}\right)}, 
 #' \eqn{\hat{d}_1\left(\frac{1}{p}\boldsymbol{\Sigma}^2\right)}, 
 #' \eqn{\hat{d}_1\left(0,\frac{1}{p}\boldsymbol{\Sigma}^2\boldsymbol{\Pi}_0\right)},
-#' \eqn{\hat{d}_2\left(\frac{1}{p}\boldsymbol{\Sigma}^2\right)} are defined in Theorem 3.2
-#' in Bodnar and Parolya (2026), while the rest \eqn{\hat{v}(0)}, \eqn{\hat{h}_2}, \eqn{\hat{h}_3},
+#' \eqn{\hat{d}_2\left(\frac{1}{p}\boldsymbol{\Sigma}^2\right)} are defined
+#' in Theorem 3.2 in Bodnar and Parolya (2026), while the rest
+#' \eqn{\hat{v}(0)}, \eqn{\hat{h}_2}, \eqn{\hat{h}_3},
 #' \eqn{\hat{d}_1(\frac{1}{p}\mathbf{I}_p)},
 #' \eqn{\hat{d}_1(\frac{1}{p}\boldsymbol{\Pi}_0)},
 #' \eqn{\hat{d}_2(\frac{1}{p}\mathbf{I}_p)},
@@ -127,8 +129,8 @@
 #' precision_MoorePenrose_Cent_trueSigma = 
 #'   Moore_Penrose_shrinkage(X, centeredCov = TRUE, Pi0 = solve(Sigma))
 #' precision_MoorePenrose_NoCent_trueSigma = 
-#'   Moore_Penrose_shrinkage(X, centeredCov = FALSE, Pi0 = solve(Sigma))                                                        
-#'                                                         
+#'   Moore_Penrose_shrinkage(X, centeredCov = FALSE, Pi0 = solve(Sigma))
+#' 
 #' LossFrobenius2(precision_MoorePenrose_Cent_trueSigma, Sigma = Sigma)
 #' LossFrobenius2(precision_MoorePenrose_NoCent_trueSigma, Sigma = Sigma)
 #' # this is indeed much closer than before
