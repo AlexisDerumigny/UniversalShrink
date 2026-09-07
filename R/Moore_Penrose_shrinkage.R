@@ -245,18 +245,23 @@ Moore_Penrose_shrinkage_general <- function(X, Pi0 = NULL, centeredCov, verbose 
   num_beta_MP <- -(d2Sig2 - d1Sig2 * h3 / h2) * q1Pi0 / h2 - d1Sig * d1Sig2Pi0 / h2
   den_MP   <- -(d2Sig2 - d1Sig2 * h3 / h2) * q2Pi02 / h2 - d1Sig2Pi0^2 / h2
   
+  alpha <- num_alpha_MP / den_MP
+  beta  <- num_beta_MP / den_MP
+  
   if (verbose > 0){
     cat("num_alpha_MP = ", num_alpha_MP, "\n")
     cat("num_beta_MP = ", num_beta_MP, "\n")
     cat("den_MP = ", den_MP, "\n")
+    cat("alpha = ", alpha, "\n")
+    cat("beta = ", beta, "\n")
   }
   
-  alpha    <- num_alpha_MP / den_MP
-  beta     <- num_beta_MP / den_MP
   iS_ShMP  <- alpha * iS_MP + beta * Pi0
   
   result = list(
     estimated_precision_matrix = iS_ShMP,
+    alpha = alpha,
+    beta  = beta,
     n = n,
     p = p,
     centeredCov = centeredCov,
@@ -320,18 +325,23 @@ Moore_Penrose_shrinkage_identity <- function (X, centeredCov = TRUE, verbose = 0
   num_beta_MP<--(d2Sig2-d1Sig2*h3/h2)*q1/h2-d1Sig*d1Sig2/h2
   den_MP<--(d2Sig2-d1Sig2*h3/h2)*q2/h2-d1Sig2^2/h2
   
+  alpha <- num_alpha_MP / den_MP
+  beta <- num_beta_MP / den_MP
+  
   if (verbose > 0){
     cat("num_alpha_MP = ", num_alpha_MP, "\n")
     cat("num_beta_MP = ", num_beta_MP, "\n")
     cat("den_MP = ", den_MP, "\n")
+    cat("alpha = ", alpha, "\n")
+    cat("beta = ", beta, "\n")
   }
   
-  ha_MP <- num_alpha_MP / den_MP
-  hb_MP <- num_beta_MP / den_MP
-  iS_ShMP<-ha_MP * iS_MP + hb_MP * Ip
+  iS_ShMP <- alpha * iS_MP + beta * Ip
   
   result = list(
     estimated_precision_matrix = iS_ShMP,
+    alpha = alpha,
+    beta  = beta,
     n = n,
     p = p,
     centeredCov = centeredCov,

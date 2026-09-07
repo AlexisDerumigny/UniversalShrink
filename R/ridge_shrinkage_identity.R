@@ -246,6 +246,7 @@ ridge_shrinkage_identity_semioptimal <- function (
     estimated_precision_matrix = iS_ShRt1,
     alpha_optimal = alpha,
     beta_optimal = beta,
+    t = t,
     M = M,
     hm = hm,
     n = n,
