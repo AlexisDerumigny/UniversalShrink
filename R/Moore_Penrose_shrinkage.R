@@ -140,20 +140,38 @@
 Moore_Penrose_shrinkage <- function(X, centeredCov = TRUE, Pi0 = NULL, verbose = 0)
 {
   call_ = match.call()
-  if (is.null(Pi0)) {
-    result = Moore_Penrose_shrinkage_identity(X = X, centeredCov = centeredCov,
-                                              verbose = verbose, call_ = call_)
-  } else {
-    result = Moore_Penrose_shrinkage_general(X = X, centeredCov = centeredCov,
-                                             Pi0 = Pi0, verbose = verbose,
-                                             call_ = call_)
+  
+  c_n = concentr_ratio(n = nrow(X), p = ncol(X),
+                       centeredCov = centeredCov, verbose = 0)
+  
+  if (is.null(Pi0) && c_n < 1) {
+    
+    result = Moore_Penrose_shrinkage_identity_psmall(
+      X = X, centeredCov = centeredCov, verbose = verbose, call_ = call_)
+    
+  } else if (is.null(Pi0) && c_n >= 1) {
+    
+    result = Moore_Penrose_shrinkage_identity_plarge(
+      X = X, centeredCov = centeredCov, verbose = verbose, call_ = call_)
+    
+  } else if (!is.null(Pi0) && c_n < 1){
+    
+    result = Moore_Penrose_shrinkage_general_psmall(
+      X = X, centeredCov = centeredCov, Pi0 = Pi0, 
+      verbose = verbose, call_ = call_)
+    
+  } else if (!is.null(Pi0) && c_n >= 1){
+    
+    result = Moore_Penrose_shrinkage_general_plarge(
+      X = X, centeredCov = centeredCov, Pi0 = Pi0, 
+      verbose = verbose, call_ = call_)
   }
   
   return (result)
 }
 
-Moore_Penrose_shrinkage_general <- function(X, Pi0 = NULL, centeredCov, verbose = 0,
-                                            call_ = NULL)
+Moore_Penrose_shrinkage_general_plarge <- function(
+    X, Pi0 = NULL, centeredCov, verbose = 0, call_ = NULL)
 {
   # Get sizes of X
   n = nrow(X)
@@ -167,14 +185,6 @@ Moore_Penrose_shrinkage_general <- function(X, Pi0 = NULL, centeredCov, verbose 
     Pi0 <- Ip
   } else if (nrow(Pi0) != p || ncol(Pi0) != p){
     stop("'Pi0' should be a 'p' by 'p' matrix.")
-  }
-  
-  if (c_n < 1){
-    result = Moore_Penrose_shrinkage_general_smalldim(
-      X = X, c_n = c_n, Pi0 = Pi0, centeredCov = centeredCov, verbose = verbose,
-      call_ = call_)
-    
-    return (result)
   }
   
   # Sample covariance matrix
@@ -283,21 +293,13 @@ Moore_Penrose_shrinkage_general <- function(X, Pi0 = NULL, centeredCov, verbose 
 }
 
 
-Moore_Penrose_shrinkage_identity <- function(X, centeredCov = TRUE, verbose = 0,
-                                             call_ = NULL)
+Moore_Penrose_shrinkage_identity_plarge <- function(
+    X, centeredCov = TRUE, verbose = 0, call_ = NULL)
 {
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
-  
-  if (c_n < 1){
-    result = Moore_Penrose_shrinkage_identity_smalldim(
-      X = X, c_n = c_n, centeredCov = centeredCov, verbose = verbose,
-      call_ = call_)
-    
-    return (result)
-  }
   
   # Sample covariance matrix
   S <- cov_with_centering(X = X, centeredCov = centeredCov)
@@ -371,8 +373,8 @@ Moore_Penrose_shrinkage_identity <- function(X, centeredCov = TRUE, verbose = 0,
 }
 
 
-Moore_Penrose_shrinkage_general_smalldim <- function(
-    X, c_n, Pi0, centeredCov = TRUE, verbose = 0, call_ = NULL)
+Moore_Penrose_shrinkage_general_psmall <- function(
+    X, Pi0, centeredCov = TRUE, verbose = 0, call_ = NULL)
 {
   if (verbose > 0){
     cat("Starting `Moore_Penrose_general_identity_smalldim`...\n")
@@ -381,6 +383,17 @@ Moore_Penrose_shrinkage_general_smalldim <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  
+  
+  # Identity matrix of size p
+  Ip = diag(nrow = p)
+  
+  if (is.null(Pi0)){
+    Pi0 <- Ip
+  } else if (nrow(Pi0) != p || ncol(Pi0) != p){
+    stop("'Pi0' should be a 'p' by 'p' matrix.")
+  }
   
   # Moore-Penrose inverse of the sample covariance matrix
   iS_MP <- as.matrix(Moore_Penrose(X = X, centeredCov = centeredCov))
@@ -420,8 +433,8 @@ Moore_Penrose_shrinkage_general_smalldim <- function(
 
 
 
-Moore_Penrose_shrinkage_identity_smalldim <- function(
-    X, c_n, centeredCov = TRUE, verbose = 0, call_ = NULL)
+Moore_Penrose_shrinkage_identity_psmall <- function(
+    X, centeredCov = TRUE, verbose = 0, call_ = NULL)
 {
   if (verbose > 0){
     cat("Starting `Moore_Penrose_shrinkage_identity_smalldim`...\n")
@@ -430,6 +443,7 @@ Moore_Penrose_shrinkage_identity_smalldim <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Moore-Penrose inverse of the sample covariance matrix
   iS_MP <- as.matrix(Moore_Penrose(X = X, centeredCov = centeredCov))
