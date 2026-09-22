@@ -436,10 +436,18 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
   # Removing the lines corresponding to n = 0 and k = 0
   Bell_polynomials = Bell_polynomials[-1, -1, drop = FALSE]
   if (any(!is.finite(Bell_polynomials))) {
+    n_Bell_polynomials = length(Bell_polynomials)
+    n_NA = length(which(!is.finite( Bell_polynomials ) ) )
     stop(UniversalShrink_error_condition_base(
-      message = "Numerical error in computing Bell polynomials",
+      message = 
+        paste0("Numerical error in computing Bell polynomials in ",
+               "`compute_sv_ridge`: ",
+               n_NA, " non-finite values out of ", n_Bell_polynomials,
+               ".\n", "Debug information: \n",
+               "m = ", m, "; c_n = ", c_n, "; q1 = ", q1, "; q2 = ", q2, 
+               "\n", "v = ", dput(v) ) ,
       subclass = "NumericalError"
-    ))
+    ) )
   }
   
   h <- rep(NA, 2 * m)
