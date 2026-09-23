@@ -152,7 +152,8 @@ LossFrobenius2.matrix <- function(
     # default
     {
       stop(UniversalShrink_error_condition_base(
-        "Type " , type, "is not implemented yet.") )
+        paste0("Type " , type, "is not implemented yet."),
+        subclass = "InvalidArgumentError") )
     }
   )
   
@@ -170,8 +171,9 @@ LossFrobenius2.EstimatedPrecisionMatrix <- function(
   
   if (type != "precision matrix"){
     stop(UniversalShrink_error_condition_base(
-      "Type is chosen to be ", type,
-      " but x is of class 'EstimatedPrecisionMatrix'."))
+      paste0("Type is chosen to be ", type,
+             " but x is of class 'EstimatedPrecisionMatrix'."),
+      subclass = "InvalidArgumentError") )
   }
   result = LossFrobenius2(x = as.matrix(x), Sigma = Sigma, SigmaInv = SigmaInv,
                           type = "precision matrix", normalized = normalized)
@@ -190,8 +192,9 @@ LossFrobenius2.EstimatedCovarianceMatrix <- function(
   
   if (type != "covariance matrix"){
     stop(UniversalShrink_error_condition_base(
-      "Type is chosen to be ", type,
-      " but x is of class 'EstimatedCovarianceMatrix'."))
+      paste0("Type is chosen to be ", type,
+             " but x is of class 'EstimatedCovarianceMatrix'."),
+      subclass = "InvalidArgumentError") )
   }
   result = LossFrobenius2(as.matrix(x), Sigma = Sigma,
                           type = "covariance matrix", normalized = normalized)
@@ -268,7 +271,9 @@ LossEuclideanEigenvalues2.matrix <- function(
   check_compatible_square_matrices(x = x, Sigma = Sigma)
   
   if (missing(type)){
-    stop("'type' must be specified. Either 'precision' or 'covariance'.")
+    stop(UniversalShrink_error_condition_base(
+      "'type' must be specified. Either 'precision' or 'covariance'.",
+      subclass = "MissingArgumentError") )
   }
   
   type = match.arg(type)
@@ -291,7 +296,9 @@ LossEuclideanEigenvalues2.matrix <- function(
     
     # default
     {
-      stop("Type " , type, "is not implemented yet.")
+      stop(UniversalShrink_error_condition_base(
+        paste0("Type " , type, "is not implemented yet."),
+        subclass = "InvalidArgumentError") )
     }
   )
   
@@ -307,8 +314,10 @@ LossEuclideanEigenvalues2.EstimatedPrecisionMatrix <- function(
   type = match.arg(type)
   
   if (type != "precision matrix"){
-    stop("Type is chosen to be ", type,
-         " but x is of class 'EstimatedPrecisionMatrix'.")
+    stop(UniversalShrink_error_condition_base(
+      paste0("Type is chosen to be ", type,
+             " but x is of class 'EstimatedPrecisionMatrix'."),
+      subclass = "InvalidArgumentError") )
   }
   result = LossEuclideanEigenvalues2(
     as.matrix(x), Sigma = Sigma,
@@ -326,8 +335,10 @@ LossEuclideanEigenvalues2.EstimatedCovarianceMatrix <- function(
   type = match.arg(type)
   
   if (type != "covariance matrix"){
-    stop("Type is chosen to be ", type,
-         " but x is of class 'EstimatedCovarianceMatrix'.")
+    stop(UniversalShrink_error_condition_base(
+      paste0("Type is chosen to be ", type,
+             " but x is of class 'EstimatedCovarianceMatrix'."),
+      subclass = "InvalidArgumentError") )
   }
   result = LossEuclideanEigenvalues2(
     as.matrix(x), Sigma,

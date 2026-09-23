@@ -26,9 +26,10 @@ check_Rmpfr <- function (mpfr){
     return (NULL) 
   }
   if (!requireNamespace("Rmpfr", quietly = TRUE)) {
-    stop(
-      "Package \"Rmpfr\" must be installed to use the higher-precision option."
-    )
+    stop(UniversalShrink_error_condition_base(
+      "Package \"Rmpfr\" must be installed to use the higher-precision option.",
+      subclass = "MissingPackageError"
+    ) )
   }
 }
 
@@ -49,7 +50,8 @@ as.matrix.EstimatedPrecisionMatrix <- function(x, ...){
     stop(
       UniversalShrink_error_condition_base(
         message = paste("Invalid x object:", 
-                        "x must not have an empty precision matrix.") ) )
+                        "x must not have an empty precision matrix."),
+        subclass = "InvalidArgumentError") )
   }
   return (x$estimated_precision_matrix)
 }
@@ -62,7 +64,8 @@ as.matrix.EstimatedCovarianceMatrix <- function(x, ...){
     stop(
       UniversalShrink_error_condition_base(
         message = paste("Invalid x object:", 
-                        "x must not have an empty covariance matrix.") ) )
+                        "x must not have an empty covariance matrix."),
+        subclass = "InvalidArgumentError" ) )
   }
   return (x$estimated_covariance_matrix)
 }

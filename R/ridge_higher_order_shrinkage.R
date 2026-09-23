@@ -646,7 +646,9 @@ compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
     alpha = solve(M) %*% hm
   } else if (method_invM == "ginv"){
     if (! requireNamespace("MASS", quietly = TRUE)){
-      stop("MASS needs to be installed to use `method_invM == 'ginv'.`")
+      stop(UniversalShrink_error_condition_base(
+        "MASS needs to be installed to use `method_invM == 'ginv'.`",
+        subclass = "MissingPackageError") )
     }
     alpha = MASS::ginv(M) %*% hm
   } else if (method_invM == "recursive"){
@@ -667,8 +669,10 @@ compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
     
     alpha = invM %*% hm
   } else {
-    stop("method_invM '", method_invM, "' unavailable. Possible choices are: ",
-         "'solve' and 'recursive'.")
+    stop(UniversalShrink_error_condition_base(
+      paste0("method_invM '", method_invM,
+             "' unavailable. Possible choices are: 'solve' and 'recursive'."),
+      subclass = "InvalidArgumentError") )
   }
   
   if (verbose > 0){
@@ -688,9 +692,11 @@ compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
 compute_d_kl <- function(v_0_t, c_n, kmax, h_hat_kmaxp1_t, t, q1)
 {
   if (length(h_hat_kmaxp1_t) != (kmax + 1 - 2 + 1)){
-    stop("The length of h_hat_kmaxp1_t is ", length(h_hat_kmaxp1_t),
-         "but it is supposed to be: ", (kmax + 1 - 2 + 1) ,
-         "because it goes from 2 to ", kmax + 1, ".")
+    stop(UniversalShrink_error_condition_base(
+      paste0("The length of h_hat_kmaxp1_t is ", length(h_hat_kmaxp1_t),
+             "but it is supposed to be: ", (kmax + 1 - 2 + 1) ,
+             "because it goes from 2 to ", kmax + 1, "."),
+      subclass = "InternalError") )
   }
   
   d_01 = 1 / (c_n * v_0_t) - t / c_n
@@ -731,10 +737,14 @@ compute_d_kl <- function(v_0_t, c_n, kmax, h_hat_kmaxp1_t, t, q1)
 h_hat_jp1_t <- function(h_hat_until_j, v_hat_until_j, j, Bell_polynomials)
 {
   if (length(h_hat_until_j) != j){
-    stop("length(h_hat_until_j) should be equal to j")
+    stop(UniversalShrink_error_condition_base(
+      "length(h_hat_until_j) should be equal to j",
+      subclass = "InternalError") )
   }
   if (length(v_hat_until_j) != j){
-    stop("length(v_hat_until_j) should be equal to j")
+    stop(UniversalShrink_error_condition_base(
+      "length(v_hat_until_j) should be equal to j",
+      subclass = "InternalError") )
   }
   
   ugly_sum <- 0
