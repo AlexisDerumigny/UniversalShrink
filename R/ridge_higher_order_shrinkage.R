@@ -397,6 +397,62 @@ loss_L2_ridge_higher_order <- function(t, m, c_n, q1, q2, S_t_inverse,
   return (loss)
 }
 
+#' Helper function to check the Bell polynomials and stop if any of the
+#' computed values is not finite.
+#' 
+#' @noRd
+stop_non_finite_bell_polynomials <- function(
+    Bell_polynomials, m, c_n, q1, q2, v, call = sys.call(-1)
+) {
+  non_finite <- !is.finite(Bell_polynomials)
+  
+  # Return normally when there is no numerical problem.
+  if (!any(non_finite)) {
+    return(invisible(NULL))
+  }
+  
+  n_Bell_polynomials <- length(Bell_polynomials)
+  n_non_finite <- sum(non_finite)
+  
+  # For a matrix, this gives the row and column of each problematic value.
+  non_finite_indices = which(non_finite, arr.ind = TRUE)
+  
+  message <- paste0(
+    "Numerical error while computing Bell polynomials in ",
+    "`compute_sv_ridge`: ",
+    n_non_finite, " non-finite ",
+    if (n_non_finite == 1L) "value" else "values",
+    " out of ", n_Bell_polynomials, ".\n",
+    "Debug information:\n",
+    "m = ", m,
+    "; c_n = ", c_n,
+    "; q1 = ", q1,
+    "; q2 = ", q2,
+    "\n",
+    "v = ",
+    paste(capture.output(dput(v)), collapse = "\n")
+  )
+  
+  condition <- UniversalShrink_error_condition_base(
+    message = message,
+    subclass = c("BellPolynomialNumericalError", "NumericalError"),
+    call = call,
+    
+    # Structured debugging information
+    Bell_polynomials = Bell_polynomials,
+    non_finite_indices = non_finite_indices,
+    n_non_finite = n_non_finite,
+    n_Bell_polynomials = n_Bell_polynomials,
+    m = m,
+    c_n = c_n,
+    q1 = q1,
+    q2 = q2,
+    v = v
+  )
+  
+  stop(condition)
+}
+
 
 #' Compute the vector hat s for the higher-order shrinkage of the ridge
 #' estimator and also hat v
@@ -435,20 +491,10 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
   Bell_polynomials = bellPolynomials(v, verbose = verbose - 1)
   # Removing the lines corresponding to n = 0 and k = 0
   Bell_polynomials = Bell_polynomials[-1, -1, drop = FALSE]
-  if (any(!is.finite(Bell_polynomials))) {
-    n_Bell_polynomials = length(Bell_polynomials)
-    n_NA = length(which(!is.finite( Bell_polynomials ) ) )
-    stop(UniversalShrink_error_condition_base(
-      message = 
-        paste0("Numerical error in computing Bell polynomials in ",
-               "`compute_sv_ridge`: ",
-               n_NA, " non-finite values out of ", n_Bell_polynomials,
-               ".\n", "Debug information: \n",
-               "m = ", m, "; c_n = ", c_n, "; q1 = ", q1, "; q2 = ", q2, 
-               "\n", "v = ", dput(v) ) ,
-      subclass = "NumericalError"
-    ) )
-  }
+  
+  # We check and stop if any value of Bell_polynomials is not finite
+  stop_non_finite_bell_polynomials(Bell_polynomials = Bell_polynomials,
+                                   m = m, c_n = c_n, q1 = q1, q2 = q2, v = v)
   
   h <- rep(NA, 2 * m)
   h[2] = - 1 / v[1]
