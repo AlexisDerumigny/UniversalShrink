@@ -124,12 +124,8 @@ LossFrobenius2.matrix <- function(
     normalized = TRUE,
     SigmaInv = NULL, ...)
 {
-  if (ncol(x) != nrow(x) || ncol(x) != nrow(Sigma) || ncol(x) != ncol(Sigma)){
-    stop(UniversalShrink_error_condition_base(
-      "x and Sigma should be square matrices of the same dimension. ",
-      "Here dim(x) = c(", paste(dim(x), collapse = ","),
-      ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")." ) )
-  }
+  check_compatible_square_matrices(x = x, Sigma = Sigma)
+  
   if (missing(type)){
     stop(UniversalShrink_error_condition_base(
       "'type' must be specified. Either 'precision' or 'covariance'.",
@@ -217,13 +213,8 @@ LossInverseFrobenius2.matrix <- function(x,
                                          Sigma,
                                          normalized = TRUE, ...)
 {
-  if (ncol(x) != nrow(x) || ncol(x) != nrow(Sigma) || ncol(x) != ncol(Sigma)){
-    stop(UniversalShrink_error_condition_base(
-      "x and Sigma should be square matrices of the same dimension. ",
-      "Here dim(x) = c(", paste(dim(x), collapse = ","),
-      ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")."
-    ) )
-  }
+  check_compatible_square_matrices(x = x, Sigma = Sigma)
+  
   p = ncol(Sigma)
   Ip = diag(p)
   
@@ -274,13 +265,8 @@ LossEuclideanEigenvalues2.matrix <- function(
     normalized = TRUE, 
     SigmaInv = NULL, ...)
 {
-  if (ncol(x) != nrow(x) || ncol(x) != nrow(Sigma) || ncol(x) != ncol(Sigma)){
-    stop(UniversalShrink_error_condition_base(
-      "x and Sigma should be square matrices of the same dimension. ",
-      "Here dim(x) = c(", paste(dim(x), collapse = ","),
-      ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")."
-    ) )
-  }
+  check_compatible_square_matrices(x = x, Sigma = Sigma)
+  
   if (missing(type)){
     stop("'type' must be specified. Either 'precision' or 'covariance'.")
   }
