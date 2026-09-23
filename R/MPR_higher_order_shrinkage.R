@@ -53,7 +53,8 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
     alpha = solve(M) %*% hm
   } else if (method_invM == "ginv"){
     if (! requireNamespace("MASS", quietly = TRUE)){
-      stop("MASS needs to be installed to use `method_invM == 'ginv'.`")
+      stop(UniversalShrink_error_condition_base(
+        "MASS needs to be installed to use `method_invM == 'ginv'.`"))
     }
     alpha = MASS::ginv(M) %*% hm
   } else if (method_invM == "recursive"){
@@ -74,8 +75,9 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
     
     alpha = invM %*% hm
   } else {
-    stop("method_invM '", method_invM, "' unavailable. Possible choices are: ",
-         "'solve' and 'recursive'.")
+    stop(UniversalShrink_error_condition_base(
+      "method_invM '", method_invM, "' unavailable. Possible choices are: ",
+      "'solve' and 'recursive'.") )
   }
   
   if (verbose > 0){

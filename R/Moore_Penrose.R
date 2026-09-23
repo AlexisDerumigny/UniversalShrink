@@ -136,9 +136,10 @@ Moore_Penrose <- function(X, centeredCov = TRUE)
     
     iS_MP <- MASS::ginv(S)
   } else {
-    stop("This estimator is not defined for p = n - 1 in the centered case,",
-         "and for p = n in the non-centered case. Here p = ", p,
-         "and n = ", n, ".")
+    stop(UniversalShrink_error_condition_base(
+      "This estimator is not defined for p = n - 1 in the centered case,",
+      "and for p = n in the non-centered case. Here p = ", p,
+      "and n = ", n, "."))
   }
   
   result = list(

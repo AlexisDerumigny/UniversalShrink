@@ -215,8 +215,9 @@ compute_M_MoorePenrose_plarge <- function(
       print(invM)
     }
   } else {
-    stop("method_invM '", method_invM, "' unavailable. Possible choices are: ",
-         "'solve' and 'recursive'.")
+    stop(UniversalShrink_error_condition_base(
+      "method_invM '", method_invM, "' unavailable. Possible choices are: ",
+      "'solve' and 'recursive'."))
   }
   
   
@@ -354,8 +355,9 @@ compute_M_MoorePenrose_psmall <- function(
       print(invM)
     }
   } else {
-    stop("method_invM '", method_invM, "' unavailable. Possible choices are: ",
-         "'solve' and 'recursive'.")
+    stop(UniversalShrink_error_condition_base(
+      "method_invM '", method_invM, "' unavailable. Possible choices are: ",
+      "'solve' and 'recursive'."))
   }
   
   
@@ -584,9 +586,10 @@ Moore_Penrose_higher_order_shrinkage <- function(
       centeredCov = centeredCov, D_MP = D_MP, method_invM = method_invM,
       verbose = verbose, mpfr = mpfr, precBits = precBits)
   } else {
-    stop("This estimator is not defined for p = n - 1 in the centered case,",
-         "and for p = n in the non-centered case. Here p = ", p,
-         "and n = ", n, ".")
+    stop(UniversalShrink_error_condition_base(
+      "This estimator is not defined for p = n - 1 in the centered case,",
+      "and for p = n in the non-centered case. Here p = ", p,
+      "and n = ", n, "."))
   }
   
   

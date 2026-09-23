@@ -430,7 +430,7 @@ stop_non_finite_bell_polynomials <- function(
     "; q2 = ", q2,
     "\n",
     "v = ",
-    paste(capture.output(dput(v)), collapse = "\n")
+    paste(utils::capture.output(dput(v)), collapse = "\n")
   )
   
   condition <- UniversalShrink_error_condition_base(

@@ -125,12 +125,15 @@ LossFrobenius2.matrix <- function(
     SigmaInv = NULL, ...)
 {
   if (ncol(x) != nrow(x) || ncol(x) != nrow(Sigma) || ncol(x) != ncol(Sigma)){
-    stop("x and Sigma should be square matrices of the same dimension. ",
-         "Here dim(x) = c(", paste(dim(x), collapse = ","),
-         ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")." )
+    stop(UniversalShrink_error_condition_base(
+      "x and Sigma should be square matrices of the same dimension. ",
+      "Here dim(x) = c(", paste(dim(x), collapse = ","),
+      ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")." ) )
   }
   if (missing(type)){
-    stop("'type' must be specified. Either 'precision' or 'covariance'.")
+    stop(UniversalShrink_error_condition_base(
+      "'type' must be specified. Either 'precision' or 'covariance'.",
+      subclass = "MissingArgumentError") )
   }
   
   type = match.arg(type)
@@ -152,7 +155,8 @@ LossFrobenius2.matrix <- function(
     
     # default
     {
-      stop("Type " , type, "is not implemented yet.")
+      stop(UniversalShrink_error_condition_base(
+        "Type " , type, "is not implemented yet.") )
     }
   )
   
@@ -169,8 +173,9 @@ LossFrobenius2.EstimatedPrecisionMatrix <- function(
   type = match.arg(type)
   
   if (type != "precision matrix"){
-    stop("Type is chosen to be ", type,
-         " but x is of class 'EstimatedPrecisionMatrix'.")
+    stop(UniversalShrink_error_condition_base(
+      "Type is chosen to be ", type,
+      " but x is of class 'EstimatedPrecisionMatrix'."))
   }
   result = LossFrobenius2(x = as.matrix(x), Sigma = Sigma, SigmaInv = SigmaInv,
                           type = "precision matrix", normalized = normalized)
@@ -188,8 +193,9 @@ LossFrobenius2.EstimatedCovarianceMatrix <- function(
   type = match.arg(type)
   
   if (type != "covariance matrix"){
-    stop("Type is chosen to be ", type,
-         " but x is of class 'EstimatedCovarianceMatrix'.")
+    stop(UniversalShrink_error_condition_base(
+      "Type is chosen to be ", type,
+      " but x is of class 'EstimatedCovarianceMatrix'."))
   }
   result = LossFrobenius2(as.matrix(x), Sigma = Sigma,
                           type = "covariance matrix", normalized = normalized)
@@ -212,9 +218,11 @@ LossInverseFrobenius2.matrix <- function(x,
                                          normalized = TRUE, ...)
 {
   if (ncol(x) != nrow(x) || ncol(x) != nrow(Sigma) || ncol(x) != ncol(Sigma)){
-    stop("x and Sigma should be square matrices of the same dimension. ",
-         "Here dim(x) = c(", paste(dim(x), collapse = ","),
-         ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")." )
+    stop(UniversalShrink_error_condition_base(
+      "x and Sigma should be square matrices of the same dimension. ",
+      "Here dim(x) = c(", paste(dim(x), collapse = ","),
+      ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")."
+    ) )
   }
   p = ncol(Sigma)
   Ip = diag(p)
@@ -267,9 +275,11 @@ LossEuclideanEigenvalues2.matrix <- function(
     SigmaInv = NULL, ...)
 {
   if (ncol(x) != nrow(x) || ncol(x) != nrow(Sigma) || ncol(x) != ncol(Sigma)){
-    stop("x and Sigma should be square matrices of the same dimension. ",
-         "Here dim(x) = c(", paste(dim(x), collapse = ","),
-         ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")." )
+    stop(UniversalShrink_error_condition_base(
+      "x and Sigma should be square matrices of the same dimension. ",
+      "Here dim(x) = c(", paste(dim(x), collapse = ","),
+      ") and dim(Sigma) = c(", paste(dim(Sigma), collapse = ","), ")."
+    ) )
   }
   if (missing(type)){
     stop("'type' must be specified. Either 'precision' or 'covariance'.")
@@ -341,5 +351,54 @@ LossEuclideanEigenvalues2.EstimatedCovarianceMatrix <- function(
 }
 
 
+
+check_compatible_square_matrices <- function(x, Sigma, call = sys.call(-1))
+{
+  valid_dimensions <- (
+    is.matrix(x) &&
+      is.matrix(Sigma) &&
+      nrow(x) == ncol(x) &&
+      nrow(Sigma) == ncol(Sigma) &&
+      nrow(x) == nrow(Sigma)
+  )
+  
+  if (valid_dimensions) {
+    return(invisible(NULL))
+  }
+  
+  dim_x <- dim(x)
+  dim_Sigma <- dim(Sigma)
+  
+  format_dimensions <- function(dimensions) {
+    if (is.null(dimensions)) {
+      return("NULL")
+    }
+    
+    return ( paste0("c(", paste(dimensions, collapse = ", "), ")") )
+  }
+  
+  message <- paste0(
+    "`x` and `Sigma` must be square matrices of the same dimension. ",
+    "Here, dim(x) = ", format_dimensions(dim_x),
+    " and dim(Sigma) = ", format_dimensions(dim_Sigma), "."
+  )
+  
+  stop(
+    UniversalShrink_error_condition_base(
+      message = message,
+      subclass = c(
+        "IncompatibleMatrixDimensionsError",
+        "InvalidArgumentError"
+      ),
+      call = call,
+      
+      # Structured debugging information
+      x = x,
+      Sigma = Sigma,
+      dim_x = dim_x,
+      dim_Sigma = dim_Sigma
+    )
+  )
+}
 
 
