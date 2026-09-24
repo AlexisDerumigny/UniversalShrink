@@ -228,7 +228,7 @@ selectOptimizationType <- function (t, alpha, beta)
           "alpha = ", dput(alpha), ", beta = ", dput(beta), ".\n",
           "Therefore optimization in t is done, and alpha and/or beta are ignored.",
           "If you want t, alpha and beta to be used, please also specify t."
-        ), subclass = "MissingParametersWarning") )
+        ), subclass = "MissingArgumentWarning") )
       
       optimizationType = "all"
     } else {
@@ -249,7 +249,7 @@ selectOptimizationType <- function (t, alpha, beta)
           "alpha = ", alpha, ", but beta is NULL. \n",
           "Therefore alpha is ignored. If you want alpha to be used, please also ",
           "specify beta."
-        ), subclass = "MissingParametersWarning") )
+        ), subclass = "MissingArgumentWarning") )
       
       optimizationType = "alpha_beta"
     } else if (is.null(alpha)) {
@@ -261,7 +261,7 @@ selectOptimizationType <- function (t, alpha, beta)
           "beta = ", beta, ", but alpha is NULL. \n",
           "Therefore beta is ignored. If you want beta to be used, please also ",
           "specify alpha."
-        ), subclass = "MissingParametersWarning") )
+        ), subclass = "MissingArgumentWarning") )
       
       optimizationType = "alpha_beta"
     } else {

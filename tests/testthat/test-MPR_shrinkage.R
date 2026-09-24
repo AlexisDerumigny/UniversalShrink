@@ -319,7 +319,7 @@ test_that("`selectOptimizationType` behave as intended", {
   
   expect_identical(result, "alpha_beta")
   expect_warning({selectOptimizationType(t = 1, alpha = 1, beta = NULL)},
-                 class = c("MissingParametersWarning"))
+                 class = c("MissingArgumentWarning"))
   
   suppressWarnings({
     result = selectOptimizationType(t = 1, alpha = NULL, beta = 1)
@@ -327,7 +327,7 @@ test_that("`selectOptimizationType` behave as intended", {
   
   expect_identical(result, "alpha_beta")
   expect_warning({selectOptimizationType(t = 1, alpha = NULL, beta = 1)},
-                 class = c("MissingParametersWarning"))
+                 class = c("MissingArgumentWarning"))
   
   
   # Cases where t is not provided - full optimization is always needed =========
@@ -344,7 +344,7 @@ test_that("`selectOptimizationType` behave as intended", {
   
   expect_identical(result, "all")
   expect_warning({selectOptimizationType(t = NULL, alpha = NULL, beta = 1)},
-                 class = c("MissingParametersWarning"))
+                 class = c("MissingArgumentWarning"))
   
   # case 2
   suppressWarnings({
@@ -353,7 +353,7 @@ test_that("`selectOptimizationType` behave as intended", {
   
   expect_identical(result, "all")
   expect_warning({selectOptimizationType(t = NULL, alpha = 1, beta = NULL)},
-                 class = c("MissingParametersWarning"))
+                 class = c("MissingArgumentWarning"))
   
   # case 3
   suppressWarnings({
@@ -362,6 +362,6 @@ test_that("`selectOptimizationType` behave as intended", {
   
   expect_identical(result, "all")
   expect_warning({selectOptimizationType(t = NULL, alpha = 1, beta = 1)},
-                 class = c("MissingParametersWarning"))
+                 class = c("MissingArgumentWarning"))
 })
 
