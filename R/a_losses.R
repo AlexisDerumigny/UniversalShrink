@@ -129,7 +129,7 @@ LossFrobenius2.matrix <- function(
   if (missing(type)){
     stop(UniversalShrink_error_condition_base(
       "'type' must be specified. Either 'precision' or 'covariance'.",
-      subclass = "MissingArgumentError") )
+      subclass = c("MissingArgumentError", "InvalidArgumentError") ) )
   }
   
   type = match.arg(type)
@@ -273,7 +273,7 @@ LossEuclideanEigenvalues2.matrix <- function(
   if (missing(type)){
     stop(UniversalShrink_error_condition_base(
       "'type' must be specified. Either 'precision' or 'covariance'.",
-      subclass = "MissingArgumentError") )
+      subclass = c("MissingArgumentError", "InvalidArgumentError") ) )
   }
   
   type = match.arg(type)
