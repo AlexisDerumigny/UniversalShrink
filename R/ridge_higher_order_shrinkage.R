@@ -182,7 +182,7 @@ ridge_higher_order_shrinkage <- function(
 
 ridge_higher_order_shrinkage_non_optimized <- function(
     X, m, centeredCov, t, verbose = 0, method_invM = "recursive", call_ = NULL,
-    mpfr = mpfr, precBits = precBits)
+    mpfr, precBits)
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_non_optimized` (known t)...\n")
