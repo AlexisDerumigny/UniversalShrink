@@ -8,7 +8,9 @@
 #' @inheritParams cov_with_centering
 #' 
 #' @export
-inverse_NL_oracle <- function(X, Sigma, centeredCov = TRUE, verbose = 0){
+inverse_NL_oracle <- function(X, Sigma, centeredCov = TRUE, verbose = 0)
+{
+  call_ = match.call()
   
   # Get sizes of X
   n = nrow(X)
@@ -31,11 +33,14 @@ inverse_NL_oracle <- function(X, Sigma, centeredCov = TRUE, verbose = 0){
   inverse_oracle <- U %*% diag(new_eigenvalues) %*% t(U)
   
   
-  result = list(
-    estimated_precision_matrix = inverse_oracle
+  result = new_estimated_precision_matrix(
+    estimate = inverse_oracle,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "inverse_NL_oracle",
+    call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }

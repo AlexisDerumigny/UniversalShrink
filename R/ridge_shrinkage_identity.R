@@ -83,8 +83,8 @@ ridge_shrinkage_identity_optimal <- function (
   hb_ShRt1 <- num_b_ShRt1 / den_ShRt1
   iS_ShRt1 <- ha_ShRt1 * iS_Rt1 + hb_ShRt1 * Ip
   
-  result = list(
-    estimated_precision_matrix = iS_ShRt1,
+  result = new_estimated_precision_matrix(
+    estimate = iS_ShRt1,
     alpha_optimal = ha_ShRt1,
     beta_optimal = hb_ShRt1,
     t_optimal = t_R,
@@ -96,8 +96,6 @@ ridge_shrinkage_identity_optimal <- function (
     call = call_,
     result_optimization = result_optimization
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }
@@ -242,22 +240,20 @@ ridge_shrinkage_identity_semioptimal <- function (
     cat("\n")
   }
   
-  result = list(
-    estimated_precision_matrix = iS_ShRt1,
+  result = new_estimated_precision_matrix(
+    estimate = iS_ShRt1,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
     alpha_optimal = alpha,
     beta_optimal = beta,
     t = t,
     M = M,
     hm = hm,
-    n = n,
-    p = p,
-    centeredCov = centeredCov,
     method = "Ridge shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }
@@ -287,18 +283,16 @@ ridge_shrinkage_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
   
   iS_ShRt1 <- alpha * iS_ridge + beta * Ip
   
-  result = list(
-    estimated_precision_matrix = iS_ShRt1,
-    t = t,
+  result = new_estimated_precision_matrix(
+    estimate = iS_ShRt1,
     n = n,
     p = p,
     centeredCov = centeredCov,
+    t = t,
     method = "Ridge shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }

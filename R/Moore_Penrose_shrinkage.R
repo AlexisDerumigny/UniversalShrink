@@ -279,8 +279,8 @@ Moore_Penrose_shrinkage_general_plarge <- function(
   
   iS_ShMP  <- alpha * iS_MP + beta * Pi0
   
-  result = list(
-    estimated_precision_matrix = iS_ShMP,
+  result = new_estimated_precision_matrix(
+    estimate = iS_ShMP,
     alpha = alpha,
     beta  = beta,
     n = n,
@@ -289,8 +289,6 @@ Moore_Penrose_shrinkage_general_plarge <- function(
     method = "Moore-Penrose shrinkage",
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }
@@ -359,8 +357,8 @@ Moore_Penrose_shrinkage_identity_plarge <- function(
   
   iS_ShMP <- alpha * iS_MP + beta * Ip
   
-  result = list(
-    estimated_precision_matrix = iS_ShMP,
+  result = new_estimated_precision_matrix(
+    estimate = iS_ShMP,
     alpha = alpha,
     beta  = beta,
     n = n,
@@ -369,8 +367,6 @@ Moore_Penrose_shrinkage_identity_plarge <- function(
     method = "Moore-Penrose shrinkage",
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return(result)
 }
@@ -421,8 +417,8 @@ Moore_Penrose_shrinkage_general_psmall <- function(
   
   iS_ShMP <- alpha * iS_MP + beta * Pi0
   
-  result = list(
-    estimated_precision_matrix = iS_ShMP,
+  result = new_estimated_precision_matrix(
+    estimate = iS_ShMP,
     alpha = alpha,
     beta  = beta,
     n = n,
@@ -431,8 +427,6 @@ Moore_Penrose_shrinkage_general_psmall <- function(
     method = "Moore-Penrose shrinkage",
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return(result)
 }
@@ -474,8 +468,8 @@ Moore_Penrose_shrinkage_identity_psmall <- function(
     cat("beta = ", beta, "\n")
   }
   
-  result = list(
-    estimated_precision_matrix = iS_ShMP,
+  result = new_estimated_precision_matrix(
+    estimate = iS_ShMP,
     alpha = alpha,
     beta  = beta,
     n = n,
@@ -484,8 +478,6 @@ Moore_Penrose_shrinkage_identity_psmall <- function(
     method = "Moore-Penrose shrinkage",
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return(result)
 }

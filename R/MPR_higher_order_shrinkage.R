@@ -252,8 +252,12 @@ MPR_higher_order_shrinkage_non_optimized <- function(
       alpha[k + 1] * power_MPR
   }
   
-  result = list(
-    estimated_precision_matrix = estimated_precision_matrix,
+  result = new_estimated_precision_matrix(
+    estimate = estimated_precision_matrix,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "MPR_higher_order_shrinkage",
     M = estimatedM$M,
     hm = estimatedM$hm,
     alpha = alpha,
@@ -262,8 +266,6 @@ MPR_higher_order_shrinkage_non_optimized <- function(
     m = m,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }
@@ -364,8 +366,12 @@ MPR_higher_order_shrinkage_optimal <- function(
       alpha[k + 1] * power_MPR
   }
   
-  result = list(
-    estimated_precision_matrix = estimated_precision_matrix,
+  result = new_estimated_precision_matrix(
+    estimate = estimated_precision_matrix,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "MPR_higher_order_shrinkage",
     M = estimatedM$M,
     hm = estimatedM$hm,
     alpha = alpha,
@@ -375,8 +381,6 @@ MPR_higher_order_shrinkage_optimal <- function(
     result_optimization = result_optimization,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }

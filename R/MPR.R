@@ -85,18 +85,16 @@ MPR <- function(X, centeredCov = TRUE, t, verbose = 0)
   # This can also be written as:
   # iS_ridge %*% S %*% iS_ridge
   
-  result = list(
-    estimated_precision_matrix = MPR_estimator,
-    t = t,
+  result = new_estimated_precision_matrix(
+    estimate = MPR_estimator,
     n = n,
     p = p,
     centeredCov = centeredCov,
+    t = t,
     method = "Moore-Penrose-ridge (MPR)",
     method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }

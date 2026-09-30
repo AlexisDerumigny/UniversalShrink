@@ -52,16 +52,14 @@ GMV_Moore_Penrose <- function(X, centeredCov = TRUE)
   iS_MP = Moore_Penrose(X = X, centeredCov = centeredCov)
   GMV_MP = GMV_PlugIn(iS_MP)
   
-  result = list(
-    estimated_portfolio_weights = as.numeric(GMV_MP),
+  result = new_estimated_portfolio_weights(
+    estimate = as.numeric(GMV_MP),
     n = nrow(X),
     p = ncol(X),
     centeredCov = centeredCov,
     method = "Plug-in of Moore-Penrose",
     call = call_
   )
-  
-  class(result) <- c("EstimatedPortfolioWeights")
   
   return (result)
 }

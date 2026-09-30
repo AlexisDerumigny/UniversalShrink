@@ -8,7 +8,9 @@
 #' @inheritParams cov_with_centering
 #' 
 #' @export
-cov_NL_oracle <- function(X, Sigma, centeredCov = TRUE, verbose = 0){
+cov_NL_oracle <- function(X, Sigma, centeredCov = TRUE, verbose = 0)
+{
+  call_ = match.call()
   
   # Get sizes of X
   n = nrow(X)
@@ -26,11 +28,14 @@ cov_NL_oracle <- function(X, Sigma, centeredCov = TRUE, verbose = 0){
   
   NonLin_oracle <- U %*% diag(diag(t(U) %*% Sigma %*% U)) %*% t(U)
   
-  result = list(
-    estimated_covariance_matrix = NonLin_oracle
+  result = new_estimated_covariance_matrix(
+    estimate = NonLin_oracle,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "cov_NL_oracle",
+    call = call_
   )
-  
-  class(result) <- c("EstimatedCovarianceMatrix")
   
   return (result)
 }
