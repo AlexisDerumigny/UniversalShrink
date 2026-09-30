@@ -60,10 +60,6 @@ check_estimated_matrix <- function(estimate, estimator_type, call = sys.call(-1)
 check_estimator_dimension <- function(p, expected_p, estimate, 
                                       call = sys.call(-1) )
 {
-  if (is.null(p)) {
-    return(invisible(NULL))
-  }
-  
   valid_p <- (is.numeric(p) && length(p) == 1L && !is.na(p) && is.finite(p) &&
       p == expected_p)
   
@@ -92,9 +88,11 @@ check_estimator_dimension <- function(p, expected_p, estimate,
 #'
 #' @param estimate Numeric square matrix containing the estimated precision
 #'   matrix.
-#' @param n Sample size, if applicable.
-#' @param p Matrix dimension. If supplied, it must agree with `estimate`.
-#' @param centeredCov Whether the covariance matrix was centered, if applicable.
+#' @param n Sample size, or `NA_integer_` when no sample size is associated
+#'   with the estimate.
+#' @param p Matrix dimension. It must agree with the dimension of `estimate`.
+#' @param centeredCov A logical indicating whether centered covariance
+#'   estimation was used, or `NA` when this is not applicable or unknown.
 #' @param method Character description of the estimator.
 #' @param call Matched call associated with the estimator.
 #' @param ... Additional estimator-specific fields.
