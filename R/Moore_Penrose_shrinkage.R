@@ -149,7 +149,7 @@ Moore_Penrose_shrinkage <- function(X, centeredCov = TRUE, Pi0 = NULL, verbose =
     result = Moore_Penrose_shrinkage_identity_psmall(
       X = X, centeredCov = centeredCov, verbose = verbose, call_ = call_)
     
-  } else if (is.null(Pi0) && c_n >= 1) {
+  } else if (is.null(Pi0) && c_n > 1) {
     
     result = Moore_Penrose_shrinkage_identity_plarge(
       X = X, centeredCov = centeredCov, verbose = verbose, call_ = call_)
@@ -160,11 +160,15 @@ Moore_Penrose_shrinkage <- function(X, centeredCov = TRUE, Pi0 = NULL, verbose =
       X = X, centeredCov = centeredCov, Pi0 = Pi0, 
       verbose = verbose, call_ = call_)
     
-  } else if (!is.null(Pi0) && c_n >= 1){
+  } else if (!is.null(Pi0) && c_n > 1){
     
     result = Moore_Penrose_shrinkage_general_plarge(
       X = X, centeredCov = centeredCov, Pi0 = Pi0, 
       verbose = verbose, call_ = call_)
+  } else {
+    stop(error_undefined_moore_penrose(
+      p = ncol(X), n = nrow(X), centeredCov = centeredCov,
+      estimatorName = "Moore_Penrose_shrinkage") )
   }
   
   return (result)
