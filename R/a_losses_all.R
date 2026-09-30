@@ -146,7 +146,9 @@ Losses.matrix <- function(
   check_compatible_square_matrices(x = x, Sigma = Sigma)
   
   if (missing(type)){
-    stop("'type' must be specified. Either 'precision' or 'covariance'.")
+    stop(UniversalShrink_error_condition_base(
+      message = "'type' must be specified. Either 'precision' or 'covariance'.",
+      subclass = c("MissingArgumentError", "InvalidArgumentError") ) )
   }
   
   type = match.arg(type)
@@ -170,7 +172,9 @@ Losses.matrix <- function(
     
     # default
     {
-      stop("Type " , type, "is not implemented yet.")
+      stop(UniversalShrink_error_condition_base(
+        message = paste0("Type " , type, "is not implemented yet."),
+        subclass = "InvalidArgumentError") )
     }
   )
   

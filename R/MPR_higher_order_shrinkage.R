@@ -54,7 +54,8 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
   } else if (method_invM == "ginv"){
     if (! requireNamespace("MASS", quietly = TRUE)){
       stop(UniversalShrink_error_condition_base(
-        "MASS needs to be installed to use `method_invM == 'ginv'.`"))
+        message = "MASS needs to be installed to use `method_invM == 'ginv'.`",
+        subclass = "MissingPackageError") )
     }
     alpha = MASS::ginv(M) %*% hm
   } else if (method_invM == "recursive"){

@@ -185,7 +185,9 @@ Moore_Penrose_shrinkage_general_plarge <- function(
     Pi0 <- Ip
   } else if (nrow(Pi0) != p || ncol(Pi0) != p){
     stop(UniversalShrink_error_condition_base(
-      "'Pi0' should be a 'p' by 'p' matrix."))
+      message = "'Pi0' should be a 'p' by 'p' matrix.",
+      subclass = c("IncompatibleMatrixDimensionsError", "InvalidArgumentError") 
+    ) )
   }
   
   # Sample covariance matrix
@@ -394,7 +396,9 @@ Moore_Penrose_shrinkage_general_psmall <- function(
     Pi0 <- Ip
   } else if (nrow(Pi0) != p || ncol(Pi0) != p){
     stop(UniversalShrink_error_condition_base(
-      "'Pi0' should be a 'p' by 'p' matrix."))
+      message = "'Pi0' should be a 'p' by 'p' matrix.",
+      subclass = c("IncompatibleMatrixDimensionsError", "InvalidArgumentError")
+    ) )
   }
   
   # Moore-Penrose inverse of the sample covariance matrix

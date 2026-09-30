@@ -129,13 +129,19 @@ ridge_shrinkage_Wang <- function (X, eps = 1e-6, upp = pi/2 - 1e-6,
 {
   call_ = match.call()
   if (eps <= 0 || eps > pi/2){
-    stop("'eps' must be between 0 and pi/2")
+    stop(UniversalShrink_error_condition_base(
+      message = "'eps' must be between 0 and pi/2",
+      subclass = "InvalidArgumentError") )
   }
   if (upp <= 0 || upp > pi/2){
-    stop("'upp' must be between 0 and pi/2")
+    stop(UniversalShrink_error_condition_base(
+      message = "'upp' must be between 0 and pi/2",
+      subclass = "InvalidArgumentError") )
   }
   if (eps >= upp){
-    stop("'eps' must be strictly smaller than 'upp'.")
+    stop(UniversalShrink_error_condition_base(
+      message = "'eps' must be strictly smaller than 'upp'.",
+      subclass = "InvalidArgumentError") )
   }
   
   n = nrow(X)

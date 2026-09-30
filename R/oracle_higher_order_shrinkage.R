@@ -100,12 +100,14 @@ oracle_higher_order_shrinkage <- function(
   }
   if (!is.matrix(Sigma)) {
     stop(UniversalShrink_error_condition_base(
-      "Sigma should be a matrix."
+      message = "Sigma should be a matrix.",
+      subclass = "InvalidArgumentError"
     ))
   }
   if (nrow(Sigma) != p || ncol(Sigma) != p) {
     stop(UniversalShrink_error_condition_base(
-      "Sigma should be of dimension p * p."
+      message = "Sigma should be of dimension p * p.",
+      subclass = c("IncompatibleMatrixDimensionsError", "InvalidArgumentError")
     ))
   }
   
@@ -187,8 +189,11 @@ oracle_higher_order_shrinkage <- function(
       estimated_precision_matrix = MPR_estimator
     }
   } else {
-    stop("nameEstimator = '", nameEstimator, "' is not valid.",
-         "It should be one of the following: 'Moore-Penrose', 'ridge', 'MPR'.")
+    stop(UniversalShrink_error_condition_base(
+      message = paste0(
+        "nameEstimator = '", nameEstimator, "' is not valid.",
+        "It should be one of the following: 'Moore-Penrose', 'ridge', 'MPR'."),
+      subclass = "InvalidArgumentError") )
   }
   
   

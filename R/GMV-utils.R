@@ -27,15 +27,18 @@ prepare_and_check_b <- function(b, p, tolerance = 0.001)
   b = as.numeric(b)
   if (anyNA(b)){
     stop(UniversalShrink_error_condition_base(
-      paste0(length(which(is.na(b))), " NAs in target portfolio 'b'.")))
+      message = paste0(length(which(is.na(b))), " NAs in target portfolio 'b'."),
+      subclass = "InvalidArgumentError"))
   }
   if (length(b) != p){
     stop(UniversalShrink_error_condition_base(
-      "'b' should be a vector of length 'p'.") )
+      message = "'b' should be a vector of length 'p'.",
+      subclass = "InvalidArgumentError") )
   }
   if (abs(sum(b) - 1) > tolerance){
     stop(UniversalShrink_error_condition_base(
-      "The weights (b) should sum up to 1.") )
+      message = "The weights (b) should sum up to 1.",
+      subclass = "InvalidArgumentError") )
   }
   
   return (b)
