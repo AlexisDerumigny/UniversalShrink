@@ -28,7 +28,7 @@ optimization <- function(FUN, optimizationControls = NULL,
       par = optimizationControls$initialValue, fn = FUN2,
       lower = optimizationControls$lower, upper = optimizationControls$upper,
       method = "L-BFGS-B",
-      control = list(fnscale = -maximum) # -1 for maximization
+      control = list(fnscale = if (maximum) -1 else 1) # -1 for maximization
     )
     
     result$optimal_t = tan(result$par)
