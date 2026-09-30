@@ -86,3 +86,23 @@ check_large_m <- function(warn, p, m)
   return (invisible(NULL))
 }
 
+
+error_invalid_method_invM <- function(
+    method_invM,
+    choices = c("solve", "recursive"),
+    call = sys.call(-1) )
+{
+  return ( UniversalShrink_error_condition_base(
+    message = paste0(
+      "`method_invM` must be one of ", 
+      paste0("'", choices, "'", collapse = ", "),
+      ". Received: '", method_invM, "'."
+    ),
+    subclass = "InvalidArgumentError",
+    call = call,
+    argument = "method_invM",
+    value = method_invM,
+    choices = choices
+  ) )
+}
+

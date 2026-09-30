@@ -672,10 +672,8 @@ compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
     
     alpha = invM %*% hm
   } else {
-    stop(UniversalShrink_error_condition_base(
-      paste0("method_invM '", method_invM,
-             "' unavailable. Possible choices are: 'solve' and 'recursive'."),
-      subclass = "InvalidArgumentError") )
+    stop(error_invalid_method_invM(method_invM,
+                                   choices = c("solve", "recursive") ) )
   }
   
   if (verbose > 0){

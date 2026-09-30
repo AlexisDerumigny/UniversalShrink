@@ -215,9 +215,8 @@ compute_M_MoorePenrose_plarge <- function(
       print(invM)
     }
   } else {
-    stop(UniversalShrink_error_condition_base(
-      "method_invM '", method_invM, "' unavailable. Possible choices are: ",
-      "'solve' and 'recursive'."))
+    stop(error_invalid_method_invM(method_invM,
+                                   choices = c("solve", "recursive") ) )
   }
   
   
@@ -355,9 +354,8 @@ compute_M_MoorePenrose_psmall <- function(
       print(invM)
     }
   } else {
-    stop(UniversalShrink_error_condition_base(
-      "method_invM '", method_invM, "' unavailable. Possible choices are: ",
-      "'solve' and 'recursive'."))
+    stop(error_invalid_method_invM(method_invM,
+                                   choices = c("solve", "recursive") ) )
   }
   
   
