@@ -4,10 +4,9 @@
 #' 
 #' @param X data matrix (rows are observations, columns are features).
 #' 
-#' @param m order of the shrinkage. Should be at least 1.
-#' 
 #' @inheritParams cov_with_centering
 #' 
+#' @template param-m
 #' @template param-mpfr
 #' 
 #' @returns an object of class `EstimatedCovarianceMatrix` containing 
@@ -66,8 +65,9 @@
 #' }
 #' 
 #' @export
-cov_higher_order_shrinkage <- function(X, centeredCov = TRUE, m, verbose = 0,
-                                       mpfr = FALSE, precBits = 2^16){
+cov_higher_order_shrinkage <- function(
+    X, centeredCov = TRUE, m, verbose = 0,
+    mpfr = FALSE, precBits = 2^16, warn_large_m = TRUE){
   
   if (verbose > 0){
     cat("Starting `cov_higher_order_shrinkage`...\n")
@@ -77,6 +77,7 @@ cov_higher_order_shrinkage <- function(X, centeredCov = TRUE, m, verbose = 0,
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
+  check_large_m(warn = warn_large_m, p = p, m = m)
   cn = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Identity matrix of size p

@@ -10,6 +10,8 @@
 #' 
 #' @param Sigma true covariance matrix
 #' 
+#' @param m the order of the shrinkage. It must be an integer, at least 1.
+#' 
 #' @template param-mpfr
 #' 
 #' @inheritParams MPR_higher_order_shrinkage

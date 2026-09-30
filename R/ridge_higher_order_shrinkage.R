@@ -70,12 +70,11 @@
 #' 
 #' @param X data matrix (rows are observations, columns are features).
 #' 
-#' @param m order of the shrinkage. Should be at least 1.
-#' 
 #' @param t \code{t} is the penalization parameter.
 #' 
 #' @inheritParams cov_with_centering
 #' 
+#' @template param-m
 #' @template param-mpfr
 #' @template param-optimizationControls
 #' @template param-method_invM
@@ -162,7 +161,8 @@
 ridge_higher_order_shrinkage <- function(
     X, m = 3, centeredCov = TRUE, t = NULL, 
     optimizationControls = NULL, verbose = 0, 
-    method_invM = "recursive", mpfr = FALSE, precBits = 2^16)
+    method_invM = "recursive", mpfr = FALSE, precBits = 2^16,
+    warn_large_m = TRUE)
 {
   call_ = match.call()
   if (is.null(t)){
@@ -170,19 +170,20 @@ ridge_higher_order_shrinkage <- function(
       X = X, m = m, centeredCov = centeredCov, verbose = verbose,
       optimizationControls = optimizationControls,
       method_invM = method_invM, call_ = call_,
-      mpfr = mpfr, precBits = precBits)
+      mpfr = mpfr, precBits = precBits, warn_large_m = warn_large_m)
     
   } else {
     result = ridge_higher_order_shrinkage_non_optimized(
       X = X, m = m, centeredCov = centeredCov, t = t, verbose = verbose,
-      method_invM = method_invM, call_ = call_, mpfr = mpfr, precBits = precBits)
+      method_invM = method_invM, call_ = call_, mpfr = mpfr, precBits = precBits, 
+      warn_large_m = warn_large_m)
   }
 }
 
 
 ridge_higher_order_shrinkage_non_optimized <- function(
     X, m, centeredCov, t, verbose = 0, method_invM = "recursive", call_ = NULL,
-    mpfr, precBits)
+    mpfr, precBits, warn_large_m = TRUE)
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_non_optimized` (known t)...\n")
@@ -192,6 +193,7 @@ ridge_higher_order_shrinkage_non_optimized <- function(
   # Get sizes of Y
   n = nrow(X)
   p = ncol(X)
+  check_large_m(warn = warn_large_m, p = p, m = m)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
                        verbose = verbose)
   
@@ -261,7 +263,7 @@ ridge_higher_order_shrinkage_non_optimized <- function(
 
 ridge_higher_order_shrinkage_optimal <- function(
     X, m, centeredCov = TRUE, verbose = 0, optimizationControls = NULL,
-    method_invM = "recursive", call_ = NULL, mpfr, precBits)
+    method_invM = "recursive", call_ = NULL, mpfr, precBits, warn_large_m = TRUE)
 {
   if (verbose > 0){
     cat("Starting `ridge_higher_order_shrinkage_optimal` (with unknown t)...\n")
@@ -271,6 +273,7 @@ ridge_higher_order_shrinkage_optimal <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
+  check_large_m(warn = warn_large_m, p = p, m = m)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
                        verbose = verbose)
   

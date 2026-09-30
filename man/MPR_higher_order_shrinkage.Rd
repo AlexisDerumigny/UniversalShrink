@@ -13,13 +13,17 @@ MPR_higher_order_shrinkage(
   method_invM = "recursive",
   verbose = 0,
   mpfr = FALSE,
-  precBits = 2^16
+  precBits = 2^16,
+  warn_large_m = TRUE
 )
 }
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
 
-\item{m}{order of the shrinkage. Should be at least 1.}
+\item{m, warn_large_m}{\code{m} is the order of the shrinkage. It must be an
+integer, at least 1. For the asymptotic validity of the estimators, \code{p}
+should be (much) larger than \code{m}. This is checked and warned (if applicable)
+if \code{warn_large_m = TRUE}.}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, then the sample covariance
 matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector

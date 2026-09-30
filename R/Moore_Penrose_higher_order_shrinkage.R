@@ -440,8 +440,6 @@ compute_M_MoorePenrose_psmall <- function(
 #' 
 #' @param X data matrix (rows are observations, columns are features).
 #' 
-#' @param m order of the shrinkage. Should be at least 1.
-#' 
 #' @param method_invM method for computing the inverse of the matrix M.
 #' It can be \code{"solve"} (computing M and then inverting it) or
 #' \code{"recursive"} (using a recursive formula, which is more stable
@@ -449,6 +447,7 @@ compute_M_MoorePenrose_psmall <- function(
 #' 
 #' @inheritParams cov_with_centering
 #' 
+#' @template param-m
 #' @template param-mpfr
 #' 
 #' @returns the estimator of the precision matrix
@@ -534,7 +533,7 @@ compute_M_MoorePenrose_psmall <- function(
 #' 
 Moore_Penrose_higher_order_shrinkage <- function(
     X, m, centeredCov = TRUE, method_invM = "recursive", verbose = 0,
-    mpfr = FALSE, precBits = 2^16)
+    mpfr = FALSE, precBits = 2^16, warn_large_m = TRUE)
 {
   call_ = match.call()
   check_Rmpfr(mpfr)
@@ -542,6 +541,7 @@ Moore_Penrose_higher_order_shrinkage <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
+  check_large_m(warn = warn_large_m, p = p, m = m)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
                        verbose = verbose)
   

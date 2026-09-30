@@ -10,7 +10,8 @@ cov_higher_order_shrinkage(
   m,
   verbose = 0,
   mpfr = FALSE,
-  precBits = 2^16
+  precBits = 2^16,
+  warn_large_m = TRUE
 )
 }
 \arguments{
@@ -22,7 +23,10 @@ is replaced by its sample counterpart. If \code{FALSE}, then the sample
 covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
 zero.}
 
-\item{m}{order of the shrinkage. Should be at least 1.}
+\item{m, warn_large_m}{\code{m} is the order of the shrinkage. It must be an
+integer, at least 1. For the asymptotic validity of the estimators, \code{p}
+should be (much) larger than \code{m}. This is checked and warned (if applicable)
+if \code{warn_large_m = TRUE}.}
 
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates

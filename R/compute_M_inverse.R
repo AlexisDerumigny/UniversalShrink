@@ -58,3 +58,30 @@ compute_M_inverse <- function(m, all_tr0, all_tr, verbose = 0, mpfr, precBits){
   return (invM)
 }
 
+
+check_large_m <- function(warn, p, m)
+{
+  if (m <= 0 || (m != round(m))) {
+    stop(UniversalShrink_error_condition_base(
+      message = paste0("m must be a positive integer, but we see: m = ", m),
+      subclass = "InvalidArgumentError"
+    ))
+  }
+  
+  if (!warn){
+    return (invisible(NULL))
+  }
+  
+  if (m >= p / 2){
+    warning(UniversalShrink_warning_condition_base(
+      message = paste0(
+        "m is too large compared to p. Therefore the mathematical (asymptotic)",
+        "validity of the estimator may not hold. Here we see m = ", m,
+        ", p = ", p),
+      subclass = "TooLarge_m_Warning"
+    ) )
+  }
+  
+  return (invisible(NULL))
+}
+

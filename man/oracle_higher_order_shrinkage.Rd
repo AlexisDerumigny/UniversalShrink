@@ -21,7 +21,7 @@ oracle_higher_order_shrinkage(
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
 
-\item{m}{order of the shrinkage. Should be at least 1.}
+\item{m}{the order of the shrinkage. It must be an integer, at least 1.}
 
 \item{Sigma}{true covariance matrix}
 

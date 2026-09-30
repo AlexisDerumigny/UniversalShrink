@@ -96,12 +96,11 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
 #' 
 #' @param X data matrix (rows are observations, columns are features).
 #' 
-#' @param m order of the shrinkage. Should be at least 1.
-#' 
 #' @param t \code{t} is the penalization parameter.
 #' 
 #' @inheritParams cov_with_centering
 #' 
+#' @template param-m
 #' @template param-mpfr
 #' @template param-optimizationControls
 #' @template param-method_invM
@@ -171,7 +170,8 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
 #' 
 MPR_higher_order_shrinkage <- function(
     X, m = 3, centeredCov = TRUE, t = NULL, optimizationControls = NULL,
-    method_invM = "recursive", verbose = 0, mpfr = FALSE, precBits = 2^16)
+    method_invM = "recursive", verbose = 0, mpfr = FALSE, precBits = 2^16, 
+    warn_large_m = TRUE)
 {
   call_ = match.call()
   if (is.null(t)){
@@ -179,20 +179,20 @@ MPR_higher_order_shrinkage <- function(
       X = X, m = m, centeredCov = centeredCov, verbose = verbose,
       optimizationControls = optimizationControls, method_invM = method_invM,
       call_ = call_,
-      mpfr = mpfr, precBits = precBits)
+      mpfr = mpfr, precBits = precBits, warn_large_m = warn_large_m)
     
   } else {
     result = MPR_higher_order_shrinkage_non_optimized(
       X = X, m = m, centeredCov = centeredCov, t = t, verbose = verbose, 
       method_invM = method_invM, call_ = call_,
-      mpfr = mpfr, precBits = precBits)
+      mpfr = mpfr, precBits = precBits, warn_large_m = warn_large_m)
   }
 }
 
 
 MPR_higher_order_shrinkage_non_optimized <- function(
     X, m, centeredCov = TRUE, t, method_invM = "recursive", verbose = 0,
-    call_ = NULL, mpfr = FALSE, precBits = 2^16)
+    call_ = NULL, mpfr = FALSE, precBits = 2^16, warn_large_m = TRUE)
 {
   if (verbose > 0){
     cat("Starting `MPR_higher_order_shrinkage`...\n")
@@ -202,6 +202,7 @@ MPR_higher_order_shrinkage_non_optimized <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
+  check_large_m(warn = warn_large_m, p = p, m = m)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
                        verbose = verbose)
   
@@ -271,7 +272,8 @@ MPR_higher_order_shrinkage_non_optimized <- function(
 
 MPR_higher_order_shrinkage_optimal <- function(
     X, m, centeredCov = TRUE, t, verbose = 0, optimizationControls = NULL,
-    method_invM = "recursive", call_ = NULL, mpfr = FALSE, precBits = 2^16)
+    method_invM = "recursive", call_ = NULL, mpfr = FALSE, precBits = 2^16,
+    warn_large_m = TRUE)
 {
   if (verbose > 0){
     cat("Starting `MPR_higher_order_shrinkage_optimal` (with unknown t)...\n")
@@ -281,6 +283,7 @@ MPR_higher_order_shrinkage_optimal <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
+  check_large_m(warn = warn_large_m, p = p, m = m)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
                        verbose = verbose)
   
