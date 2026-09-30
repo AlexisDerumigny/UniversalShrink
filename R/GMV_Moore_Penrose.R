@@ -18,8 +18,8 @@
 #' @param X data matrix (rows are observations, columns are features).
 #' @inheritParams Moore_Penrose
 #' 
-#' @returns a vector of size \eqn{p} giving the optimal portfolio weights, with
-#' the elements summing up to \eqn{1}.
+#' @returns An object of class `EstimatedPortfolioWeights`. The estimated
+#' weights can be extracted as a numeric vector with `as.numeric()`.
 #' 
 #' @seealso \code{\link{LossOutOfSampleVariance}} for computing the loss
 #' of the portfolio.

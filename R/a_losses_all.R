@@ -3,8 +3,8 @@
 #' 
 #' Returns and print all (currently implemented) quadratic losses.
 #' 
-#' @param x an object, of class \code{EstimatedPrecisionMatrix},
-#' \code{EstimatedCovarianceMatrix} or \code{AllLosses}.
+#' @param x An estimated precision or covariance matrix object, a numeric
+#' matrix, a portfolio-weights object, or an object of class `AllLosses`.
 #' 
 #' @param Sigma,SigmaInv true covariance matrix and its inverse
 #' (true precision matrix). If \code{SigmaInv} is needed and missing, it is
@@ -67,7 +67,7 @@ Losses <- function(x, Sigma, ...) {
 
 #' @rdname Losses
 #' @export
-Losses.EstimatedPrecisionMatrix <- function(x, Sigma, SigmaInv = NULL, ...)
+Losses.PrecisionMatrix <- function(x, Sigma, SigmaInv = NULL, ...)
 {
   if (is.null(SigmaInv)) {
     SigmaInv = solve(Sigma)
@@ -109,7 +109,7 @@ Losses.EstimatedPrecisionMatrix <- function(x, Sigma, SigmaInv = NULL, ...)
 
 #' @rdname Losses
 #' @export
-Losses.EstimatedCovarianceMatrix <- function(x, Sigma, ...)
+Losses.CovarianceMatrix <- function(x, Sigma, ...)
 {
   Frob2 = c(LossFrobenius2(x = x, Sigma = Sigma, normalized = TRUE),
             LossFrobenius2(x = x, Sigma = Sigma, normalized = FALSE))
@@ -157,15 +157,15 @@ Losses.matrix <- function(
     type,
     
     "precision matrix" = {
-      obj = list(estimated_precision_matrix = x)
-      class(obj) <- "EstimatedPrecisionMatrix"
+      obj = list(matrix = x)
+      class(obj) <- "PrecisionMatrix"
       
       result = Losses(obj, Sigma = Sigma, SigmaInv = SigmaInv, ...)
     },
     
     "covariance matrix" = {
-      obj = list(estimated_covariance_matrix = x)
-      class(obj) <- "EstimatedCovarianceMatrix"
+      obj = list(matrix = x)
+      class(obj) <- "CovarianceMatrix"
       
       result = Losses(obj, Sigma = Sigma, ...)
     },
@@ -185,7 +185,7 @@ Losses.matrix <- function(
 
 #' @rdname Losses
 #' @export
-Losses.EstimatedPortfolioWeights <- function(x, Sigma, SigmaInv = NULL, ...)
+Losses.PortfolioWeights <- function(x, Sigma, SigmaInv = NULL, ...)
 {
   if (is.null(SigmaInv)){
     SigmaInv = solve(Sigma)
@@ -228,7 +228,7 @@ print.AllLosses <- function(x, ...){
     cat(", method =", x$estimated$method)
   }
   
-  if (!is.null(x$estimated$centeredCov)){
+  if (!is.null(x$estimated$centeredCov) && !is.na(x$estimated$centeredCov)){
     if (x$estimated$centeredCov){
       cat(" (centered)")
     } else {

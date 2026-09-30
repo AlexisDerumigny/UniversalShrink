@@ -17,8 +17,8 @@ covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
 zero.}
 }
 \value{
-a vector of size \eqn{p} giving the optimal portfolio weights, with
-the elements summing up to \eqn{1}.
+An object of class \code{EstimatedPortfolioWeights}. The estimated
+weights can be extracted as a numeric vector with \code{as.numeric()}.
 }
 \description{
 For an \eqn{n \times p} observation matrix \eqn{\mathbf{X}_n} and the

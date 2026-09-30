@@ -164,7 +164,7 @@ LossFrobenius2.matrix <- function(
 
 #' @export
 #' @rdname quadratic_losses
-LossFrobenius2.EstimatedPrecisionMatrix <- function(
+LossFrobenius2.PrecisionMatrix <- function(
     x, Sigma, type = "precision matrix", normalized = TRUE, SigmaInv = NULL, ...)
 {
   type = match.arg(type)
@@ -172,7 +172,7 @@ LossFrobenius2.EstimatedPrecisionMatrix <- function(
   if (type != "precision matrix"){
     stop(UniversalShrink_error_condition_base(
       paste0("Type is chosen to be ", type,
-             " but x is of class 'EstimatedPrecisionMatrix'."),
+             " but x is of class 'PrecisionMatrix'."),
       subclass = "InvalidArgumentError") )
   }
   result = LossFrobenius2(x = as.matrix(x), Sigma = Sigma, SigmaInv = SigmaInv,
@@ -185,7 +185,7 @@ LossFrobenius2.EstimatedPrecisionMatrix <- function(
 
 #' @export
 #' @rdname quadratic_losses
-LossFrobenius2.EstimatedCovarianceMatrix <- function(
+LossFrobenius2.CovarianceMatrix <- function(
     x, Sigma, type = "covariance matrix", normalized = TRUE, ...)
 {
   type = match.arg(type)
@@ -193,7 +193,7 @@ LossFrobenius2.EstimatedCovarianceMatrix <- function(
   if (type != "covariance matrix"){
     stop(UniversalShrink_error_condition_base(
       paste0("Type is chosen to be ", type,
-             " but x is of class 'EstimatedCovarianceMatrix'."),
+             " but x is of class 'CovarianceMatrix'."),
       subclass = "InvalidArgumentError") )
   }
   result = LossFrobenius2(as.matrix(x), Sigma = Sigma,
@@ -229,7 +229,7 @@ LossInverseFrobenius2.matrix <- function(x,
 
 #' @export
 #' @rdname quadratic_losses
-LossInverseFrobenius2.EstimatedPrecisionMatrix <- function(
+LossInverseFrobenius2.PrecisionMatrix <- function(
     x, Sigma, normalized = TRUE, ...)
 {
   result = LossInverseFrobenius2(as.matrix(x), Sigma, normalized = normalized)
@@ -308,7 +308,7 @@ LossEuclideanEigenvalues2.matrix <- function(
 
 #' @export
 #' @rdname quadratic_losses
-LossEuclideanEigenvalues2.EstimatedPrecisionMatrix <- function(
+LossEuclideanEigenvalues2.PrecisionMatrix <- function(
     x, Sigma, type = "precision matrix", normalized = TRUE, SigmaInv = NULL, ...)
 {
   type = match.arg(type)
@@ -316,7 +316,7 @@ LossEuclideanEigenvalues2.EstimatedPrecisionMatrix <- function(
   if (type != "precision matrix"){
     stop(UniversalShrink_error_condition_base(
       paste0("Type is chosen to be ", type,
-             " but x is of class 'EstimatedPrecisionMatrix'."),
+             " but x is of class 'PrecisionMatrix'."),
       subclass = "InvalidArgumentError") )
   }
   result = LossEuclideanEigenvalues2(
@@ -329,7 +329,7 @@ LossEuclideanEigenvalues2.EstimatedPrecisionMatrix <- function(
 
 #' @export
 #' @rdname quadratic_losses
-LossEuclideanEigenvalues2.EstimatedCovarianceMatrix <- function(
+LossEuclideanEigenvalues2.CovarianceMatrix <- function(
     x, Sigma, type = "covariance matrix", normalized = TRUE, ...)
 {
   type = match.arg(type)
@@ -337,7 +337,7 @@ LossEuclideanEigenvalues2.EstimatedCovarianceMatrix <- function(
   if (type != "covariance matrix"){
     stop(UniversalShrink_error_condition_base(
       paste0("Type is chosen to be ", type,
-             " but x is of class 'EstimatedCovarianceMatrix'."),
+             " but x is of class 'CovarianceMatrix'."),
       subclass = "InvalidArgumentError") )
   }
   result = LossEuclideanEigenvalues2(

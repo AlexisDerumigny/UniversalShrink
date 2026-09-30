@@ -45,36 +45,36 @@ NULL
 #' 
 #' @rdname as.matrix.Estimator
 #' @export
-as.matrix.EstimatedPrecisionMatrix <- function(x, ...){
-  if (length(x$estimated_precision_matrix) == 0) {
+as.matrix.PrecisionMatrix <- function(x, ...){
+  if (length(x$matrix) == 0) {
     stop(
       UniversalShrink_error_condition_base(
         message = paste("Invalid x object:", 
                         "x must not have an empty precision matrix."),
         subclass = "InvalidArgumentError") )
   }
-  return (x$estimated_precision_matrix)
+  return (x$matrix)
 }
 
 
 #' @rdname as.matrix.Estimator
 #' @export
-as.matrix.EstimatedCovarianceMatrix <- function(x, ...){
-  if (length(x$estimated_covariance_matrix) == 0) {
+as.matrix.CovarianceMatrix <- function(x, ...){
+  if (length(x$matrix) == 0) {
     stop(
       UniversalShrink_error_condition_base(
         message = paste("Invalid x object:", 
                         "x must not have an empty covariance matrix."),
         subclass = "InvalidArgumentError" ) )
   }
-  return (x$estimated_covariance_matrix)
+  return (x$matrix)
 }
 
 
 #' @rdname as.matrix.Estimator
 #' @export
-as.double.EstimatedPortfolioWeights <- function(x, ...){
-  return (x$estimated_portfolio_weights)
+as.double.PortfolioWeights <- function(x, ...){
+  return (x$portfolio_weights)
 }
 
 

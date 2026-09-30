@@ -14,9 +14,10 @@ are considered).
 Or an object that can be converted to the matrix class by \code{as.matrix}.}
 }
 \value{
-a vector of size \eqn{p} with the computed portfolio weights, with
-the minimum variance, i.e. the portfolio that has the lowest variance among
-all portfolios.
+An object of class \code{PortfolioWeights}. The estimated
+weights can be extracted as a numeric vector with \code{as.numeric()}.
+These are the computed portfolio weights, with the minimum variance,
+i.e. the portfolio that has the lowest variance among all portfolios.
 }
 \description{
 This functions return the optimal portfolio weights defined by

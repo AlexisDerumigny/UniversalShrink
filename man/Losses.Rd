@@ -2,10 +2,10 @@
 % Please edit documentation in R/a_losses_all.R
 \name{Losses}
 \alias{Losses}
-\alias{Losses.EstimatedPrecisionMatrix}
-\alias{Losses.EstimatedCovarianceMatrix}
+\alias{Losses.PrecisionMatrix}
+\alias{Losses.CovarianceMatrix}
 \alias{Losses.matrix}
-\alias{Losses.EstimatedPortfolioWeights}
+\alias{Losses.PortfolioWeights}
 \alias{print.AllLosses}
 \alias{as.double.AllLosses}
 \alias{as.data.frame.AllLosses}
@@ -14,9 +14,9 @@
 \usage{
 Losses(x, Sigma, ...)
 
-\method{Losses}{EstimatedPrecisionMatrix}(x, Sigma, SigmaInv = NULL, ...)
+\method{Losses}{PrecisionMatrix}(x, Sigma, SigmaInv = NULL, ...)
 
-\method{Losses}{EstimatedCovarianceMatrix}(x, Sigma, ...)
+\method{Losses}{CovarianceMatrix}(x, Sigma, ...)
 
 \method{Losses}{matrix}(
   x,
@@ -26,7 +26,7 @@ Losses(x, Sigma, ...)
   ...
 )
 
-\method{Losses}{EstimatedPortfolioWeights}(x, Sigma, SigmaInv = NULL, ...)
+\method{Losses}{PortfolioWeights}(x, Sigma, SigmaInv = NULL, ...)
 
 \method{print}{AllLosses}(x, ...)
 
@@ -37,8 +37,8 @@ Losses(x, Sigma, ...)
 \method{as.matrix}{AllLosses}(x, ...)
 }
 \arguments{
-\item{x}{an object, of class \code{EstimatedPrecisionMatrix},
-\code{EstimatedCovarianceMatrix} or \code{AllLosses}.}
+\item{x}{An estimated precision or covariance matrix object, a numeric
+matrix, a portfolio-weights object, or an object of class \code{AllLosses}.}
 
 \item{Sigma, SigmaInv}{true covariance matrix and its inverse
 (true precision matrix). If \code{SigmaInv} is needed and missing, it is

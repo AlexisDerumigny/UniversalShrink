@@ -114,7 +114,7 @@ new_estimated_precision_matrix <- function(
   
   dots <- list(...)
   
-  result <- c(list(estimated_precision_matrix = estimate,
+  result <- c(list(matrix = estimate,
                    n = n,
                    p = p,
                    centeredCov = centeredCov,
@@ -122,7 +122,7 @@ new_estimated_precision_matrix <- function(
                    call = call), 
               dots)
   
-  class(result) <- "EstimatedPrecisionMatrix"
+  class(result) <- c("EstimatedPrecisionMatrix", "PrecisionMatrix")
   
   return (result)
 }
@@ -151,7 +151,7 @@ new_estimated_covariance_matrix <- function(
   
   dots <- list(...)
   
-  result <- c(list(estimated_covariance_matrix = estimate,
+  result <- c(list(matrix = estimate,
                    n = n,
                    p = p,
                    centeredCov = centeredCov,
@@ -159,7 +159,7 @@ new_estimated_covariance_matrix <- function(
                    call = call),
               dots)
   
-  class(result) <- "EstimatedCovarianceMatrix"
+  class(result) <- c("EstimatedCovarianceMatrix", "CovarianceMatrix")
   
   return (result)
 }
@@ -199,7 +199,7 @@ new_estimated_portfolio_weights <- function(
   
   dots <- list(...)
   
-  result <- c(list(estimated_portfolio_weights = estimate,
+  result <- c(list(portfolio_weights = estimate,
                    n = n,
                    p = p,
                    centeredCov = centeredCov,
@@ -207,7 +207,7 @@ new_estimated_portfolio_weights <- function(
                    call = call),
               dots)
   
-  class(result) <- "EstimatedPortfolioWeights"
+  class(result) <- c("EstimatedPortfolioWeights", "PortfolioWeights")
   
   return (result)
 }
