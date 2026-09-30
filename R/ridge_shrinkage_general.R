@@ -263,7 +263,7 @@ ridge_shrinkage_general <- function (X, centeredCov, t, Pi0, alpha, beta,
   
   iS_ridge <- as.matrix(ridge_)
   
-  iS_ShRt1 <- alpha * iS_ridge + beta * Ip
+  iS_ShRt1 <- alpha * iS_ridge + beta * Pi0
   
   result = list(
     estimated_precision_matrix = iS_ShRt1,
@@ -319,7 +319,7 @@ ridge_shrinkage_general_semioptimal <- function (
   alpha <- best_alphabeta$alpha
   beta <- best_alphabeta$beta
   
-  iS_ShRt1 <- alpha * iS_ridge + beta * Ip
+  iS_ShRt1 <- alpha * iS_ridge + beta * Pi0
   
   result = list(
     estimated_precision_matrix = iS_ShRt1,
@@ -407,7 +407,7 @@ ridge_shrinkage_general_optimal <- function (
   alpha <- best_alphabeta$alpha
   beta <- best_alphabeta$beta
   
-  iS_ShRt1 <- alpha * iS_ridge + beta * Ip
+  iS_ShRt1 <- alpha * iS_ridge + beta * Pi0
   
   result = list(
     estimated_precision_matrix = iS_ShRt1,
