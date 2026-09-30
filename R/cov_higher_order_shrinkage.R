@@ -9,12 +9,8 @@
 #' @template param-m
 #' @template param-mpfr
 #' 
-#' @returns an object of class `EstimatedCovarianceMatrix` containing 
-#' \itemize{
-#'    \item `estimated_covariance_matrix`: the estimator of the covariance
-#'    matrix (a `p` by `p` matrix).
-#' }
-#' 
+#' @returns An object of class `EstimatedCovarianceMatrix`.
+#' The estimated covariance matrix can be extracted with `as.matrix()`.
 #' 
 #' @examples
 #' p = 100
