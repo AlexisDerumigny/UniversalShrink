@@ -584,10 +584,9 @@ Moore_Penrose_higher_order_shrinkage <- function(
       centeredCov = centeredCov, D_MP = D_MP, method_invM = method_invM,
       verbose = verbose, mpfr = mpfr, precBits = precBits)
   } else {
-    stop(UniversalShrink_error_condition_base(
-      "This estimator is not defined for p = n - 1 in the centered case,",
-      "and for p = n in the non-centered case. Here p = ", p,
-      "and n = ", n, "."))
+    stop(error_undefined_moore_penrose(
+      p = p, n = n, centeredCov = centeredCov,
+      estimatorName = "Moore_Penrose_higher_order_shrinkage") )
   }
   
   

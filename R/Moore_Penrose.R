@@ -136,10 +136,9 @@ Moore_Penrose <- function(X, centeredCov = TRUE)
     
     iS_MP <- MASS::ginv(S)
   } else {
-    stop(UniversalShrink_error_condition_base(
-      "This estimator is not defined for p = n - 1 in the centered case,",
-      "and for p = n in the non-centered case. Here p = ", p,
-      "and n = ", n, "."))
+    stop(error_undefined_moore_penrose(
+      p = p, n = n, centeredCov = centeredCov,
+      estimatorName = "Moore_Penrose") )
   }
   
   result = list(
@@ -157,4 +156,29 @@ Moore_Penrose <- function(X, centeredCov = TRUE)
   return (result)
 }
 
+
+error_undefined_moore_penrose <- function(
+    p,
+    n,
+    centeredCov,
+    estimatorName,
+    call = sys.call(-1)
+) {
+  boundary <- if (centeredCov) "p = n - 1" else "p = n"
+  covariance_type <- if (centeredCov) "centered" else "non-centered"
+  
+  UniversalShrink_error_condition_base(
+    message = paste0(
+      "The estimator `", estimatorName, "` is not defined when ",
+      boundary, " with ", covariance_type, " covariance estimation. ",
+      "Here p = ", p, " and n = ", n, "."
+    ),
+    subclass = c("UndefinedMoorePenroseError", "UndefinedEstimatorError"),
+    call = call,
+    estimatorName = estimatorName,
+    p = p,
+    n = n,
+    centeredCov = centeredCov
+  )
+}
 
