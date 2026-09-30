@@ -86,22 +86,20 @@ MPR_shrinkage_general_optimal <- function (
   
   MPR_shrinkage_general = alpha * MPR_estimator + beta * Pi0
   
-  result = list(
-    estimated_precision_matrix = MPR_shrinkage_general,
+  result = new_estimated_precision_matrix(
+    estimate = MPR_shrinkage_general,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
     t_optimal = t,
     alpha_optimal = alpha,
     beta_optimal = beta,
     t = t,
-    n = n,
-    p = p,
-    centeredCov = centeredCov,
     method = "Moore-Penrose-ridge (MPR) with shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
     result_optimization = result_optimization,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }
@@ -162,8 +160,8 @@ loss_L2_MPR_optimal_shrinkage_general <- function(
 
 
 MPR_shrinkage_general_semioptimal <- function (
-    X, centeredCov, t, Pi0, verbose = 0, call_ = NULL){
-  
+    X, centeredCov, t, Pi0, verbose = 0, call_ = NULL)
+{
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
@@ -194,21 +192,18 @@ MPR_shrinkage_general_semioptimal <- function (
   
   MPR_shrinkage_general = alpha * MPR_estimator + beta * Pi0
   
-  result = list(
-    estimated_precision_matrix = MPR_shrinkage_general,
-    t = t,
-    alpha_optimal = alpha,
-    beta_optimal = beta,
-    t = t,
+  result = new_estimated_precision_matrix(
+    estimate = MPR_shrinkage_general,
     n = n,
     p = p,
     centeredCov = centeredCov,
+    alpha_optimal = alpha,
+    beta_optimal = beta,
+    t = t,
     method = "Moore-Penrose-ridge (MPR) with shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }
@@ -505,21 +500,18 @@ MPR_shrinkage_general <- function (X, centeredCov, t, alpha, beta, Pi0, verbose,
   
   MPR_shrinkage_general = alpha * MPR_estimator + beta * Pi0
   
-  result = list(
-    estimated_precision_matrix = MPR_shrinkage_general,
-    t = t,
-    alpha = alpha,
-    beta = beta,
-    t = t,
+  result = new_estimated_precision_matrix(
+    estimate = MPR_shrinkage_general,
     n = n,
     p = p,
     centeredCov = centeredCov,
+    alpha = alpha,
+    beta = beta,
+    t = t,
     method = "Moore-Penrose-ridge (MPR) with shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }

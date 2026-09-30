@@ -193,16 +193,16 @@ ridge_shrinkage_Wang <- function (X, eps = 1e-6, upp = pi/2 - 1e-6,
   # using the optimal parameters that were found.
   iS_WPTZ <- alpha_optimal * solve(S + t_optimal * Ip)
   
-  result = list(
-    estimated_precision_matrix = iS_WPTZ,
+  result = new_estimated_precision_matrix(
+    estimate = iS_WPTZ,
     n = n,
     p = p,
+    alpha_optimal = alpha_optimal,
+    t_optimal = t_optimal,
     centeredCov = centeredCov,
     method = "ridge_shrinkage_Wang",
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }

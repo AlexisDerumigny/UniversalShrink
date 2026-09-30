@@ -102,16 +102,14 @@ cov_analytical_NL_shrinkage = function(X, centeredCov = TRUE)
   
   estimatedSigma = u %*% diag(dtilde) %*% t(u)
   
-  result = list(
-    estimated_covariance_matrix = estimatedSigma,
+  result = new_estimated_covariance_matrix(
+    estimate = estimatedSigma,
     n = n,
     p = p,
     centeredCov = centeredCov,
     method = "Analytical NL shrinkage",
     call = call_
   )
-  
-  class(result) <- c("EstimatedCovarianceMatrix")
   
   return (result)
 }

@@ -42,11 +42,8 @@ It is recommended to use this option for higher dimensions.}
 (only used if \code{mpfr = TRUE}).}
 }
 \value{
-an object of class \code{EstimatedCovarianceMatrix} containing
-\itemize{
-\item \code{estimated_covariance_matrix}: the estimator of the covariance
-matrix (a \code{p} by \code{p} matrix).
-}
+An object of class \code{EstimatedCovarianceMatrix}.
+The estimated covariance matrix can be extracted with \code{as.matrix()}.
 }
 \description{
 Higher order shrinkage for estimation of the covariance matrix

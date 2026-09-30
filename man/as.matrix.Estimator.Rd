@@ -2,16 +2,16 @@
 % Please edit documentation in R/a_utils.R
 \name{as.matrix.Estimator}
 \alias{as.matrix.Estimator}
-\alias{as.matrix.EstimatedPrecisionMatrix}
-\alias{as.matrix.EstimatedCovarianceMatrix}
-\alias{as.double.EstimatedPortfolioWeights}
+\alias{as.matrix.PrecisionMatrix}
+\alias{as.matrix.CovarianceMatrix}
+\alias{as.double.PortfolioWeights}
 \title{Conversion of estimated matrices to matrix class}
 \usage{
-\method{as.matrix}{EstimatedPrecisionMatrix}(x, ...)
+\method{as.matrix}{PrecisionMatrix}(x, ...)
 
-\method{as.matrix}{EstimatedCovarianceMatrix}(x, ...)
+\method{as.matrix}{CovarianceMatrix}(x, ...)
 
-\method{as.double}{EstimatedPortfolioWeights}(x, ...)
+\method{as.double}{PortfolioWeights}(x, ...)
 }
 \arguments{
 \item{x}{object to be converted}

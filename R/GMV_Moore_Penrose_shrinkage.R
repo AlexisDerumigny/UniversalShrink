@@ -77,8 +77,8 @@
 #' 
 #' @inheritParams cov_with_centering
 #' 
-#' @return a vector of size \eqn{p} of (estimated) optimal portfolio weights,
-#' where \eqn{p} is the number of assets.
+#' @returns An object of class `EstimatedPortfolioWeights`. The estimated
+#' weights can be extracted as a numeric vector with `as.numeric()`.
 #' 
 #' @references 
 #' Nestor Parolya & Taras Bodnar (2026).

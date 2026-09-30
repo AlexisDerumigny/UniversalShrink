@@ -67,7 +67,8 @@
 GMV_ridge_shrinkage <- function(X, centeredCov = TRUE, b = NULL,
                                 verbose = 0, 
                                 eps = 1/(10^6), upp = pi/2 - eps,
-                                initialValue = 1.5){
+                                initialValue = 1.5)
+{
   call_ = match.call()
   # Get sizes of X
   n = nrow(X)
@@ -129,19 +130,17 @@ GMV_ridge_shrinkage <- function(X, centeredCov = TRUE, b = NULL,
   
   shrinked_portfolio = alpha_opt * ridge_portfolio + (1 - alpha_opt) * b
   
-  result = list(
-    estimated_portfolio_weights = shrinked_portfolio,
+  result = new_estimated_portfolio_weights(
+    estimate = shrinked_portfolio,
     n = n,
     p = p,
+    method = "ridge_shrinkage",
+    call = call_,
     alpha_optimal = alpha_opt,
     eta_optimal = eta_opt,
     target = b,
-    centeredCov = centeredCov,
-    method = "ridge_shrinkage",
-    call = call_
+    centeredCov = centeredCov
   )
-  
-  class(result) <- c("EstimatedPortfolioWeights")
   
   return (result)
 }

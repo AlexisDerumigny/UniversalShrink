@@ -141,17 +141,15 @@ Moore_Penrose <- function(X, centeredCov = TRUE)
       estimatorName = "Moore_Penrose") )
   }
   
-  result = list(
-    estimated_precision_matrix = iS_MP,
+  result = new_estimated_precision_matrix(
+    estimate = iS_MP,
     n = n,
-    n_adjusted = n_adjusted,
     p = p,
     centeredCov = centeredCov,
+    n_adjusted = n_adjusted,
     method = "Moore-Penrose",
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }

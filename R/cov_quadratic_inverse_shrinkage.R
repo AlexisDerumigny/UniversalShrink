@@ -126,16 +126,14 @@ cov_quadratic_inverse_shrinkage <- function(X, centeredCov = TRUE, verbose = 0)
   
   sigmahat <- u %*% diag(deltaQIS) %*% t(u) # Reconstruct covariance matrix
   
-  result = list(
-    estimated_covariance_matrix = sigmahat,
+  result = new_estimated_covariance_matrix(
+    estimate = sigmahat,
     n = n,
     p = p,
     centeredCov = centeredCov,
     method = "Quadratic Inverse Shrinkage",
     call = call_
   )
-  
-  class(result) <- c("EstimatedCovarianceMatrix")
   
   return(result)
 }

@@ -18,8 +18,8 @@
 #' @param X data matrix (rows are observations, columns are features).
 #' @inheritParams Moore_Penrose
 #' 
-#' @returns a vector of size \eqn{p} giving the optimal portfolio weights, with
-#' the elements summing up to \eqn{1}.
+#' @returns An object of class `EstimatedPortfolioWeights`. The estimated
+#' weights can be extracted as a numeric vector with `as.numeric()`.
 #' 
 #' @seealso \code{\link{LossOutOfSampleVariance}} for computing the loss
 #' of the portfolio.
@@ -52,16 +52,14 @@ GMV_Moore_Penrose <- function(X, centeredCov = TRUE)
   iS_MP = Moore_Penrose(X = X, centeredCov = centeredCov)
   GMV_MP = GMV_PlugIn(iS_MP)
   
-  result = list(
-    estimated_portfolio_weights = as.numeric(GMV_MP),
+  result = new_estimated_portfolio_weights(
+    estimate = as.numeric(GMV_MP),
     n = nrow(X),
     p = ncol(X),
     centeredCov = centeredCov,
     method = "Plug-in of Moore-Penrose",
     call = call_
   )
-  
-  class(result) <- c("EstimatedPortfolioWeights")
   
   return (result)
 }

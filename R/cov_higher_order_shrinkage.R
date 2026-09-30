@@ -9,12 +9,8 @@
 #' @template param-m
 #' @template param-mpfr
 #' 
-#' @returns an object of class `EstimatedCovarianceMatrix` containing 
-#' \itemize{
-#'    \item `estimated_covariance_matrix`: the estimator of the covariance
-#'    matrix (a `p` by `p` matrix).
-#' }
-#' 
+#' @returns An object of class `EstimatedCovarianceMatrix`.
+#' The estimated covariance matrix can be extracted with `as.matrix()`.
 #' 
 #' @examples
 #' p = 100
@@ -67,7 +63,9 @@
 #' @export
 cov_higher_order_shrinkage <- function(
     X, centeredCov = TRUE, m, verbose = 0,
-    mpfr = FALSE, precBits = 2^16, warn_large_m = TRUE){
+    mpfr = FALSE, precBits = 2^16, warn_large_m = TRUE)
+{
+  call_ = match.call()
   
   if (verbose > 0){
     cat("Starting `cov_higher_order_shrinkage`...\n")
@@ -122,15 +120,18 @@ cov_higher_order_shrinkage <- function(
       alpha[k + 1] * list_power_S[[k]]
   }
   
-  result = list(
-    estimated_covariance_matrix = estimated_covariance_matrix,
+  result = new_estimated_covariance_matrix(
+    estimate = estimated_covariance_matrix,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = "cov_higher_order_shrinkage",
+    call = call_,
     invM = estimatedM$invM,
     hm = estimatedM$hm,
     alpha = alpha,
     v = estimatedM$v
   )
-  
-  class(result) <- c("EstimatedCovarianceMatrix")
   
   return (result)
 }

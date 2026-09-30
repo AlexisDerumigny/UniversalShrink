@@ -77,22 +77,20 @@ MPR_shrinkage_identity_optimal <- function(
   
   MPR_shrinkage_identity = alpha * MPR_estimator + beta * Ip
   
-  result = list(
-    estimated_precision_matrix = MPR_shrinkage_identity,
+  result = new_estimated_precision_matrix(
+    estimate = MPR_shrinkage_identity,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
     t_optimal = t,
     alpha_optimal = alpha,
     beta_optimal = beta,
     t = t,
-    n = n,
-    p = p,
-    centeredCov = centeredCov,
     method = "Moore-Penrose-ridge (MPR) with shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
     result_optimization = result_optimization,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }
@@ -177,21 +175,18 @@ MPR_shrinkage_identity_semioptimal <- function (
   
   MPR_shrinkage_identity = alpha * MPR_estimator + beta * Ip
   
-  result = list(
-    estimated_precision_matrix = MPR_shrinkage_identity,
-    t = t,
-    alpha_optimal = alpha,
-    beta_optimal = beta,
-    t = t,
+  result = new_estimated_precision_matrix(
+    estimate = MPR_shrinkage_identity,
     n = n,
     p = p,
     centeredCov = centeredCov,
+    alpha_optimal = alpha,
+    beta_optimal = beta,
+    t = t,
     method = "Moore-Penrose-ridge (MPR) with shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }
@@ -338,21 +333,18 @@ MPR_shrinkage_identity <- function (X, centeredCov = TRUE, t, alpha, beta,
   
   MPR_shrinkage_identity = alpha * MPR_estimator + beta * Ip
   
-  result = list(
-    estimated_precision_matrix = MPR_shrinkage_identity,
-    t = t,
-    alpha = alpha,
-    beta = beta,
-    t = t,
+  result = new_estimated_precision_matrix(
+    estimate = MPR_shrinkage_identity,
     n = n,
     p = p,
     centeredCov = centeredCov,
+    alpha = alpha,
+    beta = beta,
+    t = t,
     method = "Moore-Penrose-ridge (MPR) with shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }

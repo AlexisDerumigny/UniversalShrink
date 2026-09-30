@@ -110,18 +110,16 @@ ridge <- function (X, centeredCov = TRUE, t, verbose = 0,
     iS_ridge = (Ip / t) - centralTerm / t
   }
   
-  result = list(
-    estimated_precision_matrix = iS_ridge,
-    t = t,
+  result = new_estimated_precision_matrix(
+    estimate = iS_ridge,
     n = n,
     p = p,
     centeredCov = centeredCov,
+    t = t,
     method = "Ridge",
     method_ridge_inversion = method_,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }

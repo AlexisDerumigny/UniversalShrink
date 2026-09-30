@@ -2,7 +2,7 @@
 % Please edit documentation in R/a_losses_portfolio.R
 \name{LossOutOfSampleVariance}
 \alias{LossOutOfSampleVariance}
-\alias{LossFrobenius2.EstimatedPortfolioWeights}
+\alias{LossFrobenius2.PortfolioWeights}
 \alias{LossFrobenius2.numeric}
 \title{Relative out-of-sample loss of a portfolio and Frobenius loss}
 \usage{
@@ -13,7 +13,7 @@ LossOutOfSampleVariance(
   normalized = TRUE
 )
 
-\method{LossFrobenius2}{EstimatedPortfolioWeights}(x, otherPortfolioWeights, normalized = TRUE, ...)
+\method{LossFrobenius2}{PortfolioWeights}(x, otherPortfolioWeights, normalized = TRUE, ...)
 
 \method{LossFrobenius2}{numeric}(x, otherPortfolioWeights, normalized = TRUE, ...)
 }

@@ -213,12 +213,17 @@ oracle_higher_order_shrinkage <- function(
     result = result + alpha[k + 1] * power_estimated_precision
   }
   
-  result = list(
-    estimated_precision_matrix = result,
+  result = new_estimated_precision_matrix(
+    estimate = result,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    
     M = resultM$M,
     hm = resultM$hm,
     # invM_solve = resultM$invM_solve,
     invM_recursive = resultM$invM_recursive,
+    
     alpha = alpha,
     optimal_t = if(nameEstimator %in% c("ridge", "MPR") && do_optimization) {
       optimal_t} ,
@@ -228,11 +233,9 @@ oracle_higher_order_shrinkage <- function(
       if(nameEstimator %in% c("ridge", "MPR") && do_optimization) {
         result_optimization} ,
     method = "Oracle higher-order shrinkage",
-    nameBaselinEstimator = nameEstimator,
+    nameBaselineEstimator = nameEstimator,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }

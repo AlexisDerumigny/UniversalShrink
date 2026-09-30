@@ -25,8 +25,8 @@ no printing at all, while higher values indicate increasingly more detailed
 (more verbose) output.}
 }
 \value{
-a vector of size \eqn{p} of (estimated) optimal portfolio weights,
-where \eqn{p} is the number of assets.
+An object of class \code{EstimatedPortfolioWeights}. The estimated
+weights can be extracted as a numeric vector with \code{as.numeric()}.
 }
 \description{
 This function computes shrinked optimal portfolio weights given by

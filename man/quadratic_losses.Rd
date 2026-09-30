@@ -6,16 +6,16 @@
 \alias{DistanceFrobenius2}
 \alias{LossFrobenius2}
 \alias{LossFrobenius2.matrix}
-\alias{LossFrobenius2.EstimatedPrecisionMatrix}
-\alias{LossFrobenius2.EstimatedCovarianceMatrix}
+\alias{LossFrobenius2.PrecisionMatrix}
+\alias{LossFrobenius2.CovarianceMatrix}
 \alias{LossInverseFrobenius2}
 \alias{LossInverseFrobenius2.matrix}
-\alias{LossInverseFrobenius2.EstimatedPrecisionMatrix}
+\alias{LossInverseFrobenius2.PrecisionMatrix}
 \alias{DistanceEuclideanEigenvalues2}
 \alias{LossEuclideanEigenvalues2}
 \alias{LossEuclideanEigenvalues2.matrix}
-\alias{LossEuclideanEigenvalues2.EstimatedPrecisionMatrix}
-\alias{LossEuclideanEigenvalues2.EstimatedCovarianceMatrix}
+\alias{LossEuclideanEigenvalues2.PrecisionMatrix}
+\alias{LossEuclideanEigenvalues2.CovarianceMatrix}
 \title{Quadratic losses of the estimator of a matrix}
 \usage{
 NormFrobenius2(M, normalized)
@@ -33,7 +33,7 @@ LossFrobenius2(x, ...)
   ...
 )
 
-\method{LossFrobenius2}{EstimatedPrecisionMatrix}(
+\method{LossFrobenius2}{PrecisionMatrix}(
   x,
   Sigma,
   type = "precision matrix",
@@ -42,13 +42,13 @@ LossFrobenius2(x, ...)
   ...
 )
 
-\method{LossFrobenius2}{EstimatedCovarianceMatrix}(x, Sigma, type = "covariance matrix", normalized = TRUE, ...)
+\method{LossFrobenius2}{CovarianceMatrix}(x, Sigma, type = "covariance matrix", normalized = TRUE, ...)
 
 LossInverseFrobenius2(x, Sigma, normalized = TRUE, ...)
 
 \method{LossInverseFrobenius2}{matrix}(x, Sigma, normalized = TRUE, ...)
 
-\method{LossInverseFrobenius2}{EstimatedPrecisionMatrix}(x, Sigma, normalized = TRUE, ...)
+\method{LossInverseFrobenius2}{PrecisionMatrix}(x, Sigma, normalized = TRUE, ...)
 
 DistanceEuclideanEigenvalues2(M1, M2, normalized, symmetric = FALSE)
 
@@ -63,7 +63,7 @@ LossEuclideanEigenvalues2(x, Sigma, type, normalized = TRUE, ...)
   ...
 )
 
-\method{LossEuclideanEigenvalues2}{EstimatedPrecisionMatrix}(
+\method{LossEuclideanEigenvalues2}{PrecisionMatrix}(
   x,
   Sigma,
   type = "precision matrix",
@@ -72,7 +72,7 @@ LossEuclideanEigenvalues2(x, Sigma, type, normalized = TRUE, ...)
   ...
 )
 
-\method{LossEuclideanEigenvalues2}{EstimatedCovarianceMatrix}(
+\method{LossEuclideanEigenvalues2}{CovarianceMatrix}(
   x,
   Sigma,
   type = "covariance matrix",

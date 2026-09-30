@@ -238,22 +238,21 @@ ridge_higher_order_shrinkage_non_optimized <- function(
       alpha[k + 1] * power_S_t_inverse
   }
   
-  result = list(
-    estimated_precision_matrix = estimated_precision_matrix,
+  result = new_estimated_precision_matrix(
+    estimate = estimated_precision_matrix,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
     M = estimatedM$M,
     hm = estimatedM$hm,
     alpha = alpha,
     v = estimatedM$v,
     t = t,
-    n = n,
-    p = p,
-    centeredCov = centeredCov,
+    m = m,
     method = "Ridge higher-order shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }
@@ -359,8 +358,11 @@ ridge_higher_order_shrinkage_optimal <- function(
       alpha[k + 1] * power_S_t_inverse
   }
   
-  result = list(
-    estimated_precision_matrix = estimated_precision_matrix,
+  result = new_estimated_precision_matrix(
+    estimate = estimated_precision_matrix,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
     M = estimatedM$M,
     hm = estimatedM$hm,
     alpha = alpha,
@@ -368,16 +370,11 @@ ridge_higher_order_shrinkage_optimal <- function(
     t = optimal_t,
     estimated_loss = if (optimizationControls$method == "optimize") {
       result_optimization$objective},
-    n = n,
-    p = p,
-    centeredCov = centeredCov,
     method = "Ridge higher-order shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
     result_optimization = result_optimization,
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }

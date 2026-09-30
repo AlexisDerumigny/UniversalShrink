@@ -600,22 +600,20 @@ Moore_Penrose_higher_order_shrinkage <- function(
     result = result + alpha[k + 1] * power_isMP
   }
   
-  result = list(
-    estimated_precision_matrix = result,
+  result = new_estimated_precision_matrix(
+    estimate = result,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
     M = estimatedM$M,
     invM = estimatedM$invM,
     hm = estimatedM$hm,
     alpha = alpha,
     v = estimatedM$v,
-    n = n,
-    p = p,
-    centeredCov = centeredCov,
     method_invM = method_invM,
     method = "Moore-Penrose higher-order shrinkage",
     call = call_
   )
-  
-  class(result) <- c("EstimatedPrecisionMatrix")
   
   return (result)
 }

@@ -72,7 +72,7 @@ LossOutOfSampleVariance <- function(portfolioWeights, Sigma, SigmaInv = NULL,
   if (is.null(SigmaInv)){
     SigmaInv = solve(Sigma)
   }
-  if (inherits(portfolioWeights, "EstimatedPortfolioWeights")){
+  if (inherits(portfolioWeights, "PortfolioWeights")){
     portfolioWeights = as.numeric(portfolioWeights)
   }
   p = length(portfolioWeights)
@@ -97,7 +97,7 @@ LossOutOfSampleVariance <- function(portfolioWeights, Sigma, SigmaInv = NULL,
 
 #' @export
 #' @rdname LossOutOfSampleVariance
-LossFrobenius2.EstimatedPortfolioWeights <- function(
+LossFrobenius2.PortfolioWeights <- function(
     x,
     otherPortfolioWeights,
     normalized = TRUE,

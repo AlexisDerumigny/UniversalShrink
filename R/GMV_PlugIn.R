@@ -27,9 +27,10 @@
 #' are considered).
 #' Or an object that can be converted to the matrix class by \code{as.matrix}.
 #' 
-#' @returns a vector of size \eqn{p} with the computed portfolio weights, with
-#' the minimum variance, i.e. the portfolio that has the lowest variance among
-#' all portfolios.
+#' @returns An object of class `PortfolioWeights`. The estimated
+#' weights can be extracted as a numeric vector with `as.numeric()`.
+#' These are the computed portfolio weights, with the minimum variance, 
+#' i.e. the portfolio that has the lowest variance among all portfolios.
 #' 
 #' @examples
 #' # This is used in the definition of GMV_Moore_Penrose
@@ -41,7 +42,8 @@
 #' 
 #' 
 #' @export
-GMV_PlugIn <- function(estimatedPrecisionMatrix){
+GMV_PlugIn <- function(estimatedPrecisionMatrix)
+{
   call_ = match.call()
   
   estimatedPrecisionMatrix = as.matrix(estimatedPrecisionMatrix)
@@ -53,14 +55,15 @@ GMV_PlugIn <- function(estimatedPrecisionMatrix){
     rowSums(estimatedPrecisionMatrix) / sum(estimatedPrecisionMatrix)
   
   result = list(
-    estimated_portfolio_weights = optimal_weights,
-    n = NA,
+    portfolio_weights = optimal_weights,
+    n = NA_integer_,
     p = nrow(estimatedPrecisionMatrix),
+    centeredCov = NA,
     method = "Plug-in of given precision matrix",
     call = call_
   )
   
-  class(result) <- c("EstimatedPortfolioWeights")
+  class(result) <- "PortfolioWeights"
   
   return(result)
 }

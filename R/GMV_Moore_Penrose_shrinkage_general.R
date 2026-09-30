@@ -87,8 +87,8 @@ GMV_Moore_Penrose_shrinkage_general <- function(X, centeredCov = TRUE, b = NULL,
   w_ShMP <- alp_ShMP * w_MP + (1 - alp_ShMP) * b
   
   
-  result = list(
-    estimated_portfolio_weights = w_ShMP,
+  result = new_estimated_portfolio_weights(
+    estimate = w_ShMP,
     n = n,
     p = p,
     alpha_optimal = alp_ShMP,
@@ -97,8 +97,6 @@ GMV_Moore_Penrose_shrinkage_general <- function(X, centeredCov = TRUE, b = NULL,
     method = "Moore-Penrose shrinkage",
     call = call_
   )
-  
-  class(result) <- c("EstimatedPortfolioWeights")
   
   return (result)
 }
