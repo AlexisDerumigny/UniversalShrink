@@ -528,7 +528,7 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
   
   if (nrow(d) != 2 * m){
     stop(UniversalShrink_error_condition_base(
-      mesage = "d should be of the right size.",
+      message = "d should be of the right size.",
       subclass = "InternalError") )
   }
   
