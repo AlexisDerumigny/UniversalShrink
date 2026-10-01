@@ -55,7 +55,7 @@ Frobenius loss for the estimation of the precision matrix, i.e.
 \code{NormFrobenius2(x - SigmaInv)}, potentially normalized.
 
 \item \code{type = "covariance matrix"} corresponds to the
-Frobenius loss for the estimation of the precision matrix, i.e.
+Frobenius loss for the estimation of the covariance matrix, i.e.
 \code{NormFrobenius2(x - Sigma )}, potentially normalized.
 }}
 }

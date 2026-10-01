@@ -100,7 +100,7 @@ Frobenius loss for the estimation of the precision matrix, i.e.
 \code{NormFrobenius2(x - SigmaInv)}, potentially normalized.
 
 \item \code{type = "covariance matrix"} corresponds to the
-Frobenius loss for the estimation of the precision matrix, i.e.
+Frobenius loss for the estimation of the covariance matrix, i.e.
 \code{NormFrobenius2(x - Sigma )}, potentially normalized.
 }}
 
@@ -128,8 +128,8 @@ while (squared) Frobenius loss analogously is defined by
 }
 where \eqn{M} here denotes a suitable estimator and the function \eqn{g}
 is \eqn{g(x)=x} when \code{type="covariance matrix"} is
-chosen, otherwise \eqn{g(x)=1/x} for \code{type="precision matrix"}.
-In the case \code{normalized=TRUE} (default), the above losses are
+chosen, otherwise \eqn{g(x)=1/x} for \code{type = "precision matrix"}.
+In the case \code{normalized=TRUE}, the above losses are
 normalized by the matrix dimension \eqn{p}.
 A related function for the case of precision matrices is
 \code{LossInverseFrobenius2} which returns
