@@ -17,10 +17,10 @@
 #' numerical inversion method to be used. Possible choices are \itemize{
 #'   \item \code{"solve"}: use the \code{solve} function;
 #'   
-#'   \item \code{"Woodbury"}: TODO
+#'   \item \code{"woodbury"}: TODO
 #'   
 #'   \item \code{"auto"}: this is the default. It chooses \code{"solve"} when
-#'   the concentration ratio is smaller than 1 and else \code{"Woodbury"}.
+#'   the concentration ratio is smaller than 1 and else \code{"woodbury"}.
 #' }
 #' 
 #' @inheritParams cov_with_centering
@@ -58,7 +58,7 @@
 #' 
 #' @export
 ridge <- function (X, centeredCov = TRUE, t, verbose = 0,
-                   method_inversion = "auto")
+                   method_inversion = c("auto", "solve", "woodbury"))
 {
   call_ = match.call()
   # Get sizes of X
@@ -68,13 +68,14 @@ ridge <- function (X, centeredCov = TRUE, t, verbose = 0,
   # Identity matrix of size p
   Ip = diag(nrow = p)
   
+  method_inversion <- match.arg(method_inversion)
   if (method_inversion == "auto"){
     c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
                          verbose = verbose - 1)
     if (c_n < 1){
       method_ = "solve"
     } else {
-      method_ = "Woodbury"
+      method_ = "woodbury"
     }
   } else {
     method_ = method_inversion
@@ -85,7 +86,7 @@ ridge <- function (X, centeredCov = TRUE, t, verbose = 0,
     S <- cov_with_centering(X = X, centeredCov = centeredCov)
     
     iS_ridge <- solve(S + t * Ip)
-  } else if (method_ == "Woodbury"){
+  } else if (method_ == "woodbury"){
     if (centeredCov){
       n_adjusted = n - 1
       

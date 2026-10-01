@@ -4,7 +4,13 @@
 \alias{ridge}
 \title{Plain Ridge (Tikhonov) estimator without shrinkage}
 \usage{
-ridge(X, centeredCov = TRUE, t, verbose = 0, method_inversion = "auto")
+ridge(
+  X,
+  centeredCov = TRUE,
+  t,
+  verbose = 0,
+  method_inversion = c("auto", "solve", "woodbury")
+)
 }
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
@@ -26,10 +32,10 @@ no printing at all, while higher values indicate increasingly more detailed
 numerical inversion method to be used. Possible choices are \itemize{
 \item \code{"solve"}: use the \code{solve} function;
 
-\item \code{"Woodbury"}: TODO
+\item \code{"woodbury"}: TODO
 
 \item \code{"auto"}: this is the default. It chooses \code{"solve"} when
-the concentration ratio is smaller than 1 and else \code{"Woodbury"}.
+the concentration ratio is smaller than 1 and else \code{"woodbury"}.
 }}
 }
 \value{
