@@ -106,6 +106,9 @@ LossFrobenius2.PortfolioWeights <- function(
   weights1 = as.numeric(x)
   weights2 = as.numeric(otherPortfolioWeights)
   
+  check_compatible_numeric_vectors(
+    weights1, weights2, "x", "otherPortfolioWeights")
+  
   result = NormFrobenius2(weights2 - weights1, normalized = normalized)
   return (result)
 }
@@ -122,6 +125,57 @@ LossFrobenius2.numeric <- function(
   weights1 = x
   weights2 = as.numeric(otherPortfolioWeights)
   
+  check_compatible_numeric_vectors(weights1, weights2, 
+                                   "x", "otherPortfolioWeights")
+  
   result = NormFrobenius2(weights2 - weights1, normalized = normalized)
   return (result)
 }
+
+
+check_compatible_numeric_vectors <- function(
+    x, y, name_x, name_y, call = sys.call(-1))
+{
+  if (!is.numeric(x) || !is.numeric(y) || is.matrix(x) || is.matrix(y) ||
+      is.array(x) || is.array(y))
+  {
+    stop(UniversalShrink_error_condition_base(
+      message = paste0(
+        "`", name_x, "` and `", name_y,
+        "` must be numeric vectors (or be coerecible to by `as.numeric()`)."),
+      subclass = "InvalidArgumentError",
+      call = call
+    ) )
+  }
+  
+  if (length(x) != length(y))
+  {
+    stop(UniversalShrink_error_condition_base(
+      message = paste0(
+        "`", name_x, "` and `", name_y,"` must have the same length. ",
+        "Here, length(", name_x ,") = ", length(x), 
+        " and length(", name_y,") = ", length(y), "."
+      ),
+      subclass = c(
+        "IncompatibleVectorLengthsError",
+        "InvalidArgumentError"
+      ),
+      call = call,
+      length_x = length(x),
+      length_y = length(y)
+    ))
+  }
+  
+  if (any(!is.finite(x)) || any(!is.finite(y)))
+  {
+    stop(UniversalShrink_error_condition_base(
+      message = paste0("`", name_x, "` and `", name_y, 
+                       " must contain only finite values."),
+      subclass = "InvalidArgumentError",
+      call = call
+    ))
+  }
+  
+  invisible(NULL)
+}
+

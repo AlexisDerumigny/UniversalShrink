@@ -13,3 +13,71 @@ test_that("LossFrobenius2 also works for numeric vectors", {
   
   expect_all_equal(c(l2, l3, l4), l1)
 })
+
+
+test_that("LossFrobenius2 computes the expected loss for numeric vectors", {
+  x <- c(0.2, 0.3, 0.5)
+  y <- c(0.1, 0.4, 0.5)
+  
+  result <- LossFrobenius2(
+    x,
+    otherPortfolioWeights = y,
+    normalized = FALSE
+  )
+  
+  expected <- sum((y - x)^2)
+  
+  expect_equal(result, expected)
+})
+
+
+test_that("LossFrobenius2 computes the normalized loss", {
+  x <- c(0.2, 0.3, 0.5)
+  y <- c(0.1, 0.4, 0.5)
+  
+  result <- LossFrobenius2(
+    x,
+    otherPortfolioWeights = y,
+    normalized = TRUE
+  )
+  
+  expected <- mean((y - x)^2)
+  
+  expect_equal(result, expected)
+})
+
+
+test_that("LossFrobenius2 rejects vectors with different lengths", {
+  x <- c(0.2, 0.3, 0.5)
+  y <- c(0.4, 0.6)
+  
+  expect_error(
+    LossFrobenius2(x, otherPortfolioWeights = y),
+    class = "IncompatibleVectorLengthsError"
+  )
+})
+
+
+test_that("LossFrobenius2 rejects non-numeric portfolio weights", {
+  x <- c(0.2, 0.3, 0.5)
+  y <- c("0.1", "aaa", "0.5")
+  
+  suppressWarnings({
+    expect_error(
+      LossFrobenius2(x, otherPortfolioWeights = y),
+      class = "InvalidArgumentError"
+    )
+  })
+})
+
+
+test_that("LossFrobenius2 rejects non-finite portfolio weights", {
+  x <- c(0.2, 0.3, 0.5)
+  y <- c(0.1, NA_real_, 0.9)
+  
+  expect_error(
+    LossFrobenius2(x, otherPortfolioWeights = y),
+    class = "InvalidArgumentError"
+  )
+})
+
