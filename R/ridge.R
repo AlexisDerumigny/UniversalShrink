@@ -15,12 +15,15 @@
 #' 
 #' @param method_inversion a character string of length 1 describing the
 #' numerical inversion method to be used. Possible choices are \itemize{
-#'   \item \code{"solve"}: use the \code{solve} function;
-#'   
-#'   \item \code{"woodbury"}: TODO
-#'   
-#'   \item \code{"auto"}: this is the default. It chooses \code{"solve"} when
-#'   the concentration ratio is smaller than 1 and else \code{"woodbury"}.
+#'   \item \code{"solve"}: compute the inverse directly using
+#'   \code{\link[base]{solve}}.
+#'
+#'   \item \code{"woodbury"}: compute the inverse using the Woodbury matrix
+#'   identity. This can be more efficient when the sample size is smaller than
+#'   the matrix dimension.
+#'
+#'   \item \code{"auto"}: choose \code{"solve"} when the adjusted concentration
+#'   ratio is smaller than one, and \code{"woodbury"} otherwise.
 #' }
 #' 
 #' @inheritParams cov_with_centering
