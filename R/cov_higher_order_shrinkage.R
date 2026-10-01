@@ -128,8 +128,7 @@ cov_higher_order_shrinkage <- function(
     call = call_,
     invM = estimatedM$invM,
     hm = estimatedM$hm,
-    alpha = alpha,
-    v = estimatedM$v
+    alpha = alpha
   )
   
   return (result)
