@@ -9,7 +9,7 @@ test_that("Moore_Penrose errors at the non-centered boundary p = n", {
   expect_identical(condition$p, p)
   expect_identical(condition$n, n)
   expect_identical(condition$centeredCov, FALSE)
-  expect_identical(condition$estimator, "Moore_Penrose")
+  expect_identical(condition$estimatorName, "Moore_Penrose")
   
   expect_match(conditionMessage(condition), "p = n", fixed = TRUE)
 })
@@ -27,7 +27,7 @@ test_that("Moore_Penrose errors at the centered boundary p = n - 1", {
   expect_identical(condition$p, p)
   expect_identical(condition$n, n)
   expect_identical(condition$centeredCov, TRUE)
-  expect_identical(condition$estimator, "Moore_Penrose")
+  expect_identical(condition$estimatorName, "Moore_Penrose")
   
   expect_match(conditionMessage(condition), "p = n - 1", fixed = TRUE)
 })
