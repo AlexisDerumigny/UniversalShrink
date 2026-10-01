@@ -30,7 +30,7 @@ the estimator of the precision matrix
 (a \code{p} by \code{p} matrix, i.e. the inverse of the covariance matrix).
 }
 \description{
-Following Bodnar and Parolya (2006), the shrinkage estimator
+Following Bodnar and Parolya (2026), the shrinkage estimator
 for the precision matrix using the Moore-Penrose inverse of the sample
 covariance matrix \eqn{\mathbf{S}_n} is computed as
 \deqn{

@@ -1,4 +1,4 @@
-test_that("LossFrobenius2 also works for nmeric vectors", {
+test_that("LossFrobenius2 also works for numeric vectors", {
   Sigma = diag(1:5)
   
   X <- MASS::mvrnorm(n = 3, mu = rep(0,5), Sigma = Sigma)

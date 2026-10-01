@@ -3,7 +3,7 @@
 
 #' Moore-Penrose-Ridge shrinkage with general target
 #' 
-#' Following Bodnar and Parolya (2006), the shrinkage estimator
+#' Following Bodnar and Parolya (2026), the shrinkage estimator
 #'  for the precision matrix using the Moore-Penrose-Ridge inverse of the sample 
 #'  covariance matrix \eqn{\mathbf{S}_n} is computed as
 #' \deqn{

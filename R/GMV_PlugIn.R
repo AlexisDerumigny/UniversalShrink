@@ -2,7 +2,7 @@
 
 #' Compute the optimal portfolio weights given an (estimated) precision matrix
 #' 
-#' This functions return the optimal portfolio weights defined by
+#' This function returns the optimal portfolio weights defined by
 #' \deqn{
 #' \mathbf{w} = \dfrac{\boldsymbol{\Sigma}^{-1} \mathbf{1}}{\mathbf{1}^T 
 #' \boldsymbol{\Sigma}^{-1} \mathbf{1}}
