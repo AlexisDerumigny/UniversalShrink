@@ -21,8 +21,8 @@
 #' the vector of asset returns.
 #' 
 #' 
-#' @param estimatedPrecisionMatrix a matrix of size \eqn{p \times p}, which
-#' is estimating the precision matrix \eqn{\Sigma^{-1}} 
+#' @param precisionMatrix a matrix of size \eqn{p \times p}, which
+#' is (estimating) the precision matrix \eqn{\Sigma^{-1}} 
 #' ( = the inverse of the covariance matrix of the vector of asset returns that
 #' are considered).
 #' Or an object that can be converted to the matrix class by \code{as.matrix}.
@@ -42,22 +42,32 @@
 #' 
 #' 
 #' @export
-GMV_PlugIn <- function(estimatedPrecisionMatrix)
+GMV_PlugIn <- function(precisionMatrix)
 {
   call_ = match.call()
   
-  estimatedPrecisionMatrix = as.matrix(estimatedPrecisionMatrix)
+  precisionMatrix = as.matrix(precisionMatrix)
   
-  # result = (estimatedPrecisionMatrix %*% ones) / 
-  #                 (ones %*% estimatedPrecisionMatrix %*% ones)
+  # result = (precisionMatrix %*% ones) / (ones %*% precisionMatrix %*% ones)
   # Faster and equivalent expression:
-  optimal_weights = 
-    rowSums(estimatedPrecisionMatrix) / sum(estimatedPrecisionMatrix)
+  numerator = rowSums(precisionMatrix)
+  denominator = sum(precisionMatrix)
+  
+  if (!is.finite(denominator) || denominator < .Machine$double.eps) {
+    stop(UniversalShrink_error_condition_base(
+      message = paste0(
+        "The plug-in GMV-portfolio is undefined because ",
+        "`sum(precisionMatrix)` is numerically smaller or equal to zero."),
+      subclass = "NumericalError"
+    ) )
+  }
+  
+  optimal_weights = numerator / denominator
   
   result = list(
     portfolio_weights = optimal_weights,
     n = NA_integer_,
-    p = nrow(estimatedPrecisionMatrix),
+    p = nrow(precisionMatrix),
     centeredCov = NA,
     method = "Plug-in of given precision matrix",
     call = call_

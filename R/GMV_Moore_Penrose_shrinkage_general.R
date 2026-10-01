@@ -19,7 +19,7 @@ GMV_Moore_Penrose_shrinkage_general <- function(X, centeredCov = TRUE, b = NULL,
   # Moore-Penrose inverse of the sample covariance matrix
   iS_MP <- as.matrix(Moore_Penrose(X = X, centeredCov = centeredCov))
   
-  MP_portfolio = GMV_PlugIn(estimatedPrecisionMatrix = iS_MP)
+  MP_portfolio = GMV_PlugIn(precisionMatrix = iS_MP)
   w_MP = as.numeric(MP_portfolio)
   
   trS1 <- sum(diag(iS_MP)) / p
