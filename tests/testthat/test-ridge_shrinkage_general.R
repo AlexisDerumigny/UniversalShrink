@@ -198,3 +198,11 @@ test_that("ridge_shrinkage fully optimizes with a general target", {
   expect_equal(as.matrix(result), expected, tolerance = 1e-8)
   expect_true(result$t_optimal %in% optimization_controls$grid)
 })
+
+
+test_that("general ridge shrinkage works with verbose output", {
+  expect_output(result <- ridge_shrinkage(X, Pi0 = Pi0, t = 1, verbose = 1))
+  
+  expect_s3_class(result, "EstimatedPrecisionMatrix")
+})
+
