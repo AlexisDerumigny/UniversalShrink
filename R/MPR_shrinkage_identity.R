@@ -11,7 +11,7 @@ MPR_shrinkage_identity_optimal <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  cn = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
@@ -22,7 +22,7 @@ MPR_shrinkage_identity_optimal <- function(
   
   hL2MPr <- function(t){
     loss = loss_L2_MPR_optimal(
-      t = t, X = X, S = S, cn = cn, p = p, Ip = Ip, verbose = verbose - 2,
+      t = t, X = X, S = S, c_n = c_n, p = p, Ip = Ip, verbose = verbose - 2,
       centeredCov = centeredCov)
     return(loss)
   }
@@ -37,7 +37,7 @@ MPR_shrinkage_identity_optimal <- function(
   if (optimizationControls$method == "smoothed") {
     if (is.null(optimizationControls$grid)) {
       optimizationControls$grid <- grid_optimization_default(
-        S = S, c_n = cn, p = p, n = n, 
+        S = S, c_n = c_n, p = p, n = n, 
         max_length = optimizationControls$max_length, verbose = verbose)
     }
     
@@ -65,7 +65,7 @@ MPR_shrinkage_identity_optimal <- function(
   iS_ridge <- as.matrix(ridge_)
   
   best_alphabeta = best_alphabeta_MPR_shrinkage_identity(
-    p = p, t = t, cn = cn, S = S, iS_ridge = iS_ridge, verbose = verbose)
+    p = p, t = t, c_n = c_n, S = S, iS_ridge = iS_ridge, verbose = verbose)
   
   alpha <- best_alphabeta$alpha
   beta <- best_alphabeta$beta
@@ -97,9 +97,9 @@ MPR_shrinkage_identity_optimal <- function(
 
 
 
-loss_L2_MPR_optimal <- function(t, X, S, cn, p, Ip, centeredCov, verbose){
+loss_L2_MPR_optimal <- function(t, X, S, c_n, p, Ip, centeredCov, verbose){
   
-  r = (cn - 1) / cn
+  r = (c_n - 1) / c_n
   
   ridge_ = ridge(X = X, centeredCov = centeredCov, t = t, verbose = verbose,
                  method_inversion = "auto")
@@ -112,23 +112,23 @@ loss_L2_MPR_optimal <- function(t, X, S, cn, p, Ip, centeredCov, verbose){
   trS4_t<-sum(diag(iS_Rt%*%iS_Rt%*%iS_Rt%*%iS_Rt))/p
   
   q1 <- tr(S) / p
-  q2 <- tr(S %*% S) / p - cn * q1^2
+  q2 <- tr(S %*% S) / p - c_n * q1^2
   
-  hvt<-cn*(trS1_t-r/t)
-  hvprt<--cn*(trS2_t-r/t/t)
-  hvprprt<-2*cn*(trS3_t-r/t/t/t)
-  hvprprprt<- -6*cn*(trS4_t-r/t/t/t/t)
+  hvt<-c_n*(trS1_t-r/t)
+  hvprt<--c_n*(trS2_t-r/t/t)
+  hvprprt<-2*c_n*(trS3_t-r/t/t/t)
+  hvprprprt<- -6*c_n*(trS4_t-r/t/t/t/t)
   
   ihvt<-1/hvt
   ihvt_2<-ihvt^2
   hvprt_2<-hvprt^2
   
-  d0Sig_t<-ihvt/cn-t/cn
+  d0Sig_t<-ihvt/c_n-t/c_n
   d0Sig2_t<-ihvt*(q1-d0Sig_t)
-  d1Sig_t<- (ihvt_2+1/hvprt)/cn
+  d1Sig_t<- (ihvt_2+1/hvprt)/c_n
   d1Sig2_t<-ihvt*(d0Sig2_t-d1Sig_t)
-  d2Sig2_t<-ihvt*(d1Sig2_t-(ihvt^3+hvprprt/(hvprt^3)/2)/cn)
-  d3Sig2_t<-ihvt*(d2Sig2_t-(ihvt^4+hvprprt^2/(hvprt^5)/2-hvprprprt/(hvprt^4)/6)/cn)
+  d2Sig2_t<-ihvt*(d1Sig2_t-(ihvt^3+hvprprt/(hvprt^3)/2)/c_n)
+  d3Sig2_t<-ihvt*(d2Sig2_t-(ihvt^4+hvprprt^2/(hvprt^5)/2-hvprprprt/(hvprt^4)/6)/c_n)
   
   hgs2Sig2_t<- -(hvprt_2*d2Sig2_t-hvprprt*d1Sig2_t/2) + 
     t*(hvprprprt*d1Sig2_t/6-hvprt*hvprprt*d2Sig2_t+d3Sig2_t*hvprt^3)
@@ -149,7 +149,7 @@ MPR_shrinkage_identity_semioptimal <- function (
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  cn = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = X, centeredCov = centeredCov)
@@ -163,7 +163,7 @@ MPR_shrinkage_identity_semioptimal <- function (
   iS_ridge <- as.matrix(ridge_)
   
   best_alphabeta = best_alphabeta_MPR_shrinkage_identity(
-    p = p, t = t, cn = cn, S = S, iS_ridge = iS_ridge, verbose = verbose)
+    p = p, t = t, c_n = c_n, S = S, iS_ridge = iS_ridge, verbose = verbose)
   
   alpha <- best_alphabeta$alpha
   beta <- best_alphabeta$beta
@@ -192,32 +192,32 @@ MPR_shrinkage_identity_semioptimal <- function (
 }
 
 
-best_alphabeta_MPR_shrinkage_identity <- function(p, t, cn, S, iS_ridge, verbose)
+best_alphabeta_MPR_shrinkage_identity <- function(p, t, c_n, S, iS_ridge, verbose)
 {
   trS1_t<-sum(diag(iS_ridge))/p
   trS2_t<-sum(diag(iS_ridge%*%iS_ridge))/p
   trS3_t<-sum(diag(iS_ridge%*%iS_ridge%*%iS_ridge))/p
   trS4_t<-sum(diag(iS_ridge%*%iS_ridge%*%iS_ridge%*%iS_ridge))/p
   
-  r = (cn - 1) / cn
+  r = (c_n - 1) / c_n
   
-  hvt<-cn*(trS1_t-r/t)
-  hvprt<--cn*(trS2_t-r/t/t)
-  hvprprt<-2*cn*(trS3_t-r/t/t/t)
-  hvprprprt<- -6*cn*(trS4_t-r/t/t/t/t)
+  hvt<-c_n*(trS1_t-r/t)
+  hvprt<--c_n*(trS2_t-r/t/t)
+  hvprprt<-2*c_n*(trS3_t-r/t/t/t)
+  hvprprprt<- -6*c_n*(trS4_t-r/t/t/t/t)
   
   q1 <- tr(S) / p
-  q2 <- tr(S %*% S) / p - cn * q1^2
+  q2 <- tr(S %*% S) / p - c_n * q1^2
   
   ihvt<-1/hvt
   ihvt_2<-ihvt^2
   hvprt_2<-hvprt^2
-  d0Sig_t<-ihvt/cn-t/cn
+  d0Sig_t<-ihvt/c_n-t/c_n
   d0Sig2_t<-ihvt*(q1-d0Sig_t)
-  d1Sig_t<- (ihvt_2+1/hvprt)/cn
+  d1Sig_t<- (ihvt_2+1/hvprt)/c_n
   d1Sig2_t<-ihvt*(d0Sig2_t-d1Sig_t)
-  d2Sig2_t<-ihvt*(d1Sig2_t-(ihvt^3+hvprprt/(hvprt^3)/2)/cn)
-  d3Sig2_t<-ihvt*(d2Sig2_t-(ihvt^4+hvprprt^2/(hvprt^5)/2-hvprprprt/(hvprt^4)/6)/cn)
+  d2Sig2_t<-ihvt*(d1Sig2_t-(ihvt^3+hvprprt/(hvprt^3)/2)/c_n)
+  d3Sig2_t<-ihvt*(d2Sig2_t-(ihvt^4+hvprprt^2/(hvprt^5)/2-hvprprprt/(hvprt^4)/6)/c_n)
   
   first_term_s2_Sigma2 = -(hvprt_2*d2Sig2_t-hvprprt*d1Sig2_t/2)
   

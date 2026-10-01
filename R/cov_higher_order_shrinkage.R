@@ -76,7 +76,7 @@ cov_higher_order_shrinkage <- function(
   n = nrow(X)
   p = ncol(X)
   check_large_m(warn = warn_large_m, p = p, m = m)
-  cn = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)
@@ -101,7 +101,7 @@ cov_higher_order_shrinkage <- function(
   }
   
   estimatedM = compute_M_covariance(
-    m = m, c_n = cn, p = p, S = S, verbose = verbose,
+    m = m, c_n = c_n, p = p, S = S, verbose = verbose,
     list_power_S = list_power_S, mpfr = mpfr, precBits = precBits)
   
   # TODO: compute all estimators for smaller m here using submatrices of this matrix

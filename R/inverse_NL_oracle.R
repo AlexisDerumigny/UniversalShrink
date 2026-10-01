@@ -15,7 +15,7 @@ inverse_NL_oracle <- function(X, Sigma, centeredCov = TRUE, verbose = 0)
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  cn = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov, verbose = verbose)
   
   # Identity matrix of size p
   Ip = diag(nrow = p)

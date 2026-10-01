@@ -19,7 +19,7 @@ test_that("basic identity", {
   
   t0 = 10^8
   
-  cn = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = X, centeredCov = TRUE)
@@ -29,16 +29,16 @@ test_that("basic identity", {
   
   t0 = Rmpfr::mpfr(t0, precBits = precBits)
   S = Rmpfr::mpfr(S, precBits = precBits)
-  cn = Rmpfr::mpfr(cn, precBits = precBits)
+  c_n = Rmpfr::mpfr(c_n, precBits = precBits)
   p = Rmpfr::mpfr(p, precBits = precBits)
   iS_ridge = Rmpfr::mpfr(iS_ridge, precBits = precBits)
   
   hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, iS_ridge = iS_ridge,
-                                       p = p, Ip = Ip, cn = cn)
+                                       p = p, Ip = Ip, c_n = c_n)
   
   do_t0_1p_Ip = estimator_ridge_d0_thetaknown(iS_ridge = iS_ridge, t = t0,
                                               Theta = Ip / p)
-  do_t0_1p_Ip_other = (t0 / cn) * (hat_v_t0 + (cn - 1) / t0)
+  do_t0_1p_Ip_other = (t0 / c_n) * (hat_v_t0 + (c_n - 1) / t0)
   
   diff = do_t0_1p_Ip - do_t0_1p_Ip_other
   expect_lt(as.numeric(diff), 1e-16)
@@ -65,7 +65,7 @@ test_that(paste0("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result ",
   
   t0 = 10^6
   
-  cn = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = X, centeredCov = TRUE)
@@ -75,20 +75,20 @@ test_that(paste0("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result ",
   
   t0 = Rmpfr::mpfr(t0, precBits = precBits)
   S = Rmpfr::mpfr(S, precBits = precBits)
-  cn = Rmpfr::mpfr(cn, precBits = precBits)
+  c_n = Rmpfr::mpfr(c_n, precBits = precBits)
   p = Rmpfr::mpfr(p, precBits = precBits)
   iS_ridge = Rmpfr::mpfr(iS_ridge, precBits = precBits)
   
   hat_v_t0 = estimator_vhat_derivative(t = t0, m = 0, iS_ridge = iS_ridge,
-                                       p = p, Ip = Ip, cn = cn)
+                                       p = p, Ip = Ip, c_n = c_n)
   hat_vprime_t0 = estimator_vhat_derivative(t = t0, m = 1, iS_ridge = iS_ridge,
-                                            p = p, Ip = Ip, cn = cn)
+                                            p = p, Ip = Ip, c_n = c_n)
   
   d0_1p_Sigma2 = estimator_d0_1p_Sigma2(p = p, t0 = t0, hat_v_t0 = hat_v_t0,
-                                        cn = cn, Sn = S, verbose = 0)
+                                        c_n = c_n, Sn = S, verbose = 0)
   
   d0_1p_Sigma2Pi0 = estimator_d0_1p_Sigma2Pi0(p = p, t0 = t0, hat_v_t0 = hat_v_t0,
-                                              cn = cn, Pi0 = Ip, Ip = Ip, Sn = S,
+                                              c_n = c_n, Pi0 = Ip, Ip = Ip, Sn = S,
                                               iS_ridge = iS_ridge, verbose = 0)
   
   diff = d0_1p_Sigma2 - d0_1p_Sigma2Pi0
@@ -101,15 +101,15 @@ test_that(paste0("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result ",
   
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
-                                        cn = cn, Ip = Ip, Sn = S,
+                                        c_n = c_n, Ip = Ip, Sn = S,
                                         iS_ridge = iS_ridge, verbose = 0)
   
   d1_1p_Sigma2_rec = estimator_d1_1p_Sigma2_rec(
     t0 = t0, hat_v_t0 = hat_v_t0, hat_vprime_t0 = hat_vprime_t0,
-    p = p, cn = cn, Ip = Ip, Sn = S, verbose = 0)
+    p = p, c_n = c_n, Ip = Ip, Sn = S, verbose = 0)
   
   d1_1p_Sigma2Pi0 = estimator_d1_1p_Sigma2Pi0(t0 = t0, hat_v_t0 = hat_v_t0,
-                                              cn = cn, p = p, Ip = Ip, Sn = S,
+                                              c_n = c_n, p = p, Ip = Ip, Sn = S,
                                               iS_ridge = iS_ridge, Pi0 = Ip,
                                               verbose = 0)
   
@@ -145,7 +145,7 @@ test_that(paste0("`best_alphabeta_MPR_shrinkage` is coherent ",
   
   t0 = 100
   
-  cn = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
+  c_n = concentr_ratio(n = n, p = p, centeredCov = TRUE, verbose = 0)
   
   # Sample covariance matrix
   S <- cov_with_centering(X = X, centeredCov = TRUE)
@@ -153,11 +153,11 @@ test_that(paste0("`best_alphabeta_MPR_shrinkage` is coherent ",
   iS_ridge <- solve(S + t0 * Ip)
   
   result_general = best_alphabeta_MPR_shrinkage_general(
-    p = p, t0 = t0, cn = cn, Pi0 = Ip, Ip = Ip, Sn = S,
+    p = p, t0 = t0, c_n = c_n, Pi0 = Ip, Ip = Ip, Sn = S,
     iS_ridge = iS_ridge, verbose = 0)
   
   result_identity = best_alphabeta_MPR_shrinkage_identity(
-    p = p, t = t0, cn = cn, S = S, iS_ridge = iS_ridge, verbose = 0)
+    p = p, t = t0, c_n = c_n, S = S, iS_ridge = iS_ridge, verbose = 0)
   
   expect_equal(result_identity, result_general, tolerance = 1e-4)
   
