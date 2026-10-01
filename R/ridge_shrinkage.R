@@ -106,10 +106,9 @@
 # \eqn{\alpha} and \eqn{\beta}.
 # Finally, the function `ridge_shrinkage_identity_optimal()` compute the (asymptotically)
 # optimal choice of \eqn{t, \alpha, \beta}.
+#'
 #' 
-#' 
-#' @param X data matrix (rows are features, columns are observations).
-#' TODO: transpose everything.
+#' @param X data matrix (rows are observations, columns are features).
 #' 
 #' @param t,alpha,beta \code{t}, \code{alpha} and \code{beta} are parameters
 #' of the estimation.
@@ -169,8 +168,8 @@
 #' 
 #' @export
 ridge_shrinkage <- function(X, centeredCov = TRUE, Pi0 = NULL,
-                         t = NULL, alpha = NULL, beta = NULL,
-                         verbose = 0, optimizationControls = NULL)
+                            t = NULL, alpha = NULL, beta = NULL,
+                            verbose = 0, optimizationControls = NULL)
 {
   call_ = match.call()
   optimizationType = selectOptimizationType(t = t, alpha = alpha, beta = beta)

@@ -16,8 +16,7 @@ ridge_shrinkage(
 )
 }
 \arguments{
-\item{X}{data matrix (rows are features, columns are observations).
-TODO: transpose everything.}
+\item{X}{data matrix (rows are observations, columns are features).}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, then the sample covariance
 matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector
