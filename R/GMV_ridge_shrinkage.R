@@ -201,7 +201,7 @@ loss_GMV_ridge_shrinkage  <- function(S, iS_ridge, eta, ones, b, p, c_n, verbose
 # Theorem 2 page 8 of (Bodnar, T., Parolya, N., & Thorsén, E., 2024)
 BNP2024_estimator_vhat <- function(tr_iS_ridge, p, eta, c_n){
   term_inside = 1 - eta * tr_iS_ridge / p
-  result = 1 - c_n * tr_iS_ridge
+  result = 1 - c_n * term_inside
   
   return (result)
 }
