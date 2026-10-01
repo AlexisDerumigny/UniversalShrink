@@ -9,8 +9,7 @@
 #' @template param-m
 #' @template param-mpfr
 #' 
-#' @returns An object of class `EstimatedCovarianceMatrix`.
-#' The estimated covariance matrix can be extracted with `as.matrix()`.
+#' @template returns-EstimatedCovarianceMatrix
 #' 
 #' @examples
 #' p = 100

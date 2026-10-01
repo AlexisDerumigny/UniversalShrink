@@ -56,8 +56,7 @@
 #' 
 #' @inheritParams cov_with_centering
 #' 
-#' @returns an object of class \code{"EstimatedCovarianceMatrix"}, containing
-#' the estimator of the covariance matrix (of size `p` by `p`).
+#' @template returns-EstimatedCovarianceMatrix
 #' 
 #' @references 
 #' Ledoit, O., & Wolf, M. (2022).

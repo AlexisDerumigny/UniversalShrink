@@ -22,6 +22,12 @@ details about the progress of the computations. A value of \code{0} indicates
 no printing at all, while higher values indicate increasingly more detailed
 (more verbose) output.}
 }
+\value{
+An object of class
+\code{c("EstimatedCovarianceMatrix", "CovarianceMatrix")}.
+The underlying estimated covariance matrix (of size \code{p * p}) can be
+extracted using the method \code{\link[=as.matrix.Estimator]{as.matrix}}.
+}
 \description{
 NL oracle estimator of the covariance matrix
 }

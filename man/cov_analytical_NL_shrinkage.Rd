@@ -16,8 +16,10 @@ covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
 zero.}
 }
 \value{
-an object of class \code{"EstimatedCovarianceMatrix"}, containing
-the estimator of the covariance matrix (of size \code{p} by \code{p}).
+An object of class
+\code{c("EstimatedCovarianceMatrix", "CovarianceMatrix")}.
+The underlying estimated covariance matrix (of size \code{p * p}) can be
+extracted using the method \code{\link[=as.matrix.Estimator]{as.matrix}}.
 }
 \description{
 This function estimates a covariance matrix from a given data set using the

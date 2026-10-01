@@ -42,8 +42,10 @@ It is recommended to use this option for higher dimensions.}
 (only used if \code{mpfr = TRUE}).}
 }
 \value{
-An object of class \code{EstimatedCovarianceMatrix}.
-The estimated covariance matrix can be extracted with \code{as.matrix()}.
+An object of class
+\code{c("EstimatedCovarianceMatrix", "CovarianceMatrix")}.
+The underlying estimated covariance matrix (of size \code{p * p}) can be
+extracted using the method \code{\link[=as.matrix.Estimator]{as.matrix}}.
 }
 \description{
 Higher order shrinkage for estimation of the covariance matrix
