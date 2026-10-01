@@ -71,8 +71,11 @@ Used only for \code{"optim with tan"}.
 }}
 }
 \value{
-the estimator of the precision matrix
-(a \code{p} by \code{p} matrix).
+The estimated precision matrix, i.e. an estimator of the inverse
+of the covariance matrix. It is an object of class
+\code{c("EstimatedPrecisionMatrix", "PrecisionMatrix")}.
+The underlying estimated precision matrix (of size \code{p * p}) can be
+extracted using the method \code{\link[=as.matrix.Estimator]{as.matrix}}.
 }
 \description{
 The optimal shrinkage estimator of the precision matrix with the ridge-type

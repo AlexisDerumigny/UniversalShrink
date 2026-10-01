@@ -88,6 +88,13 @@ It is recommended to use this option for higher dimensions.}
 \item{precBits}{number of precBits used for floating point precision
 (only used if \code{mpfr = TRUE}).}
 }
+\value{
+The estimated precision matrix, i.e. an estimator of the inverse
+of the covariance matrix. It is an object of class
+\code{c("EstimatedPrecisionMatrix", "PrecisionMatrix")}.
+The underlying estimated precision matrix (of size \code{p * p}) can be
+extracted using the method \code{\link[=as.matrix.Estimator]{as.matrix}}.
+}
 \description{
 Oracle estimator of the precision matrix
 }

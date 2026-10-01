@@ -28,8 +28,8 @@
 #' 
 #' @inheritParams cov_with_centering
 #' 
-#' @returns the estimator of the precision matrix, of class
-#' `EstimatedPrecisionMatrix`.
+#' 
+#' @template returns-EstimatedPrecisionMatrix
 #' 
 #' @references 
 #' Nestor Parolya & Taras Bodnar (2026).

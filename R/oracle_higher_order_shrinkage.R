@@ -16,6 +16,9 @@
 #' 
 #' @inheritParams MPR_higher_order_shrinkage
 #' 
+#' 
+#' @template returns-EstimatedPrecisionMatrix
+#' 
 #' @examples
 #' 
 #' n = 50

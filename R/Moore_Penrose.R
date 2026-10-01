@@ -23,8 +23,7 @@
 #' 
 #' @inheritParams cov_with_centering
 #' 
-#' @returns the estimator of the precision matrix
-#' (a `p` by `p` matrix, i.e. the inverse of the covariance matrix).
+#' @template returns-EstimatedPrecisionMatrix
 #' 
 #' @references 
 #' Nestor Parolya & Taras Bodnar (2026).

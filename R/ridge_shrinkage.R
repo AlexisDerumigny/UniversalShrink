@@ -123,8 +123,8 @@
 #' 
 #' @template param-optimizationControls
 #' 
-#' @returns the estimator of the precision matrix
-#' (a `p` by `p` matrix).
+#' 
+#' @template returns-EstimatedPrecisionMatrix
 #' 
 #' @references 
 #' Nestor Parolya & Taras Bodnar (2026).

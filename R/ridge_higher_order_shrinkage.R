@@ -79,6 +79,8 @@
 #' @template param-optimizationControls
 #' @template param-method_invM
 #' 
+#' @template returns-EstimatedPrecisionMatrix
+#' 
 #' @examples
 #' 
 #' n = 10

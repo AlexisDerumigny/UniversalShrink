@@ -7,6 +7,8 @@
 #' 
 #' @inheritParams cov_with_centering
 #' 
+#' @template returns-EstimatedPrecisionMatrix
+#' 
 #' @export
 inverse_NL_oracle <- function(X, Sigma, centeredCov = TRUE, verbose = 0)
 {

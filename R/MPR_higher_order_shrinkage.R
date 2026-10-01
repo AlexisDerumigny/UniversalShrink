@@ -105,6 +105,8 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
 #' @template param-optimizationControls
 #' @template param-method_invM
 #' 
+#' @template returns-EstimatedPrecisionMatrix
+#' 
 #' @examples
 #' 
 #' n = 50

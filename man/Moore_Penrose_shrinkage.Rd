@@ -26,8 +26,11 @@ no printing at all, while higher values indicate increasingly more detailed
 (more verbose) output.}
 }
 \value{
-the estimator of the precision matrix
-(a \code{p} by \code{p} matrix, i.e. the inverse of the covariance matrix).
+The estimated precision matrix, i.e. an estimator of the inverse
+of the covariance matrix. It is an object of class
+\code{c("EstimatedPrecisionMatrix", "PrecisionMatrix")}.
+The underlying estimated precision matrix (of size \code{p * p}) can be
+extracted using the method \code{\link[=as.matrix.Estimator]{as.matrix}}.
 }
 \description{
 Following Bodnar and Parolya (2026), the shrinkage estimator
