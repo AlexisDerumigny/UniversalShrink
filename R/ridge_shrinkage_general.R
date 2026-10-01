@@ -41,7 +41,7 @@ estimator_d0_1p_Sigma <- function(t0, hat_v_t0, cn){
 
 #' Estimator of d0(t0, Sigma^2 / p)
 #' @noRd
-estimator_d0_1p_Sigma2 <- function(p, t0, hat_v_t0, cn, Sn, verbose = verbose){
+estimator_d0_1p_Sigma2 <- function(p, t0, hat_v_t0, cn, Sn, verbose){
   first_term = (1 / hat_v_t0) * (tr(Sn) / p)
   second_term = (1 / hat_v_t0) * ( (1 / (cn * hat_v_t0)) - t0 / cn)
   
