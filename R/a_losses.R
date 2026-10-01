@@ -5,14 +5,35 @@ NULL
 
 #' @export
 #' @rdname quadratic_losses
-NormFrobenius2 <- function(M, normalized){
-  FrobNorm2 = tr( M %*% t(M) )
-  if (normalized){
-    p = ncol(M)
-    return (FrobNorm2 / p)
-  } else {
-    return (FrobNorm2)
+NormFrobenius2 <- function(M, normalized) {
+  if (!is.numeric(M)) {
+    stop(UniversalShrink_error_condition_base(
+      message = "`M` must be numeric.",
+      subclass = "InvalidArgumentError",
+      argument = "M",
+      value = M
+    ))
   }
+  
+  if (anyNA(M) || any(!is.finite(M))) {
+    stop(UniversalShrink_error_condition_base(
+      message = "`M` must contain only finite values.",
+      subclass = "InvalidArgumentError",
+      argument = "M",
+      value = M
+    ))
+  }
+  
+  squared_norm <- sum(M^2)
+  dimension <- if (is.matrix(M)) nrow(M) else length(M)
+  
+  if (normalized) {
+    result = squared_norm / dimension
+  } else {
+    result = squared_norm
+  }
+  
+  return (result)
 }
 
 
