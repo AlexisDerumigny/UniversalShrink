@@ -8,6 +8,7 @@
 \alias{coef.EstimatedPrecisionMatrix}
 \alias{coef.EstimatedCovarianceMatrix}
 \alias{coef.EstimatedPortfolioWeights}
+\alias{get_t}
 \title{Conversion of estimated matrices to matrix class and other generics}
 \usage{
 \method{as.matrix}{PrecisionMatrix}(x, ...)
@@ -21,6 +22,8 @@
 \method{coef}{EstimatedCovarianceMatrix}(object, ...)
 
 \method{coef}{EstimatedPortfolioWeights}(object, ...)
+
+get_t(object, ...)
 }
 \arguments{
 \item{x, object}{object to be converted, or for which ones want to extract the
@@ -34,6 +37,9 @@ coefficients}
 returns the underlying (estimated) portfolio weights.
 
 \code{coef()} returns a named numeric vector containing the estimator coefficients.
+
+\code{get_t()} returns the value of the regularization parameter \code{t}
+(used for ridge-type estimators), i.e. a numeric scalar.
 }
 \description{
 Conversion of estimated matrices to matrix class and other generics

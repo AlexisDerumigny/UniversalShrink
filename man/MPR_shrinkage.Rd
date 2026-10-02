@@ -180,7 +180,7 @@ X <- MASS::mvrnorm(n = n, mu = mu, Sigma = Sigma)
 precision_MPR_optimal = MPR_shrinkage(X)
 
 cat("loss = ", LossFrobenius2(precision_MPR_optimal, Sigma = Sigma),
-    ", t opt = ", precision_MPR_optimal$t_optimal, 
+    ", t opt = ", get_t(precision_MPR_optimal), 
     ", alpha opt = ", coef(precision_MPR_optimal)["alpha"],
     ", beta opt = ", coef(precision_MPR_optimal)["beta"], "\n", sep = "")
 
@@ -189,12 +189,12 @@ oracle = solve(0.99 * Sigma + 0.01 * diag(nrow = p))
 precision_MPR_optimal_oracle = MPR_shrinkage(X, Pi0 = oracle)
   
 cat("loss = ", LossFrobenius2(precision_MPR_optimal_oracle, Sigma = Sigma),
-    ", t = ", precision_MPR_optimal_oracle$t_optimal, 
+    ", t = ", get_t(precision_MPR_optimal_oracle), 
     ", alpha opt = ", coef(precision_MPR_optimal)["alpha"],
     ", beta opt = ", coef(precision_MPR_optimal)["beta"], "\n", sep = "")
 
 # Trying suboptimal alpha and beta
-t_opt = precision_MPR_optimal$t_optimal
+t_opt = get_t(precision_MPR_optimal)
 
 precision_MPR = MPR_shrinkage(X, t = t_opt, alpha = 1, beta = 0)
 cat("loss = ", LossFrobenius2(precision_MPR, Sigma = Sigma))

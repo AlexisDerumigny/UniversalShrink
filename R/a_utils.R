@@ -50,6 +50,8 @@ check_Rmpfr <- function (mpfr){
 #' 
 #' `coef()` returns a named numeric vector containing the estimator coefficients.
 #' 
+#' `get_t()` returns the value of the regularization parameter `t`
+#' (used for ridge-type estimators), i.e. a numeric scalar.
 #' 
 NULL
 
@@ -193,6 +195,22 @@ get_coefficient <- function(object, ...)
   
   result = c(alpha = alpha, beta = beta)
   return (result)
+}
+
+
+#' @rdname as.matrix.Estimator
+#' @export
+get_t <- function(object, ...)
+{
+  t <- if (!is.null(object$t_optimal)) {
+    object$t_optimal
+  } else {
+    object$t
+  }
+  
+  t <- as.numeric(t)
+  
+  return (t)
 }
 
 
