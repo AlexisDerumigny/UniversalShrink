@@ -20,7 +20,8 @@ Pi0 <- diag(c(1, 2, 3, 4))
 
 # 1. Identity target, no optimization -------------------------------------
 
-test_that("ridge_shrinkage uses supplied t, alpha, and beta with identity target", {
+test_that(
+  "ridge_shrinkage uses supplied t, alpha, and beta with identity target", {
   result <- ridge_shrinkage(
     X,
     centeredCov = TRUE,
@@ -149,7 +150,7 @@ test_that("ridge_shrinkage fully optimizes with identity target", {
   expect_true(is.numeric(result$t_optimal))
   expect_length(result$t_optimal, 1L)
   expect_true(is.finite(result$t_optimal))
-  expect_true(result$t_optimal > 0)
+  expect_gt(result$t_optimal, 0)
   
   expect_true(is.finite(result$alpha_optimal))
   expect_true(is.finite(result$beta_optimal))
@@ -182,7 +183,7 @@ test_that("ridge_shrinkage fully optimizes with a general target", {
   expect_s3_class(result, "EstimatedPrecisionMatrix")
   
   expect_true(is.finite(result$t_optimal))
-  expect_true(result$t_optimal > 0)
+  expect_gt(result$t_optimal, 0)
   expect_true(is.finite(result$alpha_optimal))
   expect_true(is.finite(result$beta_optimal))
   

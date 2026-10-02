@@ -81,7 +81,7 @@ cov_analytical_NL_shrinkage = function(X, centeredCov = TRUE)
     Hftemp = (-3/10/pi) * Xmod + (3/4/sqrt(5)/pi) * (1 - Xmod^2./5) * log(abs((sqrt(5) - Xmod)/(sqrt(5) + Xmod)))
     Hftemp[abs(Xmod) == sqrt(5)] = (-3/10/pi) * Xmod[abs(Xmod) == sqrt(5)]
     Hftilde = rowMeans(Hftemp / H)
-    dtilde = lambda / ((pi*(p/n)*lambda*ftilde)^2 + (1-(p/n)-pi*(p/n)*lambda*Hftilde)^2);
+    dtilde = lambda / ((pi*(p/n)*lambda*ftilde)^2 + (1-(p/n)-pi*(p/n)*lambda*Hftilde)^2)
   } else{
     lambda = lambda[max(1, p-n+2):p]
     L = matrix(rep(lambda, min(p, n-1)), nrow = length(lambda))
