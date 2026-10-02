@@ -94,7 +94,7 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
 #' Moore-Penrose-Ridge higher order shrinkage
 #' 
 #' 
-#' @param X data matrix (rows are observations, columns are features).
+#' @template param-X
 #' 
 #' @param t \code{t} is the penalization parameter.
 #' 

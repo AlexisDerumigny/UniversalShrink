@@ -15,7 +15,7 @@
 #' can choose between centered and noncentered versions of the sample covariance matrix.
 #' 
 #' 
-#' @param X data matrix (rows are observations, columns are features).
+#' @template param-X
 #' 
 #' @param t parameter of the estimation.
 #' 

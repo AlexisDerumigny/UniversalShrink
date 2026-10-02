@@ -108,7 +108,7 @@
 # optimal choice of \eqn{t, \alpha, \beta}.
 #'
 #' 
-#' @param X data matrix (rows are observations, columns are features).
+#' @template param-X
 #' 
 #' @param t,alpha,beta \code{t}, \code{alpha} and \code{beta} are parameters
 #' of the estimation.

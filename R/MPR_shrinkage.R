@@ -87,7 +87,8 @@
 #'\eqn{||\widehat{\boldsymbol{\Pi}}_{MPR}\boldsymbol{\Sigma}-\mathbf{I}_p||^2_F}
 #' is asymptotically minimized with probability one.
 #' 
-#' @param X data matrix (rows are observations, columns are features).
+#' 
+#' @template param-X
 #' 
 #' @param t,alpha,beta \code{t}, \code{alpha} and \code{beta} are parameters
 #' of the estimation.

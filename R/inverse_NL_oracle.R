@@ -2,7 +2,7 @@
 
 #' Oracle estimator of the precision matrix
 #'
-#' @param X data matrix (rows are observations, columns are features).
+#' @template param-X
 #' @param Sigma true covariance matrix
 #' 
 #' @inheritParams cov_with_centering

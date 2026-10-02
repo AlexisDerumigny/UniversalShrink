@@ -66,9 +66,9 @@
 #' Bodnar and Parolya (2025). This procedure ensures that the loss 
 #'\eqn{||\mathbf{S}_{HOS}^-(t^*)\boldsymbol{\Sigma}-\mathbf{I}_p||^2_F}
 #' is asymptotically minimized with probability one.
-
 #' 
-#' @param X data matrix (rows are observations, columns are features).
+#' 
+#' @template param-X
 #' 
 #' @param t \code{t} is the penalization parameter.
 #' 

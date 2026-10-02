@@ -76,7 +76,7 @@
 #'\eqn{\hat{q}_2(\frac{1}{p}\boldsymbol{\Pi}_0^2)}
 #' are given in the supplement to Bodnar and Parolya (2026).
 #' 
-#' @param X data matrix (rows are observations, columns are features).
+#' @template param-X
 #' 
 #' @param Pi0 prior of the precision matrix. This a `p` by `p` matrix, used as
 #' a target for the shrinkage. Default value is the identity matrix of size `p`.

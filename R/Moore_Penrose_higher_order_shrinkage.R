@@ -436,7 +436,7 @@ compute_M_MoorePenrose_psmall <- function(
 #' The details on the computation of the terms \eqn{\hat q_1}, \eqn{\hat q_2}
 #' and \eqn{s_{i,j}} are given in Theorem 2.5 of Bodnar and Parolya (2025).
 #' 
-#' @param X data matrix (rows are observations, columns are features).
+#' @template param-X
 #' 
 #' @param method_invM method for computing the inverse of the matrix M.
 #' It can be \code{"solve"} (computing M and then inverting it) or

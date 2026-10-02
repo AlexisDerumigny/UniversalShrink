@@ -2,7 +2,7 @@
 
 #' Higher order shrinkage for estimation of the covariance matrix
 #' 
-#' @param X data matrix (rows are observations, columns are features).
+#' @template param-X
 #' 
 #' @inheritParams cov_with_centering
 #' 

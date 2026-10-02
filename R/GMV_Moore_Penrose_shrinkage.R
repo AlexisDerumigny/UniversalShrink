@@ -70,7 +70,7 @@
 #
 #'
 #'
-#' @param X data matrix (rows are observations, columns are features).
+#' @template param-X
 #' 
 #' @param b shrinkage target. By default, the equally-weighted portfolio is used
 #' as a target.

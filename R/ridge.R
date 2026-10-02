@@ -9,7 +9,7 @@
 #' parameter.
 #' 
 #' 
-#' @param X data matrix (rows are observations, columns are features).
+#' @template param-X
 #' 
 #' @param t parameter of the estimation.
 #' 

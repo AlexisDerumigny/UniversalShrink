@@ -15,7 +15,7 @@
 #' ones.
 #' 
 #'
-#' @param X data matrix (rows are observations, columns are features).
+#' @template param-X
 #' @inheritParams Moore_Penrose
 #' 
 #' @returns An object of class `EstimatedPortfolioWeights`. The estimated

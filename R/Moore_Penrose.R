@@ -18,8 +18,7 @@
 #' details how the centering was done.
 #' 
 #' 
-#' 
-#' @param X data matrix (rows are observations, columns are features).
+#' @template param-X
 #' 
 #' @inheritParams cov_with_centering
 #' 

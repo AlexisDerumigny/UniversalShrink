@@ -28,7 +28,7 @@
 #'    and is implemented in the R-package \eqn{\textit{HDShOP}}. 
 #' 
 #' 
-#' @param X data matrix (rows are observations, columns are features).
+#' @template param-X
 #' 
 #' @inheritParams cov_with_centering
 #' 

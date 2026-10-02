@@ -3,7 +3,7 @@
 #' First-order shrinkage of the Ridge portfolio towards a general target 
 #' portfolio \eqn{\mathbf{b}}
 #'
-#' @param X data matrix (rows are observations, columns are features).
+#' @template param-X
 #' 
 #' @param b shrinkage target. By default, the equally-weighted portfolio is used
 #' as a target.

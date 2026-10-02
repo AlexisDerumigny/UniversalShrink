@@ -87,7 +87,7 @@
 #' }
 #' 
 #' 
-#' @param X data matrix (rows are observations, columns are features).
+#' @template param-X
 #' 
 #' @param eps,upp search interval for the best penalization parameter
 #' (used in the numerical optimization).
