@@ -65,7 +65,7 @@
 #'   
 #'   oracle = oracle_higher_order_shrinkage(
 #'       X = X, m = m, Sigma = Sigma, nameEstimator = "MPR",
-#'       centeredCov = TRUE,method_invM = "recursive", verbose = 0)
+#'       centeredCov = TRUE, method_invM = "recursive", verbose = 0)
 #'       
 #'   print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
 #'   print(LossInverseFrobenius2(oracle, Sigma))

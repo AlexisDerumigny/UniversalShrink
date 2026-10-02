@@ -52,7 +52,8 @@
 #'   Jn <- diag(n) - matrix(1/n, nrow = n, ncol = n)
 #'   S = t(X) %*% Jn %*% X / (n-1)
 #'   precision_ridge = solve(S + t * Ip)
-#'   precision_MPR_Cent_alternative_expression = precision_ridge %*% S %*% precision_ridge
+#'   precision_MPR_Cent_alternative_expression = 
+#'     precision_ridge %*% S %*% precision_ridge
 #'   precision_MP = Moore_Penrose(X, centeredCov = TRUE)
 #' 
 #'   cat("t = ", t,", Moore-Penrose  , loss =", 
@@ -60,7 +61,8 @@
 #'   cat("t = ", t,", ridge          , loss =", 
 #'     LossFrobenius2(precision_ridge, Sigma = Sigma, type = "precision"), "\n")
 #'   cat("t = ", t,", MPR            , loss =", 
-#'     LossFrobenius2(precision_MPR_Cent, Sigma = Sigma, type = "precision"), "\n")
+#'     LossFrobenius2(precision_MPR_Cent, Sigma = Sigma,
+#'                    type = "precision"), "\n")
 #'   cat("t = ", t,", MPR alternative, loss =", 
 #'     LossFrobenius2(precision_MPR_Cent_alternative_expression, Sigma = Sigma,
 #'                    type = "precision"), "\n")
