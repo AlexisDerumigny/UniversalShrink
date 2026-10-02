@@ -5,22 +5,36 @@
 \alias{as.matrix.PrecisionMatrix}
 \alias{as.matrix.CovarianceMatrix}
 \alias{as.double.PortfolioWeights}
-\title{Conversion of estimated matrices to matrix class}
+\alias{coef.EstimatedPrecisionMatrix}
+\alias{coef.EstimatedCovarianceMatrix}
+\alias{coef.EstimatedPortfolioWeights}
+\title{Conversion of estimated matrices to matrix class and other generics}
 \usage{
 \method{as.matrix}{PrecisionMatrix}(x, ...)
 
 \method{as.matrix}{CovarianceMatrix}(x, ...)
 
 \method{as.double}{PortfolioWeights}(x, ...)
+
+\method{coef}{EstimatedPrecisionMatrix}(object, ...)
+
+\method{coef}{EstimatedCovarianceMatrix}(object, ...)
+
+\method{coef}{EstimatedPortfolioWeights}(object, ...)
 }
 \arguments{
-\item{x}{object to be converted}
+\item{x, object}{object to be converted, or for which ones want to extract the
+coefficients}
 
 \item{...}{other arguments passed from methods, currently ignored.}
 }
 \value{
-the underlying estimated matrix
+\code{as.matrix()} returns the underlying (estimated) matrix.
+\code{as.double()} and \code{as.numeric()} (which is an alias for it)
+returns the underlying (estimated) portfolio weights.
+
+\code{coef()} returns a named numeric vector containing the estimator coefficients.
 }
 \description{
-Conversion of estimated matrices to matrix class
+Conversion of estimated matrices to matrix class and other generics
 }

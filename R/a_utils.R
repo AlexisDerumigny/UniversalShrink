@@ -33,16 +33,27 @@ check_Rmpfr <- function (mpfr){
   }
 }
 
-#' Conversion of estimated matrices to matrix class
+
+# Conversion to matrix and vectors  ============================================
+
+
+#' Conversion of estimated matrices to matrix class and other generics
 #' @name as.matrix.Estimator
+#' 
+#' @param x,object object to be converted, or for which ones want to extract the
+#' coefficients
+#' @param ... other arguments passed from methods, currently ignored.
+#' 
+#' @return `as.matrix()` returns the underlying (estimated) matrix.
+#' `as.double()` and `as.numeric()` (which is an alias for it) 
+#' returns the underlying (estimated) portfolio weights.
+#' 
+#' `coef()` returns a named numeric vector containing the estimator coefficients.
+#' 
+#' 
 NULL
 
 
-#' @param x object to be converted
-#' @param ... other arguments passed from methods, currently ignored.
-#' 
-#' @return the underlying estimated matrix
-#' 
 #' @rdname as.matrix.Estimator
 #' @export
 as.matrix.PrecisionMatrix <- function(x, ...){
@@ -77,6 +88,115 @@ as.double.PortfolioWeights <- function(x, ...){
   return (x$portfolio_weights)
 }
 
+
+# Extracting coefficients  =====================================================
+
+
+#' @rdname as.matrix.Estimator
+#' @export
+coef.EstimatedPrecisionMatrix <- function(object, ...)
+{
+  get_coefficient(object)
+}
+
+#' @rdname as.matrix.Estimator
+#' @export
+coef.EstimatedCovarianceMatrix <- function(object, ...)
+{
+  get_coefficient(object)
+}
+
+#' @rdname as.matrix.Estimator
+#' @export
+coef.EstimatedPortfolioWeights <- function(object, ...)
+{
+  get_coefficient(object)
+}
+
+get_coefficient <- function(object, ...)
+{
+  alpha <- if (!is.null(object$alpha_optimal)) {
+    object$alpha_optimal
+  } else {
+    object$alpha
+  }
+  
+  beta <- if (!is.null(object$beta_optimal)) {
+    object$beta_optimal
+  } else {
+    object$beta
+  }
+  
+  if (is.null(alpha) && is.null(beta)) {
+    return (numeric(0))
+  }
+  
+  if (is.null(alpha) && !is.null(beta)) {
+    stop(UniversalShrink_error_condition_base(
+      message = paste0(
+        "A beta coefficient is stored in `object`, but no alpha ",
+        "coefficient is available."
+      ),
+      subclass = c(
+        "InvalidCoefficientRepresentationError",
+        "InternalError"
+      ),
+      call = sys.call(-1),
+      object = object
+    ))
+  }
+  
+  # Higher-order routines sometimes store alpha as a one-column matrix.
+  alpha <- as.numeric(alpha)
+  
+  if (length(alpha) == 0L) {
+    stop(UniversalShrink_error_condition_base(
+      message = "The stored alpha coefficient must not be empty.",
+      subclass = c(
+        "InvalidCoefficientRepresentationError",
+        "InternalError"
+      ),
+      call = sys.call(-1),
+      object = object
+    ))
+  }
+  
+  if (is.null(beta)) {
+    if (length(alpha) == 1L) {
+      names(alpha) <- "alpha"
+    } else {
+      names(alpha) <- paste0("alpha_", seq_along(alpha) - 1L)
+    }
+    
+    return(alpha)
+  }
+  
+  beta <- as.numeric(beta)
+  
+  if (length(alpha) != 1L || length(beta) != 1L) {
+    stop(UniversalShrink_error_condition_base(
+      message = paste0(
+        "When both alpha and beta are stored, each must be a numeric ",
+        "value of length one. Here, length(alpha) = ", length(alpha),
+        " and length(beta) = ", length(beta), "."
+      ),
+      subclass = c(
+        "InvalidCoefficientRepresentationError",
+        "InternalError"
+      ),
+      call = sys.call(-1),
+      object = object,
+      alpha = alpha,
+      beta = beta
+    ))
+  }
+  
+  result = c(alpha = alpha, beta = beta)
+  return (result)
+}
+
+
+# Constructors  ================================================================
 
 #' Constructor for warning conditions of the package
 #'

@@ -82,7 +82,7 @@ Losses(GMV_MP, Sigma)
 GMV_MP_shrink_eq = GMV_Moore_Penrose_shrinkage(X)
 
 Losses(GMV_MP_shrink_eq, Sigma)
-
+coef(GMV_MP_shrink_eq)
 
 # Compute GMV portfolio based on the Moore-Penrose inverse with shrinkage
 # towards the true GMV portfolio
@@ -91,6 +91,7 @@ GMV_true = GMV_PlugIn(solve(Sigma))
 GMV_MP_shrink_oracle = GMV_Moore_Penrose_shrinkage(X, b = GMV_true)
 
 Losses(GMV_MP_shrink_oracle, Sigma)
+coef(GMV_MP_shrink_oracle)
 
 
 }

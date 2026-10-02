@@ -194,10 +194,7 @@ for (m in 1:2){
 precision_higher_order_shrinkage_Cent = 
   ridge_higher_order_shrinkage(X, m = 1, centeredCov = TRUE, t = 100)
 
-
-precision_higher_order_shrinkage_Cent$alpha
-precision_higher_order_shrinkage_Cent$M
-precision_higher_order_shrinkage_Cent$hm
+coef(precision_higher_order_shrinkage_Cent)
 
 LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
 

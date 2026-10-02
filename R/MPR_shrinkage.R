@@ -132,8 +132,8 @@
 #' 
 #' cat("loss = ", LossFrobenius2(precision_MPR_optimal, Sigma = Sigma),
 #'     ", t opt = ", precision_MPR_optimal$t_optimal, 
-#'     ", alpha opt = ", precision_MPR_optimal$alpha_optimal,
-#'     ", beta opt = ", precision_MPR_optimal$beta_optimal, "\n", sep = "")
+#'     ", alpha opt = ", coef(precision_MPR_optimal)["alpha"],
+#'     ", beta opt = ", coef(precision_MPR_optimal)["beta"], "\n", sep = "")
 #' 
 #' # Estimation with default parameters (optimization) and oracle target
 #' oracle = solve(0.99 * Sigma + 0.01 * diag(nrow = p))
@@ -141,8 +141,8 @@
 #'   
 #' cat("loss = ", LossFrobenius2(precision_MPR_optimal_oracle, Sigma = Sigma),
 #'     ", t = ", precision_MPR_optimal_oracle$t_optimal, 
-#'     ", alpha opt = ", precision_MPR_optimal_oracle$alpha_optimal,
-#'     ", beta opt = ", precision_MPR_optimal_oracle$beta_optimal, "\n", sep = "")
+#'     ", alpha opt = ", coef(precision_MPR_optimal)["alpha"],
+#'     ", beta opt = ", coef(precision_MPR_optimal)["beta"], "\n", sep = "")
 #' 
 #' # Trying suboptimal alpha and beta
 #' t_opt = precision_MPR_optimal$t_optimal

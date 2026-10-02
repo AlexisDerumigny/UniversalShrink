@@ -72,7 +72,7 @@ for (m in 1:3){
   loss = LossFrobenius2(estimatedCov_shrink_higher, Sigma)
   cat("m = ", m, ", loss = ", loss, "\n")
   
-  # cat("alpha = ", estimatedCov_shrink_higher$alpha)
+  print(coef(estimatedCov_shrink_higher))
   cat("\n")
 }
 
