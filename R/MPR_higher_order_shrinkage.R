@@ -150,18 +150,11 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
 #'       
 #' prec_general_semioptimal_Cent = MPR_shrinkage(X, t = 100, Pi0 = diag(p))
 #'
-#' prec_higher_order_Cent1$alpha
-#' prec_identity_semioptimal_Cent$beta_optimal
-#' prec_identity_semioptimal_Cent$alpha_optimal
-#' 
-#' prec_general_semioptimal_Cent$beta_optimal
-#' prec_general_semioptimal_Cent$alpha_optimal
-#' 
-#' prec_higher_order_Cent1$M
-#' prec_identity_semioptimal_Cent$M
-#' 
-#' prec_higher_order_Cent1$hm
-#' prec_identity_semioptimal_Cent$hm
+#' coef(prec_higher_order_Cent1)
+#' # Here in the linear shrinkage case, the coefficient beta plays
+#' # actually the role of alpha_0 in the higher-order case.
+#' coef(prec_identity_semioptimal_Cent)
+#' coef(prec_general_semioptimal_Cent)
 #' 
 #' LossFrobenius2(prec_higher_order_Cent1, Sigma = Sigma)
 #' LossFrobenius2(prec_identity_semioptimal_Cent, Sigma = Sigma)
