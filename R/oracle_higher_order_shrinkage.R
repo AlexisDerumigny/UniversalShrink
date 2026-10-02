@@ -57,7 +57,7 @@
 #'   print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
 #'   print(LossInverseFrobenius2(oracle, Sigma))
 #'   cat("optimal t = ", precision_higher_order_shrinkage_Cent$t,
-#'       " (BF) ,  ", oracle$optimal_t, " (oracle) \n")
+#'       " (BF) ,  ", oracle$t_optimal, " (oracle) \n")
 #'   
 #'   cat("MPR: \n")
 #'   precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(
@@ -69,8 +69,8 @@
 #'       
 #'   print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
 #'   print(LossInverseFrobenius2(oracle, Sigma))
-#'   cat("optimal t = ", precision_higher_order_shrinkage_Cent$optimal_t,
-#'       " (BF) ,  ", oracle$optimal_t, " (oracle) \n")
+#'   cat("optimal t = ", precision_higher_order_shrinkage_Cent$t_optimal,
+#'       " (BF) ,  ", oracle$t_optimal, " (oracle) \n")
 #' }
 #' 
 #' 
@@ -167,12 +167,12 @@ oracle_higher_order_shrinkage <- function(
         FUN = estimatedLoss, optimizationControls = optimizationControls,
         maximum = FALSE, verbose = verbose)
       
-      optimal_t = result_optimization$optimal_t
+      t_optimal = result_optimization$t_optimal
       
       if (verbose > 0){
-        cat("*  optimal_t = ", optimal_t, "\n")
+        cat("*  t_optimal = ", t_optimal, "\n")
       }
-      t = optimal_t
+      t = t_optimal
       
     } else {
       do_optimization = FALSE
@@ -228,8 +228,8 @@ oracle_higher_order_shrinkage <- function(
     invM_recursive = resultM$invM_recursive,
     
     alpha = alpha,
-    optimal_t = if(nameEstimator %in% c("ridge", "MPR") && do_optimization) {
-      optimal_t} ,
+    t_optimal = if(nameEstimator %in% c("ridge", "MPR") && do_optimization) {
+      t_optimal} ,
     t = if(nameEstimator %in% c("ridge", "MPR") && !do_optimization) {
       t} ,
     result_optimization =

@@ -54,7 +54,7 @@ ridge_shrinkage_identity_optimal <- function (
     
     X = X, c_n = c_n, p = p, r = r, q1 = q1, q2 = q2, centeredCov = centeredCov)
   
-  t_R <- result_optimization$optimal_t
+  t_R <- result_optimization$t_optimal
   
   ridge_ = ridge(X = X, centeredCov = centeredCov, t = t_R, verbose = verbose - 1,
                  method_inversion = "auto")

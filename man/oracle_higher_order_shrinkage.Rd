@@ -136,7 +136,7 @@ for (m in 1:3){
   print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
   print(LossInverseFrobenius2(oracle, Sigma))
   cat("optimal t = ", precision_higher_order_shrinkage_Cent$t,
-      " (BF) ,  ", oracle$optimal_t, " (oracle) \n")
+      " (BF) ,  ", oracle$t_optimal, " (oracle) \n")
   
   cat("MPR: \n")
   precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(
@@ -148,8 +148,8 @@ for (m in 1:3){
       
   print(LossInverseFrobenius2(precision_higher_order_shrinkage_Cent, Sigma))
   print(LossInverseFrobenius2(oracle, Sigma))
-  cat("optimal t = ", precision_higher_order_shrinkage_Cent$optimal_t,
-      " (BF) ,  ", oracle$optimal_t, " (oracle) \n")
+  cat("optimal t = ", precision_higher_order_shrinkage_Cent$t_optimal,
+      " (BF) ,  ", oracle$t_optimal, " (oracle) \n")
 }
 
 

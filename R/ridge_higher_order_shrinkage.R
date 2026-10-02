@@ -329,21 +329,21 @@ ridge_higher_order_shrinkage_optimal <- function(
     FUN = estimatedLoss, optimizationControls = optimizationControls,
     maximum = FALSE, verbose = verbose)
   
-  optimal_t = result_optimization$optimal_t
+  t_optimal = result_optimization$t_optimal
   
   
   # ============================================================================
-  # We now compute the estimator using this optimal_t that was found.
+  # We now compute the estimator using this t_optimal that was found.
   
   # Regularized sample covariance matrix (Tikhonov regularization)
-  ridge_ = ridge(X = X, centeredCov = centeredCov, t = optimal_t,
+  ridge_ = ridge(X = X, centeredCov = centeredCov, t = t_optimal,
                  verbose = verbose - 1, method_inversion = "auto")
   
   S_t_inverse <- as.matrix(ridge_)
   
   estimatedM = compute_M_t_ridge(
     m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = S_t_inverse,
-    t = optimal_t, method_invM = method_invM, verbose = verbose - 1,
+    t = t_optimal, method_invM = method_invM, verbose = verbose - 1,
     mpfr = mpfr, precBits = precBits)
   
   alpha = estimatedM$alpha
@@ -366,7 +366,7 @@ ridge_higher_order_shrinkage_optimal <- function(
     hm = estimatedM$hm,
     alpha = alpha,
     v = estimatedM$v,
-    t = optimal_t,
+    t = t_optimal,
     estimated_loss = if (optimizationControls$method == "optimize") {
       result_optimization$objective},
     method = "Ridge higher-order shrinkage",

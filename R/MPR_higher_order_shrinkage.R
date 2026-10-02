@@ -327,24 +327,24 @@ MPR_higher_order_shrinkage_optimal <- function(
     FUN = estimatedLoss, optimizationControls = optimizationControls,
     maximum = FALSE, verbose = verbose)
   
-  optimal_t = result_optimization$optimal_t
+  t_optimal = result_optimization$t_optimal
   
   if (verbose > 0){
-    cat("*  optimal_t = ", optimal_t, "\n")
+    cat("*  t_optimal = ", t_optimal, "\n")
   }
   
   # ============================================================================
-  # We now compute the estimator using this optimal_t that was found.
+  # We now compute the estimator using this t_optimal that was found.
   
   
   # Regularized sample covariance matrix (Tikhonov regularization)
-  iS_ridge <- solve(S + optimal_t * Ip)
+  iS_ridge <- solve(S + t_optimal * Ip)
   
-  MPR_estimator <- iS_ridge - optimal_t * iS_ridge %*% iS_ridge
+  MPR_estimator <- iS_ridge - t_optimal * iS_ridge %*% iS_ridge
   
   estimatedM = compute_M_t_MPR(
     m = m, c_n = c_n, q1 = q1, q2 = q2, S_t_inverse = iS_ridge,
-    t = optimal_t, method_invM = method_invM, verbose = verbose - 2,
+    t = t_optimal, method_invM = method_invM, verbose = verbose - 2,
     mpfr = mpfr, precBits = precBits)
   
   # TODO: compute all estimators for smaller m here using submatrices
@@ -372,7 +372,7 @@ MPR_higher_order_shrinkage_optimal <- function(
     alpha = alpha,
     v = estimatedM$v,
     m = m,
-    optimal_t = optimal_t,
+    t_optimal = t_optimal,
     result_optimization = result_optimization,
     call = call_
   )

@@ -53,7 +53,7 @@ MPR_shrinkage_identity_optimal <- function(
     optimizationControls = optimizationControls,
     verbose = verbose)
   
-  t <- result_optimization$optimal_t
+  t <- result_optimization$t_optimal
   
   if (verbose > 0){
     cat("*  optimal t =", t ,"\n\n")

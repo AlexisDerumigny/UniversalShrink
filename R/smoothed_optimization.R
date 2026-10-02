@@ -31,7 +31,7 @@ optimization <- function(FUN, optimizationControls = NULL,
       control = list(fnscale = if (maximum) -1 else 1) # -1 for maximization
     )
     
-    result$optimal_t = tan(result$par)
+    result$t_optimal = tan(result$par)
     
   } else if (method == "optimize") {
     
@@ -46,9 +46,9 @@ optimization <- function(FUN, optimizationControls = NULL,
                               interval = c(optimizationControls$lower,
                                            optimizationControls$upper), ...)
     if (maximum) {
-      result$optimal_t = result$maximum
+      result$t_optimal = result$maximum
     } else {
-      result$optimal_t = result$minimum
+      result$t_optimal = result$minimum
     }
   }
   
@@ -93,7 +93,7 @@ smoothed_optimization <- function(FUN, grid, k, verbose, maximum, ...)
   
   result = list(
     optimal_t_unsmoothed = optimal_t_unsmoothed,
-    optimal_t = optimal_t_smoothed,
+    t_optimal = optimal_t_smoothed,
     optimization_type = "smoothed",
     k = k,
     grid = grid,
