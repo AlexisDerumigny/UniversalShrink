@@ -22,7 +22,7 @@ compute_M_inverse <- function(m, all_tr0, all_tr, verbose = 0, mpfr, precBits){
   for (m_ in 1:m){
     if (mpfr) {
       invM = methods::new("mpfrMatrix",
-                          rep(zero, (m_ + 1)^2), Dim_ = c(m_ + 1L, m_ + 1L))
+                          rep(zero, (m_ + 1)^2), Dim = c(m_ + 1L, m_ + 1L))
       
       m_tilde = methods::new("mpfrMatrix",
                              all_tr[m_:(2 * m_ - 1)], Dim = c(m_, 1L))
