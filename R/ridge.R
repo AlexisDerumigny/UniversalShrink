@@ -55,7 +55,8 @@
 #' for (t in c(0.2, 0.5, 1)){
 #'   precision_ridge = ridge(X, t = t)
 #'   
-#'   cat("t = t, loss =", LossFrobenius2(precision_ridge, Sigma = Sigma), "\n")
+#'   cat("t = ", t,
+#'       ", loss =", LossFrobenius2(precision_ridge, Sigma = Sigma), "\n")
 #' }
 #' 
 #' 
