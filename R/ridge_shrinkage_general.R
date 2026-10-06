@@ -326,6 +326,7 @@ ridge_shrinkage_general_semioptimal <- function (
     centeredCov = centeredCov,
     alpha_optimal = alpha,
     beta_optimal = beta,
+    t = t,
     method = "Ridge shrinkage",
     method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
