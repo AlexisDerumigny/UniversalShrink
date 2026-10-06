@@ -50,6 +50,16 @@ optimization <- function(FUN, optimizationControls = NULL,
     } else {
       result$t_optimal = result$minimum
     }
+  } else {
+    stop(UniversalShrink_error_condition_base(
+      message = paste0(
+        "`optimizationControls$method` must be one of ",
+        "'smoothed', 'optim with tan', or 'optimize'."
+      ),
+      subclass = "InvalidArgumentError",
+      argument = "optimizationControls$method",
+      value = method
+    ))
   }
   
   return (result)
