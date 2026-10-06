@@ -40,6 +40,8 @@ NormFrobenius2 <- function(M, normalized) {
 #' @export
 #' @rdname quadratic_losses
 DistanceFrobenius2 <- function(M1, M2, normalized){
+  check_compatible_square_matrices(M1, M2)
+  
   FrobNorm2 = NormFrobenius2(M1 - M2, normalized = normalized)
   return (FrobNorm2)
 }
