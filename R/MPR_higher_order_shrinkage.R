@@ -406,7 +406,7 @@ loss_L2_MPR_higher_order_optimal <- function (
   }, error = function(e){e}
   )
   
-  if (inherits(loss, "simpleError") || !is.finite(loss)){
+  if (inherits(loss, "error") || !is.finite(loss)){
     loss <- .Machine$double.xmax
   }
   

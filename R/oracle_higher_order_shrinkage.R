@@ -310,7 +310,7 @@ loss_L2_ridge_oracle_higher_order_optimal <- function (
   }, error = function(e){e}
   )
   
-  if (inherits(loss, "simpleError") || !is.finite(loss)){
+  if (inherits(loss, "error") || !is.finite(loss)){
     loss <- .Machine$double.xmax
   }
   
@@ -348,7 +348,7 @@ loss_L2_MPR_oracle_higher_order_optimal <- function (
   }, error = function(e){e}
   )
   
-  if (inherits(loss, "simpleError") || !is.finite(loss)){
+  if (inherits(loss, "error") || !is.finite(loss)){
     loss <- .Machine$double.xmax
   }
   
