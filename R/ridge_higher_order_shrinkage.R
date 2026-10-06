@@ -517,8 +517,10 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
   if (any(!is.finite(h[-1]))) {
     stop(UniversalShrink_error_condition_base(
       message = "Numerical error in computing h",
-      subclass = "NumericalError"
-    ))
+      subclass = "NumericalError",
+      h = h, t = t, m = m,
+      c_n = c_n, v_0_t = v_0_t, v = v,
+    ) )
   }
   
   d <- compute_d_kl(v_0_t = v_0_t, c_n = c_n, kmax = 2 * m - 1,
