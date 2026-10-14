@@ -197,7 +197,7 @@ MPR_higher_order_shrinkage_non_optimized <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  check_large_m(warn = warn_large_m, p = p, m = m)
+  check_large_m(warn = warn_large_m, p = p, m = m, call = call_)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
                        verbose = verbose)
   
@@ -280,7 +280,7 @@ MPR_higher_order_shrinkage_optimal <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  check_large_m(warn = warn_large_m, p = p, m = m)
+  check_large_m(warn = warn_large_m, p = p, m = m, call = call_)
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
                        verbose = verbose)
   
