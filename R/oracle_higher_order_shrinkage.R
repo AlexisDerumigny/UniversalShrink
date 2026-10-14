@@ -114,6 +114,32 @@ oracle_higher_order_shrinkage <- function(
     ))
   }
   
+  if (m == 0) {
+    q1_oracle = tr(Sigma) / p
+    q2_oracle = tr(Sigma %*% Sigma) / p
+    alpha = q1_oracle / q2_oracle
+    M = matrix(q2_oracle, nrow = 1L, ncol = 1L)
+    hm = q1_oracle
+    invM_recursive = matrix( 1 / q2_oracle, nrow = 1L, ncol = 1L)
+    
+    estimated_precision_matrix = alpha * Ip
+    
+    return (new_estimated_precision_matrix(
+      estimate = estimated_precision_matrix,
+      n = n,
+      p = p,
+      centeredCov = centeredCov,
+      M = M,
+      hm = hm,
+      invM_recursive = invM_recursive,
+      alpha = alpha,
+      t = if (nameEstimator %in% c("ridge", "MPR")) t,
+      method = "Oracle higher-order shrinkage",
+      nameBaselineEstimator = nameEstimator,
+      call = call_
+    ) )
+  }
+  
   if (nameEstimator == "Moore-Penrose") {
     
     # Moore-Penrose inverse of the sample covariance matrix

@@ -539,6 +539,18 @@ Moore_Penrose_higher_order_shrinkage <- function(
   n = nrow(X)
   p = ncol(X)
   check_large_m(warn = warn_large_m, p = p, m = m, call = call_)
+  
+  if (m == 0) { 
+    return (precision_higher_order_m0(
+      X = X,
+      centeredCov = centeredCov,
+      method = "Moore-Penrose higher-order shrinkage",
+      call = call_,
+      verbose = verbose,
+      method_invM = method_invM
+    ) ) 
+  }
+  
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
                        verbose = verbose)
   
