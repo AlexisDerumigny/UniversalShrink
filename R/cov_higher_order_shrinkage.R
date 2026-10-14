@@ -27,7 +27,7 @@
 #' Losses(estimatedCov_analytical, Sigma)
 #' Losses(estimatedCov_QIS, Sigma)
 #' 
-#' for (m in 1:3){
+#' for (m in 0:3){
 #'   estimatedCov_shrink_higher = cov_higher_order_shrinkage(X, m = m)
 #'   
 #'   loss = LossFrobenius2(estimatedCov_shrink_higher, Sigma)

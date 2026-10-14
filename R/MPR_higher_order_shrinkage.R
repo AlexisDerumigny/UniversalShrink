@@ -129,7 +129,7 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
 #' LossFrobenius2(precision_MPR_Cent, Sigma = Sigma)
 #' LossFrobenius2(precision_MPR_NoCent, Sigma = Sigma)
 #' 
-#' for (m in 1:3){
+#' for (m in 0:3){
 #'   cat("m = ", m, "\n")
 #'   prec_higher_order_shrinkage_Cent = 
 #'       MPR_higher_order_shrinkage(X, m = m, centeredCov = TRUE, t = t)

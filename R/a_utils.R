@@ -51,7 +51,8 @@ check_Rmpfr <- function (mpfr){
 #' `coef()` returns a named numeric vector containing the estimator coefficients.
 #' 
 #' `get_t()` returns the value of the regularization parameter `t`
-#' (used for ridge-type estimators), i.e. a numeric scalar.
+#' (used for ridge-type estimators), i.e. a numeric scalar, or `numeric(0)` when
+#' `t` is not applicable.
 #' 
 NULL
 

@@ -24,9 +24,10 @@ covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
 zero.}
 
 \item{m, warn_large_m}{\code{m} is the order of the shrinkage. It must be an
-integer, at least 1. For the asymptotic validity of the estimators, \code{p}
-should be (much) larger than \code{m}. This is checked and warned (if applicable)
-if \code{warn_large_m = TRUE}.}
+integer large or equal to 0.
+For the asymptotic validity of the estimators, \code{p} should be (much) larger
+than \code{m}. If \code{warn_large_m = TRUE}, this requirement is checked, and a
+warning is raised when it may not be satisfied.}
 
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates
@@ -66,7 +67,7 @@ Losses(estimatedCov_sample, Sigma, type = "covariance")
 Losses(estimatedCov_analytical, Sigma)
 Losses(estimatedCov_QIS, Sigma)
 
-for (m in 1:3){
+for (m in 0:3){
   estimatedCov_shrink_higher = cov_higher_order_shrinkage(X, m = m)
   
   loss = LossFrobenius2(estimatedCov_shrink_higher, Sigma)

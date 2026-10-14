@@ -476,7 +476,7 @@ compute_M_MoorePenrose_psmall <- function(
 #' print(LossFrobenius2(prec_MoorePenrose_Cent, Sigma))
 #' print(LossFrobenius2(prec_MoorePenrose_NoCent, Sigma))
 #' 
-#' for (m in 1:3){
+#' for (m in 0:3){
 #'   cat("m = ", m, "\n")
 #'   precision_higher_order_shrinkage_Cent = 
 #'       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
@@ -509,7 +509,7 @@ compute_M_MoorePenrose_psmall <- function(
 #' print(LossFrobenius2(prec_MoorePenrose_Cent, Sigma))
 #' print(LossFrobenius2(prec_MoorePenrose_NoCent, Sigma))
 #' 
-#' for (m in 1:3){
+#' for (m in 0:3){
 #'   cat("m = ", m, "\n")
 #'   prec_higher_order_shrinkage_Cent = 
 #'       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE)

@@ -132,7 +132,7 @@
 #' # Examples for ridge_higher_order_shrinkage where the optimization is done 
 #' # with respect to t
 #' 
-#' for (m in 1:2){
+#' for (m in 0:2){
 #'   cat("m = ", m, "\n")
 #'   prec_higher_order_shrinkage_Cent = 
 #'       ridge_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
