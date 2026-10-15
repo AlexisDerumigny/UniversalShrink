@@ -39,7 +39,7 @@
 #'   precision_higher_order_shrinkage_Cent = Moore_Penrose_higher_order_shrinkage(
 #'       X, m = m, centeredCov = TRUE, verbose = 0)
 #'   
-#'   oracle = oracle_higher_order_shrinkage(
+#'   oracle = prec_oracle_higher_order_shrinkage(
 #'       X = X, m = m, Sigma = Sigma, nameEstimator = "Moore-Penrose",
 #'       centeredCov = TRUE,method_invM = "recursive", verbose = 0)
 #'       
@@ -50,7 +50,7 @@
 #'   precision_higher_order_shrinkage_Cent = ridge_higher_order_shrinkage(
 #'       X, m = m, centeredCov = TRUE, verbose = 0)
 #'   
-#'   oracle = oracle_higher_order_shrinkage(
+#'   oracle = prec_oracle_higher_order_shrinkage(
 #'       X = X, m = m, Sigma = Sigma, nameEstimator = "ridge",
 #'       centeredCov = TRUE,method_invM = "recursive", verbose = 0)
 #'       
@@ -63,7 +63,7 @@
 #'   precision_higher_order_shrinkage_Cent = MPR_higher_order_shrinkage(
 #'       X, m = m, centeredCov = TRUE, verbose = 0)
 #'   
-#'   oracle = oracle_higher_order_shrinkage(
+#'   oracle = prec_oracle_higher_order_shrinkage(
 #'       X = X, m = m, Sigma = Sigma, nameEstimator = "MPR",
 #'       centeredCov = TRUE, method_invM = "recursive", verbose = 0)
 #'       
@@ -75,13 +75,13 @@
 #' 
 #' 
 #' @export
-oracle_higher_order_shrinkage <- function(
+prec_oracle_higher_order_shrinkage <- function(
     X, m, Sigma, nameEstimator, t = NULL, centeredCov = TRUE,
     method_invM = "recursive", verbose = 0, optimizationControls = NULL,
     mpfr = FALSE, precBits = 2^16)
 {
   if (verbose > 0) {
-    cat("Starting oracle_higher_order_shrinkage...\n")
+    cat("Starting prec_oracle_higher_order_shrinkage...\n")
   }
   call_ = match.call()
   check_Rmpfr(mpfr)

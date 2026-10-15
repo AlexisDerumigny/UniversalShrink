@@ -9,7 +9,7 @@ test_that("m = 0 oracle uses the true covariance moments", {
   expected = (q1 / q2) * diag(ncol(X))
   
   for (name in c("Moore-Penrose", "ridge", "MPR")) {
-    result = oracle_higher_order_shrinkage(
+    result = prec_oracle_higher_order_shrinkage(
       X = X,
       m = 0,
       Sigma = Sigma,
