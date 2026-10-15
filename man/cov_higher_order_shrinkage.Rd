@@ -77,9 +77,6 @@ for (m in 0:3){
   cat("\n")
 }
 
-estimator = sum(diag(estimatedCov_sample)) / p * diag(nrow = p)
-Losses(estimator, Sigma, type = "covariance")
-
 oracle_Estimator = cov_NL_oracle(X, Sigma = Sigma)
 Losses(oracle_Estimator, Sigma)
 
