@@ -132,7 +132,7 @@
 #' # Examples for ridge_higher_order_shrinkage where the optimization is done 
 #' # with respect to t
 #' 
-#' for (m in 1:2){
+#' for (m in 0:2){
 #'   cat("m = ", m, "\n")
 #'   prec_higher_order_shrinkage_Cent = 
 #'       ridge_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
@@ -164,6 +164,19 @@ ridge_higher_order_shrinkage <- function(
     warn_large_m = TRUE)
 {
   call_ = match.call()
+  check_large_m(warn = warn_large_m, p = ncol(X), m = m, call = call_)
+  
+  if (m == 0) {
+    return (precision_higher_order_m0(
+      X = X,
+      centeredCov = centeredCov,
+      method = "Ridge higher-order shrinkage",
+      call = call_,
+      verbose = verbose,
+      t = t
+    ) )
+  }
+  
   if (is.null(t)){
     result = ridge_higher_order_shrinkage_optimal(
       X = X, m = m, centeredCov = centeredCov, verbose = verbose,
@@ -192,7 +205,7 @@ ridge_higher_order_shrinkage_non_optimized <- function(
   # Get sizes of Y
   n = nrow(X)
   p = ncol(X)
-  check_large_m(warn = warn_large_m, p = p, m = m, call = call_)
+  
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
                        verbose = verbose)
   
@@ -271,7 +284,7 @@ ridge_higher_order_shrinkage_optimal <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  check_large_m(warn = warn_large_m, p = p, m = m, call = call_)
+  
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
                        verbose = verbose)
   

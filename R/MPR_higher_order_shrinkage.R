@@ -129,7 +129,7 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
 #' LossFrobenius2(precision_MPR_Cent, Sigma = Sigma)
 #' LossFrobenius2(precision_MPR_NoCent, Sigma = Sigma)
 #' 
-#' for (m in 1:3){
+#' for (m in 0:3){
 #'   cat("m = ", m, "\n")
 #'   prec_higher_order_shrinkage_Cent = 
 #'       MPR_higher_order_shrinkage(X, m = m, centeredCov = TRUE, t = t)
@@ -169,6 +169,20 @@ MPR_higher_order_shrinkage <- function(
     warn_large_m = TRUE)
 {
   call_ = match.call()
+  
+  check_large_m(warn = warn_large_m, p = ncol(X), m = m, call = call_)
+  
+  if (m == 0) {
+    return (precision_higher_order_m0(
+      X = X,
+      centeredCov = centeredCov,
+      method = "MPR_higher_order_shrinkage",
+      call = call_,
+      verbose = verbose,
+      t = t
+    ) )
+  }
+  
   if (is.null(t)){
     result = MPR_higher_order_shrinkage_optimal(
       X = X, m = m, centeredCov = centeredCov, verbose = verbose,
@@ -182,6 +196,8 @@ MPR_higher_order_shrinkage <- function(
       method_invM = method_invM, call_ = call_,
       mpfr = mpfr, precBits = precBits, warn_large_m = warn_large_m)
   }
+  
+  return (result)
 }
 
 
@@ -197,7 +213,7 @@ MPR_higher_order_shrinkage_non_optimized <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  check_large_m(warn = warn_large_m, p = p, m = m, call = call_)
+  
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
                        verbose = verbose)
   
@@ -280,7 +296,7 @@ MPR_higher_order_shrinkage_optimal <- function(
   # Get sizes of X
   n = nrow(X)
   p = ncol(X)
-  check_large_m(warn = warn_large_m, p = p, m = m, call = call_)
+  
   c_n = concentr_ratio(n = n, p = p, centeredCov = centeredCov,
                        verbose = verbose)
   

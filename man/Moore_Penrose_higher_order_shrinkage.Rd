@@ -19,9 +19,10 @@ Moore_Penrose_higher_order_shrinkage(
 \item{X}{data matrix (rows are observations, columns are features).}
 
 \item{m, warn_large_m}{\code{m} is the order of the shrinkage. It must be an
-integer, at least 1. For the asymptotic validity of the estimators, \code{p}
-should be (much) larger than \code{m}. This is checked and warned (if applicable)
-if \code{warn_large_m = TRUE}.}
+integer large or equal to 0.
+For the asymptotic validity of the estimators, \code{p} should be (much) larger
+than \code{m}. If \code{warn_large_m = TRUE}, this requirement is checked, and a
+warning is raised when it may not be satisfied.}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, then the sample covariance
 matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector
@@ -110,7 +111,7 @@ prec_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
 print(LossFrobenius2(prec_MoorePenrose_Cent, Sigma))
 print(LossFrobenius2(prec_MoorePenrose_NoCent, Sigma))
 
-for (m in 1:3){
+for (m in 0:3){
   cat("m = ", m, "\n")
   precision_higher_order_shrinkage_Cent = 
       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
@@ -143,7 +144,7 @@ prec_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
 print(LossFrobenius2(prec_MoorePenrose_Cent, Sigma))
 print(LossFrobenius2(prec_MoorePenrose_NoCent, Sigma))
 
-for (m in 1:3){
+for (m in 0:3){
   cat("m = ", m, "\n")
   prec_higher_order_shrinkage_Cent = 
       Moore_Penrose_higher_order_shrinkage(X, m = m, centeredCov = TRUE)

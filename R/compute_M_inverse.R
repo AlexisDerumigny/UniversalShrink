@@ -61,9 +61,9 @@ compute_M_inverse <- function(m, all_tr0, all_tr, verbose = 0, mpfr, precBits){
 
 check_large_m <- function(warn, p, m, call = NULL)
 {
-  if (length(m) != 1 || !is.finite(m) || m <= 0 || (m != round(m))) {
+  if (length(m) != 1 || !is.finite(m) || m < 0 || (m != round(m))) {
     stop(UniversalShrink_error_condition_base(
-      message = paste0("m must be a positive integer, but we see: m = ", 
+      message = paste0("m must be a non-negative integer, but we see: m = ", 
                        utils::capture.output(dput(m))),
       subclass = "InvalidArgumentError",
       call = call
@@ -107,4 +107,49 @@ error_invalid_method_invM <- function(
     choices = choices
   ) )
 }
+
+
+# Helper for computation of the higher-order shrinkage estimator
+# of the precision matrix. This is the same for Moore-Penrose, ridge,
+# and Moore-Penrose-Ridge (MPR).
+precision_higher_order_m0 <- function(X, centeredCov, method, call, 
+                                      verbose = 0, ...)
+{
+  n = nrow(X)
+  p = ncol(X)
+  
+  c_n = concentr_ratio(n = n, p = p, 
+                       centeredCov = centeredCov, verbose = verbose)
+  
+  S = cov_with_centering(X = X, centeredCov = centeredCov)
+  
+  q1 = tr(S) / p
+  q2 = tr(S %*% S) / p - c_n * q1^2
+  
+  alpha = q1 / q2
+  
+  M = matrix(q2, nrow = 1L, ncol = 1L)
+  invM = matrix(1 / q2, nrow = 1L, ncol = 1L)
+  hm = q1
+  
+  estimated_precision_matrix = alpha * diag(nrow = p)
+  
+  result = new_estimated_precision_matrix(
+    estimate = estimated_precision_matrix,
+    n = n,
+    p = p,
+    centeredCov = centeredCov,
+    method = method,
+    call = call,
+    M = M,
+    invM = invM,
+    hm = hm,
+    alpha = alpha,
+    m = 0L,
+    ...
+  )
+  
+  return (result)
+}
+
 

@@ -39,7 +39,8 @@ returns the underlying (estimated) portfolio weights.
 \code{coef()} returns a named numeric vector containing the estimator coefficients.
 
 \code{get_t()} returns the value of the regularization parameter \code{t}
-(used for ridge-type estimators), i.e. a numeric scalar.
+(used for ridge-type estimators), i.e. a numeric scalar, or \code{numeric(0)} when
+\code{t} is not applicable.
 }
 \description{
 Conversion of estimated matrices to matrix class and other generics

@@ -27,7 +27,7 @@
 #' Losses(estimatedCov_analytical, Sigma)
 #' Losses(estimatedCov_QIS, Sigma)
 #' 
-#' for (m in 1:3){
+#' for (m in 0:3){
 #'   estimatedCov_shrink_higher = cov_higher_order_shrinkage(X, m = m)
 #'   
 #'   loss = LossFrobenius2(estimatedCov_shrink_higher, Sigma)
@@ -90,7 +90,7 @@ cov_higher_order_shrinkage <- function(
   list_power_S = list()
   power_S = Ip
   
-  for (k in 1:(2 * m)){
+  for (k in seq_len(2 * m)){
     if (k == 1){
       power_S = S
     } else {
@@ -114,7 +114,9 @@ cov_higher_order_shrinkage <- function(
   estimated_covariance_matrix = alpha[1] * Ip
   power_S = Ip
   
-  for (k in 1:m){
+  # Here the case m = 0 is handled since seq_len(0)=numeric(0)
+  # and therefore skips the loop.
+  for (k in seq_len(m)){
     estimated_covariance_matrix = estimated_covariance_matrix + 
       alpha[k + 1] * list_power_S[[k]]
   }
