@@ -246,5 +246,7 @@ LossFrobenius2(precision_ridge_shrinkage_Cent, Sigma = Sigma)
 \references{
 Nestor Parolya & Taras Bodnar (2025).
 Higher-order nonlinear shrinkage estimator of large-dimensional precision
-matrix. \doi{10.1090/tpms/1239}
+matrix.
+Theory of Probability and Mathematical Statistics, 113, 23-38.
+\doi{10.1090/tpms/1239}
 }

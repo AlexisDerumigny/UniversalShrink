@@ -149,11 +149,11 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
 #' 
 #' 
 #' @references
-#' Taras Bodnar & Nestor Parolya (2026).
-#' Reviving pseudo-inverses: Asymptotic properties of large
-#' dimensional Moore-Penrose and ridge-type inverses with applications.
+#' Nestor Parolya & Taras Bodnar (2026).
+#' Reviving pseudo-inverses: Asymptotic properties of large dimensional
+#' Moore-Penrose and Ridge-type inverses with applications.
 #' The Annals of Statistics, 54(2), 1053-1079.
-#' \doi{10.1214/25-AOS2602}
+#' \doi{10.1214/25-AOS2602}. ArXiv: \doi{10.48550/arXiv.2403.15792}.
 #' 
 #' @template param-X
 #' 

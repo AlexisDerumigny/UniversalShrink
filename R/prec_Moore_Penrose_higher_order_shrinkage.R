@@ -505,6 +505,7 @@ compute_M_MoorePenrose_psmall <- function(
 #' Nestor Parolya & Taras Bodnar (2025).
 #' Higher-order nonlinear shrinkage estimator of large-dimensional precision
 #' matrix.
+#' Theory of Probability and Mathematical Statistics, 113, 23-38.
 #' \doi{10.1090/tpms/1239}
 #' 
 #' @examples

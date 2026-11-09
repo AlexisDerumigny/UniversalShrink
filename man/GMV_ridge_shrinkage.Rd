@@ -136,4 +136,6 @@ Taras Bodnar, Nestor Parolya & Erik Thorsén (2024).
 Two is better than one: Regularized shrinkage of large
 minimum variance portfolios.
 Journal of Machine Learning Research, 25(173), 1-32.
+\url{https://jmlr.org/papers/v25/22-1337.html}
+ArXiv: \doi{https://doi.org/10.48550/arXiv.2202.06666}
 }
