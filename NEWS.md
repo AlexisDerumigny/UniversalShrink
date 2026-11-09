@@ -1,3 +1,3 @@
-# UniversalShrink 0.0.1
+# UniversalShrink 0.1.0
 
 * Initial CRAN submission.
