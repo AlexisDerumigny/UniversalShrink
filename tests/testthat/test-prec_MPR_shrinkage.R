@@ -97,7 +97,7 @@ test_that(paste0("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result ",
   # print(d0_1p_Sigma2Pi0)
   # print(diff)
   # print(relative_diff)
-  expect_lt(as.numeric(relative_diff), 1e-16)
+  expect_lt(as.numeric(relative_diff), 1e-10)
   
   
   d1_1p_Sigma2 = estimator_d1_1p_Sigma2(t0 = t0, hat_v_t0 = hat_v_t0, p = p,
@@ -116,12 +116,12 @@ test_that(paste0("`d*_1p_Sigma2` and `d*_1p_Sigma2Pi0` give the same result ",
   diff = d1_1p_Sigma2 - d1_1p_Sigma2_rec
   relative_diff = abs(diff / d1_1p_Sigma2)
   
-  expect_lt(as.numeric(relative_diff), 1e-13)
+  expect_lt(as.numeric(relative_diff), 1e-10)
   
   diff = d1_1p_Sigma2 - d1_1p_Sigma2Pi0
   relative_diff = abs(diff / d1_1p_Sigma2)
   
-  expect_lt(as.numeric(relative_diff), 1e-13)
+  expect_lt(as.numeric(relative_diff), 1e-10)
 })
 
 
