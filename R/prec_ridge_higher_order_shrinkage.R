@@ -256,12 +256,14 @@ ridge_higher_order_shrinkage_non_optimized <- function(
     p = p,
     centeredCov = centeredCov,
     M = estimatedM$M,
+    invM = estimatedM$invM,
     hm = estimatedM$hm,
     alpha = alpha,
     v = estimatedM$v,
     t = t,
     m = m,
     method = "Ridge higher-order shrinkage",
+    method_invM = method_invM,
     method_ridge_inversion = ridge_$method_ridge_inversion,
     call = call_
   )
@@ -376,6 +378,8 @@ ridge_higher_order_shrinkage_optimal <- function(
     p = p,
     centeredCov = centeredCov,
     M = estimatedM$M,
+    invM = estimatedM$invM,
+    method_invM = method_invM,
     hm = estimatedM$hm,
     alpha = alpha,
     v = estimatedM$v,
@@ -659,43 +663,52 @@ compute_M_t_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
   # this matrix
   
   if (method_invM == "solve"){
-    alpha = solve(M) %*% hm
+    invM = solve(M)
+    
   } else if (method_invM == "ginv"){
-    if (! requireNamespace("MASS", quietly = TRUE)){
+    if (!requireNamespace("MASS", quietly = TRUE)){
       stop(UniversalShrink_error_condition_base(
-        "MASS needs to be installed to use `method_invM == 'ginv'.`",
-        subclass = "MissingPackageError") )
-    }
-    alpha = MASS::ginv(M) %*% hm
-  } else if (method_invM == "recursive"){
-    if (verbose > 0){
-      cat("Using the recursive formula to compute the inverse of the",
-          "matrix M...\n")
+        message = paste0(
+          "Package `MASS` must be installed to use ",
+          "`method_invM = \"ginv\"`."),
+        subclass = "MissingPackageError"
+      ))
     }
     
-    # We avoid computing M and inverting it numerically. Here we compute the
-    # inverse of the matrix M by using the recursive formula.
-    invM = compute_M_inverse(m = m, all_tr0 = 1 / s2[1],
-                             all_tr = s2[-1], verbose = verbose - 2,
-                             mpfr = mpfr, precBits = precBits)
+    invM = MASS::ginv(M)
+    
+  } else if (method_invM == "recursive"){
+    if (verbose > 0){
+      cat("Using the recursive formula to compute the inverse of",
+          "the matrix M...\n")
+    }
+    
+    invM = compute_M_inverse(
+      m = m,
+      all_tr0 = 1 / s2[1],
+      all_tr = s2[-1],
+      verbose = verbose - 2,
+      mpfr = mpfr,
+      precBits = precBits
+    )
+    
     if (verbose > 1){
       cat("M^{-1} = \n")
       print(invM)
     }
     
-    alpha = invM %*% hm
   } else {
-    stop(error_invalid_method_invM(method_invM,
-                                   choices = c("solve", "recursive") ) )
+    stop(error_invalid_method_invM(method_invM))
   }
+  
+  alpha = invM %*% hm
   
   if (verbose > 0){
     cat("Optimal alpha: \n")
     print(alpha)
   }
   
-  
-  return(list(M = M, hm = hm, v = v, alpha = alpha))
+  return(list(M = M, invM = invM, hm = hm, v = v, alpha = alpha))
 }
 
 
