@@ -5,3 +5,4 @@
 ^\.claude$
 man-roxygen
 .github
+^cran-comments\.md$
