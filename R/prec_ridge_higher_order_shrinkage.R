@@ -543,7 +543,7 @@ compute_sv_ridge <- function(m, c_n, S_t_inverse, q1, q2, t, verbose)
       message = "Numerical error in computing h",
       subclass = "NumericalError",
       h = h, t = t, m = m,
-      c_n = c_n, v_0_t = v_0_t, v = v,
+      c_n = c_n, v_0_t = v_0_t, v = v
     ) )
   }
   
