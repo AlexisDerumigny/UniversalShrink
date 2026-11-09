@@ -30,10 +30,19 @@ is replaced by its sample counterpart. If \code{FALSE}, then the sample
 covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
 zero.}
 
-\item{method_invM}{method for computing the inverse of the matrix M.
-It can be \code{"solve"} (computing M and then inverting it) or
-\code{"recursive"} (using a recursive formula, which is more stable
-numerically for large \eqn{m}, and is therefore the default).}
+\item{method_invM}{Character string specifying the method used for the
+inversion of the matrix \eqn{M}. Possible choices are:
+\itemize{
+\item \code{"recursive"}: compute the inverse using the recursive
+formula. This is the default and is generally faster and more
+numerically stable for larger values of \code{m}.
+
+\item \code{"solve"}: construct \eqn{M} and compute its usual inverse
+using \code{\link[base]{solve}}.
+
+\item \code{"ginv"}: construct \eqn{M} and compute its Moore-Penrose
+generalized inverse using \code{MASS::\link[MASS]{ginv}}.
+}}
 
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates

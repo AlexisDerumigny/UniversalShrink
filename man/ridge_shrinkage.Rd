@@ -50,7 +50,7 @@ Currently, the following possibilities are implemented:
 rolling median and minimizes this smoothed loss.
 \item \code{"optimize"}: this uses the \code{stats::\link[stats]{optimize}}
 function.
-\item \code{"optim with tan"}: uses \code{\link[stats]{optim}}
+\item \code{"optim with tan"}: uses \code{stats::\link[stats]{optim}}
 with the change of variable \eqn{t = \tan(u)}, where
 \eqn{u = \arctan(t)}, to optimize over the interval
 \eqn{u \in [10^{-6}, \pi/2 - 10^{-6}]} by default.

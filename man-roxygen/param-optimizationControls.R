@@ -13,7 +13,7 @@
 #'   * \code{"optimize"}: this uses the \code{stats::\link[stats]{optimize}}
 #'   function.
 #'   
-#'   * \code{"optim with tan"}: uses \code{\link[stats]{optim}}
+#'   * \code{"optim with tan"}: uses \code{stats::\link[stats]{optim}}
 #'   with the change of variable \eqn{t = \tan(u)}, where
 #'   \eqn{u = \arctan(t)}, to optimize over the interval
 #'   \eqn{u \in [10^{-6}, \pi/2 - 10^{-6}]} by default.

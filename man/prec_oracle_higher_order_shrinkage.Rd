@@ -38,10 +38,19 @@ is replaced by its sample counterpart. If \code{FALSE}, then the sample
 covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
 zero.}
 
-\item{method_invM}{method for inverting the matrix \eqn{M}. Current
-possible choices are \code{solve} (usual inverse) and \code{ginv}
-(Moore-Penrose generalize inverse via \code{MASS::\link[MASS]{ginv}}).
-The default is the faster and more precise method \code{recursive}.}
+\item{method_invM}{Character string specifying the method used for the
+inversion of the matrix \eqn{M}. Possible choices are:
+\itemize{
+\item \code{"recursive"}: compute the inverse using the recursive
+formula. This is the default and is generally faster and more
+numerically stable for larger values of \code{m}.
+
+\item \code{"solve"}: construct \eqn{M} and compute its usual inverse
+using \code{\link[base]{solve}}.
+
+\item \code{"ginv"}: construct \eqn{M} and compute its Moore-Penrose
+generalized inverse using \code{MASS::\link[MASS]{ginv}}.
+}}
 
 \item{verbose}{a number indicating whether to print intermediary values and
 details about the progress of the computations. A value of \code{0} indicates
@@ -60,7 +69,7 @@ Currently, the following possibilities are implemented:
 rolling median and minimizes this smoothed loss.
 \item \code{"optimize"}: this uses the \code{stats::\link[stats]{optimize}}
 function.
-\item \code{"optim with tan"}: uses \code{\link[stats]{optim}}
+\item \code{"optim with tan"}: uses \code{stats::\link[stats]{optim}}
 with the change of variable \eqn{t = \tan(u)}, where
 \eqn{u = \arctan(t)}, to optimize over the interval
 \eqn{u \in [10^{-6}, \pi/2 - 10^{-6}]} by default.
