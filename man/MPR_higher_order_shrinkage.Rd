@@ -46,9 +46,10 @@ Currently, the following possibilities are implemented:
 rolling median and minimizes this smoothed loss.
 \item \code{"optimize"}: this uses the \code{stats::\link[stats]{optimize}}
 function.
-\item \code{"optim with tan"}: this uses the \code{stats::\link[stats]{optim}}
-function with the change of variable \code{u = tan(t)} so as to optimize
-over the compact interval \eqn{[0, \pi/2]}.
+\item \code{"optim with tan"}: uses \code{\link[stats]{optim}}
+with the change of variable \eqn{t = \tan(u)}, where
+\eqn{u = \arctan(t)}, to optimize over the interval
+\eqn{u \in [10^{-6}, \pi/2 - 10^{-6}]} by default.
 }
 \item \code{k}: an integer giving the width of the window for median smoothing.
 Used only for \code{method = "smoothed"}.
@@ -92,7 +93,58 @@ The underlying estimated precision matrix (of size \code{p * p}) can be
 extracted using the method \code{\link[=as.matrix.Estimator]{as.matrix}}.
 }
 \description{
-Moore-Penrose-Ridge higher order shrinkage
+This function computes an estimator of the precision matrix using
+the Moore-Penrose-ridge inverse and the polynomial
+\deqn{
+\hat{\mathbf{\Pi}}_{n;MPr}(m,t)
+=\hat{\alpha}_0^\pm(m,t)\mathbf{I}_p
++\sum_{j=1}^m\hat{\alpha}_j^\pm(m,t)
+(\mathbf{S}_n^\pm(t))^j,
+}
+where \eqn{t>0} and
+\eqn{\hat{\boldsymbol{\alpha}}^\pm(m,t)
+=(\hat{\alpha}_0^\pm(m,t),\hat{\alpha}_1^\pm(m,t),
+\ldots,\hat{\alpha}_m^\pm(m,t))^\top}
+is given by
+\deqn{
+\hat{\boldsymbol{\alpha}}^\pm(m,t)
+=\widehat{\mathbf{M}}^\pm(m,t)^{-1}
+\hat{\mathbf{m}}^\pm(m,t)
+}
+with
+\deqn{
+\hat{\mathbf{m}}^\pm(m,t)=
+\begin{pmatrix}
+\hat{q}_1\\
+\hat{s}^\pm_{1,1}(t)\\
+\vdots\\
+\hat{s}^\pm_{m,1}(t)
+\end{pmatrix}
+\quad \text{and}\quad
+\widehat{\mathbf{M}}^\pm(m,t)=
+\begin{pmatrix}
+\hat{q}_2 & \hat{s}^\pm_{1,2}(t) & \ldots & \hat{s}^\pm_{m,2}(t)\\
+\hat{s}^\pm_{1,2}(t) & \hat{s}^\pm_{2,2}(t) & \ldots & \hat{s}^\pm_{m+1,2}(t)\\
+\vdots & \vdots & \ddots & \vdots\\
+\hat{s}^\pm_{m,2}(t) & \hat{s}^\pm_{m+1,2}(t) & \ldots & \hat{s}^\pm_{2m,2}(t)
+\end{pmatrix},
+}
+where
+\deqn{
+\hat{s}^\pm_{j,r}(t)
+=\sum_{k=0}^j(-t)^k\binom{j}{k}
+\hat{s}^-_{j+k,r}(t),
+}
+for \eqn{j=1,\ldots,2m} and \eqn{r\in\{1,2\}}.
+Here, \eqn{\mathbf{S}_n^\pm(t)} is the Moore-Penrose-ridge
+inverse of the sample covariance matrix and
+\eqn{\mathbf{I}_p} is the identity matrix of size \eqn{p}.
+The details on the computation of the terms
+\eqn{\hat{q}_1}, \eqn{\hat{q}_2} and
+\eqn{\hat{s}^\pm_{j,r}(t)} are given in
+Theorem 2.3 of Bodnar and Parolya (2026). This procedure ensures that the loss
+\eqn{||\widehat{\boldsymbol{\Pi}}_{MPR}\boldsymbol{\Sigma}-\mathbf{I}_p||^2_F}
+is asymptotically minimized with probability one.
 }
 \examples{
 
@@ -148,4 +200,11 @@ LossFrobenius2(prec_identity_semioptimal_Cent, Sigma = Sigma)
 LossFrobenius2(prec_higher_order_Cent2, Sigma = Sigma)
 
 
+}
+\references{
+Taras Bodnar & Nestor Parolya (2026).
+Reviving pseudo-inverses: Asymptotic properties of large
+dimensional Moore-Penrose and ridge-type inverses with applications.
+The Annals of Statistics, 54(2), 1053-1079.
+\doi{10.1214/25-AOS2602}
 }

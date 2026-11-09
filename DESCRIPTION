@@ -35,7 +35,7 @@ Suggests:
     Rmpfr,
     methods
 VignetteBuilder: knitr
-URL: https://github.com/AlexisDerumigny/UniversalShrink/issues
-BugReports: https://github.com/AlexisDerumigny/UniversalShrink
+URL: https://github.com/AlexisDerumigny/UniversalShrink
+BugReports: https://github.com/AlexisDerumigny/UniversalShrink/issues
 Config/testthat/edition: 3
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1

@@ -1,12 +1,52 @@
 
 
 #' Higher order shrinkage for estimation of the covariance matrix
+#'
+#' This function computes an estimator of the covariance matrix using
+#' the polynomial
+#' \deqn{
+#' \mathbf{S}_{n;HOS}(m)=\hat{\alpha}_0(m)\mathbf{I}_p
+#' +\sum_{j=1}^m\hat{\alpha}_j(m)\mathbf{S}_n^j,
+#' }
+#' where \eqn{\hat{\boldsymbol{\alpha}}(m)
+#' =(\hat{\alpha}_0(m),\hat{\alpha}_1(m),\ldots,
+#' \hat{\alpha}_m(m))^\top} is given by
+#' \deqn{
+#' \hat{\boldsymbol{\alpha}}(m)
+#' =\mathbf{M}_n(m)^{-1}\hat{\mathbf{m}}(m)
+#' }
+#' with
+#' \deqn{
+#' \hat{\mathbf{m}}(m)=
+#' \begin{pmatrix}
+#' \hat{f}_0\\
+#' \hat{f}_1\\
+#' \vdots\\
+#' \hat{f}_m
+#' \end{pmatrix}
+#' \quad \text{and}\quad
+#' \mathbf{M}_n(m)=
+#' \begin{pmatrix}
+#' 1 & \hat{t}_1 & \ldots & \hat{t}_m\\
+#' \hat{t}_1 & \hat{t}_2 & \ldots & \hat{t}_{m+1}\\
+#' \vdots & \vdots & \ddots & \vdots\\
+#' \hat{t}_m & \hat{t}_{m+1} & \ldots & \hat{t}_{2m}
+#' \end{pmatrix},
+#' }
+#' where \eqn{\hat{t}_j=p^{-1}\operatorname{tr}(\mathbf{S}_n^j)},
+#' \eqn{\mathbf{S}_n} is the sample covariance matrix and
+#' \eqn{\mathbf{I}_p} is the identity matrix of size \eqn{p}.
+#' The terms \eqn{\hat{f}_j} are computed using partial Bell
+#' polynomials and consistent estimators of the population moments.
+#' This procedure ensures that the loss 
+#' \eqn{||\mathbf{S}_{n;HOS}(m)-\boldsymbol{\Sigma}||^2_F}
+#' is asymptotically minimized with probability one.
 #' 
 #' @template param-X
 #' 
 #' @inheritParams cov_with_centering
 #' 
-#' @template param-m
+#' @template param-m 
 #' @template param-mpfr
 #' 
 #' @template returns-EstimatedCovarianceMatrix

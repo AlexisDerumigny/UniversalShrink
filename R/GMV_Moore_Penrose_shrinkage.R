@@ -3,7 +3,7 @@
 #' portfolio \eqn{\mathbf{b}}
 #'
 #' This function computes shrinked optimal portfolio weights given by
-#' \deqn{\hat{\alpha}^*\mathbf{w}_{MP} + (1 - \hat{\alpha}^*) \mathbf{b}}
+#' \deqn{\mathbf{w}_{GSE, MP}=\hat{\alpha}^*\mathbf{w}_{MP} + (1 - \hat{\alpha}^*) \mathbf{b}}
 #' where \eqn{\hat{\alpha}^*} is given by
 #' \deqn{
 #' \hat{\alpha}^*=
@@ -29,7 +29,11 @@
 #' in (S.41), (S.44), and (S.45)  from the supplement of Bodnar and Parolya (2026).
 #' The vector \eqn{\mathbf{w}_{MP}} are the optimal portfolio weights 
 #' estimated as the plug-in of the Moore-Penrose estimate of the precision
-#' matrix and \eqn{\mathbf{1}} is a vector of ones of size \eqn{p}.
+#' matrix and \eqn{\mathbf{1}} is a vector of ones of size \eqn{p}. This 
+#' procedure ensures that the out-of-sample variance loss 
+#' \eqn{\mathbf{w}_{GSE, MP}^\top\boldsymbol{\Sigma}\mathbf{w}_{GSE, MP}}
+#' is asymptotically minimized with probability one 
+#' (see \code{\link{LossOutOfSampleVariance}}).
 #'
 #'
 # In the particular case of the shrinkage to the equally weighted portfolio,
@@ -84,7 +88,7 @@
 #' Nestor Parolya & Taras Bodnar (2026).
 #' Reviving pseudo-inverses: Asymptotic properties of large dimensional
 #' Moore-Penrose and Ridge-type inverses with applications.
-#' \doi{10.1214/25-AOS2602}. ArXiv: \doi{10.48550/arXiv.2403.15792}.
+#' \doi{10.1214/25-AOS2602}.
 #' 
 #' @examples
 #' set.seed(1)

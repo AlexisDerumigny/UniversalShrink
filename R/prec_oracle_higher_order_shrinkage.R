@@ -1,7 +1,59 @@
-
-
-#' Oracle estimator of the precision matrix
-#' 
+#' Oracle higher order shrinkage of the precision matrix
+#'
+#' This function computes the oracle estimator of the precision
+#' matrix using the polynomial
+#' \deqn{
+#' \mathbf{\Pi}_{n;HOS}^{\#,or}(m,t)
+#' =\alpha_0^*(m,t)\mathbf{I}_p
+#' +\sum_{j=1}^m\alpha_j^*(m,t)
+#' (\mathbf{S}_n^\#(t))^j,
+#' }
+#' where \eqn{\boldsymbol{\alpha}^*(m,t)
+#' =(\alpha_0^*(m,t),\alpha_1^*(m,t),
+#' \ldots,\alpha_m^*(m,t))^\top}
+#' is given by
+#' \deqn{
+#' \boldsymbol{\alpha}^*(m,t)
+#' =\mathbf{M}^\#(m,t)^{-1}\mathbf{m}^\#(m,t)
+#' }
+#' with
+#' \deqn{
+#' \mathbf{m}^\#(m,t)=
+#' \begin{pmatrix}
+#' \frac{1}{p}\operatorname{tr}[\boldsymbol{\Sigma}]\\
+#' \frac{1}{p}\operatorname{tr}[\mathbf{S}_n^\#(t)\boldsymbol{\Sigma}]\\
+#' \vdots\\
+#' \frac{1}{p}\operatorname{tr}[(\mathbf{S}_n^\#(t))^m
+#' \boldsymbol{\Sigma}]
+#' \end{pmatrix}
+#' \quad \text{and}\quad
+#' \mathbf{M}^\#(m,t)=
+#' \begin{pmatrix}
+#' s_0 & s_1 & \ldots & s_m\\
+#' s_1 & s_2 & \ldots & s_{m+1}\\
+#' \vdots & \vdots & \ddots & \vdots\\
+#' s_m & s_{m+1} & \ldots & s_{2m}
+#' \end{pmatrix},
+#' }
+#' where
+#' \eqn{s_j=p^{-1}\operatorname{tr}[
+#' (\mathbf{S}_n^\#(t))^j\boldsymbol{\Sigma}^2]}.
+#' Here, \eqn{\mathbf{S}_n^\#(t)} denotes the baseline
+#' estimator of the precision matrix, where
+#' \eqn{\#\in\{+,-,\pm\}} corresponds to the Moore-Penrose,
+#' ridge (Tikhonov) and Moore-Penrose-ridge estimators,
+#' respectively. The baseline estimator is selected using
+#' \code{nameEstimator}.
+#' The parameter \eqn{t>0} is the regularization parameter
+#' for the ridge and Moore-Penrose-ridge estimators. If
+#' \code{t = NULL}, its value is determined by minimizing
+#' \deqn{
+#' L_{n;2}^\#(m,t)
+#' =1-\mathbf{m}^\#(m,t)^\top
+#' \mathbf{M}^\#(m,t)^{-1}\mathbf{m}^\#(m,t).
+#' }
+#' For the Moore-Penrose estimator, the regularization
+#' parameter is not required.
 #' 
 #' @param nameEstimator name of the estimator of which we compute the oracle of.
 #' If \code{nameEstimator = "Moore-Penrose"}, this computes the finite-sample
@@ -10,7 +62,7 @@
 #' 
 #' @param Sigma true covariance matrix
 #' 
-#' @param m the order of the shrinkage. It must be an integer, at least 1.
+#' @param m the order of the shrinkage. It must be an integer, at least 0.
 #' 
 #' @template param-mpfr
 #' 

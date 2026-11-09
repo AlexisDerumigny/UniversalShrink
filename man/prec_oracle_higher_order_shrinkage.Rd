@@ -2,7 +2,7 @@
 % Please edit documentation in R/prec_oracle_higher_order_shrinkage.R
 \name{prec_oracle_higher_order_shrinkage}
 \alias{prec_oracle_higher_order_shrinkage}
-\title{Oracle estimator of the precision matrix}
+\title{Oracle higher order shrinkage of the precision matrix}
 \usage{
 prec_oracle_higher_order_shrinkage(
   X,
@@ -21,7 +21,7 @@ prec_oracle_higher_order_shrinkage(
 \arguments{
 \item{X}{data matrix (rows are observations, columns are features).}
 
-\item{m}{the order of the shrinkage. It must be an integer, at least 1.}
+\item{m}{the order of the shrinkage. It must be an integer, at least 0.}
 
 \item{Sigma}{true covariance matrix}
 
@@ -60,9 +60,10 @@ Currently, the following possibilities are implemented:
 rolling median and minimizes this smoothed loss.
 \item \code{"optimize"}: this uses the \code{stats::\link[stats]{optimize}}
 function.
-\item \code{"optim with tan"}: this uses the \code{stats::\link[stats]{optim}}
-function with the change of variable \code{u = tan(t)} so as to optimize
-over the compact interval \eqn{[0, \pi/2]}.
+\item \code{"optim with tan"}: uses \code{\link[stats]{optim}}
+with the change of variable \eqn{t = \tan(u)}, where
+\eqn{u = \arctan(t)}, to optimize over the interval
+\eqn{u \in [10^{-6}, \pi/2 - 10^{-6}]} by default.
 }
 \item \code{k}: an integer giving the width of the window for median smoothing.
 Used only for \code{method = "smoothed"}.
@@ -96,7 +97,60 @@ The underlying estimated precision matrix (of size \code{p * p}) can be
 extracted using the method \code{\link[=as.matrix.Estimator]{as.matrix}}.
 }
 \description{
-Oracle estimator of the precision matrix
+This function computes the oracle estimator of the precision
+matrix using the polynomial
+\deqn{
+\mathbf{\Pi}_{n;HOS}^{\#,or}(m,t)
+=\alpha_0^*(m,t)\mathbf{I}_p
++\sum_{j=1}^m\alpha_j^*(m,t)
+(\mathbf{S}_n^\#(t))^j,
+}
+where \eqn{\boldsymbol{\alpha}^*(m,t)
+=(\alpha_0^*(m,t),\alpha_1^*(m,t),
+\ldots,\alpha_m^*(m,t))^\top}
+is given by
+\deqn{
+\boldsymbol{\alpha}^*(m,t)
+=\mathbf{M}^\#(m,t)^{-1}\mathbf{m}^\#(m,t)
+}
+with
+\deqn{
+\mathbf{m}^\#(m,t)=
+\begin{pmatrix}
+\frac{1}{p}\operatorname{tr}[\boldsymbol{\Sigma}]\\
+\frac{1}{p}\operatorname{tr}[\mathbf{S}_n^\#(t)\boldsymbol{\Sigma}]\\
+\vdots\\
+\frac{1}{p}\operatorname{tr}[(\mathbf{S}_n^\#(t))^m
+\boldsymbol{\Sigma}]
+\end{pmatrix}
+\quad \text{and}\quad
+\mathbf{M}^\#(m,t)=
+\begin{pmatrix}
+s_0 & s_1 & \ldots & s_m\\
+s_1 & s_2 & \ldots & s_{m+1}\\
+\vdots & \vdots & \ddots & \vdots\\
+s_m & s_{m+1} & \ldots & s_{2m}
+\end{pmatrix},
+}
+where
+\eqn{s_j=p^{-1}\operatorname{tr}[
+(\mathbf{S}_n^\#(t))^j\boldsymbol{\Sigma}^2]}.
+Here, \eqn{\mathbf{S}_n^\#(t)} denotes the baseline
+estimator of the precision matrix, where
+\eqn{\#\in\{+,-,\pm\}} corresponds to the Moore-Penrose,
+ridge (Tikhonov) and Moore-Penrose-ridge estimators,
+respectively. The baseline estimator is selected using
+\code{nameEstimator}.
+The parameter \eqn{t>0} is the regularization parameter
+for the ridge and Moore-Penrose-ridge estimators. If
+\code{t = NULL}, its value is determined by minimizing
+\deqn{
+L_{n;2}^\#(m,t)
+=1-\mathbf{m}^\#(m,t)^\top
+\mathbf{M}^\#(m,t)^{-1}\mathbf{m}^\#(m,t).
+}
+For the Moore-Penrose estimator, the regularization
+parameter is not required.
 }
 \examples{
 
