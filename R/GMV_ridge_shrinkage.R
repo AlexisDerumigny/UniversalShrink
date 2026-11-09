@@ -3,25 +3,75 @@
 #' First-order shrinkage of the Ridge portfolio towards a general target 
 #' portfolio \eqn{\mathbf{b}}
 #'
+#' This function computes the double shrinkage (ridge shrinkage)
+#' estimator of the global minimum variance portfolio given by
+#' \deqn{
+#' \mathbf{w}_{Rid}
+#' =\hat{\alpha}_{Rid}^*(\hat{\eta})
+#' \frac{\mathbf{S}_n^{-}(\hat{\eta})\mathbf{1}_p}
+#' {\mathbf{1}_p^\top\mathbf{S}_n^{-}(\hat{\eta})\mathbf{1}_p}
+#' +(1-\hat{\alpha}_{Rid}^*(\hat{\eta}))\mathbf{b},
+#' }
+#' where \eqn{\mathbf{S}_n^{-}(\eta)} is the ridge inverse
+#' of the sample covariance matrix (see \code{\link{ridge}}),
+#' \eqn{\mathbf{1}_p} is the vector of ones of size \eqn{p},
+#' and \eqn{\mathbf{b}} is the target portfolio.
+#' The estimated shrinkage intensity is given by
+#' \deqn{
+#' \hat{\alpha}_{Rid}^*(\eta)
+#' =\frac{1-A(\eta)}
+#' {1-2A(\eta)+B(\eta)},
+#' }
+#' where
+#' \deqn{
+#' A(\eta)=
+#' \frac{(1+\eta)^{-1}d_1(\eta)}
+#' {(\mathbf{b}^\top\mathbf{S}_n\mathbf{b})
+#' (\mathbf{1}_p^\top\mathbf{S}_n^{-}(\eta)\mathbf{1}_p)}
+#' }
+#' and
+#' \deqn{
+#' B(\eta)=
+#' \frac{(1+\eta)^{-2}
+#' (1-\hat{v}_2^{(1)}(\eta,0))d_2(\eta)}
+#' {(\mathbf{b}^\top\mathbf{S}_n\mathbf{b})
+#' (\mathbf{1}_p^\top\mathbf{S}_n^{-}(\eta)\mathbf{1}_p)^2}.
+#' }
+#' The ridge parameter \eqn{\hat{\eta}} is obtained by maximizing
+#' \deqn{
+#' \hat{L}_{n;2}(\eta)
+#' =\frac{(1-A(\eta))^2}{1-2A(\eta)+B(\eta)}.
+#' }
+#' The details on the computation of \eqn{d_1(\eta)},
+#' \eqn{d_2(\eta)} and \eqn{\hat{v}_2^{(1)}(\eta,0)}
+#' are given in Bodnar, Parolya and Thorsén (2024).  This 
+#' procedure ensures that the out-of-sample variance loss 
+#' \eqn{\mathbf{w}_{Rid}^\top\boldsymbol{\Sigma}\mathbf{w}_{Rid}}
+#' is asymptotically minimized with probability one 
+#' (see \code{\link{LossOutOfSampleVariance}}).
+#'
+#' @references
+#' Taras Bodnar, Nestor Parolya & Erik Thorsén (2024).
+#' Two is better than one: Regularized shrinkage of large
+#' minimum variance portfolios.
+#' Journal of Machine Learning Research, 25(173), 1-32.
+#'
 #' @template param-X
 #' 
-#' @param b shrinkage target. By default, the equally-weighted portfolio is used
-#' as a target.
-#' 
+#' @param b Shrinkage target. By default, the equally-weighted portfolio
+#' is used as the target.
+#'
 #' @param eps,upp,initialValue The loss is optimized with respect to
-#' \eqn{u = tan(eta)} over the interval \code{[eps, upp]},
-#' and the optimizer starts at the \code{initialValue}.
+#' \eqn{u = \arctan(\eta)} over the interval \code{[eps, upp]},
+#' where \eqn{\eta = \tan(u)} is the ridge regularization parameter.
+#' The optimization starts at \code{initialValue}.
+#'
+#' @return An object of class \code{EstimatedPortfolioWeights}.
+#' The estimated portfolio weights, i.e., a vector of size \eqn{p} of (estimated)
+#'  optimal portfolio weights, where \eqn{p} is the number of assets, 
+#'  can be extracted using \code{as.numeric()}.
 #' 
 #' @inheritParams cov_with_centering
-#' 
-#' @return a vector of size \eqn{p} of (estimated) optimal portfolio weights,
-#' where \eqn{p} is the number of assets.
-#' 
-#' @references
-#' Bodnar, T., Parolya, N., & Thorsén, E. (2024).
-#' Two is better than one: Regularized shrinkage of large minimum variance
-#' portfolios.
-#' Journal of Machine Learning Research, 25(173), 1-32.
 #' 
 #' @examples
 #' set.seed(1)
@@ -243,7 +293,7 @@ BNP2024_estimator_d1 <- function(iS_ridge, b, ones, eta, vhat){
 # (Bodnar, T., Parolya, N., & Thorsén, E., 2024)
 BNP2024_estimator_d2 <- function(iS_ridge, eta, vhat){
   sum1 = sum(iS_ridge)
-  sum2 = sum(iS_ridge^2)
+  sum2 = sum(iS_ridge %*% iS_ridge)
   
   term_inside = sum1 - eta * sum2
   result = ((1 + eta)^2 / vhat) * term_inside

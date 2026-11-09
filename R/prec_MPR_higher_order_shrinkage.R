@@ -92,7 +92,67 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
 
 
 #' Moore-Penrose-Ridge higher order shrinkage
+#'
+#' This function computes an estimator of the precision matrix using
+#' the Moore-Penrose-ridge inverse and the polynomial
+#' \deqn{
+#' \hat{\mathbf{\Pi}}_{n;MPr}(m,t)
+#' =\hat{\alpha}_0^\pm(m,t)\mathbf{I}_p
+#' +\sum_{j=1}^m\hat{\alpha}_j^\pm(m,t)
+#' (\mathbf{S}_n^\pm(t))^j,
+#' }
+#' where \eqn{t>0} and
+#' \eqn{\hat{\boldsymbol{\alpha}}^\pm(m,t)
+#' =(\hat{\alpha}_0^\pm(m,t),\hat{\alpha}_1^\pm(m,t),
+#' \ldots,\hat{\alpha}_m^\pm(m,t))^\top}
+#' is given by
+#' \deqn{
+#' \hat{\boldsymbol{\alpha}}^\pm(m,t)
+#' =\widehat{\mathbf{M}}^\pm(m,t)^{-1}
+#' \hat{\mathbf{m}}^\pm(m,t)
+#' }
+#' with
+#' \deqn{
+#' \hat{\mathbf{m}}^\pm(m,t)=
+#' \begin{pmatrix}
+#' \hat{q}_1\\
+#' \hat{s}^\pm_{1,1}(t)\\
+#' \vdots\\
+#' \hat{s}^\pm_{m,1}(t)
+#' \end{pmatrix}
+#' \quad \text{and}\quad
+#' \widehat{\mathbf{M}}^\pm(m,t)=
+#' \begin{pmatrix}
+#' \hat{q}_2 & \hat{s}^\pm_{1,2}(t) & \ldots & \hat{s}^\pm_{m,2}(t)\\
+#' \hat{s}^\pm_{1,2}(t) & \hat{s}^\pm_{2,2}(t) & \ldots & \hat{s}^\pm_{m+1,2}(t)\\
+#' \vdots & \vdots & \ddots & \vdots\\
+#' \hat{s}^\pm_{m,2}(t) & \hat{s}^\pm_{m+1,2}(t) & \ldots & \hat{s}^\pm_{2m,2}(t)
+#' \end{pmatrix},
+#' }
+#' where
+#' \deqn{
+#' \hat{s}^\pm_{j,r}(t)
+#' =\sum_{k=0}^j(-t)^k\binom{j}{k}
+#' \hat{s}^-_{j+k,r}(t),
+#' }
+#' for \eqn{j=1,\ldots,2m} and \eqn{r\in\{1,2\}}.
+#' Here, \eqn{\mathbf{S}_n^\pm(t)} is the Moore-Penrose-ridge
+#' inverse of the sample covariance matrix and
+#' \eqn{\mathbf{I}_p} is the identity matrix of size \eqn{p}.
+#' The details on the computation of the terms
+#' \eqn{\hat{q}_1}, \eqn{\hat{q}_2} and
+#' \eqn{\hat{s}^\pm_{j,r}(t)} are given in
+#' Theorem 2.3 of Bodnar and Parolya (2026). This procedure ensures that the loss 
+#'\eqn{||\widehat{\boldsymbol{\Pi}}_{MPR}\boldsymbol{\Sigma}-\mathbf{I}_p||^2_F}
+#' is asymptotically minimized with probability one.
 #' 
+#' 
+#' @references
+#' Taras Bodnar & Nestor Parolya (2026).
+#' Reviving pseudo-inverses: Asymptotic properties of large
+#' dimensional Moore-Penrose and ridge-type inverses with applications.
+#' The Annals of Statistics, 54(2), 1053-1079.
+#' \doi{10.1214/25-AOS2602}
 #' 
 #' @template param-X
 #' 
@@ -100,7 +160,7 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
 #' 
 #' @inheritParams cov_with_centering
 #' 
-#' @template param-m
+#' @template param-m 
 #' @template param-mpfr
 #' @template param-optimizationControls
 #' @template param-method_invM

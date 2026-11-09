@@ -52,7 +52,46 @@ The underlying estimated covariance matrix (of size \code{p * p}) can be
 extracted using the method \code{\link[=as.matrix.Estimator]{as.matrix}}.
 }
 \description{
-Oracle higher order shrinkage for estimation of the covariance matrix
+This function computes the oracle estimator of the covariance
+matrix using the polynomial
+\deqn{
+\mathbf{S}_{n;HOS}^{or}(m)
+=\alpha_0(m)\mathbf{I}_p
++\sum_{j=1}^m\alpha_j(m)\mathbf{S}_n^j,
+}
+where \eqn{\boldsymbol{\alpha}(m)
+=(\alpha_0(m),\alpha_1(m),\ldots,\alpha_m(m))^\top}
+is given by
+\deqn{
+\boldsymbol{\alpha}(m)
+=\mathbf{M}_n(m)^{-1}\mathbf{m}_n(m)
+}
+with
+\deqn{
+\mathbf{m}_n(m)=
+\begin{pmatrix}
+\frac{1}{p}\operatorname{tr}[\boldsymbol{\Sigma}]\\
+\frac{1}{p}\operatorname{tr}[\mathbf{S}_n\boldsymbol{\Sigma}]\\
+\vdots\\
+\frac{1}{p}\operatorname{tr}[\mathbf{S}_n^m\boldsymbol{\Sigma}]
+\end{pmatrix}
+\quad \text{and}\quad
+\mathbf{M}_n(m)=
+\begin{pmatrix}
+1 & \hat{t}_1 & \ldots & \hat{t}_m\\
+\hat{t}_1 & \hat{t}_2 & \ldots & \hat{t}_{m+1}\\
+\vdots & \vdots & \ddots & \vdots\\
+\hat{t}_m & \hat{t}_{m+1} & \ldots & \hat{t}_{2m}
+\end{pmatrix},
+}
+where \eqn{\hat{t}_j=p^{-1}\operatorname{tr}[\mathbf{S}_n^j]},
+\eqn{\mathbf{S}_n} is the sample covariance matrix,
+\eqn{\boldsymbol{\Sigma}} is the population covariance matrix,
+and \eqn{\mathbf{I}_p} is the identity matrix of size \eqn{p}.
+The inverse of \eqn{\mathbf{M}_n(m)} is understood whenever
+this matrix is nonsingular. This procedure ensures that the loss
+\eqn{||\mathbf{S}_{n;HOS}^{or}(m)-\boldsymbol{\Sigma}||^2_F}
+is minimized with probability one for a finite sample.
 }
 \examples{
 p = 300

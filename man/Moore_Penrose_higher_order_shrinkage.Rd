@@ -89,7 +89,10 @@ given by
 covariance matrix and \eqn{\mathbf{I}_p} is the identity matrix of
 size \eqn{p}.
 The details on the computation of the terms \eqn{\hat q_1}, \eqn{\hat q_2}
-and \eqn{s_{i,j}} are given in Theorem 2.5 of Bodnar and Parolya (2025).
+and \eqn{s_{i,j}} are given in Theorem 2.5 of Bodnar and Parolya (2025). This
+procedure ensures that the loss
+\eqn{||\widehat{\boldsymbol{\Pi}}_{MPR}\boldsymbol{\Sigma}-\mathbf{I}_p||^2_F}
+is asymptotically minimized with probability one.
 }
 \examples{
 

@@ -81,6 +81,11 @@
 #' 
 #' @template returns-EstimatedPrecisionMatrix
 #' 
+#' @references
+#' Nestor Parolya & Taras Bodnar (2025).
+#' Higher-order nonlinear shrinkage estimator of large-dimensional precision
+#' matrix. \doi{10.1090/tpms/1239}
+#' 
 #' @examples
 #' 
 #' n = 10

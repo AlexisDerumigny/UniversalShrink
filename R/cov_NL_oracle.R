@@ -1,6 +1,38 @@
 
 
-#' NL oracle estimator of the covariance matrix
+#' Finite sample nonlinear oracle estimator of the covariance matrix
+#'
+#' This function computes the finite-sample rotation-equivariant
+#' oracle estimator of the covariance matrix given by
+#' \deqn{
+#' \hat{\boldsymbol{\Sigma}}_{\mathrm{NLoracle}}
+#' =\sum_{i=1}^p d_i^{\mathrm{or}}\mathbf{u}_i\mathbf{u}_i^\top,
+#' }
+#' where the oracle eigenvalues are defined as
+#' \deqn{
+#' d_i^{\mathrm{or}}
+#' =\mathbf{u}_i^\top\boldsymbol{\Sigma}\mathbf{u}_i,
+#' \quad i=1,\ldots,p.
+#' }
+#' Here, \eqn{\mathbf{u}_i} denotes the \eqn{i}-th eigenvector
+#' of the sample covariance matrix \eqn{\mathbf{S}_n}, and
+#' \eqn{\boldsymbol{\Sigma}} is the population covariance matrix.
+#' The estimator minimizes the Frobenius loss within the class
+#' of rotation-equivariant estimators for the realized sample
+#' eigenvectors. This procedure ensures that the loss 
+#'\eqn{||\hat{\boldsymbol{\Sigma}}_{\mathrm{NLoracle}}-\boldsymbol{\Sigma}||^2_F}
+#' is minimized with probability one for a finite sample.
+#'
+#' @references
+#' Ledoit and Peche (2011).
+#' Eigenvectors of some large sample covariance matrix ensembles.
+#' Probability Theory and Related Fields, 151, 233-264.
+#'
+#' Ledoit and Wolf (2012).
+#' Nonlinear shrinkage estimation of large-dimensional
+#' covariance matrices.
+#' The Annals of Statistics, 40(2), 1024-1060.
+
 #'
 #' @template param-X
 #' @param Sigma true covariance matrix

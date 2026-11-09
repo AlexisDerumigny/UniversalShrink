@@ -50,9 +50,10 @@ Currently, the following possibilities are implemented:
 rolling median and minimizes this smoothed loss.
 \item \code{"optimize"}: this uses the \code{stats::\link[stats]{optimize}}
 function.
-\item \code{"optim with tan"}: this uses the \code{stats::\link[stats]{optim}}
-function with the change of variable \code{u = tan(t)} so as to optimize
-over the compact interval \eqn{[0, \pi/2]}.
+\item \code{"optim with tan"}: uses \code{\link[stats]{optim}}
+with the change of variable \eqn{t = \tan(u)}, where
+\eqn{u = \arctan(t)}, to optimize over the interval
+\eqn{u \in [10^{-6}, \pi/2 - 10^{-6}]} by default.
 }
 \item \code{k}: an integer giving the width of the window for median smoothing.
 Used only for \code{method = "smoothed"}.
