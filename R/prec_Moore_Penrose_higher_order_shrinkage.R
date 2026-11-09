@@ -196,6 +196,33 @@ compute_M_MoorePenrose_plarge <- function(
       print(invM)
     }
     
+  }  else if (method_invM == "ginv"){
+    if (!requireNamespace("MASS", quietly = TRUE)){
+      stop(UniversalShrink_error_condition_base(
+        message = paste0(
+          "Package `MASS` must be installed to use `method_invM = \"ginv\"`."
+        ),
+        subclass = "MissingPackageError"
+      ))
+    }
+    
+    if (verbose > 0){
+      cat("Computing the Moore-Penrose generalized inverse",
+          "of the matrix M...\n")
+    }
+    
+    id <- 1:(m + 1) + rep(0:m, each = m + 1)
+    M <- matrix(s2[id], nrow = m + 1)
+    
+    invM = MASS::ginv(M)
+    
+    if (verbose > 1){
+      cat("M = \n")
+      print(M)
+      cat("M generalized inverse = \n")
+      print(invM)
+    }
+    
   } else if (method_invM == "recursive"){
     if (verbose > 0){
       cat("Using the recursive formula to compute the inverse of",
@@ -215,8 +242,7 @@ compute_M_MoorePenrose_plarge <- function(
       print(invM)
     }
   } else {
-    stop(error_invalid_method_invM(method_invM,
-                                   choices = c("solve", "recursive") ) )
+    stop(error_invalid_method_invM(method_invM) )
   }
   
   
@@ -335,6 +361,33 @@ compute_M_MoorePenrose_psmall <- function(
       cat("M^{-1} = \n")
       print(invM)
     }
+  } else if (method_invM == "ginv"){
+    if (!requireNamespace("MASS", quietly = TRUE)){
+      stop(UniversalShrink_error_condition_base(
+        message = paste0(
+          "Package `MASS` must be installed to use `method_invM = \"ginv\"`."
+        ),
+        subclass = "MissingPackageError"
+      ) )
+    }
+    
+    if (verbose > 0){
+      cat("Computing the Moore-Penrose generalized inverse",
+          "of the matrix M...\n")
+    }
+    
+    id <- 1:(m + 1) + rep(0:m, each = m + 1)
+    M <- matrix(s2[id], nrow = m + 1)
+    
+    invM = MASS::ginv(M)
+    
+    if (verbose > 1){
+      cat("M = \n")
+      print(M)
+      cat("M generalized inverse = \n")
+      print(invM)
+    }
+    
   } else if (method_invM == "recursive"){
     if (verbose > 0){
       cat("Using the recursive formula to compute the inverse of",
@@ -354,8 +407,7 @@ compute_M_MoorePenrose_psmall <- function(
       print(invM)
     }
   } else {
-    stop(error_invalid_method_invM(method_invM,
-                                   choices = c("solve", "recursive") ) )
+    stop(error_invalid_method_invM(method_invM) )
   }
   
   
@@ -441,15 +493,11 @@ compute_M_MoorePenrose_psmall <- function(
 #' 
 #' @template param-X
 #' 
-#' @param method_invM method for computing the inverse of the matrix M.
-#' It can be \code{"solve"} (computing M and then inverting it) or
-#' \code{"recursive"} (using a recursive formula, which is more stable
-#' numerically for large \eqn{m}, and is therefore the default).
-#' 
 #' @inheritParams cov_with_centering
 #' 
 #' @template param-m 
 #' @template param-mpfr
+#' @template param-method_invM
 #' 
 #' @template returns-EstimatedPrecisionMatrix
 #' 
@@ -549,8 +597,7 @@ Moore_Penrose_higher_order_shrinkage <- function(
       centeredCov = centeredCov,
       method = "Moore-Penrose higher-order shrinkage",
       call = call_,
-      verbose = verbose,
-      method_invM = method_invM
+      verbose = verbose
     ) ) 
   }
   

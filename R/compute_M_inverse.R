@@ -91,9 +91,10 @@ check_large_m <- function(warn, p, m, call = NULL)
 
 error_invalid_method_invM <- function(
     method_invM,
-    choices = c("solve", "recursive"),
     call = sys.call(-1) )
 {
+  choices = c("recursive", "solve", "ginv")
+  
   return ( UniversalShrink_error_condition_base(
     message = paste0(
       "`method_invM` must be one of ", 
