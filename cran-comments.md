@@ -12,4 +12,4 @@ There were no ERRORs, WARNINGs or NOTEs.
 
 
 ## Reverse dependencies
-There are no reverse dependencies, as this a new package.
+There are no reverse dependencies, as this is a new package.
