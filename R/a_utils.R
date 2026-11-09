@@ -54,6 +54,29 @@ check_Rmpfr <- function (mpfr){
 #' (used for ridge-type estimators), i.e. a numeric scalar, or `numeric(0)` when
 #' `t` is not applicable.
 #' 
+#' @examples
+#' p <- 5
+#' X <- matrix(rnorm(3 * p), ncol = p)
+#'
+#' precision <- ridge_shrinkage(X)
+#'
+#' # Extract the estimated matrix
+#' as.matrix(precision)
+#'
+#' # Extract estimator coefficients
+#' coef(precision)
+#'
+#' # Extract the ridge parameter
+#' get_t(precision)
+#'
+#' weights <- GMV_Moore_Penrose(X)
+#'
+#' # Extract portfolio weights
+#' as.numeric(weights)
+#' as.double(weights) # Same function with a different name
+#' 
+#' 
+#' 
 NULL
 
 

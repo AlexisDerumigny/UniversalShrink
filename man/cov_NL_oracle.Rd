@@ -50,6 +50,19 @@ eigenvectors. This procedure ensures that the loss
 \eqn{||\hat{\boldsymbol{\Sigma}}_{\mathrm{NLoracle}}-\boldsymbol{\Sigma}||^2_F}
 is minimized with probability one for a finite sample.
 }
+\examples{
+p = 10
+Sigma = diag(1:p)
+n = 5
+
+# True mean is zero
+
+X <- MASS::mvrnorm(n = n, mu = rep(0,p), Sigma = Sigma)
+cov_usual = cov_with_centering(X, centeredCov = TRUE)
+cov_oracle = cov_NL_oracle(X, Sigma = Sigma, centeredCov = TRUE)
+
+
+}
 \references{
 Ledoit and Peche (2011).
 Eigenvectors of some large sample covariance matrix ensembles.

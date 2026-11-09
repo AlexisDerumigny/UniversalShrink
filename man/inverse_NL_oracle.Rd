@@ -53,3 +53,13 @@ is minimized with probability one for a finite sample. The estimator requires
 knowledge of the population covariance
 matrix and is therefore used as an oracle benchmark.
 }
+\examples{
+
+p = 10
+Sigma = diag(1:p)
+n = 5
+
+X <- MASS::mvrnorm(n = n, mu = rep(0,p), Sigma = Sigma)
+precision_oracle = inverse_NL_oracle(X, Sigma = Sigma, centeredCov = TRUE)
+
+}

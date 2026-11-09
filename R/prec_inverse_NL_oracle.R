@@ -32,6 +32,15 @@
 #' 
 #' @template returns-EstimatedPrecisionMatrix
 #' 
+#' @examples
+#' 
+#' p = 10
+#' Sigma = diag(1:p)
+#' n = 5
+#' 
+#' X <- MASS::mvrnorm(n = n, mu = rep(0,p), Sigma = Sigma)
+#' precision_oracle = inverse_NL_oracle(X, Sigma = Sigma, centeredCov = TRUE)
+#' 
 #' @export
 inverse_NL_oracle <- function(X, Sigma, centeredCov = TRUE, verbose = 0)
 {

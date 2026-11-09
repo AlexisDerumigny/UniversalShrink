@@ -20,7 +20,7 @@
 #' The estimator minimizes the Frobenius loss within the class
 #' of rotation-equivariant estimators for the realized sample
 #' eigenvectors. This procedure ensures that the loss 
-#'\eqn{||\hat{\boldsymbol{\Sigma}}_{\mathrm{NLoracle}}-\boldsymbol{\Sigma}||^2_F}
+#' \eqn{||\hat{\boldsymbol{\Sigma}}_{\mathrm{NLoracle}}-\boldsymbol{\Sigma}||^2_F}
 #' is minimized with probability one for a finite sample.
 #'
 #' @references
@@ -32,7 +32,6 @@
 #' Nonlinear shrinkage estimation of large-dimensional
 #' covariance matrices.
 #' The Annals of Statistics, 40(2), 1024-1060.
-
 #'
 #' @template param-X
 #' @param Sigma true covariance matrix
@@ -40,6 +39,18 @@
 #' @inheritParams cov_with_centering
 #' 
 #' @template returns-EstimatedCovarianceMatrix
+#' 
+#' @examples
+#' p = 10
+#' Sigma = diag(1:p)
+#' n = 5
+#' 
+#' # True mean is zero
+#' 
+#' X <- MASS::mvrnorm(n = n, mu = rep(0,p), Sigma = Sigma)
+#' cov_usual = cov_with_centering(X, centeredCov = TRUE)
+#' cov_oracle = cov_NL_oracle(X, Sigma = Sigma, centeredCov = TRUE)
+#' 
 #' 
 #' @export
 cov_NL_oracle <- function(X, Sigma, centeredCov = TRUE, verbose = 0)
