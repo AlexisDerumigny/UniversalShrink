@@ -53,6 +53,8 @@ jobs:
         #   LaTeX errors found:
         # * checking PDF version of manual without index ... OK
         run: |
+          tlmgr option repository https://mirror.ctan.org/systems/texlive/tlnet
+          tlmgr update --self
           tlmgr --version
           tlmgr install courier makeindex
                     

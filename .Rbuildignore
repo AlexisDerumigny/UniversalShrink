@@ -4,3 +4,4 @@
 ^\.positai$
 ^\.claude$
 man-roxygen
+.github
