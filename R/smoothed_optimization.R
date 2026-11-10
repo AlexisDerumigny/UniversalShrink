@@ -118,18 +118,39 @@ smoothed_optimization <- function(FUN, grid, k, verbose, maximum, ...)
 # Compute a regular grid using the eigenvalues of S.
 #
 # The length of this grid is capped at max_length.
-grid_optimization_default <- function(S, c_n, p, n, max_length, verbose = 0){
+grid_optimization_default <- function(S, c_n, p, n, centeredCov, max_length, 
+                                      verbose = 0){
   if (is.null(max_length)) {
     max_length = 100
   }
   
   eigenvalues_S = eigen(S, symmetric = TRUE, only.values = TRUE)$values
-  if (p - 1 > n) {
-    eigenvalues_S_ = eigenvalues_S[1:(n - 1)]
-  } else {
-    eigenvalues_S_ = eigenvalues_S
+  
+  n_adjusted <- if (centeredCov) n - 1L else n
+  n_usable <- min(p, n_adjusted)
+  eigenvalues_S_ <- eigenvalues_S[seq_len(n_usable)]
+  
+  spectral_gaps <- abs(diff(eigenvalues_S_))
+  epsilon_steps = stats::median(spectral_gaps) / (1 + sqrt(c_n))^2
+  
+  if (!is.finite(epsilon_steps) || epsilon_steps <= 0) {
+    stop(UniversalShrink_error_condition_base(
+      message = paste0(
+        "The default optimization grid cannot be constructed because ",
+        "of numerical issues with the sample covariance eigenvalues. ",
+        "Supply an explicit grid through `optimizationControls$grid`, ",
+        "or use another optimization method."),
+      subclass = c("DefaultOptimizationGridError", "NumericalError"),
+      n = n,
+      p = p,
+      c_n = c_n,
+      eigenvalues = eigenvalues_S_,
+      spectral_gaps = spectral_gaps,
+      epsilon_steps = epsilon_steps
+    ))
   }
-  epsilon_steps = stats::median(abs(diff(eigenvalues_S_))) / (1 + sqrt(c_n))^2
+  
+  
   from = epsilon_steps / 2
   to = max(eigenvalues_S_)
   by = epsilon_steps
