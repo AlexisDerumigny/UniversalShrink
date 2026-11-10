@@ -183,64 +183,29 @@ Sigma = H \%*\% diag(seq(1, 0.02, length.out = p)) \%*\% t(H)
 # Generate example dataset
 X <- MASS::mvrnorm(n = n, mu = mu, Sigma=Sigma)
 
-prec_MoorePenrose_Cent = Moore_Penrose_shrinkage(X, centeredCov = TRUE)
-prec_MoorePenrose_NoCent = Moore_Penrose_shrinkage(X, centeredCov = FALSE)
-
-LossFrobenius2(prec_MoorePenrose_Cent, Sigma = Sigma)
-LossFrobenius2(prec_MoorePenrose_NoCent, Sigma = Sigma)
-
-for (m in 1:2){
-  cat("m = ", m, "\n")
-  prec_higher_order_shrinkage_Cent = 
-      ridge_higher_order_shrinkage(X, m = m, centeredCov = TRUE, t = 10)
-      
-  prec_higher_order_shrinkage_NoCent = 
-      ridge_higher_order_shrinkage(X, m = m, centeredCov = FALSE, t = 10)
-      
-  print(LossFrobenius2(prec_higher_order_shrinkage_Cent, Sigma = Sigma))
-  
-  print(LossFrobenius2(prec_higher_order_shrinkage_NoCent, Sigma = Sigma))
-}
-
-
-precision_higher_order_shrinkage_Cent = 
-  ridge_higher_order_shrinkage(X, m = 1, centeredCov = TRUE, t = 100)
-
-coef(precision_higher_order_shrinkage_Cent)
-
-LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
-
-
-# For comparison TODO: move this as unit test
-
-precision_target = ridge_shrinkage(X, centeredCov = TRUE, t = 100)
-LossFrobenius2(precision_target, Sigma = Sigma)
-
-
-# Examples for ridge_higher_order_shrinkage where the optimization is done 
-# with respect to t
+# Fixed regularization parameter
 
 for (m in 0:2){
   cat("m = ", m, "\n")
-  prec_higher_order_shrinkage_Cent = 
-      ridge_higher_order_shrinkage(X, m = m, centeredCov = TRUE)
+  precision_fixed_t = ridge_higher_order_shrinkage(X, m = m, t = 10)
       
-  prec_higher_order_shrinkage_NoCent = 
-      ridge_higher_order_shrinkage(X, m = m, centeredCov = FALSE)
-      
-  print(LossFrobenius2(prec_higher_order_shrinkage_Cent, Sigma = Sigma))
-  
-  print(LossFrobenius2(prec_higher_order_shrinkage_NoCent, Sigma = Sigma))
+  cat("loss = ", LossFrobenius2(precision_fixed_t, Sigma = Sigma), "\n")
+  print(coef(precision_fixed_t))
+  cat("\n")
 }
 
-precision_higher_order_shrinkage_Cent = 
-      ridge_higher_order_shrinkage(X, m = 1, centeredCov = TRUE)
+# Select the regularization parameter automatically
 
-precision_ridge_shrinkage_Cent = ridge_shrinkage(X, centeredCov = TRUE)
+for (m in 0:2){
+  cat("m = ", m, "\n")
+  precision_optimized_t = ridge_higher_order_shrinkage(X, m = m)
+      
+  cat("loss = ", LossFrobenius2(precision_optimized_t, Sigma = Sigma), "\n")
   
-LossFrobenius2(precision_higher_order_shrinkage_Cent, Sigma = Sigma)
-LossFrobenius2(precision_ridge_shrinkage_Cent, Sigma = Sigma)
-
+  if (m>0){ cat("t = ", get_t(precision_optimized_t), "\n") }
+  print(coef(precision_optimized_t))
+  cat("\n")
+}
 
 
 }

@@ -36,3 +36,58 @@ test_that("non-finite Bell polynomials produce a structured error", {
 })
 
 
+test_that(
+  "ridge higher-order shrinkage with m = 1 equals linear ridge shrinkage",
+{
+  set.seed(123)
+  
+  n <- 12
+  p <- 4
+  X <- matrix(rnorm(n * p), nrow = n, ncol = p)
+  
+  t_value <- 0.8
+  identity <- diag(p)
+  
+  ridge_matrix <- as.matrix( ridge(X, centeredCov = TRUE, t = t_value) )
+  
+  higher_order <- ridge_higher_order_shrinkage(
+    X, m = 1, centeredCov = TRUE, t = t_value)
+  
+  higher_order_coefficients <- coef(higher_order)
+  
+  expected_higher_order <-
+    higher_order_coefficients["alpha_0"] * identity +
+    higher_order_coefficients["alpha_1"] * ridge_matrix
+  
+  expect_s3_class(higher_order, "EstimatedPrecisionMatrix")
+  expect_named(higher_order_coefficients, c("alpha_0", "alpha_1") )
+  
+  expect_equal(as.matrix(higher_order), expected_higher_order,
+               tolerance = 1e-10)
+  
+  linear_shrinkage <- ridge_shrinkage(X, centeredCov = TRUE,
+                                      t = t_value)
+  
+  linear_shrinkage_coefficients <- coef(linear_shrinkage)
+  
+  expected_linear_shrinkage <-
+    linear_shrinkage_coefficients["alpha"] * ridge_matrix +
+    linear_shrinkage_coefficients["beta"] * identity
+  
+  expect_s3_class(linear_shrinkage, "EstimatedPrecisionMatrix")
+  expect_named(linear_shrinkage_coefficients, c("alpha", "beta") )
+  
+  expect_equal(as.matrix(linear_shrinkage), expected_linear_shrinkage,
+               tolerance = 1e-10)
+  
+  expect_equal(unname(higher_order_coefficients["alpha_0"]),
+                      unname(linear_shrinkage_coefficients["beta"]),
+               tolerance = 1e-10)
+  
+  expect_equal(unname(higher_order_coefficients["alpha_1"]),
+                      unname(linear_shrinkage_coefficients["alpha"]),
+               tolerance = 1e-10)
+  
+  expect_equal(as.matrix(higher_order), as.matrix(linear_shrinkage),
+               tolerance = 1e-10)
+} )
