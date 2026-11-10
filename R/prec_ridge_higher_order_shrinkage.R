@@ -71,6 +71,7 @@
 #' @template param-X
 #' 
 #' @param t \code{t} is the penalization parameter.
+#' It is ignored when \code{m = 0}.
 #' 
 #' @inheritParams cov_with_centering
 #' 
@@ -179,8 +180,7 @@ ridge_higher_order_shrinkage <- function(
       centeredCov = centeredCov,
       method = "Ridge higher-order shrinkage",
       call = call_,
-      verbose = verbose,
-      t = t
+      verbose = verbose
     ) )
   }
   

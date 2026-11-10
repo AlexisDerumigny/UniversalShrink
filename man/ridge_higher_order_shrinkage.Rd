@@ -32,7 +32,8 @@ is replaced by its sample counterpart. If \code{FALSE}, then the sample
 covariance matrix \eqn{\mathbf{S}_n} is computed assuming the mean vector is
 zero.}
 
-\item{t}{\code{t} is the penalization parameter.}
+\item{t}{\code{t} is the penalization parameter.
+It is ignored when \code{m = 0}.}
 
 \item{optimizationControls}{It describes the optimization method that it
 used to choose \code{t} (if not given). The input \code{optimizationControls}

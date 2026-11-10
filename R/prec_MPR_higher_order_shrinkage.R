@@ -157,7 +157,8 @@ compute_M_t_MPR <- function(m, c_n, S_t_inverse, q1, q2, t, method_invM,
 #' 
 #' @template param-X
 #' 
-#' @param t \code{t} is the penalization parameter.
+#' @param t \code{t} is the penalization parameter. 
+#' It is ignored when \code{m = 0}.
 #' 
 #' @inheritParams cov_with_centering
 #' 
@@ -239,8 +240,7 @@ MPR_higher_order_shrinkage <- function(
       centeredCov = centeredCov,
       method = "MPR_higher_order_shrinkage",
       call = call_,
-      verbose = verbose,
-      t = t
+      verbose = verbose
     ) )
   }
   

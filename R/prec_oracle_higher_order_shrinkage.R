@@ -185,7 +185,6 @@ prec_oracle_higher_order_shrinkage <- function(
       hm = hm,
       invM = invM,
       alpha = alpha,
-      t = if (nameEstimator %in% c("ridge", "MPR")) t,
       method = "Oracle higher-order shrinkage",
       nameBaselineEstimator = nameEstimator,
       call = call_

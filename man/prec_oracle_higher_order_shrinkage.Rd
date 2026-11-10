@@ -30,7 +30,8 @@ If \code{nameEstimator = "Moore-Penrose"}, this computes the finite-sample
 oracle of the higher-order shrinked Moore-Penrose estimator. Other
 possibilities are \code{"ridge"} and \code{"MPR"}.}
 
-\item{t}{\code{t} is the penalization parameter.}
+\item{t}{\code{t} is the penalization parameter.
+It is ignored when \code{m = 0}.}
 
 \item{centeredCov}{Boolean variable. If \code{TRUE}, then the sample covariance
 matrix \eqn{\mathbf{S}_n} is computed by using centering, i.e. the mean vector
