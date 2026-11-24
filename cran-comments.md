@@ -5,6 +5,7 @@ We fixed the issue with the DOI (there was a hyphen missing).
 ## Test environments
 
 * Windows 11 (release)
+* Windows Server 2025 (release)
 * macOS 26.7.2 (release)
 * Ubuntu Linux 26.04.1 (devel,release)
 * Debian GNU/Linux 12 (release)
