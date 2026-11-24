@@ -11,7 +11,8 @@ We fixed the issue with the DOI (there was a hyphen missing).
 
 
 ## R CMD check results
-There were no ERRORs, WARNINGs or NOTEs.
+There were no ERRORs nor WARNINGs.
+There is only one NOTE: New submission.
 
 
 ## Reverse dependencies
